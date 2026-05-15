@@ -1,0 +1,1581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a6e3a">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src  'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.supabase.co;
+  style-src   'self' 'unsafe-inline';
+  img-src     'self' data: blob:;
+  connect-src 'self' https://*.supabase.co wss://*.supabase.co;
+  font-src    'self' data:;
+  frame-src   'self';
+">
+<title>KHANGLAOS · ຄັງລາວ</title>
+
+<!--
+  KHANGLAOS v2.2 — single-file warehouse management system
+  ═══════════════════════════════════════════════════════════════
+  ARCHITECTURE
+    Frontend: this single index.html (HTML + CSS + JS inline)
+    Backend:  Supabase (PostgreSQL with RLS, JWT auth)
+    Hosting:  GitHub Pages → khanglaos.eatlaos.com
+    Pattern:  hash routing (#/login, #/dashboard, #/receive, #/checkout)
+  SECURITY
+    - Anon key in client is safe (RLS blocks all reads without JWT)
+    - JWT issued by khanglaos_login RPC, 8h expiry
+    - All queries authenticated via Authorization: Bearer header
+    - 34/34 security audit checks pass at v2.1 schema
+  EDITING
+    Search for section headers like  // ===== SECTION =====  to navigate
+═══════════════════════════════════════════════════════════════ -->
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   THEME + LAYOUT
+═══════════════════════════════════════════════════════════════ */
+:root {
+  --kl-bg: #f4f6f8;
+  --kl-surface: #fff;
+  --kl-border: #e3e7eb;
+  --kl-text: #1c2530;
+  --kl-text-soft: #5e6b7a;
+  --kl-primary: #0a6e3a;
+  --kl-primary-d: #075028;
+  --kl-accent: #d4382a;
+  --kl-warn: #e9a700;
+  --kl-danger: #c0392b;
+  --kl-info: #2c80c4;
+  --kl-success: #1f8a4c;
+  --kl-shadow: 0 2px 6px rgba(0,0,0,.06);
+  --kl-radius: 8px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Noto Sans Lao", "Phetsarath OT", "Saysettha OT",
+    "Noto Sans Thai", "Sarabun",
+    "Noto Sans SC", "PingFang SC",
+    "Noto Sans KR", "Malgun Gothic",
+    Roboto, sans-serif;
+  background: var(--kl-bg);
+  color: var(--kl-text);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+a { color: var(--kl-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ─── Top bar ─── */
+.kl-topbar {
+  background: var(--kl-primary);
+  color: #fff;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  box-shadow: var(--kl-shadow);
+}
+.kl-brand { font-weight: 700; font-size: 17px; letter-spacing: 0.5px; }
+.kl-brand small { opacity: 0.7; font-weight: 400; margin-left: 6px; font-size: 11px; }
+.kl-topbar nav {
+  display: flex; gap: 4px;
+  flex: 1 1 auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.kl-topbar nav::-webkit-scrollbar { display: none; }
+.kl-topbar nav a {
+  color: #fff; opacity: 0.85;
+  padding: 6px 10px; border-radius: 4px;
+  font-size: 13px; white-space: nowrap;
+}
+.kl-topbar nav a:hover { opacity: 1; background: rgba(255,255,255,0.1); text-decoration: none; }
+.kl-topbar nav a.active { background: rgba(255,255,255,0.15); opacity: 1; }
+.kl-tools { display: flex; align-items: center; gap: 8px; font-size: 12px; opacity: 0.9; }
+.kl-tools select {
+  background: rgba(255,255,255,0.15); color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px; padding: 4px 8px; font-size: 12px;
+}
+.kl-tools select option { color: #000; }
+.kl-tools a { color: #fff; opacity: 0.85; font-size: 12px; }
+
+/* ─── Container + cards ─── */
+.kl-container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+.kl-page-title { font-size: 20px; font-weight: 600; margin: 0 0 6px 0; }
+.kl-page-sub { color: var(--kl-text-soft); margin: 0 0 16px 0; font-size: 13px; }
+.kl-card {
+  background: var(--kl-surface);
+  border: 1px solid var(--kl-border);
+  border-radius: var(--kl-radius);
+  padding: 16px; box-shadow: var(--kl-shadow);
+  margin-bottom: 14px;
+}
+.kl-card h2 {
+  font-size: 15px; margin: 0 0 12px 0;
+  padding-bottom: 8px; border-bottom: 1px solid var(--kl-border);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+
+/* ─── KPI tiles ─── */
+.kl-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px; margin-bottom: 16px;
+}
+.kl-kpi {
+  background: var(--kl-surface); border: 1px solid var(--kl-border);
+  border-radius: var(--kl-radius); padding: 12px 14px; box-shadow: var(--kl-shadow);
+}
+.kl-kpi-label { color: var(--kl-text-soft); font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }
+.kl-kpi-value { font-size: 24px; font-weight: 700; margin-top: 4px; }
+.kl-kpi.is-danger  .kl-kpi-value { color: var(--kl-danger); }
+.kl-kpi.is-warn    .kl-kpi-value { color: var(--kl-warn); }
+.kl-kpi.is-success .kl-kpi-value { color: var(--kl-success); }
+
+/* ─── Forms ─── */
+.kl-form-row { margin-bottom: 12px; }
+.kl-form-row label {
+  display: block; font-size: 11px; color: var(--kl-text-soft);
+  margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600;
+}
+.kl-form-row input, .kl-form-row select, .kl-form-row textarea {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid var(--kl-border); border-radius: 6px;
+  font-size: 15px; font-family: inherit;
+  background: #fff; color: var(--kl-text);
+}
+.kl-form-row input:focus, .kl-form-row select:focus, .kl-form-row textarea:focus {
+  outline: none; border-color: var(--kl-primary);
+  box-shadow: 0 0 0 3px rgba(10,110,58,0.15);
+}
+.kl-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+/* ─── Buttons ─── */
+.kl-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px 18px; border: 1px solid var(--kl-border); border-radius: 6px;
+  background: #fff; color: var(--kl-text);
+  font-size: 14px; font-family: inherit; cursor: pointer;
+  text-decoration: none; font-weight: 500; min-height: 40px;
+}
+.kl-btn:hover:not(:disabled) { background: #f0f3f6; text-decoration: none; }
+.kl-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.kl-btn-primary { background: var(--kl-primary); color: #fff; border-color: var(--kl-primary); }
+.kl-btn-primary:hover:not(:disabled) { background: var(--kl-primary-d); }
+.kl-btn-danger  { background: var(--kl-danger);  color: #fff; border-color: var(--kl-danger); }
+.kl-btn-lg { padding: 12px 22px; font-size: 15px; min-height: 46px; }
+.kl-btn-block { width: 100%; }
+
+/* ─── Tables ─── */
+.kl-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.kl-table { width: 100%; border-collapse: collapse; background: #fff; min-width: 600px; }
+.kl-table th, .kl-table td {
+  padding: 9px 12px; text-align: left;
+  border-bottom: 1px solid var(--kl-border);
+  font-size: 13px; vertical-align: middle;
+}
+.kl-table th {
+  background: #f7f9fb; font-weight: 600; color: var(--kl-text-soft);
+  text-transform: uppercase; font-size: 11px; letter-spacing: 0.4px;
+}
+.kl-table tr:hover td { background: #fafbfc; }
+.kl-mono { font-family: SFMono-Regular, Menlo, monospace; font-size: 11px; }
+
+/* ─── Pills ─── */
+.kl-pill {
+  display: inline-block; padding: 2px 8px; border-radius: 10px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.4px; white-space: nowrap;
+}
+.kl-pill-green   { background: #e2f5ea; color: #1f8a4c; }
+.kl-pill-yellow  { background: #fff4d6; color: #a87000; }
+.kl-pill-red     { background: #fde2de; color: #c0392b; }
+.kl-pill-expired { background: #1c2530; color: #fff; }
+.kl-pill-none    { background: #eef0f3; color: #5e6b7a; }
+
+/* ─── Messages ─── */
+.kl-msg { padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 13px; }
+.kl-msg-ok   { background: #e2f5ea; color: #1f8a4c; border: 1px solid #b9e3c9; }
+.kl-msg-err  { background: #fde2de; color: #c0392b; border: 1px solid #f5b9b1; }
+.kl-msg-info { background: #e0eef9; color: #2c80c4; border: 1px solid #bcd9f0; }
+.kl-msg-warn { background: #fff4d6; color: #a87000; border: 1px solid #f0deaa; }
+
+/* ─── Sticker (print-safe) ─── */
+.kl-sticker {
+  width: 70mm; padding: 4mm; border: 1px dashed #bbb;
+  background: #fff; margin: 8px auto; page-break-inside: avoid;
+}
+.kl-sticker-head { display: flex; justify-content: space-between; font-size: 9pt; margin-bottom: 2mm; }
+.kl-sticker-name { font-weight: 700; font-size: 11pt; margin-bottom: 2mm; line-height: 1.2; }
+.kl-sticker-sub  { font-weight: 400; font-size: 9pt; color: #444; display: block; margin-top: 1mm; }
+.kl-sticker-row  { display: flex; justify-content: space-between; font-size: 9pt; margin-bottom: 1mm; }
+.kl-sticker svg  { display: block; margin: 2mm auto; max-width: 100%; }
+.kl-sticker-expiry { font-weight: 700; font-size: 10pt; }
+.kl-sticker-expiry.is-red { color: var(--kl-danger); }
+
+@media print {
+  body { background: #fff; }
+  .kl-no-print { display: none !important; }
+  .kl-sticker { border: none; }
+  .kl-container { padding: 0; max-width: none; }
+}
+
+/* ─── Login page (full-screen overlay) ─── */
+.kl-login-wrap {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  background: linear-gradient(135deg, #0a6e3a 0%, #075028 100%);
+}
+.kl-login-card {
+  background: #fff; padding: 28px; border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.15);
+  width: 100%; max-width: 380px;
+}
+.kl-login-brand {
+  text-align: center; font-size: 24px; font-weight: 700;
+  color: var(--kl-primary); margin-bottom: 4px;
+}
+.kl-login-tag {
+  text-align: center; color: var(--kl-text-soft);
+  font-size: 12px; margin-bottom: 20px;
+}
+.kl-login-lang {
+  display: flex; justify-content: center; gap: 6px;
+  margin-bottom: 14px; flex-wrap: wrap;
+}
+.kl-login-lang button {
+  background: none; border: 1px solid var(--kl-border);
+  padding: 4px 10px; border-radius: 4px;
+  font-size: 12px; cursor: pointer;
+}
+.kl-login-lang button.active {
+  background: var(--kl-primary); color: #fff; border-color: var(--kl-primary);
+}
+
+/* ─── Scanner overlay ─── */
+.kl-scanner-box {
+  background: #000; border-radius: var(--kl-radius);
+  position: relative; max-width: 480px; margin: 0 auto;
+  overflow: hidden;
+}
+#qrReader { width: 100%; }
+#qrReader video { display: block; width: 100%; }
+
+/* ─── Page sections (hash router shows one at a time) ─── */
+.kl-page { display: none; }
+.kl-page.active { display: block; }
+
+/* ─── Loading spinner ─── */
+.kl-spinner {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid #ccc; border-top-color: var(--kl-primary);
+  border-radius: 50%; animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .kl-topbar { padding: 8px 12px; gap: 8px; }
+  .kl-brand { font-size: 15px; flex: 1 1 100%; order: 1; }
+  .kl-tools { order: 2; flex: 1 1 auto; justify-content: flex-end; }
+  .kl-topbar nav { order: 3; flex-basis: 100%; padding-top: 4px; }
+  .kl-container { padding: 12px; }
+  .kl-form-grid { grid-template-columns: 1fr; }
+  .kl-page-title { font-size: 18px; }
+  .kl-kpi-value { font-size: 20px; }
+  .kl-kpi { padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PAGE: LOGIN  (#/login)
+═══════════════════════════════════════════════════════════════ -->
+<div id="page-login" class="kl-page">
+  <div class="kl-login-wrap">
+    <form class="kl-login-card" id="loginForm" autocomplete="off">
+      <div class="kl-login-brand">KHANGLAOS</div>
+      <div class="kl-login-tag">ຄັງລາວ · <span data-i18n="app.tag">Warehouse Management</span></div>
+
+      <div class="kl-login-lang" id="loginLangBar">
+        <button type="button" data-lang="en">🇬🇧 EN</button>
+        <button type="button" data-lang="lo">🇱🇦 ລາວ</button>
+        <button type="button" data-lang="th">🇹🇭 ไทย</button>
+        <button type="button" data-lang="zh">🇨🇳 中文</button>
+        <button type="button" data-lang="ko">🇰🇷 한국어</button>
+      </div>
+
+      <div id="loginMsg"></div>
+
+      <div class="kl-form-row">
+        <label data-i18n="login.username">Username</label>
+        <input type="text" id="loginUsername" required autocomplete="username" autocapitalize="none">
+      </div>
+      <div class="kl-form-row">
+        <label data-i18n="login.password">Password</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password">
+      </div>
+      <button type="submit" id="loginBtn" class="kl-btn kl-btn-primary kl-btn-lg kl-btn-block" data-i18n="login.button">Sign in</button>
+    </form>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SHARED TOPBAR  (shown on all authenticated pages)
+═══════════════════════════════════════════════════════════════ -->
+<header id="kl-topbar" class="kl-topbar kl-no-print" style="display:none">
+  <div class="kl-brand">KHANGLAOS <small>ຄັງລາວ</small></div>
+  <nav>
+    <a href="#/dashboard" data-nav="dashboard" data-i18n="nav.dashboard">Dashboard</a>
+    <a href="#/receive"   data-nav="receive"   data-i18n="nav.receive">Receive</a>
+    <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout">Check-Out</a>
+  </nav>
+  <div class="kl-tools">
+    <select id="topLangSel" aria-label="Language">
+      <option value="en">🇬🇧 EN</option>
+      <option value="lo">🇱🇦 ລາວ</option>
+      <option value="th">🇹🇭 ไทย</option>
+      <option value="zh">🇨🇳 中文</option>
+      <option value="ko">🇰🇷 한국어</option>
+    </select>
+    <span id="topUserLabel" style="font-size:12px;opacity:.9"></span>
+    <a href="#" id="topLogoutLink" data-i18n="nav.logout">Logout</a>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PAGE: DASHBOARD  (#/dashboard)
+═══════════════════════════════════════════════════════════════ -->
+<div id="page-dashboard" class="kl-page">
+  <div class="kl-container">
+    <h1 class="kl-page-title" data-i18n="dashboard.title">Dashboard</h1>
+    <p class="kl-page-sub"><span data-i18n="dashboard.welcome">Welcome</span>, <span id="dashUserName"></span>. <span data-i18n="dashboard.today">Today</span>: <span id="dashTodayDate"></span>.</p>
+
+    <div id="dashMsg"></div>
+
+    <div class="kl-kpi-row">
+      <div class="kl-kpi" id="kpiActiveTile">
+        <div class="kl-kpi-label" data-i18n="dashboard.kpi.active">Active Batches</div>
+        <div class="kl-kpi-value" id="kpiActive">—</div>
+      </div>
+      <div class="kl-kpi" id="kpiExpiringTile">
+        <div class="kl-kpi-label" data-i18n="dashboard.kpi.expiring">Expiring ≤ 7 days</div>
+        <div class="kl-kpi-value" id="kpiExpiring">—</div>
+      </div>
+      <div class="kl-kpi" id="kpiExpiredTile">
+        <div class="kl-kpi-label" data-i18n="dashboard.kpi.expired">Expired</div>
+        <div class="kl-kpi-value" id="kpiExpired">—</div>
+      </div>
+      <div class="kl-kpi" id="kpiLowTile">
+        <div class="kl-kpi-label" data-i18n="dashboard.kpi.lowstock">Low-Stock Items</div>
+        <div class="kl-kpi-value" id="kpiLow">—</div>
+      </div>
+    </div>
+
+    <div class="kl-card">
+      <h2 data-i18n="dashboard.fefo.title">Expiring Soonest (FEFO queue)</h2>
+      <div id="fefoBox"><p style="color:var(--kl-text-soft);margin:0" data-i18n="common.loading">Loading...</p></div>
+    </div>
+
+    <div class="kl-card">
+      <h2 data-i18n="dashboard.moves.title">Recent Movements</h2>
+      <div id="movesBox"><p style="color:var(--kl-text-soft);margin:0" data-i18n="common.loading">Loading...</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PAGE: RECEIVE  (#/receive)
+═══════════════════════════════════════════════════════════════ -->
+<div id="page-receive" class="kl-page">
+  <div class="kl-container">
+    <h1 class="kl-page-title" data-i18n="receive.title">Receive Stock</h1>
+    <p class="kl-page-sub" data-i18n="receive.sub">Check-in a delivery. Sticker prints after save.</p>
+
+    <div id="receiveMsg"></div>
+
+    <div class="kl-card" id="receiveFormCard">
+      <form id="receiveForm">
+        <div class="kl-form-grid">
+          <div class="kl-form-row">
+            <label data-i18n="receive.form.item">Item</label>
+            <select id="recItem" required></select>
+          </div>
+          <div class="kl-form-row">
+            <label data-i18n="receive.form.supplier">Supplier</label>
+            <select id="recSupplier"></select>
+          </div>
+          <div class="kl-form-row">
+            <label data-i18n="receive.form.location">Storage location</label>
+            <select id="recLocation" required></select>
+          </div>
+          <div class="kl-form-row">
+            <label><span data-i18n="receive.form.quantity">Quantity</span> <span id="recUnitHint" style="color:var(--kl-text-soft);text-transform:none"></span></label>
+            <input type="number" id="recQty" step="0.001" min="0.001" required inputmode="decimal">
+          </div>
+          <div class="kl-form-row">
+            <label data-i18n="receive.form.unitcost">Unit cost</label>
+            <input type="number" id="recUnitCost" step="0.01" min="0" inputmode="decimal">
+          </div>
+          <div class="kl-form-row">
+            <label data-i18n="receive.form.receivedDate">Received date</label>
+            <input type="date" id="recReceivedDate" required>
+          </div>
+          <div class="kl-form-row">
+            <label><span data-i18n="receive.form.expiryDate">Expiry date</span> <span id="recExpHint" style="color:var(--kl-text-soft);text-transform:none"></span></label>
+            <input type="date" id="recExpiryDate">
+          </div>
+          <div class="kl-form-row">
+            <label data-i18n="receive.form.lotNumber">Supplier lot/batch #</label>
+            <input type="text" id="recLotNumber">
+          </div>
+        </div>
+        <div class="kl-form-row">
+          <label data-i18n="receive.form.notes">Notes</label>
+          <textarea id="recNotes" rows="2"></textarea>
+        </div>
+        <button type="submit" id="recSubmitBtn" class="kl-btn kl-btn-primary kl-btn-lg" data-i18n="receive.form.submit">Receive &amp; Print Sticker</button>
+      </form>
+    </div>
+
+    <div id="receiveStickerSection" style="display:none">
+      <div class="kl-card kl-no-print">
+        <h2>
+          <span>✓ <span data-i18n="receive.success.short">Saved</span></span>
+          <span>
+            <button class="kl-btn kl-btn-primary" id="recPrintBtn" data-i18n="receive.print">🖨 Print sticker</button>
+            <button class="kl-btn" id="recAnotherBtn" data-i18n="receive.another">+ Receive another</button>
+            <a href="#/dashboard" class="kl-btn" data-i18n="receive.back">Back to dashboard</a>
+          </span>
+        </h2>
+      </div>
+
+      <div class="kl-sticker" id="stickerBox">
+        <div class="kl-sticker-head">
+          <span><strong>KHANGLAOS</strong></span>
+          <span id="stkDate"></span>
+        </div>
+        <div class="kl-sticker-name" id="stkName"></div>
+        <div class="kl-sticker-row"><span data-i18n="sticker.qty">Qty:</span><strong id="stkQty"></strong></div>
+        <div class="kl-sticker-row"><span data-i18n="sticker.loc">Location:</span><strong id="stkLoc"></strong></div>
+        <div class="kl-sticker-row" id="stkExpRow"><span data-i18n="sticker.exp">Expiry:</span><span class="kl-sticker-expiry" id="stkExp"></span></div>
+        <svg id="stkBarcode"></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PAGE: CHECKOUT  (#/checkout)
+═══════════════════════════════════════════════════════════════ -->
+<div id="page-checkout" class="kl-page">
+  <div class="kl-container">
+    <h1 class="kl-page-title" data-i18n="checkout.title">Check-Out Stock</h1>
+    <p class="kl-page-sub" data-i18n="checkout.sub">Scan barcode or type it. FEFO-suggested batch will be picked first.</p>
+
+    <div id="checkoutMsg"></div>
+
+    <div class="kl-card">
+      <h2>
+        <span data-i18n="checkout.scan.title">Scan barcode</span>
+        <span>
+          <button id="coStartScanBtn" class="kl-btn kl-btn-primary" data-i18n="checkout.scan.start">📷 Start scanner</button>
+          <button id="coStopScanBtn" class="kl-btn" style="display:none" data-i18n="checkout.scan.stop">Stop</button>
+        </span>
+      </h2>
+      <div class="kl-scanner-box" id="qrReaderWrap" style="display:none">
+        <div id="qrReader"></div>
+      </div>
+      <div class="kl-form-row" style="margin-top:12px">
+        <label data-i18n="checkout.scan.manual">Or type barcode</label>
+        <input type="text" id="coBarcodeInput" placeholder="KL-R001-000042-260520" inputmode="text" autocapitalize="characters">
+      </div>
+      <button id="coLookupBtn" class="kl-btn" data-i18n="checkout.lookup">Find batch</button>
+    </div>
+
+    <div class="kl-card" id="coBatchCard" style="display:none">
+      <h2 data-i18n="checkout.batch.title">Batch found</h2>
+      <div id="coBatchInfo"></div>
+
+      <div class="kl-form-grid" style="margin-top:12px">
+        <div class="kl-form-row">
+          <label><span data-i18n="checkout.take.qty">Quantity to take</span> <span id="coUnitHint" style="color:var(--kl-text-soft);text-transform:none"></span></label>
+          <input type="number" id="coTakeQty" step="0.001" min="0.001" inputmode="decimal">
+        </div>
+        <div class="kl-form-row">
+          <label data-i18n="checkout.take.type">Movement type</label>
+          <select id="coMoveType">
+            <option value="OUT" data-i18n="checkout.type.out">OUT — kitchen use</option>
+            <option value="WASTE" data-i18n="checkout.type.waste">WASTE — discard</option>
+          </select>
+        </div>
+        <div class="kl-form-row" id="coWasteReasonRow" style="display:none">
+          <label data-i18n="checkout.waste.reason">Waste reason</label>
+          <select id="coWasteReason">
+            <option value="expired" data-i18n="checkout.waste.expired">Expired</option>
+            <option value="spoiled" data-i18n="checkout.waste.spoiled">Spoiled</option>
+            <option value="damaged" data-i18n="checkout.waste.damaged">Damaged</option>
+            <option value="overcooked" data-i18n="checkout.waste.overcooked">Overcooked</option>
+            <option value="dropped" data-i18n="checkout.waste.dropped">Dropped</option>
+            <option value="other" data-i18n="checkout.waste.other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="kl-form-row">
+        <label data-i18n="checkout.note">Note</label>
+        <textarea id="coNote" rows="2"></textarea>
+      </div>
+      <button id="coConfirmBtn" class="kl-btn kl-btn-primary kl-btn-lg" data-i18n="checkout.confirm">✓ Confirm check-out</button>
+      <button id="coCancelBtn" class="kl-btn" data-i18n="common.cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     EXTERNAL LIBRARIES (Supabase JS, JsBarcode, html5-qrcode)
+═══════════════════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.10/html5-qrcode.min.js"></script>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 1 — SUPABASE CONFIG (edit these 2 lines after creating project)
+// ═══════════════════════════════════════════════════════════════
+const SUPABASE_URL      = 'https://YOUR-PROJECT-ID.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR-PUBLIC-ANON-KEY';
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 2 — i18n (5 languages)
+// ═══════════════════════════════════════════════════════════════
+const I18N = {
+  en: {
+    "app.tag": "Warehouse Management",
+    "nav.dashboard":"Dashboard", "nav.receive":"Receive", "nav.checkout":"Check-Out", "nav.logout":"Logout",
+    "login.username":"Username", "login.password":"Password", "login.button":"Sign in",
+    "login.error":"Invalid username or password.", "login.locked":"Too many failed attempts. Try again in 15 minutes.",
+    "login.connecting":"Connecting...", "login.expired":"Session expired. Please sign in again.",
+    "dashboard.title":"Dashboard", "dashboard.welcome":"Welcome", "dashboard.today":"Today",
+    "dashboard.kpi.active":"Active Batches", "dashboard.kpi.expiring":"Expiring ≤ 7 days",
+    "dashboard.kpi.expired":"Expired", "dashboard.kpi.lowstock":"Low-Stock Items",
+    "dashboard.fefo.title":"Expiring Soonest (FEFO queue)",
+    "dashboard.fefo.empty":"No batches with expiry dates tracked yet.",
+    "dashboard.moves.title":"Recent Movements",
+    "dashboard.moves.empty":"No movements yet. Go to Receive to add stock.",
+    "table.item":"Item", "table.location":"Location", "table.qty":"Qty", "table.expiry":"Expiry",
+    "table.status":"Status", "table.barcode":"Barcode", "table.when":"When", "table.type":"Type",
+    "table.user":"User", "table.note":"Note", "table.supplier":"Supplier",
+    "status.expired":"EXPIRED", "status.days":"days",
+    "receive.title":"Receive Stock", "receive.sub":"Check-in a delivery. Sticker prints after save.",
+    "receive.form.item":"Item", "receive.form.supplier":"Supplier", "receive.form.location":"Storage location",
+    "receive.form.quantity":"Quantity", "receive.form.unitcost":"Unit cost",
+    "receive.form.receivedDate":"Received date", "receive.form.expiryDate":"Expiry date",
+    "receive.form.lotNumber":"Supplier lot/batch #", "receive.form.notes":"Notes",
+    "receive.form.select":"— Select —", "receive.form.submit":"Receive & Print Sticker",
+    "receive.success":"Stock received. Sticker ready — print and stick on the package.",
+    "receive.success.short":"Saved",
+    "receive.error.item":"Please choose an item.",
+    "receive.error.location":"Please choose a storage location.",
+    "receive.error.quantity":"Quantity must be greater than zero.",
+    "receive.print":"Print sticker", "receive.another":"Receive another", "receive.back":"Back to dashboard",
+    "sticker.qty":"Qty:", "sticker.loc":"Location:", "sticker.exp":"Expiry:",
+    "checkout.title":"Check-Out Stock",
+    "checkout.sub":"Scan barcode or type it. FEFO-suggested batch will be picked first.",
+    "checkout.scan.title":"Scan barcode", "checkout.scan.start":"📷 Start scanner",
+    "checkout.scan.stop":"Stop", "checkout.scan.manual":"Or type barcode",
+    "checkout.lookup":"Find batch",
+    "checkout.batch.title":"Batch found",
+    "checkout.take.qty":"Quantity to take", "checkout.take.type":"Movement type",
+    "checkout.type.out":"OUT — kitchen use", "checkout.type.waste":"WASTE — discard",
+    "checkout.waste.reason":"Waste reason", "checkout.waste.expired":"Expired",
+    "checkout.waste.spoiled":"Spoiled", "checkout.waste.damaged":"Damaged",
+    "checkout.waste.overcooked":"Overcooked", "checkout.waste.dropped":"Dropped",
+    "checkout.waste.other":"Other",
+    "checkout.note":"Note", "checkout.confirm":"✓ Confirm check-out",
+    "checkout.batch.notfound":"Barcode not found.",
+    "checkout.batch.empty":"This batch is empty.",
+    "checkout.batch.expired":"⚠ This batch is EXPIRED. Use WASTE movement type to discard.",
+    "checkout.error.exceed":"Quantity exceeds remaining stock.",
+    "checkout.success":"Check-out recorded successfully.",
+    "checkout.scan.permission":"Camera permission denied. Type barcode manually.",
+    "common.optional":"optional", "common.loading":"Loading...",
+    "common.cancel":"Cancel", "common.confirm":"Are you sure?",
+  },
+  lo: {
+    "app.tag": "ລະບົບຈັດການສາງສິນຄ້າ",
+    "nav.dashboard":"ໜ້າຫລັກ", "nav.receive":"ຮັບສິນຄ້າ", "nav.checkout":"ເບີກສິນຄ້າ", "nav.logout":"ອອກຈາກລະບົບ",
+    "login.username":"ຊື່ຜູ້ໃຊ້", "login.password":"ລະຫັດຜ່ານ", "login.button":"ເຂົ້າສູ່ລະບົບ",
+    "login.error":"ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ",
+    "login.locked":"ພະຍາຍາມຫຼາຍຄັ້ງເກີນໄປ. ລອງໃໝ່ໃນ 15 ນາທີ",
+    "login.connecting":"ກຳລັງເຊື່ອມຕໍ່...", "login.expired":"ໝົດອາຍຸແລ້ວ. ກະລຸນາເຂົ້າສູ່ລະບົບໃໝ່.",
+    "dashboard.title":"ໜ້າຫລັກ", "dashboard.welcome":"ສະບາຍດີ", "dashboard.today":"ມື້ນີ້",
+    "dashboard.kpi.active":"ລ໋ອດທີ່ມີຢູ່", "dashboard.kpi.expiring":"ໃກ້ໝົດອາຍຸ ≤ 7 ມື້",
+    "dashboard.kpi.expired":"ໝົດອາຍຸແລ້ວ", "dashboard.kpi.lowstock":"ສິນຄ້າເຫຼືອນ້ອຍ",
+    "dashboard.fefo.title":"ສິນຄ້າໃກ້ໝົດອາຍຸ (ລຳດັບ FEFO)",
+    "dashboard.fefo.empty":"ຍັງບໍ່ມີລ໋ອດທີ່ມີວັນໝົດອາຍຸ",
+    "dashboard.moves.title":"ການເຄື່ອນໄຫວລ່າສຸດ",
+    "dashboard.moves.empty":"ຍັງບໍ່ມີການເຄື່ອນໄຫວ ໄປທີ່ ຮັບສິນຄ້າ ເພື່ອເພີ່ມສະຕັອກ",
+    "table.item":"ສິນຄ້າ", "table.location":"ສະຖານທີ່", "table.qty":"ຈຳນວນ", "table.expiry":"ວັນໝົດອາຍຸ",
+    "table.status":"ສະຖານະ", "table.barcode":"ບາໂຄດ", "table.when":"ເວລາ", "table.type":"ປະເພດ",
+    "table.user":"ຜູ້ໃຊ້", "table.note":"ໝາຍເຫດ", "table.supplier":"ຜູ້ສະໜອງ",
+    "status.expired":"ໝົດອາຍຸ", "status.days":"ມື້",
+    "receive.title":"ຮັບສິນຄ້າເຂົ້າສາງ", "receive.sub":"ບັນທຶກສິນຄ້າເຂົ້າ. ສະຕິກເກີຈະພິມຫຼັງບັນທຶກ",
+    "receive.form.item":"ສິນຄ້າ", "receive.form.supplier":"ຜູ້ສະໜອງ",
+    "receive.form.location":"ສະຖານທີ່ເກັບ", "receive.form.quantity":"ຈຳນວນ",
+    "receive.form.unitcost":"ລາຄາຕໍ່ໜ່ວຍ", "receive.form.receivedDate":"ວັນທີ່ຮັບ",
+    "receive.form.expiryDate":"ວັນໝົດອາຍຸ", "receive.form.lotNumber":"ເລກລ໋ອດຈາກຜູ້ສະໜອງ",
+    "receive.form.notes":"ໝາຍເຫດ", "receive.form.select":"— ເລືອກ —",
+    "receive.form.submit":"ບັນທຶກ ແລະ ພິມສະຕິກເກີ",
+    "receive.success":"ຮັບສິນຄ້າສຳເລັດ. ສະຕິກເກີພ້ອມພິມຢູ່ດ້ານລຸ່ມ",
+    "receive.success.short":"ບັນທຶກສຳເລັດ",
+    "receive.error.item":"ກະລຸນາເລືອກສິນຄ້າ",
+    "receive.error.location":"ກະລຸນາເລືອກສະຖານທີ່ເກັບ",
+    "receive.error.quantity":"ຈຳນວນຕ້ອງຫຼາຍກວ່າສູນ",
+    "receive.print":"ພິມສະຕິກເກີ", "receive.another":"ຮັບສິນຄ້າອື່ນ", "receive.back":"ກັບໜ້າຫລັກ",
+    "sticker.qty":"ຈຳນວນ:", "sticker.loc":"ສະຖານທີ່:", "sticker.exp":"ໝົດອາຍຸ:",
+    "checkout.title":"ເບີກສິນຄ້າ",
+    "checkout.sub":"ສະແກນບາໂຄດ ຫຼື ພິມເຂົ້າ. ລ໋ອດທີ່ໝົດອາຍຸໄວສຸດຈະຖືກເລືອກກ່ອນ.",
+    "checkout.scan.title":"ສະແກນບາໂຄດ", "checkout.scan.start":"📷 ເລີ່ມສະແກນ",
+    "checkout.scan.stop":"ຢຸດ", "checkout.scan.manual":"ຫຼື ພິມບາໂຄດ",
+    "checkout.lookup":"ຄົ້ນຫາລ໋ອດ",
+    "checkout.batch.title":"ພົບລ໋ອດ",
+    "checkout.take.qty":"ຈຳນວນທີ່ເບີກ", "checkout.take.type":"ປະເພດການເຄື່ອນໄຫວ",
+    "checkout.type.out":"OUT — ໃຊ້ໃນຄົວ", "checkout.type.waste":"WASTE — ຖິ້ມ",
+    "checkout.waste.reason":"ເຫດຜົນ", "checkout.waste.expired":"ໝົດອາຍຸ",
+    "checkout.waste.spoiled":"ເສຍ", "checkout.waste.damaged":"ເສຍຫາຍ",
+    "checkout.waste.overcooked":"ປະຸງເກີນ", "checkout.waste.dropped":"ຕົກ",
+    "checkout.waste.other":"ອື່ນໆ",
+    "checkout.note":"ໝາຍເຫດ", "checkout.confirm":"✓ ຢືນຢັນເບີກ",
+    "checkout.batch.notfound":"ບໍ່ພົບບາໂຄດ",
+    "checkout.batch.empty":"ລ໋ອດນີ້ໝົດແລ້ວ",
+    "checkout.batch.expired":"⚠ ລ໋ອດນີ້ໝົດອາຍຸແລ້ວ. ໃຊ້ WASTE ເພື່ອຖິ້ມ.",
+    "checkout.error.exceed":"ຈຳນວນເກີນສະຕັອກທີ່ມີ",
+    "checkout.success":"ບັນທຶກການເບີກສຳເລັດ",
+    "checkout.scan.permission":"ບໍ່ໄດ້ຮັບອະນຸຍາດໃຊ້ກ້ອງ. ກະລຸນາພິມບາໂຄດເອງ",
+    "common.optional":"ບໍ່ບັງຄັບ", "common.loading":"ກຳລັງໂຫຼດ...",
+    "common.cancel":"ຍົກເລີກ", "common.confirm":"ແນ່ໃຈບໍ?",
+  },
+  th: {
+    "app.tag":"ระบบจัดการคลังสินค้า",
+    "nav.dashboard":"หน้าหลัก", "nav.receive":"รับสินค้า", "nav.checkout":"เบิกสินค้า", "nav.logout":"ออกจากระบบ",
+    "login.username":"ชื่อผู้ใช้", "login.password":"รหัสผ่าน", "login.button":"เข้าสู่ระบบ",
+    "login.error":"ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
+    "login.locked":"ลองผิดหลายครั้งเกินไป รอ 15 นาที", "login.connecting":"กำลังเชื่อมต่อ...",
+    "login.expired":"หมดอายุ กรุณาเข้าสู่ระบบใหม่",
+    "dashboard.title":"หน้าหลัก", "dashboard.welcome":"สวัสดี", "dashboard.today":"วันนี้",
+    "dashboard.kpi.active":"ล็อตที่มีอยู่", "dashboard.kpi.expiring":"ใกล้หมดอายุ ≤ 7 วัน",
+    "dashboard.kpi.expired":"หมดอายุแล้ว", "dashboard.kpi.lowstock":"สินค้าเหลือน้อย",
+    "dashboard.fefo.title":"สินค้าใกล้หมดอายุ (ลำดับ FEFO)",
+    "dashboard.fefo.empty":"ยังไม่มีล็อตที่มีวันหมดอายุ",
+    "dashboard.moves.title":"การเคลื่อนไหวล่าสุด",
+    "dashboard.moves.empty":"ยังไม่มีการเคลื่อนไหว ไปที่ รับสินค้า เพื่อเพิ่มสต๊อก",
+    "table.item":"สินค้า", "table.location":"สถานที่", "table.qty":"จำนวน", "table.expiry":"วันหมดอายุ",
+    "table.status":"สถานะ", "table.barcode":"บาร์โค้ด", "table.when":"เวลา", "table.type":"ประเภท",
+    "table.user":"ผู้ใช้", "table.note":"หมายเหตุ", "table.supplier":"ผู้จัดส่ง",
+    "status.expired":"หมดอายุ", "status.days":"วัน",
+    "receive.title":"รับสินค้าเข้าคลัง", "receive.sub":"บันทึกสินค้าเข้า สติกเกอร์จะพิมพ์หลังบันทึก",
+    "receive.form.item":"สินค้า", "receive.form.supplier":"ผู้จัดส่ง",
+    "receive.form.location":"สถานที่เก็บ", "receive.form.quantity":"จำนวน",
+    "receive.form.unitcost":"ราคาต่อหน่วย", "receive.form.receivedDate":"วันที่รับ",
+    "receive.form.expiryDate":"วันหมดอายุ", "receive.form.lotNumber":"เลขล็อตจากผู้จัดส่ง",
+    "receive.form.notes":"หมายเหตุ", "receive.form.select":"— เลือก —",
+    "receive.form.submit":"บันทึกและพิมพ์สติกเกอร์",
+    "receive.success":"รับสินค้าสำเร็จ สติกเกอร์พร้อมพิมพ์ด้านล่าง",
+    "receive.success.short":"บันทึกสำเร็จ",
+    "receive.error.item":"กรุณาเลือกสินค้า",
+    "receive.error.location":"กรุณาเลือกสถานที่เก็บ",
+    "receive.error.quantity":"จำนวนต้องมากกว่าศูนย์",
+    "receive.print":"พิมพ์สติกเกอร์", "receive.another":"รับสินค้าอื่น", "receive.back":"กลับหน้าหลัก",
+    "sticker.qty":"จำนวน:", "sticker.loc":"สถานที่:", "sticker.exp":"หมดอายุ:",
+    "checkout.title":"เบิกสินค้า",
+    "checkout.sub":"สแกนบาร์โค้ดหรือพิมพ์ ล็อตที่หมดอายุไวที่สุดจะถูกเลือกก่อน",
+    "checkout.scan.title":"สแกนบาร์โค้ด", "checkout.scan.start":"📷 เริ่มสแกน",
+    "checkout.scan.stop":"หยุด", "checkout.scan.manual":"หรือพิมพ์บาร์โค้ด",
+    "checkout.lookup":"ค้นหาล็อต",
+    "checkout.batch.title":"พบล็อต",
+    "checkout.take.qty":"จำนวนที่เบิก", "checkout.take.type":"ประเภทการเคลื่อนไหว",
+    "checkout.type.out":"OUT — ใช้ในครัว", "checkout.type.waste":"WASTE — ทิ้ง",
+    "checkout.waste.reason":"เหตุผล", "checkout.waste.expired":"หมดอายุ",
+    "checkout.waste.spoiled":"เสีย", "checkout.waste.damaged":"เสียหาย",
+    "checkout.waste.overcooked":"ปรุงเกิน", "checkout.waste.dropped":"ตก",
+    "checkout.waste.other":"อื่นๆ",
+    "checkout.note":"หมายเหตุ", "checkout.confirm":"✓ ยืนยันการเบิก",
+    "checkout.batch.notfound":"ไม่พบบาร์โค้ด",
+    "checkout.batch.empty":"ล็อตนี้หมดแล้ว",
+    "checkout.batch.expired":"⚠ ล็อตนี้หมดอายุแล้ว ใช้ WASTE เพื่อทิ้ง",
+    "checkout.error.exceed":"จำนวนเกินสต๊อกที่มี",
+    "checkout.success":"บันทึกการเบิกสำเร็จ",
+    "checkout.scan.permission":"ไม่ได้รับอนุญาตใช้กล้อง กรุณาพิมพ์บาร์โค้ดเอง",
+    "common.optional":"ไม่บังคับ", "common.loading":"กำลังโหลด...",
+    "common.cancel":"ยกเลิก", "common.confirm":"แน่ใจไหม?",
+  },
+  zh: {
+    "app.tag":"仓库管理系统",
+    "nav.dashboard":"仪表盘", "nav.receive":"入库", "nav.checkout":"出库", "nav.logout":"退出",
+    "login.username":"用户名", "login.password":"密码", "login.button":"登录",
+    "login.error":"用户名或密码错误", "login.locked":"失败次数过多,请15分钟后再试",
+    "login.connecting":"连接中...", "login.expired":"会话已过期,请重新登录",
+    "dashboard.title":"仪表盘", "dashboard.welcome":"欢迎", "dashboard.today":"今天",
+    "dashboard.kpi.active":"活跃批次", "dashboard.kpi.expiring":"≤7天到期",
+    "dashboard.kpi.expired":"已过期", "dashboard.kpi.lowstock":"低库存",
+    "dashboard.fefo.title":"即将到期(FEFO队列)",
+    "dashboard.fefo.empty":"尚无带到期日的批次",
+    "dashboard.moves.title":"最近活动", "dashboard.moves.empty":"暂无活动,前往入库添加库存",
+    "table.item":"商品", "table.location":"位置", "table.qty":"数量", "table.expiry":"到期日",
+    "table.status":"状态", "table.barcode":"条码", "table.when":"时间", "table.type":"类型",
+    "table.user":"用户", "table.note":"备注", "table.supplier":"供应商",
+    "status.expired":"已过期", "status.days":"天",
+    "receive.title":"入库", "receive.sub":"登记到货,保存后打印标签",
+    "receive.form.item":"商品", "receive.form.supplier":"供应商",
+    "receive.form.location":"存放位置", "receive.form.quantity":"数量",
+    "receive.form.unitcost":"单价", "receive.form.receivedDate":"到货日期",
+    "receive.form.expiryDate":"到期日", "receive.form.lotNumber":"供应商批次号",
+    "receive.form.notes":"备注", "receive.form.select":"— 选择 —",
+    "receive.form.submit":"保存并打印标签",
+    "receive.success":"入库成功,标签已准备,请打印并贴于包装",
+    "receive.success.short":"已保存",
+    "receive.error.item":"请选择商品",
+    "receive.error.location":"请选择存放位置",
+    "receive.error.quantity":"数量必须大于零",
+    "receive.print":"打印标签", "receive.another":"继续入库", "receive.back":"返回仪表盘",
+    "sticker.qty":"数量:", "sticker.loc":"位置:", "sticker.exp":"到期:",
+    "checkout.title":"出库",
+    "checkout.sub":"扫描条码或输入,最早到期的批次优先",
+    "checkout.scan.title":"扫描条码", "checkout.scan.start":"📷 开始扫描",
+    "checkout.scan.stop":"停止", "checkout.scan.manual":"或输入条码",
+    "checkout.lookup":"查找批次",
+    "checkout.batch.title":"找到批次",
+    "checkout.take.qty":"出库数量", "checkout.take.type":"移动类型",
+    "checkout.type.out":"OUT — 厨房使用", "checkout.type.waste":"WASTE — 丢弃",
+    "checkout.waste.reason":"原因", "checkout.waste.expired":"已过期",
+    "checkout.waste.spoiled":"变质", "checkout.waste.damaged":"损坏",
+    "checkout.waste.overcooked":"烹饪过度", "checkout.waste.dropped":"掉落",
+    "checkout.waste.other":"其他",
+    "checkout.note":"备注", "checkout.confirm":"✓ 确认出库",
+    "checkout.batch.notfound":"未找到条码",
+    "checkout.batch.empty":"该批次已空",
+    "checkout.batch.expired":"⚠ 该批次已过期,请使用 WASTE 丢弃",
+    "checkout.error.exceed":"数量超过库存",
+    "checkout.success":"出库记录已保存",
+    "checkout.scan.permission":"摄像头权限被拒绝,请手动输入条码",
+    "common.optional":"可选", "common.loading":"加载中...",
+    "common.cancel":"取消", "common.confirm":"确定吗?",
+  },
+  ko: {
+    "app.tag":"창고 관리 시스템",
+    "nav.dashboard":"대시보드", "nav.receive":"입고", "nav.checkout":"출고", "nav.logout":"로그아웃",
+    "login.username":"사용자명", "login.password":"비밀번호", "login.button":"로그인",
+    "login.error":"사용자명 또는 비밀번호가 잘못되었습니다",
+    "login.locked":"실패 횟수 초과. 15분 후 다시 시도하세요",
+    "login.connecting":"연결 중...", "login.expired":"세션 만료. 다시 로그인하세요",
+    "dashboard.title":"대시보드", "dashboard.welcome":"환영합니다", "dashboard.today":"오늘",
+    "dashboard.kpi.active":"활성 배치", "dashboard.kpi.expiring":"7일 이내 만료",
+    "dashboard.kpi.expired":"만료됨", "dashboard.kpi.lowstock":"재고 부족",
+    "dashboard.fefo.title":"곧 만료 (FEFO 대기열)",
+    "dashboard.fefo.empty":"만료일이 있는 배치가 없습니다",
+    "dashboard.moves.title":"최근 활동", "dashboard.moves.empty":"활동이 없습니다. 입고에서 재고를 추가하세요",
+    "table.item":"상품", "table.location":"위치", "table.qty":"수량", "table.expiry":"만료일",
+    "table.status":"상태", "table.barcode":"바코드", "table.when":"시간", "table.type":"유형",
+    "table.user":"사용자", "table.note":"메모", "table.supplier":"공급업체",
+    "status.expired":"만료됨", "status.days":"일",
+    "receive.title":"입고", "receive.sub":"도착 등록, 저장 후 라벨 인쇄",
+    "receive.form.item":"상품", "receive.form.supplier":"공급업체",
+    "receive.form.location":"보관 위치", "receive.form.quantity":"수량",
+    "receive.form.unitcost":"단가", "receive.form.receivedDate":"입고일",
+    "receive.form.expiryDate":"만료일", "receive.form.lotNumber":"공급업체 배치번호",
+    "receive.form.notes":"메모", "receive.form.select":"— 선택 —",
+    "receive.form.submit":"저장 및 라벨 인쇄",
+    "receive.success":"입고 완료. 라벨이 아래에 준비되었습니다",
+    "receive.success.short":"저장됨",
+    "receive.error.item":"상품을 선택하세요",
+    "receive.error.location":"보관 위치를 선택하세요",
+    "receive.error.quantity":"수량은 0보다 커야 합니다",
+    "receive.print":"라벨 인쇄", "receive.another":"추가 입고", "receive.back":"대시보드로 돌아가기",
+    "sticker.qty":"수량:", "sticker.loc":"위치:", "sticker.exp":"만료:",
+    "checkout.title":"출고",
+    "checkout.sub":"바코드를 스캔하거나 입력하세요. 가장 빨리 만료되는 배치가 우선 선택됩니다",
+    "checkout.scan.title":"바코드 스캔", "checkout.scan.start":"📷 스캐너 시작",
+    "checkout.scan.stop":"중지", "checkout.scan.manual":"또는 바코드 입력",
+    "checkout.lookup":"배치 찾기",
+    "checkout.batch.title":"배치 찾음",
+    "checkout.take.qty":"출고 수량", "checkout.take.type":"이동 유형",
+    "checkout.type.out":"OUT — 주방 사용", "checkout.type.waste":"WASTE — 폐기",
+    "checkout.waste.reason":"사유", "checkout.waste.expired":"만료",
+    "checkout.waste.spoiled":"부패", "checkout.waste.damaged":"손상",
+    "checkout.waste.overcooked":"과조리", "checkout.waste.dropped":"떨어뜨림",
+    "checkout.waste.other":"기타",
+    "checkout.note":"메모", "checkout.confirm":"✓ 출고 확인",
+    "checkout.batch.notfound":"바코드를 찾을 수 없습니다",
+    "checkout.batch.empty":"이 배치는 비어있습니다",
+    "checkout.batch.expired":"⚠ 이 배치는 만료되었습니다. WASTE로 폐기하세요",
+    "checkout.error.exceed":"수량이 재고를 초과합니다",
+    "checkout.success":"출고가 기록되었습니다",
+    "checkout.scan.permission":"카메라 권한이 거부되었습니다. 바코드를 직접 입력하세요",
+    "common.optional":"선택", "common.loading":"로딩 중...",
+    "common.cancel":"취소", "common.confirm":"확실합니까?",
+  },
+};
+
+let __lang = localStorage.getItem('kl_lang') || 'en';
+if (!I18N[__lang]) __lang = 'en';
+function t(key) { return (I18N[__lang] && I18N[__lang][key]) || I18N.en[key] || key; }
+function setLang(lang) {
+  if (!I18N[lang]) return;
+  __lang = lang;
+  localStorage.setItem('kl_lang', lang);
+  applyI18n();
+  const sel = document.getElementById('topLangSel');
+  if (sel) sel.value = lang;
+  document.documentElement.lang = lang === 'lo' ? 'lo' : lang === 'th' ? 'th' : lang === 'zh' ? 'zh' : lang === 'ko' ? 'ko' : 'en';
+}
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.getAttribute('data-i18n-placeholder')); });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 3 — SUPABASE CLIENT + JWT SESSION
+// ═══════════════════════════════════════════════════════════════
+let sb = null;
+function initSupabase() {
+  // Build client with current JWT (if any) as auth header
+  const sess = klSession();
+  const opts = {
+    auth: { persistSession: false, autoRefreshToken: false },
+  };
+  if (sess && sess.jwt) {
+    opts.global = { headers: { Authorization: 'Bearer ' + sess.jwt } };
+  }
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, opts);
+}
+
+function klSession() {
+  try {
+    const raw = sessionStorage.getItem('kl_session');
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+function klSetSession(s) { sessionStorage.setItem('kl_session', JSON.stringify(s)); initSupabase(); }
+function klClearSession() { sessionStorage.removeItem('kl_session'); initSupabase(); }
+
+function klSessionValid() {
+  const s = klSession();
+  if (!s || !s.jwt || !s.exp) return false;
+  // exp is unix epoch seconds; allow 30s skew
+  return s.exp > (Date.now() / 1000) + 30;
+}
+
+async function klLogin(username, password) {
+  // Use anon-only client to call the RPC (login is the one anon thing allowed)
+  const anonSb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false }
+  });
+  const { data, error } = await anonSb.rpc('khanglaos_login', {
+    p_username: username,
+    p_password: password,
+  });
+  if (error) throw error;
+  if (!data || data.ok !== true) {
+    return { ok: false, error: data && data.error };
+  }
+  klSetSession({
+    jwt: data.jwt,
+    exp: data.exp,
+    user: data.user,
+  });
+  return { ok: true };
+}
+
+async function klLogout() {
+  klClearSession();
+  location.hash = '#/login';
+}
+
+function klRequireLogin() {
+  if (!klSessionValid()) {
+    klClearSession();
+    location.hash = '#/login';
+    return null;
+  }
+  return klSession();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 4 — HELPERS
+// ═══════════════════════════════════════════════════════════════
+function h(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
+}
+function fmtQty(n) {
+  if (n === null || n === undefined) return '';
+  const num = parseFloat(n);
+  if (isNaN(num)) return String(n);
+  return num.toFixed(3).replace(/\.?0+$/, '');
+}
+function daysUntil(dateStr) {
+  if (!dateStr) return null;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const exp = new Date(dateStr); exp.setHours(0,0,0,0);
+  return Math.round((exp - today) / 86400000);
+}
+const EXPIRY_WARN_DAYS = 7;
+const EXPIRY_CRIT_DAYS = 2;
+function expiryStatus(dateStr) {
+  const d = daysUntil(dateStr);
+  if (d === null) return 'none';
+  if (d < 0) return 'expired';
+  if (d <= EXPIRY_CRIT_DAYS) return 'red';
+  if (d <= EXPIRY_WARN_DAYS) return 'yellow';
+  return 'green';
+}
+const BARCODE_PREFIX = 'KL';
+function buildBarcode(restaurantCode, batchId, expiryDate) {
+  let expPart = '999999';
+  if (expiryDate) {
+    const d = new Date(expiryDate);
+    expPart = String(d.getFullYear()).slice(-2)
+            + String(d.getMonth()+1).padStart(2,'0')
+            + String(d.getDate()).padStart(2,'0');
+  }
+  return `${BARCODE_PREFIX}-${restaurantCode}-${String(batchId).padStart(6,'0')}-${expPart}`;
+}
+function fmtDateDMY(d) {
+  if (!d) return '';
+  const dt = new Date(d);
+  return String(dt.getDate()).padStart(2,'0') + '/' +
+         String(dt.getMonth()+1).padStart(2,'0') + '/' +
+         dt.getFullYear();
+}
+function todayYMD() {
+  const d = new Date();
+  return d.getFullYear() + '-' +
+         String(d.getMonth()+1).padStart(2,'0') + '-' +
+         String(d.getDate()).padStart(2,'0');
+}
+function addDays(ymd, days) {
+  const d = new Date(ymd);
+  d.setDate(d.getDate() + days);
+  return d.getFullYear() + '-' +
+         String(d.getMonth()+1).padStart(2,'0') + '-' +
+         String(d.getDate()).padStart(2,'0');
+}
+
+function showMsg(elId, text, type) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const cls = type === 'ok' ? 'kl-msg-ok' : type === 'err' ? 'kl-msg-err'
+            : type === 'warn' ? 'kl-msg-warn' : 'kl-msg-info';
+  el.innerHTML = `<div class="kl-msg ${cls}"></div>`;
+  el.firstChild.textContent = text;
+  if (type === 'ok') setTimeout(() => el.innerHTML = '', 4000);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 5 — HASH ROUTER
+// ═══════════════════════════════════════════════════════════════
+const ROUTES = ['login','dashboard','receive','checkout'];
+function currentRoute() {
+  const h = (location.hash || '').replace(/^#\//, '');
+  return ROUTES.includes(h) ? h : (klSessionValid() ? 'dashboard' : 'login');
+}
+function showPage(name) {
+  ROUTES.forEach(r => {
+    const el = document.getElementById('page-' + r);
+    if (el) el.classList.toggle('active', r === name);
+  });
+  // topbar visible on all pages except login
+  document.getElementById('kl-topbar').style.display = (name === 'login') ? 'none' : 'flex';
+  // highlight nav
+  document.querySelectorAll('#kl-topbar nav a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('data-nav') === name);
+  });
+  applyI18n();
+  // page-specific init
+  if (name === 'login') initLoginPage();
+  else if (name === 'dashboard') initDashboardPage();
+  else if (name === 'receive')   initReceivePage();
+  else if (name === 'checkout')  initCheckoutPage();
+}
+function route() {
+  const r = currentRoute();
+  if (r !== 'login' && !klSessionValid()) {
+    klClearSession();
+    location.hash = '#/login';
+    return;
+  }
+  if (r === 'login' && klSessionValid()) {
+    location.hash = '#/dashboard';
+    return;
+  }
+  showPage(r);
+}
+window.addEventListener('hashchange', route);
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 6 — LOGIN PAGE
+// ═══════════════════════════════════════════════════════════════
+function initLoginPage() {
+  document.getElementById('loginMsg').innerHTML = '';
+  // Language buttons
+  const bar = document.getElementById('loginLangBar');
+  bar.querySelectorAll('button').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === __lang);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Login lang buttons
+  document.getElementById('loginLangBar').addEventListener('click', e => {
+    const b = e.target.closest('button[data-lang]');
+    if (!b) return;
+    setLang(b.dataset.lang);
+    document.getElementById('loginLangBar').querySelectorAll('button').forEach(x =>
+      x.classList.toggle('active', x === b)
+    );
+  });
+  // Login form
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const u = document.getElementById('loginUsername').value.trim();
+    const p = document.getElementById('loginPassword').value;
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = true;
+    btn.textContent = t('login.connecting');
+    try {
+      const r = await klLogin(u, p);
+      if (r.ok) {
+        location.hash = '#/dashboard';
+      } else if (r.error === 'locked_out') {
+        showMsg('loginMsg', t('login.locked'), 'err');
+      } else {
+        showMsg('loginMsg', t('login.error'), 'err');
+      }
+    } catch (err) {
+      console.error(err);
+      showMsg('loginMsg', err.message || t('login.error'), 'err');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = t('login.button');
+    }
+  });
+  // Top bar
+  document.getElementById('topLangSel').addEventListener('change', e => setLang(e.target.value));
+  document.getElementById('topLogoutLink').addEventListener('click', e => { e.preventDefault(); klLogout(); });
+
+  // Boot
+  initSupabase();
+  applyI18n();
+  route();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 7 — DASHBOARD PAGE
+// ═══════════════════════════════════════════════════════════════
+async function initDashboardPage() {
+  const u = klRequireLogin();
+  if (!u) return;
+  document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
+  document.getElementById('dashUserName').textContent = u.user.full_name;
+  document.getElementById('dashTodayDate').textContent = new Date().toLocaleDateString();
+
+  try {
+    // KPI 1: active batches
+    let r = await sb.from('batches').select('*', { count:'exact', head:true })
+      .eq('status', 'active').gt('quantity_remaining', 0);
+    document.getElementById('kpiActive').textContent = r.count || 0;
+
+    // KPI 2: expiring ≤ 7 days
+    const in7 = addDays(todayYMD(), EXPIRY_WARN_DAYS);
+    r = await sb.from('batches').select('*', { count:'exact', head:true })
+      .eq('status', 'active').gt('quantity_remaining', 0)
+      .not('expiry_date', 'is', null).lte('expiry_date', in7).gte('expiry_date', todayYMD());
+    document.getElementById('kpiExpiring').textContent = r.count || 0;
+    document.getElementById('kpiExpiringTile').classList.toggle('is-warn', (r.count||0) > 0);
+
+    // KPI 3: expired
+    r = await sb.from('batches').select('*', { count:'exact', head:true })
+      .eq('status', 'active').gt('quantity_remaining', 0)
+      .not('expiry_date', 'is', null).lt('expiry_date', todayYMD());
+    document.getElementById('kpiExpired').textContent = r.count || 0;
+    document.getElementById('kpiExpiredTile').classList.toggle('is-danger', (r.count||0) > 0);
+
+    // KPI 4: low stock via view
+    const lowRes = await sb.from('v_item_stock')
+      .select('item_id, on_hand, reorder_level').not('reorder_level','is',null);
+    const lowCount = (lowRes.data || []).filter(x =>
+      parseFloat(x.on_hand) <= parseFloat(x.reorder_level)
+    ).length;
+    document.getElementById('kpiLow').textContent = lowCount;
+    document.getElementById('kpiLowTile').classList.toggle('is-warn', lowCount > 0);
+
+    // FEFO queue
+    const fefo = await sb.from('batches')
+      .select('batch_id, barcode, expiry_date, quantity_remaining, items(name,name_lao,unit), locations(name)')
+      .eq('status', 'active').gt('quantity_remaining', 0)
+      .not('expiry_date', 'is', null)
+      .order('expiry_date', { ascending: true }).limit(10);
+    renderFefo(fefo.data || []);
+
+    // Recent movements
+    const moves = await sb.from('movements')
+      .select('movement_type, quantity, created_at, note, batches(items(name,unit)), users(full_name)')
+      .order('created_at', { ascending: false }).limit(10);
+    renderMoves(moves.data || []);
+  } catch (e) {
+    console.error(e);
+    showMsg('dashMsg', 'Error: ' + (e.message || e), 'err');
+  }
+}
+
+function renderFefo(rows) {
+  const box = document.getElementById('fefoBox');
+  if (!rows.length) {
+    const p = document.createElement('p');
+    p.style.cssText = 'color:var(--kl-text-soft);margin:0';
+    p.textContent = t('dashboard.fefo.empty');
+    box.replaceChildren(p);
+    return;
+  }
+  const headers = ['table.item','table.location','table.qty','table.expiry','table.status','table.barcode'];
+  let html = `<div class="kl-table-wrap"><table class="kl-table"><thead><tr>${
+    headers.map(k=>`<th>${h(t(k))}</th>`).join('')
+  }</tr></thead><tbody>`;
+  for (const b of rows) {
+    const status = expiryStatus(b.expiry_date);
+    const d = daysUntil(b.expiry_date);
+    const label = status === 'expired' ? t('status.expired') : (d + ' ' + t('status.days'));
+    html += `<tr>
+      <td>${h(b.items&&b.items.name)}${b.items&&b.items.name_lao?`<br><small style="color:var(--kl-text-soft)">${h(b.items.name_lao)}</small>`:''}</td>
+      <td>${h(b.locations&&b.locations.name)}</td>
+      <td>${h(fmtQty(b.quantity_remaining))} ${h(b.items&&b.items.unit)}</td>
+      <td>${h(b.expiry_date)}</td>
+      <td><span class="kl-pill kl-pill-${status}">${h(label)}</span></td>
+      <td class="kl-mono">${h(b.barcode)}</td>
+    </tr>`;
+  }
+  html += `</tbody></table></div>`;
+  box.innerHTML = html;
+}
+function renderMoves(rows) {
+  const box = document.getElementById('movesBox');
+  if (!rows.length) {
+    const p = document.createElement('p');
+    p.style.cssText = 'color:var(--kl-text-soft);margin:0';
+    p.textContent = t('dashboard.moves.empty');
+    box.replaceChildren(p);
+    return;
+  }
+  const headers = ['table.when','table.type','table.item','table.qty','table.user','table.note'];
+  let html = `<div class="kl-table-wrap"><table class="kl-table"><thead><tr>${
+    headers.map(k=>`<th>${h(t(k))}</th>`).join('')
+  }</tr></thead><tbody>`;
+  for (const m of rows) {
+    const dt = new Date(m.created_at);
+    const when = dt.toLocaleDateString() + ' ' + dt.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+    const itemName = m.batches && m.batches.items && m.batches.items.name || '';
+    const unit = m.batches && m.batches.items && m.batches.items.unit || '';
+    html += `<tr>
+      <td>${h(when)}</td>
+      <td><strong>${h(m.movement_type)}</strong></td>
+      <td>${h(itemName)}</td>
+      <td>${h(fmtQty(m.quantity))} ${h(unit)}</td>
+      <td>${h(m.users && m.users.full_name)}</td>
+      <td>${h(m.note)}</td>
+    </tr>`;
+  }
+  html += `</tbody></table></div>`;
+  box.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 8 — RECEIVE PAGE
+// ═══════════════════════════════════════════════════════════════
+let RECV_STATE = { items: [], locations: [], suppliers: [], restaurantCode: '' };
+
+async function initReceivePage() {
+  const u = klRequireLogin();
+  if (!u) return;
+  if (!['sa','owner','manager','receiver'].includes(u.user.role)) {
+    location.hash = '#/dashboard';
+    alert('Access denied for role: ' + u.user.role);
+    return;
+  }
+  document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
+  document.getElementById('receiveMsg').innerHTML = '';
+  document.getElementById('receiveStickerSection').style.display = 'none';
+  document.getElementById('receiveFormCard').style.display = 'block';
+  document.getElementById('recReceivedDate').value = todayYMD();
+  RECV_STATE.restaurantCode = u.user.restaurant_code;
+
+  try {
+    const [items, suppliers, locations] = await Promise.all([
+      sb.from('items').select('*').eq('is_active', true).order('category').order('name'),
+      sb.from('suppliers').select('supplier_id,name').eq('is_active', true).order('name'),
+      sb.from('locations').select('*').eq('is_active', true).order('temp_zone').order('name'),
+    ]);
+    RECV_STATE.items = items.data || [];
+    RECV_STATE.suppliers = suppliers.data || [];
+    RECV_STATE.locations = locations.data || [];
+
+    // Build item select with category optgroups
+    const itemSel = document.getElementById('recItem');
+    itemSel.innerHTML = '<option value="">' + t('receive.form.select') + '</option>';
+    const grouped = {};
+    RECV_STATE.items.forEach(i => { (grouped[i.category || ''] ||= []).push(i); });
+    for (const cat of Object.keys(grouped).sort()) {
+      const og = document.createElement('optgroup');
+      og.label = cat || 'Uncategorized';
+      grouped[cat].forEach(i => {
+        const o = document.createElement('option');
+        o.value = i.item_id;
+        o.textContent = `${i.name} (${i.sku})`;
+        og.appendChild(o);
+      });
+      itemSel.appendChild(og);
+    }
+
+    // Suppliers
+    const supSel = document.getElementById('recSupplier');
+    supSel.innerHTML = '<option value="">— ' + t('common.optional') + ' —</option>';
+    RECV_STATE.suppliers.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s.supplier_id; o.textContent = s.name;
+      supSel.appendChild(o);
+    });
+
+    // Locations
+    const locSel = document.getElementById('recLocation');
+    locSel.innerHTML = '<option value="">' + t('receive.form.select') + '</option>';
+    RECV_STATE.locations.forEach(l => {
+      const o = document.createElement('option');
+      o.value = l.location_id; o.textContent = `${l.name} (${l.temp_zone.toUpperCase()})`;
+      locSel.appendChild(o);
+    });
+  } catch (e) {
+    console.error(e);
+    showMsg('receiveMsg', 'Error: ' + (e.message || e), 'err');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Receive item-change auto-fills
+  document.getElementById('recItem').addEventListener('change', () => {
+    const id = parseInt(document.getElementById('recItem').value);
+    if (!id) return;
+    const item = RECV_STATE.items.find(x => x.item_id === id);
+    if (!item) return;
+    // Auto-select matching location
+    const matchLoc = RECV_STATE.locations.find(l => l.temp_zone === item.storage_type);
+    if (matchLoc) document.getElementById('recLocation').value = matchLoc.location_id;
+    // Auto-fill expiry from shelf life
+    const recDate = document.getElementById('recReceivedDate').value;
+    const expIn = document.getElementById('recExpiryDate');
+    if (item.default_shelf_life_days && recDate && !expIn.value) {
+      expIn.value = addDays(recDate, item.default_shelf_life_days);
+      document.getElementById('recExpHint').textContent = `(${item.default_shelf_life_days}d shelf life)`;
+    }
+    document.getElementById('recUnitHint').textContent = item.unit ? `(${item.unit})` : '';
+  });
+
+  document.getElementById('receiveForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await doReceive();
+  });
+  document.getElementById('recPrintBtn').addEventListener('click', () => window.print());
+  document.getElementById('recAnotherBtn').addEventListener('click', () => initReceivePage());
+});
+
+async function doReceive() {
+  const u = klRequireLogin(); if (!u) return;
+  const btn = document.getElementById('recSubmitBtn');
+  btn.disabled = true; btn.textContent = t('common.loading');
+
+  try {
+    const item_id = parseInt(document.getElementById('recItem').value);
+    const supplier_raw = document.getElementById('recSupplier').value;
+    const supplier_id = supplier_raw ? parseInt(supplier_raw) : null;
+    const location_id = parseInt(document.getElementById('recLocation').value);
+    const quantity = parseFloat(document.getElementById('recQty').value);
+    const cost_raw = document.getElementById('recUnitCost').value;
+    const unit_cost = cost_raw === '' ? null : parseFloat(cost_raw);
+    const received_date = document.getElementById('recReceivedDate').value;
+    const expiry_date = document.getElementById('recExpiryDate').value || null;
+    const lot_number = document.getElementById('recLotNumber').value.trim() || null;
+    const notes = document.getElementById('recNotes').value.trim() || null;
+
+    if (!item_id)            throw new Error(t('receive.error.item'));
+    if (!location_id)        throw new Error(t('receive.error.location'));
+    if (!(quantity > 0))     throw new Error(t('receive.error.quantity'));
+
+    const tmp = 'TMP-' + Math.random().toString(36).slice(2, 14);
+    const { data: batch, error: insErr } = await sb.from('batches').insert({
+      restaurant_id: u.user.restaurant_id,
+      item_id, supplier_id, location_id,
+      barcode: tmp, lot_number,
+      quantity_in: quantity, quantity_remaining: quantity,
+      unit_cost, received_date, expiry_date,
+      status: 'active', received_by: u.user.user_id, notes,
+    }).select().single();
+    if (insErr) throw insErr;
+
+    const realBC = buildBarcode(RECV_STATE.restaurantCode, batch.batch_id, expiry_date);
+    await sb.from('batches').update({ barcode: realBC }).eq('batch_id', batch.batch_id);
+
+    await sb.from('movements').insert({
+      restaurant_id: u.user.restaurant_id,
+      batch_id: batch.batch_id, movement_type: 'IN',
+      quantity, to_location_id: location_id,
+      user_id: u.user.user_id, note: 'Stock received',
+    });
+
+    // Render sticker
+    const item = RECV_STATE.items.find(x => x.item_id === item_id);
+    const loc  = RECV_STATE.locations.find(x => x.location_id === location_id);
+    document.getElementById('stkDate').textContent = fmtDateDMY(received_date);
+    const nameEl = document.getElementById('stkName');
+    nameEl.textContent = item.name;
+    if (item.name_lao) {
+      const sub = document.createElement('span');
+      sub.className = 'kl-sticker-sub'; sub.textContent = item.name_lao;
+      nameEl.appendChild(sub);
+    }
+    document.getElementById('stkQty').textContent = fmtQty(quantity) + ' ' + item.unit;
+    document.getElementById('stkLoc').textContent = loc.name;
+    if (expiry_date) {
+      document.getElementById('stkExpRow').style.display = 'flex';
+      const exp = document.getElementById('stkExp');
+      exp.textContent = fmtDateDMY(expiry_date);
+      const status = expiryStatus(expiry_date);
+      exp.classList.toggle('is-red', status === 'red' || status === 'expired');
+    } else {
+      document.getElementById('stkExpRow').style.display = 'none';
+    }
+    JsBarcode(document.getElementById('stkBarcode'), realBC, {
+      format: 'CODE128', height: 50, width: 1.6, fontSize: 11, margin: 6
+    });
+
+    showMsg('receiveMsg', t('receive.success'), 'ok');
+    document.getElementById('receiveFormCard').style.display = 'none';
+    document.getElementById('receiveStickerSection').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (e) {
+    console.error(e);
+    showMsg('receiveMsg', e.message || String(e), 'err');
+  } finally {
+    btn.disabled = false; btn.textContent = t('receive.form.submit');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION 9 — CHECKOUT PAGE
+// ═══════════════════════════════════════════════════════════════
+let CO_STATE = { batch: null, scanner: null };
+
+async function initCheckoutPage() {
+  const u = klRequireLogin(); if (!u) return;
+  document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
+  document.getElementById('checkoutMsg').innerHTML = '';
+  document.getElementById('coBatchCard').style.display = 'none';
+  document.getElementById('coBarcodeInput').value = '';
+  CO_STATE.batch = null;
+  await stopScanner();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Lookup button
+  document.getElementById('coLookupBtn').addEventListener('click', async () => {
+    const bc = document.getElementById('coBarcodeInput').value.trim();
+    if (!bc) return;
+    await lookupBarcode(bc);
+  });
+  document.getElementById('coBarcodeInput').addEventListener('keydown', async (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      await lookupBarcode(e.target.value.trim());
+    }
+  });
+  document.getElementById('coStartScanBtn').addEventListener('click', startScanner);
+  document.getElementById('coStopScanBtn').addEventListener('click', stopScanner);
+  document.getElementById('coCancelBtn').addEventListener('click', () => {
+    document.getElementById('coBatchCard').style.display = 'none';
+    CO_STATE.batch = null;
+  });
+  document.getElementById('coMoveType').addEventListener('change', e => {
+    document.getElementById('coWasteReasonRow').style.display = (e.target.value === 'WASTE') ? 'block' : 'none';
+  });
+  document.getElementById('coConfirmBtn').addEventListener('click', doCheckout);
+});
+
+async function lookupBarcode(bc) {
+  if (!bc) return;
+  try {
+    const { data, error } = await sb.from('batches')
+      .select('*, items(name, name_lao, unit), locations(name), suppliers(name)')
+      .eq('barcode', bc).single();
+    if (error || !data) {
+      showMsg('checkoutMsg', t('checkout.batch.notfound'), 'err');
+      return;
+    }
+    CO_STATE.batch = data;
+    renderBatchCard(data);
+  } catch (e) {
+    console.error(e);
+    showMsg('checkoutMsg', e.message || String(e), 'err');
+  }
+}
+
+function renderBatchCard(b) {
+  const status = expiryStatus(b.expiry_date);
+  const daysLeft = daysUntil(b.expiry_date);
+  let pill = '<span class="kl-pill kl-pill-none">—</span>';
+  if (status === 'expired') pill = `<span class="kl-pill kl-pill-expired">${h(t('status.expired'))}</span>`;
+  else if (status !== 'none') pill = `<span class="kl-pill kl-pill-${status}">${daysLeft} ${h(t('status.days'))}</span>`;
+
+  const info = document.getElementById('coBatchInfo');
+  info.innerHTML = `
+    <div style="font-weight:600;font-size:16px;margin-bottom:6px">${h(b.items.name)}</div>
+    ${b.items.name_lao ? `<div style="color:var(--kl-text-soft);font-size:12px;margin-bottom:8px">${h(b.items.name_lao)}</div>` : ''}
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px">
+      <div style="color:var(--kl-text-soft)">${h(t('table.barcode'))}:</div><div class="kl-mono">${h(b.barcode)}</div>
+      <div style="color:var(--kl-text-soft)">${h(t('table.qty'))}:</div><div><strong>${h(fmtQty(b.quantity_remaining))} ${h(b.items.unit)}</strong> remaining (of ${h(fmtQty(b.quantity_in))})</div>
+      <div style="color:var(--kl-text-soft)">${h(t('table.location'))}:</div><div>${h(b.locations.name)}</div>
+      <div style="color:var(--kl-text-soft)">${h(t('table.expiry'))}:</div><div>${h(b.expiry_date || '—')} ${pill}</div>
+    </div>
+  `;
+  document.getElementById('coUnitHint').textContent = b.items.unit ? `(${b.items.unit})` : '';
+  document.getElementById('coTakeQty').value = '';
+  document.getElementById('coTakeQty').max = b.quantity_remaining;
+  document.getElementById('coNote').value = '';
+  document.getElementById('coMoveType').value = status === 'expired' ? 'WASTE' : 'OUT';
+  document.getElementById('coWasteReasonRow').style.display = (status === 'expired') ? 'block' : 'none';
+  if (status === 'expired') {
+    document.getElementById('coWasteReason').value = 'expired';
+    showMsg('checkoutMsg', t('checkout.batch.expired'), 'warn');
+  }
+  if (parseFloat(b.quantity_remaining) <= 0) {
+    showMsg('checkoutMsg', t('checkout.batch.empty'), 'err');
+  }
+  document.getElementById('coBatchCard').style.display = 'block';
+  document.getElementById('coBatchCard').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function doCheckout() {
+  const u = klRequireLogin(); if (!u) return;
+  const b = CO_STATE.batch;
+  if (!b) return;
+
+  const qty = parseFloat(document.getElementById('coTakeQty').value);
+  if (!(qty > 0)) {
+    showMsg('checkoutMsg', t('receive.error.quantity'), 'err'); return;
+  }
+  if (qty > parseFloat(b.quantity_remaining)) {
+    showMsg('checkoutMsg', t('checkout.error.exceed'), 'err'); return;
+  }
+  const moveType = document.getElementById('coMoveType').value;
+  const wasteReason = moveType === 'WASTE' ? document.getElementById('coWasteReason').value : null;
+  const note = document.getElementById('coNote').value.trim() || null;
+
+  const btn = document.getElementById('coConfirmBtn');
+  btn.disabled = true; btn.textContent = t('common.loading');
+
+  try {
+    // Optimistic concurrency: only update if version matches
+    const newRemaining = parseFloat(b.quantity_remaining) - qty;
+    const newStatus = newRemaining <= 0.0001 ? 'depleted' : b.status;
+    const upd = await sb.from('batches')
+      .update({
+        quantity_remaining: newRemaining,
+        status: newStatus,
+        version: b.version + 1,
+      })
+      .eq('batch_id', b.batch_id)
+      .eq('version', b.version)
+      .select();
+    if (upd.error || !upd.data || upd.data.length === 0) {
+      throw new Error('Concurrent update detected. Reload the batch and try again.');
+    }
+
+    await sb.from('movements').insert({
+      restaurant_id: u.user.restaurant_id,
+      batch_id: b.batch_id,
+      movement_type: moveType,
+      quantity: qty,
+      from_location_id: b.location_id,
+      waste_reason: wasteReason,
+      user_id: u.user.user_id,
+      note,
+    });
+
+    showMsg('checkoutMsg', t('checkout.success'), 'ok');
+    document.getElementById('coBatchCard').style.display = 'none';
+    CO_STATE.batch = null;
+    document.getElementById('coBarcodeInput').value = '';
+    document.getElementById('coBarcodeInput').focus();
+  } catch (e) {
+    console.error(e);
+    showMsg('checkoutMsg', e.message || String(e), 'err');
+  } finally {
+    btn.disabled = false; btn.textContent = t('checkout.confirm');
+  }
+}
+
+// ─── Camera scanner (html5-qrcode) ───
+async function startScanner() {
+  const wrap = document.getElementById('qrReaderWrap');
+  wrap.style.display = 'block';
+  document.getElementById('coStartScanBtn').style.display = 'none';
+  document.getElementById('coStopScanBtn').style.display = 'inline-flex';
+  try {
+    CO_STATE.scanner = new Html5Qrcode('qrReader');
+    await CO_STATE.scanner.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: 250, height: 100 } },
+      async (decoded) => {
+        // Pause scanner, look up the barcode
+        await stopScanner();
+        document.getElementById('coBarcodeInput').value = decoded;
+        await lookupBarcode(decoded);
+      },
+      () => {} // ignore scan errors
+    );
+  } catch (e) {
+    console.error(e);
+    showMsg('checkoutMsg', t('checkout.scan.permission'), 'err');
+    await stopScanner();
+  }
+}
+async function stopScanner() {
+  document.getElementById('qrReaderWrap').style.display = 'none';
+  document.getElementById('coStartScanBtn').style.display = 'inline-flex';
+  document.getElementById('coStopScanBtn').style.display = 'none';
+  if (CO_STATE.scanner) {
+    try { await CO_STATE.scanner.stop(); } catch {}
+    try { CO_STATE.scanner.clear(); } catch {}
+    CO_STATE.scanner = null;
+  }
+}
+
+</script>
+</body>
+</html>
