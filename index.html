@@ -289,8 +289,8 @@ a:hover { text-decoration: underline; }
       <div id="loginMsg"></div>
 
       <div class="kl-form-row">
-        <label data-i18n="login.username">Username</label>
-        <input type="text" id="loginUsername" required autocomplete="username" autocapitalize="none">
+        <label data-i18n="login.email">Email</label>
+        <input type="email" id="loginUsername" required autocomplete="username" autocapitalize="none">
       </div>
       <div class="kl-form-row">
         <label data-i18n="login.password">Password</label>
@@ -513,14 +513,14 @@ a:hover { text-decoration: underline; }
 <script>
 'use strict';
 
-const SUPABASE_URL      = 'https://YOUR-PROJECT-ID.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR-PUBLIC-ANON-KEY';
+const SUPABASE_URL      = 'https://emkurcfcoofatldyacmr.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_yrh-5VTEtaFBv7-djGPR3Q_8XIPu9ps';
 
 const I18N = {
   en: {
     "app.tag": "Warehouse Management",
     "nav.dashboard":"Dashboard", "nav.receive":"Receive", "nav.checkout":"Check-Out", "nav.logout":"Logout",
-    "login.username":"Username", "login.password":"Password", "login.button":"Sign in",
+    "login.email":"Email", "login.password":"Password", "login.button":"Sign in",
     "login.error":"Invalid username or password.", "login.locked":"Too many failed attempts. Try again in 15 minutes.",
     "login.connecting":"Connecting...", "login.expired":"Session expired. Please sign in again.",
     "dashboard.title":"Dashboard", "dashboard.welcome":"Welcome", "dashboard.today":"Today",
@@ -572,7 +572,7 @@ const I18N = {
   lo: {
     "app.tag": "ລະບົບຈັດການສາງສິນຄ້າ",
     "nav.dashboard":"ໜ້າຫລັກ", "nav.receive":"ຮັບສິນຄ້າ", "nav.checkout":"ເບີກສິນຄ້າ", "nav.logout":"ອອກຈາກລະບົບ",
-    "login.username":"ຊື່ຜູ້ໃຊ້", "login.password":"ລະຫັດຜ່ານ", "login.button":"ເຂົ້າສູ່ລະບົບ",
+    "login.email":"ອີເມວ", "login.password":"ລະຫັດຜ່ານ", "login.button":"ເຂົ້າສູ່ລະບົບ",
     "login.error":"ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ",
     "login.locked":"ພະຍາຍາມຫຼາຍຄັ້ງເກີນໄປ. ລອງໃໝ່ໃນ 15 ນາທີ",
     "login.connecting":"ກຳລັງເຊື່ອມຕໍ່...", "login.expired":"ໝົດອາຍຸແລ້ວ. ກະລຸນາເຂົ້າສູ່ລະບົບໃໝ່.",
@@ -626,7 +626,7 @@ const I18N = {
   th: {
     "app.tag":"ระบบจัดการคลังสินค้า",
     "nav.dashboard":"หน้าหลัก", "nav.receive":"รับสินค้า", "nav.checkout":"เบิกสินค้า", "nav.logout":"ออกจากระบบ",
-    "login.username":"ชื่อผู้ใช้", "login.password":"รหัสผ่าน", "login.button":"เข้าสู่ระบบ",
+    "login.email":"อีเมล", "login.password":"รหัสผ่าน", "login.button":"เข้าสู่ระบบ",
     "login.error":"ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
     "login.locked":"ลองผิดหลายครั้งเกินไป รอ 15 นาที", "login.connecting":"กำลังเชื่อมต่อ...",
     "login.expired":"หมดอายุ กรุณาเข้าสู่ระบบใหม่",
@@ -680,7 +680,7 @@ const I18N = {
   zh: {
     "app.tag":"仓库管理系统",
     "nav.dashboard":"仪表盘", "nav.receive":"入库", "nav.checkout":"出库", "nav.logout":"退出",
-    "login.username":"用户名", "login.password":"密码", "login.button":"登录",
+    "login.email":"邮箱", "login.password":"密码", "login.button":"登录",
     "login.error":"用户名或密码错误", "login.locked":"失败次数过多,请15分钟后再试",
     "login.connecting":"连接中...", "login.expired":"会话已过期,请重新登录",
     "dashboard.title":"仪表盘", "dashboard.welcome":"欢迎", "dashboard.today":"今天",
@@ -732,7 +732,7 @@ const I18N = {
   ko: {
     "app.tag":"창고 관리 시스템",
     "nav.dashboard":"대시보드", "nav.receive":"입고", "nav.checkout":"출고", "nav.logout":"로그아웃",
-    "login.username":"사용자명", "login.password":"비밀번호", "login.button":"로그인",
+    "login.email":"이메일", "login.password":"비밀번호", "login.button":"로그인",
     "login.error":"사용자명 또는 비밀번호가 잘못되었습니다",
     "login.locked":"실패 횟수 초과. 15분 후 다시 시도하세요",
     "login.connecting":"연결 중...", "login.expired":"세션 만료. 다시 로그인하세요",
@@ -801,65 +801,79 @@ function applyI18n() {
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.getAttribute('data-i18n-placeholder')); });
 }
 
-let sb = null;
-function initSupabase() {
-  const sess = klSession();
-  const opts = {
-    auth: { persistSession: false, autoRefreshToken: false },
+// Supabase client — persistSession=true means Supabase manages JWT storage,
+// refresh, and Authorization headers automatically. No manual token handling.
+let sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    storage: window.sessionStorage,  // gone when tab closes
+  },
+});
+
+// Cache for current user profile (joined from user_profiles + restaurants)
+let __profile = null;
+
+async function loadProfile() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) { __profile = null; return null; }
+  const { data, error } = await sb.from('user_profiles')
+    .select('user_id, full_name, role, restaurant_id, is_active, restaurants(code, name)')
+    .eq('user_id', user.id).single();
+  if (error || !data || !data.is_active) {
+    await sb.auth.signOut();
+    __profile = null;
+    return null;
+  }
+  __profile = {
+    user_id: data.user_id,
+    email: user.email,
+    full_name: data.full_name,
+    role: data.role,
+    restaurant_id: data.restaurant_id,
+    restaurant_code: data.restaurants && data.restaurants.code,
+    restaurant_name: data.restaurants && data.restaurants.name,
   };
-  if (sess && sess.jwt) {
-    opts.global = { headers: { Authorization: 'Bearer ' + sess.jwt } };
+  return __profile;
+}
+
+function klSession() { return __profile ? { user: __profile } : null; }
+
+async function klLogin(email, password) {
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    // Standard Supabase error messages
+    const msg = (error.message || '').toLowerCase();
+    if (msg.includes('rate limit') || msg.includes('too many')) {
+      return { ok: false, error: 'locked_out' };
+    }
+    return { ok: false, error: 'invalid_credentials' };
   }
-  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, opts);
-}
-
-function klSession() {
-  try {
-    const raw = sessionStorage.getItem('kl_session');
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
-}
-function klSetSession(s) { sessionStorage.setItem('kl_session', JSON.stringify(s)); initSupabase(); }
-function klClearSession() { sessionStorage.removeItem('kl_session'); initSupabase(); }
-
-function klSessionValid() {
-  const s = klSession();
-  if (!s || !s.jwt || !s.exp) return false;
-  // exp is unix epoch seconds; allow 30s skew
-  return s.exp > (Date.now() / 1000) + 30;
-}
-
-async function klLogin(username, password) {
-  // Use anon-only client to call the RPC (login is the one anon thing allowed)
-  const anonSb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: { persistSession: false }
-  });
-  const { data, error } = await anonSb.rpc('khanglaos_login', {
-    p_username: username,
-    p_password: password,
-  });
-  if (error) throw error;
-  if (!data || data.ok !== true) {
-    return { ok: false, error: data && data.error };
+  if (!data || !data.user) {
+    return { ok: false, error: 'invalid_credentials' };
   }
-  klSetSession({
-    jwt: data.jwt,
-    exp: data.exp,
-    user: data.user,
-  });
+  // Load the linked user_profile to verify they have role + restaurant access
+  const profile = await loadProfile();
+  if (!profile) {
+    await sb.auth.signOut();
+    return { ok: false, error: 'profile_missing' };
+  }
   return { ok: true };
 }
 
 async function klLogout() {
-  klClearSession();
+  await sb.auth.signOut();
+  __profile = null;
   location.hash = '#/login';
 }
 
-function klRequireLogin() {
-  if (!klSessionValid()) {
-    klClearSession();
-    location.hash = '#/login';
-    return null;
+async function klRequireLogin() {
+  if (!__profile) {
+    const profile = await loadProfile();
+    if (!profile) {
+      location.hash = '#/login';
+      return null;
+    }
   }
   return klSession();
 }
@@ -937,7 +951,7 @@ function showMsg(elId, text, type) {
 const ROUTES = ['login','dashboard','receive','checkout'];
 function currentRoute() {
   const h = (location.hash || '').replace(/^#\//, '');
-  return ROUTES.includes(h) ? h : (klSessionValid() ? 'dashboard' : 'login');
+  return ROUTES.includes(h) ? h : (klSession() ? 'dashboard' : 'login');
 }
 function showPage(name) {
   ROUTES.forEach(r => {
@@ -957,14 +971,15 @@ function showPage(name) {
   else if (name === 'receive')   initReceivePage();
   else if (name === 'checkout')  initCheckoutPage();
 }
-function route() {
+async function route() {
+  // Make sure we know if user is logged in. loadProfile() resolves from Supabase session.
+  if (!__profile) await loadProfile();
   const r = currentRoute();
-  if (r !== 'login' && !klSessionValid()) {
-    klClearSession();
+  if (r !== 'login' && !klSession()) {
     location.hash = '#/login';
     return;
   }
-  if (r === 'login' && klSessionValid()) {
+  if (r === 'login' && klSession()) {
     location.hash = '#/dashboard';
     return;
   }
@@ -1021,13 +1036,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('topLogoutLink').addEventListener('click', e => { e.preventDefault(); klLogout(); });
 
   // Boot
-  initSupabase();
   applyI18n();
   route();
 });
 
 async function initDashboardPage() {
-  const u = klRequireLogin();
+  const u = await klRequireLogin();
   if (!u) return;
   document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
   document.getElementById('dashUserName').textContent = u.user.full_name;
@@ -1145,7 +1159,7 @@ function renderMoves(rows) {
 let RECV_STATE = { items: [], locations: [], suppliers: [], restaurantCode: '' };
 
 async function initReceivePage() {
-  const u = klRequireLogin();
+  const u = await klRequireLogin();
   if (!u) return;
   if (!['sa','owner','manager','receiver'].includes(u.user.role)) {
     location.hash = '#/dashboard';
@@ -1238,7 +1252,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function doReceive() {
-  const u = klRequireLogin(); if (!u) return;
+  const u = await klRequireLogin(); if (!u) return;
   const btn = document.getElementById('recSubmitBtn');
   btn.disabled = true; btn.textContent = t('common.loading');
 
@@ -1321,7 +1335,7 @@ async function doReceive() {
 let CO_STATE = { batch: null, scanner: null };
 
 async function initCheckoutPage() {
-  const u = klRequireLogin(); if (!u) return;
+  const u = await klRequireLogin(); if (!u) return;
   document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
   document.getElementById('checkoutMsg').innerHTML = '';
   document.getElementById('coBatchCard').style.display = 'none';
@@ -1409,7 +1423,7 @@ function renderBatchCard(b) {
 }
 
 async function doCheckout() {
-  const u = klRequireLogin(); if (!u) return;
+  const u = await klRequireLogin(); if (!u) return;
   const b = CO_STATE.batch;
   if (!b) return;
 
