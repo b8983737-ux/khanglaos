@@ -13,29 +13,10 @@
   font-src    'self' data:;
   frame-src   'self';
 ">
-<title>KHANGLAOS · ຄັງລາວ</title>
-
-<!--
-  KHANGLAOS v2.2 — single-file warehouse management system
-  ═══════════════════════════════════════════════════════════════
-  ARCHITECTURE
-    Frontend: this single index.html (HTML + CSS + JS inline)
-    Backend:  Supabase (PostgreSQL with RLS, JWT auth)
-    Hosting:  GitHub Pages → khanglaos.eatlaos.com
-    Pattern:  hash routing (#/login, #/dashboard, #/receive, #/checkout)
-  SECURITY
-    - Anon key in client is safe (RLS blocks all reads without JWT)
-    - JWT issued by khanglaos_login RPC, 8h expiry
-    - All queries authenticated via Authorization: Bearer header
-    - 34/34 security audit checks pass at v2.1 schema
-  EDITING
-    Search for section headers like  // ===== SECTION =====  to navigate
-═══════════════════════════════════════════════════════════════ -->
+<title>KHANGLAOS</title>
 
 <style>
-/* ═══════════════════════════════════════════════════════════════
-   THEME + LAYOUT
-═══════════════════════════════════════════════════════════════ */
+
 :root {
   --kl-bg: #f4f6f8;
   --kl-surface: #fff;
@@ -70,7 +51,6 @@ body {
 a { color: var(--kl-primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ─── Top bar ─── */
 .kl-topbar {
   background: var(--kl-primary);
   color: #fff;
@@ -107,7 +87,6 @@ a:hover { text-decoration: underline; }
 .kl-tools select option { color: #000; }
 .kl-tools a { color: #fff; opacity: 0.85; font-size: 12px; }
 
-/* ─── Container + cards ─── */
 .kl-container { max-width: 1200px; margin: 0 auto; padding: 16px; }
 .kl-page-title { font-size: 20px; font-weight: 600; margin: 0 0 6px 0; }
 .kl-page-sub { color: var(--kl-text-soft); margin: 0 0 16px 0; font-size: 13px; }
@@ -125,7 +104,6 @@ a:hover { text-decoration: underline; }
   gap: 12px; flex-wrap: wrap;
 }
 
-/* ─── KPI tiles ─── */
 .kl-kpi-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -141,7 +119,6 @@ a:hover { text-decoration: underline; }
 .kl-kpi.is-warn    .kl-kpi-value { color: var(--kl-warn); }
 .kl-kpi.is-success .kl-kpi-value { color: var(--kl-success); }
 
-/* ─── Forms ─── */
 .kl-form-row { margin-bottom: 12px; }
 .kl-form-row label {
   display: block; font-size: 11px; color: var(--kl-text-soft);
@@ -163,7 +140,6 @@ a:hover { text-decoration: underline; }
   gap: 12px;
 }
 
-/* ─── Buttons ─── */
 .kl-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   padding: 10px 18px; border: 1px solid var(--kl-border); border-radius: 6px;
@@ -179,7 +155,6 @@ a:hover { text-decoration: underline; }
 .kl-btn-lg { padding: 12px 22px; font-size: 15px; min-height: 46px; }
 .kl-btn-block { width: 100%; }
 
-/* ─── Tables ─── */
 .kl-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .kl-table { width: 100%; border-collapse: collapse; background: #fff; min-width: 600px; }
 .kl-table th, .kl-table td {
@@ -194,7 +169,6 @@ a:hover { text-decoration: underline; }
 .kl-table tr:hover td { background: #fafbfc; }
 .kl-mono { font-family: SFMono-Regular, Menlo, monospace; font-size: 11px; }
 
-/* ─── Pills ─── */
 .kl-pill {
   display: inline-block; padding: 2px 8px; border-radius: 10px;
   font-size: 11px; font-weight: 600; text-transform: uppercase;
@@ -206,14 +180,12 @@ a:hover { text-decoration: underline; }
 .kl-pill-expired { background: #1c2530; color: #fff; }
 .kl-pill-none    { background: #eef0f3; color: #5e6b7a; }
 
-/* ─── Messages ─── */
 .kl-msg { padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 13px; }
 .kl-msg-ok   { background: #e2f5ea; color: #1f8a4c; border: 1px solid #b9e3c9; }
 .kl-msg-err  { background: #fde2de; color: #c0392b; border: 1px solid #f5b9b1; }
 .kl-msg-info { background: #e0eef9; color: #2c80c4; border: 1px solid #bcd9f0; }
 .kl-msg-warn { background: #fff4d6; color: #a87000; border: 1px solid #f0deaa; }
 
-/* ─── Sticker (print-safe) ─── */
 .kl-sticker {
   width: 70mm; padding: 4mm; border: 1px dashed #bbb;
   background: #fff; margin: 8px auto; page-break-inside: avoid;
@@ -233,7 +205,6 @@ a:hover { text-decoration: underline; }
   .kl-container { padding: 0; max-width: none; }
 }
 
-/* ─── Login page (full-screen overlay) ─── */
 .kl-login-wrap {
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
@@ -266,7 +237,6 @@ a:hover { text-decoration: underline; }
   background: var(--kl-primary); color: #fff; border-color: var(--kl-primary);
 }
 
-/* ─── Scanner overlay ─── */
 .kl-scanner-box {
   background: #000; border-radius: var(--kl-radius);
   position: relative; max-width: 480px; margin: 0 auto;
@@ -275,11 +245,9 @@ a:hover { text-decoration: underline; }
 #qrReader { width: 100%; }
 #qrReader video { display: block; width: 100%; }
 
-/* ─── Page sections (hash router shows one at a time) ─── */
 .kl-page { display: none; }
 .kl-page.active { display: block; }
 
-/* ─── Loading spinner ─── */
 .kl-spinner {
   display: inline-block; width: 14px; height: 14px;
   border: 2px solid #ccc; border-top-color: var(--kl-primary);
@@ -288,7 +256,6 @@ a:hover { text-decoration: underline; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ─── Responsive ─── */
 @media (max-width: 640px) {
   .kl-topbar { padding: 8px 12px; gap: 8px; }
   .kl-brand { font-size: 15px; flex: 1 1 100%; order: 1; }
@@ -304,9 +271,7 @@ a:hover { text-decoration: underline; }
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     PAGE: LOGIN  (#/login)
-═══════════════════════════════════════════════════════════════ -->
+<!-- page -->
 <div id="page-login" class="kl-page">
   <div class="kl-login-wrap">
     <form class="kl-login-card" id="loginForm" autocomplete="off">
@@ -359,9 +324,7 @@ a:hover { text-decoration: underline; }
   </div>
 </header>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     PAGE: DASHBOARD  (#/dashboard)
-═══════════════════════════════════════════════════════════════ -->
+<!-- page -->
 <div id="page-dashboard" class="kl-page">
   <div class="kl-container">
     <h1 class="kl-page-title" data-i18n="dashboard.title">Dashboard</h1>
@@ -400,9 +363,7 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     PAGE: RECEIVE  (#/receive)
-═══════════════════════════════════════════════════════════════ -->
+<!-- page -->
 <div id="page-receive" class="kl-page">
   <div class="kl-container">
     <h1 class="kl-page-title" data-i18n="receive.title">Receive Stock</h1>
@@ -481,9 +442,7 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     PAGE: CHECKOUT  (#/checkout)
-═══════════════════════════════════════════════════════════════ -->
+<!-- page -->
 <div id="page-checkout" class="kl-page">
   <div class="kl-container">
     <h1 class="kl-page-title" data-i18n="checkout.title">Check-Out Stock</h1>
@@ -504,7 +463,7 @@ a:hover { text-decoration: underline; }
       </div>
       <div class="kl-form-row" style="margin-top:12px">
         <label data-i18n="checkout.scan.manual">Or type barcode</label>
-        <input type="text" id="coBarcodeInput" placeholder="KL-R001-000042-260520" inputmode="text" autocapitalize="characters">
+        <input type="text" id="coBarcodeInput" placeholder="Scan or type barcode" inputmode="text" autocapitalize="characters">
       </div>
       <button id="coLookupBtn" class="kl-btn" data-i18n="checkout.lookup">Find batch</button>
     </div>
@@ -547,9 +506,6 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     EXTERNAL LIBRARIES (Supabase JS, JsBarcode, html5-qrcode)
-═══════════════════════════════════════════════════════════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.10/html5-qrcode.min.js"></script>
@@ -557,15 +513,9 @@ a:hover { text-decoration: underline; }
 <script>
 'use strict';
 
-// ═══════════════════════════════════════════════════════════════
-// SECTION 1 — SUPABASE CONFIG (edit these 2 lines after creating project)
-// ═══════════════════════════════════════════════════════════════
 const SUPABASE_URL      = 'https://YOUR-PROJECT-ID.supabase.co';
 const SUPABASE_ANON_KEY = 'YOUR-PUBLIC-ANON-KEY';
 
-// ═══════════════════════════════════════════════════════════════
-// SECTION 2 — i18n (5 languages)
-// ═══════════════════════════════════════════════════════════════
 const I18N = {
   en: {
     "app.tag": "Warehouse Management",
@@ -851,12 +801,8 @@ function applyI18n() {
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.getAttribute('data-i18n-placeholder')); });
 }
 
-// ═══════════════════════════════════════════════════════════════
-// SECTION 3 — SUPABASE CLIENT + JWT SESSION
-// ═══════════════════════════════════════════════════════════════
 let sb = null;
 function initSupabase() {
-  // Build client with current JWT (if any) as auth header
   const sess = klSession();
   const opts = {
     auth: { persistSession: false, autoRefreshToken: false },
@@ -918,9 +864,6 @@ function klRequireLogin() {
   return klSession();
 }
 
-// ═══════════════════════════════════════════════════════════════
-// SECTION 4 — HELPERS
-// ═══════════════════════════════════════════════════════════════
 function h(s) {
   if (s === null || s === undefined) return '';
   return String(s).replace(/[&<>"']/g, c => ({
@@ -991,9 +934,6 @@ function showMsg(elId, text, type) {
   if (type === 'ok') setTimeout(() => el.innerHTML = '', 4000);
 }
 
-// ═══════════════════════════════════════════════════════════════
-// SECTION 5 — HASH ROUTER
-// ═══════════════════════════════════════════════════════════════
 const ROUTES = ['login','dashboard','receive','checkout'];
 function currentRoute() {
   const h = (location.hash || '').replace(/^#\//, '');
@@ -1032,9 +972,6 @@ function route() {
 }
 window.addEventListener('hashchange', route);
 
-// ═══════════════════════════════════════════════════════════════
-// SECTION 6 — LOGIN PAGE
-// ═══════════════════════════════════════════════════════════════
 function initLoginPage() {
   document.getElementById('loginMsg').innerHTML = '';
   // Language buttons
@@ -1089,9 +1026,6 @@ document.addEventListener('DOMContentLoaded', () => {
   route();
 });
 
-// ═══════════════════════════════════════════════════════════════
-// SECTION 7 — DASHBOARD PAGE
-// ═══════════════════════════════════════════════════════════════
 async function initDashboardPage() {
   const u = klRequireLogin();
   if (!u) return;
@@ -1129,7 +1063,7 @@ async function initDashboardPage() {
     document.getElementById('kpiLow').textContent = lowCount;
     document.getElementById('kpiLowTile').classList.toggle('is-warn', lowCount > 0);
 
-    // FEFO queue
+    // queue
     const fefo = await sb.from('batches')
       .select('batch_id, barcode, expiry_date, quantity_remaining, items(name,name_lao,unit), locations(name)')
       .eq('status', 'active').gt('quantity_remaining', 0)
@@ -1208,9 +1142,6 @@ function renderMoves(rows) {
   box.innerHTML = html;
 }
 
-// ═══════════════════════════════════════════════════════════════
-// SECTION 8 — RECEIVE PAGE
-// ═══════════════════════════════════════════════════════════════
 let RECV_STATE = { items: [], locations: [], suppliers: [], restaurantCode: '' };
 
 async function initReceivePage() {
@@ -1387,9 +1318,6 @@ async function doReceive() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-// SECTION 9 — CHECKOUT PAGE
-// ═══════════════════════════════════════════════════════════════
 let CO_STATE = { batch: null, scanner: null };
 
 async function initCheckoutPage() {
@@ -1500,7 +1428,7 @@ async function doCheckout() {
   btn.disabled = true; btn.textContent = t('common.loading');
 
   try {
-    // Optimistic concurrency: only update if version matches
+    // version check before update
     const newRemaining = parseFloat(b.quantity_remaining) - qty;
     const newStatus = newRemaining <= 0.0001 ? 'depleted' : b.status;
     const upd = await sb.from('batches')
@@ -1540,7 +1468,6 @@ async function doCheckout() {
   }
 }
 
-// ─── Camera scanner (html5-qrcode) ───
 async function startScanner() {
   const wrap = document.getElementById('qrReaderWrap');
   wrap.style.display = 'block';

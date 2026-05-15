@@ -1,3 +1,29 @@
+# KHANGLAOS
 
+Restaurant warehouse management system.
 
-Private. 
+ຄັງລາວ — ລະບົບຈັດການສາງສິນຄ້າ
+
+---
+
+## About
+
+Internal business application. Source code only — credentials, configuration, and operational details are managed separately.
+
+For access requests, contact the project owner.
+
+---
+
+## Tech stack
+
+- HTML + vanilla JS (single-file frontend)
+- PostgreSQL backend
+- GitHub Pages hosting
+
+---
+
+## License
+
+All rights reserved. Private use only.
+
+Copyright © 2026.
