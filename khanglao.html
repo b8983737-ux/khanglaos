@@ -267,6 +267,34 @@ a:hover { text-decoration: underline; }
   .kl-kpi-value { font-size: 20px; }
   .kl-kpi { padding: 10px 12px; }
 }
+.kl-tabs { display:flex; gap:4px; flex-wrap:wrap; margin:0 0 16px 0; border-bottom:1px solid var(--kl-border); }
+.kl-tab { background:none; border:none; padding:10px 16px; cursor:pointer; font-size:14px;
+  color:var(--kl-text-soft); border-bottom:2px solid transparent; margin-bottom:-1px; }
+.kl-tab.active { color:var(--kl-text); border-bottom-color:var(--kl-accent); font-weight:600; }
+.kl-rcard { background:#fff; border:1px solid var(--kl-border); border-radius:10px; padding:16px; margin:0 0 12px 0; }
+.kl-rcard.bad  { background:#fdeaea; border-color:#e9a3a3; }
+.kl-rcard.warn { background:#fdf3e3; border-color:#eccb8a; }
+.kl-rcard.good { background:#e9f6ec; border-color:#a4d6b0; }
+.kl-rcard.info { background:#e8f1fb; border-color:#a3c4e9; }
+.kl-rlabel { font-size:13px; color:var(--kl-text-soft); margin:0 0 4px 0; }
+.kl-rcard.bad .kl-rlabel, .kl-rcard.bad .kl-rbig { color:#a32d2d; }
+.kl-rcard.warn .kl-rlabel, .kl-rcard.warn .kl-rbig { color:#854f0b; }
+.kl-rcard.good .kl-rlabel, .kl-rcard.good .kl-rbig { color:#27500a; }
+.kl-rcard.info .kl-rlabel, .kl-rcard.info .kl-rbig { color:#0c447c; }
+.kl-rbig { font-size:24px; font-weight:600; margin:0; }
+.kl-rsmall { font-size:12px; margin:4px 0 0 0; }
+.kl-rgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:0 0 16px 0; }
+.kl-iedit { cursor:pointer; }
+.kl-iedit:hover td { background:#eef4ff; }
+.kl-chip { display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px;
+  background:#eee; color:#555; margin:1px; }
+.kl-chip.al { background:#fde2e2; color:#a32d2d; }
+.kl-modal-bg { position:fixed; inset:0; background:rgba(0,0,0,.45); display:none;
+  align-items:center; justify-content:center; z-index:999; padding:16px; }
+.kl-modal-bg.show { display:flex; }
+.kl-modal { background:#fff; border-radius:12px; padding:20px; max-width:480px;
+  width:100%; max-height:90vh; overflow-y:auto; }
+.kl-modal h3 { margin:0 0 14px 0; }
 </style>
 </head>
 <body>
@@ -310,6 +338,8 @@ a:hover { text-decoration: underline; }
     <a href="#/dashboard" data-nav="dashboard" data-i18n="nav.dashboard">Dashboard</a>
     <a href="#/receive"   data-nav="receive"   data-i18n="nav.receive">Receive</a>
     <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout">Check-Out</a>
+    <a href="#/reports"   data-nav="reports"   data-i18n="nav.reports">Reports</a>
+    <a href="#/manage"    data-nav="manage"    data-i18n="nav.manage">Manage</a>
   </nav>
   <div class="kl-tools">
     <select id="topLangSel" aria-label="Language">
@@ -506,6 +536,28 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
+<div id="page-reports" class="kl-page">
+  <div class="kl-wrap">
+    <h1 class="kl-page-title" data-i18n="reports.title">Reports — Money &amp; Profit</h1>
+    <p class="kl-page-sub" data-i18n="reports.sub">What is making money, what is losing money. Red = problem.</p>
+    <div id="reportsBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
+  </div>
+</div>
+
+<div id="page-manage" class="kl-page">
+  <div class="kl-wrap">
+    <h1 class="kl-page-title" data-i18n="manage.title">Manage</h1>
+    <p class="kl-page-sub" data-i18n="manage.sub">Add and edit items, suppliers, locations, staff. Tap to edit.</p>
+    <div class="kl-tabs" id="manageTabs">
+      <button class="kl-tab active" data-mtab="items"     data-i18n="manage.items">Items</button>
+      <button class="kl-tab" data-mtab="suppliers" data-i18n="manage.suppliers">Suppliers</button>
+      <button class="kl-tab" data-mtab="locations" data-i18n="manage.locations">Locations</button>
+      <button class="kl-tab" data-mtab="users"     data-i18n="manage.users">Staff</button>
+    </div>
+    <div id="manageBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.10/html5-qrcode.min.js"></script>
@@ -520,6 +572,10 @@ const I18N = {
   en: {
     "app.tag": "Warehouse Management",
     "nav.dashboard":"Dashboard", "nav.receive":"Receive", "nav.checkout":"Check-Out", "nav.logout":"Logout",
+    "nav.reports":"Reports", "nav.manage":"Manage",
+    "reports.title":"Reports — Money & Profit", "reports.sub":"What is making money, what is losing money. Red = problem.",
+    "manage.title":"Manage", "manage.sub":"Add and edit items, suppliers, locations, staff. Tap to edit.",
+    "manage.items":"Items", "manage.suppliers":"Suppliers", "manage.locations":"Locations", "manage.users":"Staff",
     "login.email":"Email", "login.password":"Password", "login.button":"Sign in",
     "login.error":"Invalid username or password.", "login.locked":"Too many failed attempts. Try again in 15 minutes.",
     "login.connecting":"Connecting...", "login.expired":"Session expired. Please sign in again.",
@@ -572,6 +628,10 @@ const I18N = {
   lo: {
     "app.tag": "ລະບົບຈັດການສາງສິນຄ້າ",
     "nav.dashboard":"ໜ້າຫລັກ", "nav.receive":"ຮັບສິນຄ້າ", "nav.checkout":"ເບີກສິນຄ້າ", "nav.logout":"ອອກຈາກລະບົບ",
+    "nav.reports":"ລາຍງານ", "nav.manage":"ຈັດການ",
+    "reports.title":"ລາຍງານ — ເງິນ & ກຳໄລ", "reports.sub":"ອັນໃດໄດ້ກຳໄລ ອັນໃດເສຍເງິນ. ສີແດງ = ບັນຫາ.",
+    "manage.title":"ຈັດການ", "manage.sub":"ເພີ່ມ ແລະ ແກ້ໄຂ ສິນຄ້າ, ຜູ້ສະໜອງ, ບ່ອນເກັບ, ພະນັກງານ.",
+    "manage.items":"ສິນຄ້າ", "manage.suppliers":"ຜູ້ສະໜອງ", "manage.locations":"ບ່ອນເກັບ", "manage.users":"ພະນັກງານ",
     "login.email":"ອີເມວ", "login.password":"ລະຫັດຜ່ານ", "login.button":"ເຂົ້າສູ່ລະບົບ",
     "login.error":"ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ",
     "login.locked":"ພະຍາຍາມຫຼາຍຄັ້ງເກີນໄປ. ລອງໃໝ່ໃນ 15 ນາທີ",
@@ -626,6 +686,10 @@ const I18N = {
   th: {
     "app.tag":"ระบบจัดการคลังสินค้า",
     "nav.dashboard":"หน้าหลัก", "nav.receive":"รับสินค้า", "nav.checkout":"เบิกสินค้า", "nav.logout":"ออกจากระบบ",
+    "nav.reports":"รายงาน", "nav.manage":"จัดการ",
+    "reports.title":"รายงาน — เงิน & กำไร", "reports.sub":"อะไรทำกำไร อะไรขาดทุน. แดง = ปัญหา.",
+    "manage.title":"จัดการ", "manage.sub":"เพิ่มและแก้ไข สินค้า ผู้จัดส่ง สถานที่ พนักงาน.",
+    "manage.items":"สินค้า", "manage.suppliers":"ผู้จัดส่ง", "manage.locations":"สถานที่", "manage.users":"พนักงาน",
     "login.email":"อีเมล", "login.password":"รหัสผ่าน", "login.button":"เข้าสู่ระบบ",
     "login.error":"ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
     "login.locked":"ลองผิดหลายครั้งเกินไป รอ 15 นาที", "login.connecting":"กำลังเชื่อมต่อ...",
@@ -680,6 +744,10 @@ const I18N = {
   zh: {
     "app.tag":"仓库管理系统",
     "nav.dashboard":"仪表盘", "nav.receive":"入库", "nav.checkout":"出库", "nav.logout":"退出",
+    "nav.reports":"报表", "nav.manage":"管理",
+    "reports.title":"报表 — 金钱与利润", "reports.sub":"什么赚钱，什么亏钱。红色 = 问题。",
+    "manage.title":"管理", "manage.sub":"添加和编辑物品、供应商、位置、员工。",
+    "manage.items":"物品", "manage.suppliers":"供应商", "manage.locations":"位置", "manage.users":"员工",
     "login.email":"邮箱", "login.password":"密码", "login.button":"登录",
     "login.error":"用户名或密码错误", "login.locked":"失败次数过多,请15分钟后再试",
     "login.connecting":"连接中...", "login.expired":"会话已过期,请重新登录",
@@ -732,6 +800,10 @@ const I18N = {
   ko: {
     "app.tag":"창고 관리 시스템",
     "nav.dashboard":"대시보드", "nav.receive":"입고", "nav.checkout":"출고", "nav.logout":"로그아웃",
+    "nav.reports":"보고서", "nav.manage":"관리",
+    "reports.title":"보고서 — 돈과 이익", "reports.sub":"무엇이 돈을 벌고, 무엇이 손해인지. 빨강 = 문제.",
+    "manage.title":"관리", "manage.sub":"품목, 공급업체, 위치, 직원 추가 및 편집.",
+    "manage.items":"품목", "manage.suppliers":"공급업체", "manage.locations":"위치", "manage.users":"직원",
     "login.email":"이메일", "login.password":"비밀번호", "login.button":"로그인",
     "login.error":"사용자명 또는 비밀번호가 잘못되었습니다",
     "login.locked":"실패 횟수 초과. 15분 후 다시 시도하세요",
@@ -948,7 +1020,7 @@ function showMsg(elId, text, type) {
   if (type === 'ok') setTimeout(() => el.innerHTML = '', 4000);
 }
 
-const ROUTES = ['login','dashboard','receive','checkout'];
+const ROUTES = ['login','dashboard','receive','checkout','reports','manage'];
 function currentRoute() {
   const h = (location.hash || '').replace(/^#\//, '');
   return ROUTES.includes(h) ? h : (klSession() ? 'dashboard' : 'login');
@@ -970,6 +1042,8 @@ function showPage(name) {
   else if (name === 'dashboard') initDashboardPage();
   else if (name === 'receive')   initReceivePage();
   else if (name === 'checkout')  initCheckoutPage();
+  else if (name === 'reports')   initReportsPage();
+  else if (name === 'manage')    initManagePage();
 }
 async function route() {
   // Make sure we know if user is logged in. loadProfile() resolves from Supabase session.
@@ -1515,6 +1589,360 @@ async function stopScanner() {
     try { CO_STATE.scanner.clear(); } catch {}
     CO_STATE.scanner = null;
   }
+}
+
+// =====================================================================
+// v2.4 — REPORTS PAGE (money & profit, color-coded)
+// =====================================================================
+function money(n) {
+  const v = Math.round(Number(n) || 0);
+  return v.toLocaleString('en-US') + ' ₭';
+}
+
+async function initReportsPage() {
+  const u = await klRequireLogin(); if (!u) return;
+  document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
+  const body = document.getElementById('reportsBody');
+  body.innerHTML = '<p class="kl-muted">Loading…</p>';
+
+  try {
+    const monthStart = new Date();
+    monthStart.setDate(1); monthStart.setHours(0,0,0,0);
+
+    // Pull the 3 profit views (RLS auto-scopes to this restaurant)
+    const [waste, stock, reorder] = await Promise.all([
+      sb.from('v_waste_summary').select('*'),
+      sb.from('v_stock_value').select('*'),
+      sb.from('v_reorder_advisor').select('*'),
+    ]);
+
+    const wasteRows  = (waste.data  || []);
+    const stockRows  = (stock.data  || []);
+    const reorderRows= (reorder.data || []);
+
+    const totalWaste = wasteRows.reduce((s,r)=> s + Number(r.money_lost||0), 0);
+    const totalStock = stockRows.reduce((s,r)=> s + Number(r.stock_value||0), 0);
+    const needRe     = reorderRows.filter(r=> r.needs_reorder);
+
+    // Expiring soon (next 3 days) from batches
+    const in3 = new Date(); in3.setDate(in3.getDate()+3);
+    const exp = await sb.from('batches')
+      .select('quantity_remaining, unit_cost, expiry_date, status')
+      .eq('status','active').not('expiry_date','is',null)
+      .lte('expiry_date', in3.toISOString().slice(0,10));
+    const expRows = (exp.data || []);
+    const expValue = expRows.reduce((s,r)=> s + Number(r.quantity_remaining||0)*Number(r.unit_cost||0), 0);
+
+    let html = '<div class="kl-rgrid">';
+    html += '<div class="kl-rcard '+(totalWaste>0?'bad':'good')+'">'
+      + '<p class="kl-rlabel">Money lost to waste</p>'
+      + '<p class="kl-rbig">'+money(totalWaste)+'</p>'
+      + '<p class="kl-rsmall">'+(wasteRows.length)+' waste events this period</p></div>';
+    html += '<div class="kl-rcard '+(expRows.length>0?'warn':'good')+'">'
+      + '<p class="kl-rlabel">Expiring in 3 days</p>'
+      + '<p class="kl-rbig">'+expRows.length+' items</p>'
+      + '<p class="kl-rsmall">Worth '+money(expValue)+' — use now</p></div>';
+    html += '<div class="kl-rcard '+(needRe.length>0?'warn':'good')+'">'
+      + '<p class="kl-rlabel">Need to reorder</p>'
+      + '<p class="kl-rbig">'+needRe.length+' items</p>'
+      + '<p class="kl-rsmall">Below reorder level</p></div>';
+    html += '<div class="kl-rcard good">'
+      + '<p class="kl-rlabel">Stock on hand value</p>'
+      + '<p class="kl-rbig">'+money(totalStock)+'</p>'
+      + '<p class="kl-rsmall">Current inventory worth</p></div>';
+    html += '</div>';
+
+    // Biggest losses table
+    const topWaste = wasteRows.slice().sort((a,b)=> Number(b.money_lost)-Number(a.money_lost)).slice(0,5);
+    html += '<div class="kl-rcard"><p class="kl-rlabel" style="font-weight:600;font-size:14px">Biggest losses — fix these first</p>';
+    if (topWaste.length === 0) {
+      html += '<p class="kl-rsmall">No waste recorded yet. Good — keep it that way.</p>';
+    } else {
+      html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+        + '<th>Item</th><th>Wasted</th><th>Money lost</th><th>Reason</th></tr></thead><tbody>';
+      topWaste.forEach(r=>{
+        html += '<tr><td>'+h(r.name)+'</td><td>'+fmtQty(r.qty_wasted)+' '+h(r.unit||'')+'</td>'
+          + '<td style="color:#a32d2d;font-weight:600">'+money(r.money_lost)+'</td>'
+          + '<td>'+h(r.waste_reason||'-')+'</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    html += '</div>';
+
+    // Reorder advisor — what to DO
+    html += '<div class="kl-rcard info"><p class="kl-rlabel" style="font-weight:600;font-size:14px">Reorder advisor — what to buy</p>';
+    if (needRe.length === 0) {
+      html += '<p class="kl-rsmall">Nothing needs reordering right now.</p>';
+    } else {
+      html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+        + '<th>Item</th><th>On hand</th><th>Use/day</th><th>Suggest order</th><th>Usual supplier</th></tr></thead><tbody>';
+      needRe.forEach(r=>{
+        const perDay = Number(r.used_per_day||0);
+        const suggest = Math.max(Number(r.par_level||0) - Number(r.on_hand||0), Math.ceil(perDay*7));
+        html += '<tr><td>'+h(r.name)+'</td><td>'+fmtQty(r.on_hand)+' '+h(r.unit||'')+'</td>'
+          + '<td>'+fmtQty(perDay)+'</td>'
+          + '<td style="font-weight:600">'+fmtQty(suggest)+' '+h(r.unit||'')+'</td>'
+          + '<td>'+h(r.usual_supplier||'—')+'</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    html += '</div>';
+
+    body.innerHTML = html;
+  } catch (e) {
+    body.innerHTML = '<div class="kl-rcard bad"><p class="kl-rbig">Could not load reports</p>'
+      + '<p class="kl-rsmall">'+h(e.message||String(e))+'</p></div>';
+  }
+}
+
+// =====================================================================
+// v2.4 — MANAGE PAGE (items / suppliers / locations / users)
+// =====================================================================
+let MANAGE_TAB = 'items';
+
+async function initManagePage() {
+  const u = await klRequireLogin(); if (!u) return;
+  document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
+  document.querySelectorAll('#manageTabs .kl-tab').forEach(btn=>{
+    btn.onclick = () => {
+      MANAGE_TAB = btn.getAttribute('data-mtab');
+      document.querySelectorAll('#manageTabs .kl-tab').forEach(b=>b.classList.toggle('active', b===btn));
+      renderManageTab(u);
+    };
+  });
+  renderManageTab(u);
+}
+
+async function renderManageTab(u) {
+  const body = document.getElementById('manageBody');
+  body.innerHTML = '<p class="kl-muted">Loading…</p>';
+  try {
+    if (MANAGE_TAB === 'items')     return renderItems(u, body);
+    if (MANAGE_TAB === 'suppliers') return renderSuppliers(u, body);
+    if (MANAGE_TAB === 'locations') return renderLocations(u, body);
+    if (MANAGE_TAB === 'users')     return renderUsers(u, body);
+  } catch (e) {
+    body.innerHTML = '<div class="kl-rcard bad"><p class="kl-rsmall">'+h(e.message||String(e))+'</p></div>';
+  }
+}
+
+function modal(titleText, innerHtml) {
+  let bg = document.getElementById('klModalBg');
+  if (!bg) {
+    bg = document.createElement('div');
+    bg.id = 'klModalBg'; bg.className = 'kl-modal-bg';
+    document.body.appendChild(bg);
+  }
+  bg.innerHTML = '<div class="kl-modal"><h3>'+h(titleText)+'</h3>'+innerHtml+'</div>';
+  bg.classList.add('show');
+  bg.onclick = (e)=>{ if (e.target === bg) closeModal(); };
+}
+function closeModal(){ const bg=document.getElementById('klModalBg'); if(bg) bg.classList.remove('show'); }
+
+// ---- ITEMS ----
+async function renderItems(u, body) {
+  const { data, error } = await sb.from('items')
+    .select('item_id,sku,name,name_lao,category,unit,storage_type,standard_cost,last_cost,default_shelf_life_days,reorder_level,par_level,contains_peanut,contains_shellfish,contains_dairy,contains_gluten,contains_egg,contains_soy,is_active')
+    .order('name');
+  if (error) throw error;
+  let html = '<button class="kl-btn kl-btn-primary" onclick="itemForm()">+ Add item</button>';
+  html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+    + '<th>Name</th><th>Unit</th><th>Cost</th><th>Reorder</th><th>Allergens</th></tr></thead><tbody>';
+  (data||[]).forEach(it=>{
+    const al = [];
+    if (it.contains_peanut) al.push('peanut');
+    if (it.contains_shellfish) al.push('shellfish');
+    if (it.contains_dairy) al.push('dairy');
+    if (it.contains_gluten) al.push('gluten');
+    if (it.contains_egg) al.push('egg');
+    if (it.contains_soy) al.push('soy');
+    html += '<tr class="kl-iedit" onclick=\'itemForm('+it.item_id+')\'>'
+      + '<td>'+h(it.name)+(it.name_lao?'<br><small class="kl-muted">'+h(it.name_lao)+'</small>':'')+'</td>'
+      + '<td>'+h(it.unit)+'</td>'
+      + '<td>'+(it.standard_cost?money(it.standard_cost):'<span class="kl-muted">set cost</span>')+'</td>'
+      + '<td>'+(it.reorder_level!=null?fmtQty(it.reorder_level):'-')+'</td>'
+      + '<td>'+(al.length?al.map(a=>'<span class="kl-chip al">'+a+'</span>').join(''):'-')+'</td>'
+      + '</tr>';
+  });
+  html += '</tbody></table></div>';
+  if (!(data||[]).length) html += '<p class="kl-muted">No items yet. Tap "+ Add item".</p>';
+  body.innerHTML = html;
+  window.__items = data || [];
+}
+
+window.itemForm = function(id) {
+  const it = id ? (window.__items||[]).find(x=>x.item_id===id) : {};
+  const v = (k,d='')=> (it&&it[k]!=null)?it[k]:d;
+  const cb = (k)=> (it&&it[k])?'checked':'';
+  const html =
+    '<div class="kl-form-row"><label>Name *</label><input id="if_name" value="'+h(v('name'))+'"></div>'
+   +'<div class="kl-form-row"><label>Name (Lao)</label><input id="if_namelao" value="'+h(v('name_lao'))+'"></div>'
+   +'<div class="kl-form-row"><label>SKU *</label><input id="if_sku" value="'+h(v('sku'))+'"></div>'
+   +'<div class="kl-form-row"><label>Category</label><input id="if_cat" value="'+h(v('category'))+'"></div>'
+   +'<div class="kl-form-row"><label>Unit</label><input id="if_unit" value="'+h(v('unit','kg'))+'"></div>'
+   +'<div class="kl-form-row"><label>Storage</label><select id="if_store">'
+     +['freezer','chiller','dry','ambient','bar'].map(z=>'<option '+(v('storage_type','dry')===z?'selected':'')+'>'+z+'</option>').join('')
+   +'</select></div>'
+   +'<div class="kl-form-row"><label>Cost price (₭ per unit)</label><input id="if_cost" type="number" value="'+h(v('standard_cost'))+'"></div>'
+   +'<div class="kl-form-row"><label>Shelf life (days)</label><input id="if_shelf" type="number" value="'+h(v('default_shelf_life_days'))+'"></div>'
+   +'<div class="kl-form-row"><label>Reorder level</label><input id="if_re" type="number" value="'+h(v('reorder_level'))+'"></div>'
+   +'<div class="kl-form-row"><label>Par level</label><input id="if_par" type="number" value="'+h(v('par_level'))+'"></div>'
+   +'<div class="kl-form-row"><label>Allergens</label><div style="display:flex;flex-wrap:wrap;gap:8px">'
+     +[['peanut','contains_peanut'],['shellfish','contains_shellfish'],['dairy','contains_dairy'],['gluten','contains_gluten'],['egg','contains_egg'],['soy','contains_soy']]
+       .map(([lbl,k])=>'<label style="font-size:13px"><input type="checkbox" id="if_'+k+'" '+cb(k)+'> '+lbl+'</label>').join('')
+   +'</div></div>'
+   +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveItem('+(id||'null')+')">Save</button> '
+   +'<button class="kl-btn" onclick="closeModal()">Cancel</button>';
+  modal(id?'Edit item':'Add item', html);
+};
+
+window.saveItem = async function(id) {
+  const g = (x)=>document.getElementById(x);
+  const rec = {
+    name: g('if_name').value.trim(),
+    name_lao: g('if_namelao').value.trim() || null,
+    sku: g('if_sku').value.trim(),
+    category: g('if_cat').value.trim() || null,
+    unit: g('if_unit').value.trim() || 'kg',
+    storage_type: g('if_store').value,
+    standard_cost: g('if_cost').value ? Number(g('if_cost').value) : null,
+    default_shelf_life_days: g('if_shelf').value ? parseInt(g('if_shelf').value) : null,
+    reorder_level: g('if_re').value ? Number(g('if_re').value) : null,
+    par_level: g('if_par').value ? Number(g('if_par').value) : null,
+    contains_peanut: g('if_contains_peanut').checked,
+    contains_shellfish: g('if_contains_shellfish').checked,
+    contains_dairy: g('if_contains_dairy').checked,
+    contains_gluten: g('if_contains_gluten').checked,
+    contains_egg: g('if_contains_egg').checked,
+    contains_soy: g('if_contains_soy').checked,
+  };
+  if (!rec.name || !rec.sku) { alert('Name and SKU are required'); return; }
+  try {
+    let res;
+    if (id) {
+      res = await sb.from('items').update(rec).eq('item_id', id);
+    } else {
+      rec.restaurant_id = __profile.restaurant_id;
+      res = await sb.from('items').insert(rec);
+    }
+    if (res.error) throw res.error;
+    closeModal();
+    renderManageTab(klSession());
+  } catch (e) { alert('Save failed: ' + (e.message||e)); }
+};
+
+// ---- SUPPLIERS ----
+async function renderSuppliers(u, body) {
+  const { data, error } = await sb.from('suppliers')
+    .select('supplier_id,name,contact_person,phone,whatsapp,payment_terms,is_active').order('name');
+  if (error) throw error;
+  let html = '<button class="kl-btn kl-btn-primary" onclick="supForm()">+ Add supplier</button>';
+  html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+    + '<th>Name</th><th>Contact</th><th>Phone</th><th>Terms</th></tr></thead><tbody>';
+  (data||[]).forEach(s=>{
+    html += '<tr class="kl-iedit" onclick=\'supForm('+s.supplier_id+')\'>'
+      + '<td>'+h(s.name)+'</td><td>'+h(s.contact_person||'-')+'</td>'
+      + '<td>'+h(s.phone||'-')+'</td><td>'+h(s.payment_terms||'-')+'</td></tr>';
+  });
+  html += '</tbody></table></div>';
+  if (!(data||[]).length) html += '<p class="kl-muted">No suppliers yet.</p>';
+  body.innerHTML = html;
+  window.__sups = data || [];
+}
+window.supForm = function(id) {
+  const s = id ? (window.__sups||[]).find(x=>x.supplier_id===id) : {};
+  const v=(k,d='')=>(s&&s[k]!=null)?s[k]:d;
+  modal(id?'Edit supplier':'Add supplier',
+     '<div class="kl-form-row"><label>Name *</label><input id="sf_name" value="'+h(v('name'))+'"></div>'
+    +'<div class="kl-form-row"><label>Contact person</label><input id="sf_cp" value="'+h(v('contact_person'))+'"></div>'
+    +'<div class="kl-form-row"><label>Phone</label><input id="sf_ph" value="'+h(v('phone'))+'"></div>'
+    +'<div class="kl-form-row"><label>WhatsApp</label><input id="sf_wa" value="'+h(v('whatsapp'))+'"></div>'
+    +'<div class="kl-form-row"><label>Payment terms</label><input id="sf_pt" value="'+h(v('payment_terms'))+'"></div>'
+    +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveSup('+(id||'null')+')">Save</button> '
+    +'<button class="kl-btn" onclick="closeModal()">Cancel</button>');
+};
+window.saveSup = async function(id){
+  const g=(x)=>document.getElementById(x);
+  const rec={ name:g('sf_name').value.trim(), contact_person:g('sf_cp').value.trim()||null,
+    phone:g('sf_ph').value.trim()||null, whatsapp:g('sf_wa').value.trim()||null,
+    payment_terms:g('sf_pt').value.trim()||null };
+  if(!rec.name){ alert('Name required'); return; }
+  try{
+    let res;
+    if(id) res=await sb.from('suppliers').update(rec).eq('supplier_id',id);
+    else { rec.restaurant_id=__profile.restaurant_id; res=await sb.from('suppliers').insert(rec); }
+    if(res.error) throw res.error;
+    closeModal(); renderManageTab(klSession());
+  }catch(e){ alert('Save failed: '+(e.message||e)); }
+};
+
+// ---- LOCATIONS ----
+async function renderLocations(u, body) {
+  const { data, error } = await sb.from('locations')
+    .select('location_id,code,name,temp_zone,target_temp_min_c,target_temp_max_c,is_active').order('code');
+  if (error) throw error;
+  let html = '<button class="kl-btn kl-btn-primary" onclick="locForm()">+ Add location</button>';
+  html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+    + '<th>Code</th><th>Name</th><th>Zone</th><th>Temp °C</th></tr></thead><tbody>';
+  (data||[]).forEach(l=>{
+    const t=(l.target_temp_min_c!=null?l.target_temp_min_c+' to '+l.target_temp_max_c:'-');
+    html += '<tr class="kl-iedit" onclick=\'locForm('+l.location_id+')\'>'
+      + '<td>'+h(l.code)+'</td><td>'+h(l.name)+'</td><td>'+h(l.temp_zone)+'</td><td>'+h(t)+'</td></tr>';
+  });
+  html += '</tbody></table></div>';
+  if (!(data||[]).length) html += '<p class="kl-muted">No locations yet.</p>';
+  body.innerHTML = html;
+  window.__locs = data || [];
+}
+window.locForm = function(id){
+  const l=id?(window.__locs||[]).find(x=>x.location_id===id):{};
+  const v=(k,d='')=>(l&&l[k]!=null)?l[k]:d;
+  modal(id?'Edit location':'Add location',
+     '<div class="kl-form-row"><label>Code *</label><input id="lf_code" value="'+h(v('code'))+'"></div>'
+    +'<div class="kl-form-row"><label>Name *</label><input id="lf_name" value="'+h(v('name'))+'"></div>'
+    +'<div class="kl-form-row"><label>Zone</label><select id="lf_zone">'
+      +['freezer','chiller','dry','ambient','bar'].map(z=>'<option '+(v('temp_zone','dry')===z?'selected':'')+'>'+z+'</option>').join('')
+    +'</select></div>'
+    +'<div class="kl-form-row"><label>Temp min °C</label><input id="lf_min" type="number" value="'+h(v('target_temp_min_c'))+'"></div>'
+    +'<div class="kl-form-row"><label>Temp max °C</label><input id="lf_max" type="number" value="'+h(v('target_temp_max_c'))+'"></div>'
+    +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveLoc('+(id||'null')+')">Save</button> '
+    +'<button class="kl-btn" onclick="closeModal()">Cancel</button>');
+};
+window.saveLoc = async function(id){
+  const g=(x)=>document.getElementById(x);
+  const rec={ code:g('lf_code').value.trim(), name:g('lf_name').value.trim(),
+    temp_zone:g('lf_zone').value,
+    target_temp_min_c:g('lf_min').value?Number(g('lf_min').value):null,
+    target_temp_max_c:g('lf_max').value?Number(g('lf_max').value):null };
+  if(!rec.code||!rec.name){ alert('Code and name required'); return; }
+  try{
+    let res;
+    if(id) res=await sb.from('locations').update(rec).eq('location_id',id);
+    else { rec.restaurant_id=__profile.restaurant_id; res=await sb.from('locations').insert(rec); }
+    if(res.error) throw res.error;
+    closeModal(); renderManageTab(klSession());
+  }catch(e){ alert('Save failed: '+(e.message||e)); }
+};
+
+// ---- USERS (owner/sa only — read + role view) ----
+async function renderUsers(u, body) {
+  const role = u.user.role;
+  if (!['sa','owner','manager'].includes(role)) {
+    body.innerHTML = '<div class="kl-rcard warn"><p class="kl-rsmall">Only owner/manager can view staff.</p></div>';
+    return;
+  }
+  const { data, error } = await sb.from('user_profiles')
+    .select('full_name,role,phone,is_active').order('full_name');
+  if (error) throw error;
+  let html = '<div class="kl-rcard info"><p class="kl-rsmall">To add a new staff login: create them in Supabase → Authentication → Users, then link via user_profiles. (Self-service staff signup is a future feature.)</p></div>';
+  html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+    + '<th>Name</th><th>Role</th><th>Phone</th><th>Active</th></tr></thead><tbody>';
+  (data||[]).forEach(p=>{
+    html += '<tr><td>'+h(p.full_name)+'</td><td>'+h(p.role)+'</td>'
+      + '<td>'+h(p.phone||'-')+'</td><td>'+(p.is_active?'✓':'✗')+'</td></tr>';
+  });
+  html += '</tbody></table></div>';
+  body.innerHTML = html;
 }
 
 </script>
