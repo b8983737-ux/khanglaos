@@ -88,8 +88,8 @@ a:hover { text-decoration: underline; }
 .kl-tools a { color: #fff; opacity: 0.85; font-size: 12px; }
 
 .kl-container { max-width: 1200px; margin: 0 auto; padding: 16px; }
-.kl-page-title { font-size: 20px; font-weight: 600; margin: 0 0 6px 0; }
-.kl-page-sub { color: var(--kl-text-soft); margin: 0 0 16px 0; font-size: 13px; }
+.kl-page-title { font-size: 24px; font-weight: 700; margin: 0 0 8px 0; }
+.kl-page-sub { color: var(--kl-text-soft); margin: 0 0 18px 0; font-size: 15px; }
 .kl-card {
   background: var(--kl-surface);
   border: 1px solid var(--kl-border);
@@ -114,7 +114,7 @@ a:hover { text-decoration: underline; }
   border-radius: var(--kl-radius); padding: 12px 14px; box-shadow: var(--kl-shadow);
 }
 .kl-kpi-label { color: var(--kl-text-soft); font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }
-.kl-kpi-value { font-size: 24px; font-weight: 700; margin-top: 4px; }
+.kl-kpi-value { font-size: 30px; font-weight: 700; margin-top: 4px; }
 .kl-kpi.is-danger  .kl-kpi-value { color: var(--kl-danger); }
 .kl-kpi.is-warn    .kl-kpi-value { color: var(--kl-warn); }
 .kl-kpi.is-success .kl-kpi-value { color: var(--kl-success); }
@@ -158,13 +158,13 @@ a:hover { text-decoration: underline; }
 .kl-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .kl-table { width: 100%; border-collapse: collapse; background: #fff; min-width: 600px; }
 .kl-table th, .kl-table td {
-  padding: 9px 12px; text-align: left;
+  padding: 12px 14px; text-align: left;
   border-bottom: 1px solid var(--kl-border);
-  font-size: 13px; vertical-align: middle;
+  font-size: 15px; vertical-align: middle;
 }
 .kl-table th {
   background: #f7f9fb; font-weight: 600; color: var(--kl-text-soft);
-  text-transform: uppercase; font-size: 11px; letter-spacing: 0.4px;
+  text-transform: uppercase; font-size: 13px; letter-spacing: 0.4px;
 }
 .kl-table tr:hover td { background: #fafbfc; }
 .kl-mono { font-family: SFMono-Regular, Menlo, monospace; font-size: 11px; }
@@ -263,26 +263,26 @@ a:hover { text-decoration: underline; }
   .kl-topbar nav { order: 3; flex-basis: 100%; padding-top: 4px; }
   .kl-container { padding: 12px; }
   .kl-form-grid { grid-template-columns: 1fr; }
-  .kl-page-title { font-size: 18px; }
-  .kl-kpi-value { font-size: 20px; }
+  .kl-page-title { font-size: 21px; }
+  .kl-kpi-value { font-size: 26px; }
   .kl-kpi { padding: 10px 12px; }
 }
 .kl-tabs { display:flex; gap:4px; flex-wrap:wrap; margin:0 0 16px 0; border-bottom:1px solid var(--kl-border); }
 .kl-tab { background:none; border:none; padding:10px 16px; cursor:pointer; font-size:14px;
   color:var(--kl-text-soft); border-bottom:2px solid transparent; margin-bottom:-1px; }
 .kl-tab.active { color:var(--kl-text); border-bottom-color:var(--kl-accent); font-weight:600; }
-.kl-rcard { background:#fff; border:1px solid var(--kl-border); border-radius:10px; padding:16px; margin:0 0 12px 0; }
+.kl-rcard { background:#fff; border:1px solid var(--kl-border); border-radius:12px; padding:20px; margin:0 0 14px 0; }
 .kl-rcard.bad  { background:#fdeaea; border-color:#e9a3a3; }
 .kl-rcard.warn { background:#fdf3e3; border-color:#eccb8a; }
 .kl-rcard.good { background:#e9f6ec; border-color:#a4d6b0; }
 .kl-rcard.info { background:#e8f1fb; border-color:#a3c4e9; }
-.kl-rlabel { font-size:13px; color:var(--kl-text-soft); margin:0 0 4px 0; }
+.kl-rlabel { font-size:15px; color:var(--kl-text-soft); margin:0 0 6px 0; }
 .kl-rcard.bad .kl-rlabel, .kl-rcard.bad .kl-rbig { color:#a32d2d; }
 .kl-rcard.warn .kl-rlabel, .kl-rcard.warn .kl-rbig { color:#854f0b; }
 .kl-rcard.good .kl-rlabel, .kl-rcard.good .kl-rbig { color:#27500a; }
 .kl-rcard.info .kl-rlabel, .kl-rcard.info .kl-rbig { color:#0c447c; }
-.kl-rbig { font-size:24px; font-weight:600; margin:0; }
-.kl-rsmall { font-size:12px; margin:4px 0 0 0; }
+.kl-rbig { font-size:32px; font-weight:700; margin:0; line-height:1.2; }
+.kl-rsmall { font-size:14px; margin:6px 0 0 0; }
 .kl-rgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:0 0 16px 0; }
 .kl-iedit { cursor:pointer; }
 .kl-iedit:hover td { background:#eef4ff; }
@@ -295,6 +295,34 @@ a:hover { text-decoration: underline; }
 .kl-modal { background:#fff; border-radius:12px; padding:20px; max-width:480px;
   width:100%; max-height:90vh; overflow-y:auto; }
 .kl-modal h3 { margin:0 0 14px 0; }
+/* Overview cockpit — stock gauges */
+.kl-ov-card { background:#fff; border:1px solid var(--kl-border); border-radius:12px;
+  padding:14px 16px; margin:0 0 10px 0; }
+.kl-ov-head { font-size:16px; font-weight:600; margin:0 0 10px 0; display:flex;
+  align-items:center; gap:8px; }
+.kl-ov-card.bad  { background:#fdeaea; border-color:#e9a3a3; }
+.kl-ov-card.bad  .kl-ov-head { color:#a32d2d; }
+.kl-ov-card.warn { background:#fdf3e3; border-color:#eccb8a; }
+.kl-ov-card.warn .kl-ov-head { color:#854f0b; }
+.kl-gauge-row { padding:10px 0; border-bottom:1px solid var(--kl-border); }
+.kl-gauge-row:last-child { border-bottom:none; }
+.kl-gauge-top { display:flex; justify-content:space-between; align-items:baseline;
+  font-size:15px; margin-bottom:6px; }
+.kl-gauge-name { font-weight:600; }
+.kl-gauge-status { font-size:14px; font-weight:600; }
+.kl-gauge-bar { position:relative; height:24px; background:#eef0f2;
+  border-radius:5px; overflow:hidden; }
+.kl-gauge-fill { position:absolute; left:0; top:0; bottom:0; border-radius:5px;
+  transition:width .3s; }
+.kl-gauge-fill.z-red    { background:#e24b4a; }
+.kl-gauge-fill.z-yellow { background:#ef9f27; }
+.kl-gauge-fill.z-green  { background:#1d9e75; }
+.kl-gauge-mark { position:absolute; top:-3px; bottom:-3px; width:2px;
+  background:#5f5e5a; }
+.kl-gauge-scale { display:flex; justify-content:space-between; font-size:12px;
+  color:var(--kl-text-soft); margin-top:3px; }
+.kl-ov-legend { font-size:13px; color:var(--kl-text-soft); text-align:center;
+  margin:14px 0 0 0; }
 </style>
 </head>
 <body>
@@ -336,6 +364,7 @@ a:hover { text-decoration: underline; }
   <div class="kl-brand">KHANGLAOS <small>ຄັງລາວ</small></div>
   <nav>
     <a href="#/dashboard" data-nav="dashboard" data-i18n="nav.dashboard">Dashboard</a>
+    <a href="#/overview"  data-nav="overview"  data-i18n="nav.overview">Overview</a>
     <a href="#/receive"   data-nav="receive"   data-i18n="nav.receive">Receive</a>
     <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout">Check-Out</a>
     <a href="#/reports"   data-nav="reports"   data-i18n="nav.reports">Reports</a>
@@ -536,6 +565,14 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
+<div id="page-overview" class="kl-page">
+  <div class="kl-wrap">
+    <h1 class="kl-page-title" data-i18n="ov.title">Overview — Owner Cockpit</h1>
+    <p class="kl-page-sub" data-i18n="ov.sub">Everything in one screen. Order today and expiring on top.</p>
+    <div id="overviewBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
+  </div>
+</div>
+
 <div id="page-reports" class="kl-page">
   <div class="kl-wrap">
     <h1 class="kl-page-title" data-i18n="reports.title">Reports — Money &amp; Profit</h1>
@@ -623,6 +660,45 @@ const I18N = {
     "checkout.success":"Check-out recorded successfully.",
     "checkout.scan.permission":"Camera permission denied. Type barcode manually.",
     "common.optional":"optional", "common.loading":"Loading...",
+    "r.title":"Reports — Money & Profit", "r.sub":"What makes money, what loses money. Red = problem.",
+    "r.wasteLost":"Money lost to waste", "r.events":"waste events this period",
+    "r.expiring":"Expiring in 3 days", "r.items":"items", "r.useNow":"Worth {0} — use now",
+    "r.reorderNeed":"Need to reorder", "r.belowLevel":"Below reorder level",
+    "r.stockValue":"Stock on hand value", "r.invWorth":"Current inventory worth",
+    "r.biggest":"Biggest losses — fix these first", "r.noWaste":"No waste recorded yet. Good — keep it that way.",
+    "r.colItem":"Item", "r.colWasted":"Wasted", "r.colLost":"Money lost", "r.colReason":"Reason",
+    "r.advisor":"Reorder advisor — what to buy", "r.noReorder":"Nothing needs reordering right now.",
+    "r.colOnHand":"On hand", "r.colPerDay":"Use/day", "r.colSuggest":"Suggest order", "r.colSupplier":"Usual supplier",
+    "r.loadFail":"Could not load reports", "r.noAccess":"No access",
+    "r.mgrOnly":"Money and profit reports are for owners and managers. Your role is",
+    "m.title":"Manage", "m.sub":"Add and edit items, suppliers, locations, staff. Tap to edit.",
+    "m.items":"Items", "m.suppliers":"Suppliers", "m.locations":"Locations", "m.staff":"Staff",
+    "m.addItem":"+ Add item", "m.addSup":"+ Add supplier", "m.addLoc":"+ Add location",
+    "m.editItem":"Edit item", "m.editSup":"Edit supplier", "m.editLoc":"Edit location",
+    "m.name":"Name", "m.nameLao":"Name (Lao)", "m.sku":"SKU", "m.category":"Category",
+    "m.unit":"Unit", "m.storage":"Storage", "m.cost":"Cost price (per unit)", "m.shelf":"Shelf life (days)",
+    "m.reorder":"Reorder level", "m.par":"Par level", "m.allergens":"Allergens",
+    "m.contact":"Contact person", "m.phone":"Phone", "m.terms":"Payment terms",
+    "m.code":"Code", "m.zone":"Zone", "m.tmin":"Temp min °C", "m.tmax":"Temp max °C",
+    "m.save":"Save", "m.cancel":"Cancel", "m.role":"Role", "m.active":"Active",
+    "m.setCost":"set cost", "m.noItems":"No items yet. Tap Add.", "m.noSup":"No suppliers yet.",
+    "m.noLoc":"No locations yet.", "m.noAccess":"No access",
+    "m.mgrOnly":"The Manage section is for owners and managers. Your role is",
+    "m.staffNote":"To add a new staff login: create them in Supabase Authentication, then link via user_profiles.",
+    "m.saveFail":"Save failed", "m.needNameSku":"Name and SKU are required", "m.needName":"Name required",
+    "m.needCodeName":"Code and name required", "m.tempErr":"Min temperature cannot be higher than max",
+    "nav.overview":"Overview",
+    "ov.title":"Overview — Owner Cockpit", "ov.sub":"Everything in one screen. Order today and expiring on top.",
+    "ov.orderToday":"Order today — below minimum", "ov.nothingOrder":"Nothing needs ordering. Stock levels healthy.",
+    "ov.haveUse":"Have / use per day", "ov.orderQty":"Order this much", "ov.day":"day",
+    "ov.expiring3":"Expiring in 3 days — use NOW", "ov.nothing3":"Nothing expiring in 3 days. Good.",
+    "ov.expiring7":"Expiring this week (4–7 days) — plan ahead", "ov.nothing7":"Nothing expiring this week.",
+    "ov.qty":"Quantity", "ov.expires":"Expires", "ov.today":"today", "ov.tomorrow":"tomorrow", "ov.days":"days",
+    "ov.stockLevels":"Stock levels — min / now / max", "ov.setLevels":"Set reorder & par levels on items to see gauges.",
+    "ov.ok":"OK", "ov.belowMin":"BELOW MIN — order now", "ov.low":"LOW — order soon",
+    "ov.min":"min", "ov.max":"max",
+    "ov.legend":"Red = below min · Yellow = low · Green = healthy · lines = min & max markers",
+    "ov.noAccess":"No access", "ov.mgrOnly":"The Overview cockpit is for owners and managers. Your role is",
     "common.cancel":"Cancel", "common.confirm":"Are you sure?",
   },
   lo: {
@@ -681,6 +757,45 @@ const I18N = {
     "checkout.success":"ບັນທຶກການເບີກສຳເລັດ",
     "checkout.scan.permission":"ບໍ່ໄດ້ຮັບອະນຸຍາດໃຊ້ກ້ອງ. ກະລຸນາພິມບາໂຄດເອງ",
     "common.optional":"ບໍ່ບັງຄັບ", "common.loading":"ກຳລັງໂຫຼດ...",
+    "r.title":"ລາຍງານ — ເງິນ & ກຳໄລ", "r.sub":"ອັນໃດໄດ້ກຳໄລ ອັນໃດເສຍເງິນ. ສີແດງ = ບັນຫາ.",
+    "r.wasteLost":"ເງິນເສຍຍ້ອນຂີ້ເສດ", "r.events":"ຄັ້ງຂີ້ເສດໃນຊ່ວງນີ້",
+    "r.expiring":"ໝົດອາຍຸໃນ 3 ມື້", "r.items":"ລາຍການ", "r.useNow":"ມູນຄ່າ {0} — ໃຊ້ດຽວນີ້",
+    "r.reorderNeed":"ຕ້ອງສັ່ງຊື້ໃໝ່", "r.belowLevel":"ຕ່ຳກວ່າລະດັບສັ່ງຊື້",
+    "r.stockValue":"ມູນຄ່າສິນຄ້າຄົງເຫຼືອ", "r.invWorth":"ມູນຄ່າສິນຄ້າປັດຈຸບັນ",
+    "r.biggest":"ການເສຍຫາຍຫຼາຍສຸດ — ແກ້ໄຂກ່ອນ", "r.noWaste":"ຍັງບໍ່ມີຂີ້ເສດ. ດີ — ຮັກສາໄວ້.",
+    "r.colItem":"ລາຍການ", "r.colWasted":"ເສຍ", "r.colLost":"ເງິນເສຍ", "r.colReason":"ເຫດຜົນ",
+    "r.advisor":"ຄຳແນະນຳສັ່ງຊື້ — ຊື້ຫຍັງ", "r.noReorder":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຊື້ດຽວນີ້.",
+    "r.colOnHand":"ຄົງເຫຼືອ", "r.colPerDay":"ໃຊ້/ມື້", "r.colSuggest":"ແນະນຳສັ່ງ", "r.colSupplier":"ຜູ້ສະໜອງປະຈຳ",
+    "r.loadFail":"ໂຫຼດລາຍງານບໍ່ໄດ້", "r.noAccess":"ບໍ່ມີສິດ",
+    "r.mgrOnly":"ລາຍງານເງິນ ສຳລັບເຈົ້າຂອງ ແລະ ຜູ້ຈັດການ. ໜ້າທີ່ຂອງທ່ານຄື",
+    "m.title":"ຈັດການ", "m.sub":"ເພີ່ມ ແລະ ແກ້ໄຂ ສິນຄ້າ ຜູ້ສະໜອງ ບ່ອນເກັບ ພະນັກງານ.",
+    "m.items":"ສິນຄ້າ", "m.suppliers":"ຜູ້ສະໜອງ", "m.locations":"ບ່ອນເກັບ", "m.staff":"ພະນັກງານ",
+    "m.addItem":"+ ເພີ່ມສິນຄ້າ", "m.addSup":"+ ເພີ່ມຜູ້ສະໜອງ", "m.addLoc":"+ ເພີ່ມບ່ອນເກັບ",
+    "m.editItem":"ແກ້ໄຂສິນຄ້າ", "m.editSup":"ແກ້ໄຂຜູ້ສະໜອງ", "m.editLoc":"ແກ້ໄຂບ່ອນເກັບ",
+    "m.name":"ຊື່", "m.nameLao":"ຊື່ (ລາວ)", "m.sku":"ລະຫັດ", "m.category":"ໝວດ",
+    "m.unit":"ໜ່ວຍ", "m.storage":"ບ່ອນເກັບ", "m.cost":"ລາຄາຕົ້ນທຶນ (ຕໍ່ໜ່ວຍ)", "m.shelf":"ອາຍຸ (ມື້)",
+    "m.reorder":"ລະດັບສັ່ງຊື້", "m.par":"ລະດັບມາດຕະຖານ", "m.allergens":"ສານກໍ່ແພ້",
+    "m.contact":"ຜູ້ຕິດຕໍ່", "m.phone":"ໂທລະສັບ", "m.terms":"ເງື່ອນໄຂຈ່າຍ",
+    "m.code":"ລະຫັດ", "m.zone":"ເຂດ", "m.tmin":"ອຸນຫະພູມຕ່ຳ °C", "m.tmax":"ອຸນຫະພູມສູງ °C",
+    "m.save":"ບັນທຶກ", "m.cancel":"ຍົກເລີກ", "m.role":"ໜ້າທີ່", "m.active":"ໃຊ້ງານ",
+    "m.setCost":"ຕັ້ງລາຄາ", "m.noItems":"ຍັງບໍ່ມີສິນຄ້າ. ກົດເພີ່ມ.", "m.noSup":"ຍັງບໍ່ມີຜູ້ສະໜອງ.",
+    "m.noLoc":"ຍັງບໍ່ມີບ່ອນເກັບ.", "m.noAccess":"ບໍ່ມີສິດ",
+    "m.mgrOnly":"ສ່ວນຈັດການ ສຳລັບເຈົ້າຂອງ ແລະ ຜູ້ຈັດການ. ໜ້າທີ່ຂອງທ່ານຄື",
+    "m.staffNote":"ເພີ່ມພະນັກງານໃໝ່: ສ້າງໃນ Supabase Authentication ແລ້ວເຊື່ອມຜ່ານ user_profiles.",
+    "m.saveFail":"ບັນທຶກບໍ່ສຳເລັດ", "m.needNameSku":"ຕ້ອງມີຊື່ ແລະ ລະຫັດ", "m.needName":"ຕ້ອງມີຊື່",
+    "m.needCodeName":"ຕ້ອງມີລະຫັດ ແລະ ຊື່", "m.tempErr":"ອຸນຫະພູມຕ່ຳ ສູງກວ່າ ສູງ ບໍ່ໄດ້",
+    "nav.overview":"ພາບລວມ",
+    "ov.title":"ພາບລວມ — ສຳລັບເຈົ້າຂອງ", "ov.sub":"ທຸກຢ່າງໃນໜ້າດຽວ. ສັ່ງຊື້ມື້ນີ້ ແລະ ໝົດອາຍຸ ຢູ່ເທິງ.",
+    "ov.orderToday":"ສັ່ງຊື້ມື້ນີ້ — ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "ov.nothingOrder":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຊື້. ສິນຄ້າພຽງພໍ.",
+    "ov.haveUse":"ມີ / ໃຊ້ຕໍ່ມື້", "ov.orderQty":"ສັ່ງຊື້ຈຳນວນນີ້", "ov.day":"ມື້",
+    "ov.expiring3":"ໝົດອາຍຸໃນ 3 ມື້ — ໃຊ້ດຽວນີ້", "ov.nothing3":"ບໍ່ມີຫຍັງໝົດອາຍຸໃນ 3 ມື້. ດີ.",
+    "ov.expiring7":"ໝົດອາຍຸອາທິດນີ້ (4–7 ມື້) — ວາງແຜນລ່ວງໜ້າ", "ov.nothing7":"ບໍ່ມີຫຍັງໝົດອາຍຸອາທິດນີ້.",
+    "ov.qty":"ຈຳນວນ", "ov.expires":"ໝົດອາຍຸ", "ov.today":"ມື້ນີ້", "ov.tomorrow":"ມື້ອື່ນ", "ov.days":"ມື້",
+    "ov.stockLevels":"ລະດັບສິນຄ້າ — ຕ່ຳ / ດຽວນີ້ / ສູງ", "ov.setLevels":"ຕັ້ງລະດັບສັ່ງຊື້ ແລະ ມາດຕະຖານ ເພື່ອເຫັນແຖບ.",
+    "ov.ok":"ດີ", "ov.belowMin":"ຕ່ຳກວ່າຂັ້ນຕ່ຳ — ສັ່ງດຽວນີ້", "ov.low":"ໜ້ອຍ — ສັ່ງໄວໆ",
+    "ov.min":"ຕ່ຳ", "ov.max":"ສູງ",
+    "ov.legend":"ແດງ = ຕ່ຳກວ່າຂັ້ນຕ່ຳ · ເຫຼືອງ = ໜ້ອຍ · ຂຽວ = ພຽງພໍ · ເສັ້ນ = ຈຸດຕ່ຳ&ສູງ",
+    "ov.noAccess":"ບໍ່ມີສິດ", "ov.mgrOnly":"ໜ້າພາບລວມ ສຳລັບເຈົ້າຂອງ ແລະ ຜູ້ຈັດການ. ໜ້າທີ່ຂອງທ່ານຄື",
     "common.cancel":"ຍົກເລີກ", "common.confirm":"ແນ່ໃຈບໍ?",
   },
   th: {
@@ -739,6 +854,45 @@ const I18N = {
     "checkout.success":"บันทึกการเบิกสำเร็จ",
     "checkout.scan.permission":"ไม่ได้รับอนุญาตใช้กล้อง กรุณาพิมพ์บาร์โค้ดเอง",
     "common.optional":"ไม่บังคับ", "common.loading":"กำลังโหลด...",
+    "r.title":"รายงาน — เงิน & กำไร", "r.sub":"อะไรทำกำไร อะไรขาดทุน. แดง = ปัญหา.",
+    "r.wasteLost":"เงินที่เสียจากของเสีย", "r.events":"ครั้งของเสียช่วงนี้",
+    "r.expiring":"หมดอายุใน 3 วัน", "r.items":"รายการ", "r.useNow":"มูลค่า {0} — ใช้เลย",
+    "r.reorderNeed":"ต้องสั่งซื้อใหม่", "r.belowLevel":"ต่ำกว่าระดับสั่งซื้อ",
+    "r.stockValue":"มูลค่าสต็อกคงเหลือ", "r.invWorth":"มูลค่าสินค้าปัจจุบัน",
+    "r.biggest":"ขาดทุนมากสุด — แก้ก่อน", "r.noWaste":"ยังไม่มีของเสีย. ดี — รักษาไว้.",
+    "r.colItem":"รายการ", "r.colWasted":"เสีย", "r.colLost":"เงินเสีย", "r.colReason":"เหตุผล",
+    "r.advisor":"คำแนะนำสั่งซื้อ — ซื้ออะไร", "r.noReorder":"ไม่มีอะไรต้องสั่งซื้อตอนนี้.",
+    "r.colOnHand":"คงเหลือ", "r.colPerDay":"ใช้/วัน", "r.colSuggest":"แนะนำสั่ง", "r.colSupplier":"ผู้จัดส่งประจำ",
+    "r.loadFail":"โหลดรายงานไม่ได้", "r.noAccess":"ไม่มีสิทธิ์",
+    "r.mgrOnly":"รายงานเงิน สำหรับเจ้าของและผู้จัดการ. ตำแหน่งของคุณคือ",
+    "m.title":"จัดการ", "m.sub":"เพิ่มและแก้ไข สินค้า ผู้จัดส่ง สถานที่ พนักงาน.",
+    "m.items":"สินค้า", "m.suppliers":"ผู้จัดส่ง", "m.locations":"สถานที่", "m.staff":"พนักงาน",
+    "m.addItem":"+ เพิ่มสินค้า", "m.addSup":"+ เพิ่มผู้จัดส่ง", "m.addLoc":"+ เพิ่มสถานที่",
+    "m.editItem":"แก้ไขสินค้า", "m.editSup":"แก้ไขผู้จัดส่ง", "m.editLoc":"แก้ไขสถานที่",
+    "m.name":"ชื่อ", "m.nameLao":"ชื่อ (ลาว)", "m.sku":"รหัส", "m.category":"หมวด",
+    "m.unit":"หน่วย", "m.storage":"ที่เก็บ", "m.cost":"ราคาทุน (ต่อหน่วย)", "m.shelf":"อายุ (วัน)",
+    "m.reorder":"ระดับสั่งซื้อ", "m.par":"ระดับมาตรฐาน", "m.allergens":"สารก่อแพ้",
+    "m.contact":"ผู้ติดต่อ", "m.phone":"โทรศัพท์", "m.terms":"เงื่อนไขชำระ",
+    "m.code":"รหัส", "m.zone":"โซน", "m.tmin":"อุณหภูมิต่ำ °C", "m.tmax":"อุณหภูมิสูง °C",
+    "m.save":"บันทึก", "m.cancel":"ยกเลิก", "m.role":"ตำแหน่ง", "m.active":"ใช้งาน",
+    "m.setCost":"ตั้งราคา", "m.noItems":"ยังไม่มีสินค้า. กดเพิ่ม.", "m.noSup":"ยังไม่มีผู้จัดส่ง.",
+    "m.noLoc":"ยังไม่มีสถานที่.", "m.noAccess":"ไม่มีสิทธิ์",
+    "m.mgrOnly":"ส่วนจัดการ สำหรับเจ้าของและผู้จัดการ. ตำแหน่งของคุณคือ",
+    "m.staffNote":"เพิ่มพนักงานใหม่: สร้างใน Supabase Authentication แล้วเชื่อมผ่าน user_profiles.",
+    "m.saveFail":"บันทึกไม่สำเร็จ", "m.needNameSku":"ต้องมีชื่อและรหัส", "m.needName":"ต้องมีชื่อ",
+    "m.needCodeName":"ต้องมีรหัสและชื่อ", "m.tempErr":"อุณหภูมิต่ำสูงกว่าสูงไม่ได้",
+    "nav.overview":"ภาพรวม",
+    "ov.title":"ภาพรวม — สำหรับเจ้าของ", "ov.sub":"ทุกอย่างในหน้าเดียว. สั่งซื้อวันนี้และหมดอายุอยู่บน.",
+    "ov.orderToday":"สั่งซื้อวันนี้ — ต่ำกว่าขั้นต่ำ", "ov.nothingOrder":"ไม่มีอะไรต้องสั่งซื้อ. สต็อกพอ.",
+    "ov.haveUse":"มี / ใช้ต่อวัน", "ov.orderQty":"สั่งซื้อจำนวนนี้", "ov.day":"วัน",
+    "ov.expiring3":"หมดอายุใน 3 วัน — ใช้เลยตอนนี้", "ov.nothing3":"ไม่มีอะไรหมดอายุใน 3 วัน. ดี.",
+    "ov.expiring7":"หมดอายุสัปดาห์นี้ (4–7 วัน) — วางแผนล่วงหน้า", "ov.nothing7":"ไม่มีอะไรหมดอายุสัปดาห์นี้.",
+    "ov.qty":"จำนวน", "ov.expires":"หมดอายุ", "ov.today":"วันนี้", "ov.tomorrow":"พรุ่งนี้", "ov.days":"วัน",
+    "ov.stockLevels":"ระดับสต็อก — ต่ำ / ตอนนี้ / สูง", "ov.setLevels":"ตั้งระดับสั่งซื้อและมาตรฐานเพื่อดูแถบ.",
+    "ov.ok":"ดี", "ov.belowMin":"ต่ำกว่าขั้นต่ำ — สั่งเลย", "ov.low":"น้อย — สั่งเร็วๆ",
+    "ov.min":"ต่ำ", "ov.max":"สูง",
+    "ov.legend":"แดง = ต่ำกว่าขั้นต่ำ · เหลือง = น้อย · เขียว = พอ · เส้น = จุดต่ำ&สูง",
+    "ov.noAccess":"ไม่มีสิทธิ์", "ov.mgrOnly":"หน้าภาพรวม สำหรับเจ้าของและผู้จัดการ. ตำแหน่งของคุณคือ",
     "common.cancel":"ยกเลิก", "common.confirm":"แน่ใจไหม?",
   },
   zh: {
@@ -795,6 +949,45 @@ const I18N = {
     "checkout.success":"出库记录已保存",
     "checkout.scan.permission":"摄像头权限被拒绝,请手动输入条码",
     "common.optional":"可选", "common.loading":"加载中...",
+    "r.title":"报表 — 金钱与利润", "r.sub":"什么赚钱，什么亏钱。红色 = 问题。",
+    "r.wasteLost":"浪费损失的钱", "r.events":"本期浪费次数",
+    "r.expiring":"3天内过期", "r.items":"项", "r.useNow":"价值 {0} — 立即使用",
+    "r.reorderNeed":"需要补货", "r.belowLevel":"低于补货水平",
+    "r.stockValue":"库存价值", "r.invWorth":"当前库存价值",
+    "r.biggest":"最大损失 — 优先解决", "r.noWaste":"暂无浪费记录。很好，保持下去。",
+    "r.colItem":"物品", "r.colWasted":"浪费", "r.colLost":"损失金额", "r.colReason":"原因",
+    "r.advisor":"补货建议 — 买什么", "r.noReorder":"目前无需补货。",
+    "r.colOnHand":"现有", "r.colPerDay":"每日用量", "r.colSuggest":"建议订购", "r.colSupplier":"常用供应商",
+    "r.loadFail":"无法加载报表", "r.noAccess":"无权限",
+    "r.mgrOnly":"金钱和利润报表仅限业主和经理。您的角色是",
+    "m.title":"管理", "m.sub":"添加和编辑物品、供应商、位置、员工。点击编辑。",
+    "m.items":"物品", "m.suppliers":"供应商", "m.locations":"位置", "m.staff":"员工",
+    "m.addItem":"+ 添加物品", "m.addSup":"+ 添加供应商", "m.addLoc":"+ 添加位置",
+    "m.editItem":"编辑物品", "m.editSup":"编辑供应商", "m.editLoc":"编辑位置",
+    "m.name":"名称", "m.nameLao":"名称（老挝语）", "m.sku":"编号", "m.category":"类别",
+    "m.unit":"单位", "m.storage":"存储", "m.cost":"成本价（每单位）", "m.shelf":"保质期（天）",
+    "m.reorder":"补货水平", "m.par":"标准水平", "m.allergens":"过敏原",
+    "m.contact":"联系人", "m.phone":"电话", "m.terms":"付款条款",
+    "m.code":"代码", "m.zone":"区域", "m.tmin":"最低温度 °C", "m.tmax":"最高温度 °C",
+    "m.save":"保存", "m.cancel":"取消", "m.role":"角色", "m.active":"启用",
+    "m.setCost":"设置价格", "m.noItems":"暂无物品。点击添加。", "m.noSup":"暂无供应商。",
+    "m.noLoc":"暂无位置。", "m.noAccess":"无权限",
+    "m.mgrOnly":"管理部分仅限业主和经理。您的角色是",
+    "m.staffNote":"添加新员工：在 Supabase Authentication 创建，然后通过 user_profiles 关联。",
+    "m.saveFail":"保存失败", "m.needNameSku":"需要名称和编号", "m.needName":"需要名称",
+    "m.needCodeName":"需要代码和名称", "m.tempErr":"最低温度不能高于最高温度",
+    "nav.overview":"总览",
+    "ov.title":"总览 — 业主驾驶舱", "ov.sub":"一屏看全部。今日订购和即将过期在顶部。",
+    "ov.orderToday":"今日订购 — 低于最低", "ov.nothingOrder":"无需订购。库存充足。",
+    "ov.haveUse":"现有 / 每日用量", "ov.orderQty":"订购此数量", "ov.day":"天",
+    "ov.expiring3":"3天内过期 — 立即使用", "ov.nothing3":"3天内无过期。很好。",
+    "ov.expiring7":"本周过期 (4–7天) — 提前计划", "ov.nothing7":"本周无过期。",
+    "ov.qty":"数量", "ov.expires":"过期", "ov.today":"今天", "ov.tomorrow":"明天", "ov.days":"天",
+    "ov.stockLevels":"库存水平 — 最低 / 现在 / 最高", "ov.setLevels":"设置补货和标准水平以查看仪表。",
+    "ov.ok":"正常", "ov.belowMin":"低于最低 — 立即订购", "ov.low":"偏低 — 尽快订购",
+    "ov.min":"最低", "ov.max":"最高",
+    "ov.legend":"红 = 低于最低 · 黄 = 偏低 · 绿 = 充足 · 线 = 最低&最高标记",
+    "ov.noAccess":"无权限", "ov.mgrOnly":"总览驾驶舱仅限业主和经理。您的角色是",
     "common.cancel":"取消", "common.confirm":"确定吗?",
   },
   ko: {
@@ -852,6 +1045,45 @@ const I18N = {
     "checkout.success":"출고가 기록되었습니다",
     "checkout.scan.permission":"카메라 권한이 거부되었습니다. 바코드를 직접 입력하세요",
     "common.optional":"선택", "common.loading":"로딩 중...",
+    "r.title":"보고서 — 돈과 이익", "r.sub":"무엇이 돈을 벌고 무엇이 손해인지. 빨강 = 문제.",
+    "r.wasteLost":"폐기로 잃은 돈", "r.events":"이번 기간 폐기 횟수",
+    "r.expiring":"3일 내 만료", "r.items":"개", "r.useNow":"가치 {0} — 지금 사용",
+    "r.reorderNeed":"재주문 필요", "r.belowLevel":"재주문 수준 이하",
+    "r.stockValue":"재고 가치", "r.invWorth":"현재 재고 가치",
+    "r.biggest":"가장 큰 손실 — 먼저 해결", "r.noWaste":"폐기 기록 없음. 좋음 — 유지하세요.",
+    "r.colItem":"품목", "r.colWasted":"폐기", "r.colLost":"손실액", "r.colReason":"이유",
+    "r.advisor":"재주문 조언 — 무엇을 살지", "r.noReorder":"지금 재주문할 것 없음.",
+    "r.colOnHand":"보유", "r.colPerDay":"일일 사용", "r.colSuggest":"주문 제안", "r.colSupplier":"단골 공급업체",
+    "r.loadFail":"보고서를 불러올 수 없음", "r.noAccess":"접근 불가",
+    "r.mgrOnly":"돈과 이익 보고서는 소유자와 관리자용입니다. 귀하의 역할은",
+    "m.title":"관리", "m.sub":"품목, 공급업체, 위치, 직원 추가 및 편집. 탭하여 편집.",
+    "m.items":"품목", "m.suppliers":"공급업체", "m.locations":"위치", "m.staff":"직원",
+    "m.addItem":"+ 품목 추가", "m.addSup":"+ 공급업체 추가", "m.addLoc":"+ 위치 추가",
+    "m.editItem":"품목 편집", "m.editSup":"공급업체 편집", "m.editLoc":"위치 편집",
+    "m.name":"이름", "m.nameLao":"이름 (라오어)", "m.sku":"코드", "m.category":"분류",
+    "m.unit":"단위", "m.storage":"보관", "m.cost":"원가 (단위당)", "m.shelf":"유통기한 (일)",
+    "m.reorder":"재주문 수준", "m.par":"표준 수준", "m.allergens":"알레르겐",
+    "m.contact":"담당자", "m.phone":"전화", "m.terms":"결제 조건",
+    "m.code":"코드", "m.zone":"구역", "m.tmin":"최저 온도 °C", "m.tmax":"최고 온도 °C",
+    "m.save":"저장", "m.cancel":"취소", "m.role":"역할", "m.active":"활성",
+    "m.setCost":"가격 설정", "m.noItems":"품목 없음. 추가를 탭하세요.", "m.noSup":"공급업체 없음.",
+    "m.noLoc":"위치 없음.", "m.noAccess":"접근 불가",
+    "m.mgrOnly":"관리 섹션은 소유자와 관리자용입니다. 귀하의 역할은",
+    "m.staffNote":"새 직원 추가: Supabase Authentication에서 생성 후 user_profiles로 연결.",
+    "m.saveFail":"저장 실패", "m.needNameSku":"이름과 코드 필요", "m.needName":"이름 필요",
+    "m.needCodeName":"코드와 이름 필요", "m.tempErr":"최저 온도가 최고보다 높을 수 없음",
+    "nav.overview":"개요",
+    "ov.title":"개요 — 소유자 콕핏", "ov.sub":"한 화면에 전부. 오늘 주문과 만료가 상단에.",
+    "ov.orderToday":"오늘 주문 — 최소 이하", "ov.nothingOrder":"주문할 것 없음. 재고 충분.",
+    "ov.haveUse":"보유 / 일일 사용", "ov.orderQty":"이만큼 주문", "ov.day":"일",
+    "ov.expiring3":"3일 내 만료 — 지금 사용", "ov.nothing3":"3일 내 만료 없음. 좋음.",
+    "ov.expiring7":"이번 주 만료 (4–7일) — 미리 계획", "ov.nothing7":"이번 주 만료 없음.",
+    "ov.qty":"수량", "ov.expires":"만료", "ov.today":"오늘", "ov.tomorrow":"내일", "ov.days":"일",
+    "ov.stockLevels":"재고 수준 — 최소 / 현재 / 최대", "ov.setLevels":"재주문 및 표준 수준을 설정하면 게이지가 표시됩니다.",
+    "ov.ok":"양호", "ov.belowMin":"최소 이하 — 지금 주문", "ov.low":"부족 — 곧 주문",
+    "ov.min":"최소", "ov.max":"최대",
+    "ov.legend":"빨강 = 최소 이하 · 노랑 = 부족 · 초록 = 충분 · 선 = 최소&최대 표시",
+    "ov.noAccess":"접근 불가", "ov.mgrOnly":"개요 콕핏은 소유자와 관리자용입니다. 귀하의 역할은",
     "common.cancel":"취소", "common.confirm":"확실합니까?",
   },
 };
@@ -867,6 +1099,17 @@ function setLang(lang) {
   const sel = document.getElementById('topLangSel');
   if (sel) sel.value = lang;
   document.documentElement.lang = lang === 'lo' ? 'lo' : lang === 'th' ? 'th' : lang === 'zh' ? 'zh' : lang === 'ko' ? 'ko' : 'en';
+  // Re-render the current dynamic page so JS-built content (Reports cards,
+  // Manage tables, dashboard) also switches language immediately.
+  try {
+    const r = currentRoute();
+    if (r === 'reports')        initReportsPage();
+    else if (r === 'manage')    initManagePage();
+    else if (r === 'overview')  initOverviewPage();
+    else if (r === 'dashboard') initDashboardPage();
+    else if (r === 'receive')   initReceivePage();
+    else if (r === 'checkout')  initCheckoutPage();
+  } catch (e) { /* page not ready yet — applyI18n already handled static text */ }
 }
 function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
@@ -1020,7 +1263,7 @@ function showMsg(elId, text, type) {
   if (type === 'ok') setTimeout(() => el.innerHTML = '', 4000);
 }
 
-const ROUTES = ['login','dashboard','receive','checkout','reports','manage'];
+const ROUTES = ['login','dashboard','overview','receive','checkout','reports','manage'];
 function currentRoute() {
   const h = (location.hash || '').replace(/^#\//, '');
   return ROUTES.includes(h) ? h : (klSession() ? 'dashboard' : 'login');
@@ -1036,10 +1279,17 @@ function showPage(name) {
   document.querySelectorAll('#kl-topbar nav a').forEach(a => {
     a.classList.toggle('active', a.getAttribute('data-nav') === name);
   });
+  // Show Reports/Manage nav only for owner/manager/sa (cleaner UX —
+  // staff don't see buttons they can't use; DB RLS enforces it anyway)
+  const role = (__profile && __profile.role) || '';
+  const canManage = ['sa','owner','manager'].includes(role);
+  document.querySelectorAll('#kl-topbar nav a[data-nav="reports"], #kl-topbar nav a[data-nav="manage"], #kl-topbar nav a[data-nav="overview"]')
+    .forEach(a => { a.style.display = canManage ? '' : 'none'; });
   applyI18n();
   // page-specific init
   if (name === 'login') initLoginPage();
   else if (name === 'dashboard') initDashboardPage();
+  else if (name === 'overview')  initOverviewPage();
   else if (name === 'receive')   initReceivePage();
   else if (name === 'checkout')  initCheckoutPage();
   else if (name === 'reports')   initReportsPage();
@@ -1109,7 +1359,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('topLangSel').addEventListener('change', e => setLang(e.target.value));
   document.getElementById('topLogoutLink').addEventListener('click', e => { e.preventDefault(); klLogout(); });
 
-  // Boot
+  // Boot — sync UI controls to the SAVED language (persists across refresh)
+  const sel = document.getElementById('topLangSel');
+  if (sel) sel.value = __lang;
+  document.querySelectorAll('#loginLangBar button').forEach(b =>
+    b.classList.toggle('active', b.dataset.lang === __lang));
+  document.documentElement.lang = __lang;
   applyI18n();
   route();
 });
@@ -1603,6 +1858,12 @@ async function initReportsPage() {
   const u = await klRequireLogin(); if (!u) return;
   document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
   const body = document.getElementById('reportsBody');
+  // Money/profit reports are sensitive — owner/manager/sa only.
+  if (!['sa','owner','manager'].includes(u.user.role)) {
+    body.innerHTML = '<div class="kl-rcard warn"><p class="kl-rbig">'+t('r.noAccess')+'</p>'
+      + '<p class="kl-rsmall">'+t('r.mgrOnly')+' "' + h(u.user.role) + '".</p></div>';
+    return;
+  }
   body.innerHTML = '<p class="kl-muted">Loading…</p>';
 
   try {
@@ -1635,31 +1896,31 @@ async function initReportsPage() {
 
     let html = '<div class="kl-rgrid">';
     html += '<div class="kl-rcard '+(totalWaste>0?'bad':'good')+'">'
-      + '<p class="kl-rlabel">Money lost to waste</p>'
+      + '<p class="kl-rlabel">'+t('r.wasteLost')+'</p>'
       + '<p class="kl-rbig">'+money(totalWaste)+'</p>'
-      + '<p class="kl-rsmall">'+(wasteRows.length)+' waste events this period</p></div>';
+      + '<p class="kl-rsmall">'+(wasteRows.length)+' '+t('r.events')+'</p></div>';
     html += '<div class="kl-rcard '+(expRows.length>0?'warn':'good')+'">'
-      + '<p class="kl-rlabel">Expiring in 3 days</p>'
-      + '<p class="kl-rbig">'+expRows.length+' items</p>'
-      + '<p class="kl-rsmall">Worth '+money(expValue)+' — use now</p></div>';
+      + '<p class="kl-rlabel">'+t('r.expiring')+'</p>'
+      + '<p class="kl-rbig">'+expRows.length+' '+t('r.items')+'</p>'
+      + '<p class="kl-rsmall">'+t('r.useNow').replace('{0}', money(expValue))+'</p></div>';
     html += '<div class="kl-rcard '+(needRe.length>0?'warn':'good')+'">'
-      + '<p class="kl-rlabel">Need to reorder</p>'
-      + '<p class="kl-rbig">'+needRe.length+' items</p>'
-      + '<p class="kl-rsmall">Below reorder level</p></div>';
+      + '<p class="kl-rlabel">'+t('r.reorderNeed')+'</p>'
+      + '<p class="kl-rbig">'+needRe.length+' '+t('r.items')+'</p>'
+      + '<p class="kl-rsmall">'+t('r.belowLevel')+'</p></div>';
     html += '<div class="kl-rcard good">'
-      + '<p class="kl-rlabel">Stock on hand value</p>'
+      + '<p class="kl-rlabel">'+t('r.stockValue')+'</p>'
       + '<p class="kl-rbig">'+money(totalStock)+'</p>'
-      + '<p class="kl-rsmall">Current inventory worth</p></div>';
+      + '<p class="kl-rsmall">'+t('r.invWorth')+'</p></div>';
     html += '</div>';
 
     // Biggest losses table
     const topWaste = wasteRows.slice().sort((a,b)=> Number(b.money_lost)-Number(a.money_lost)).slice(0,5);
-    html += '<div class="kl-rcard"><p class="kl-rlabel" style="font-weight:600;font-size:14px">Biggest losses — fix these first</p>';
+    html += '<div class="kl-rcard"><p class="kl-rlabel" style="font-weight:600;font-size:16px">'+t('r.biggest')+'</p>';
     if (topWaste.length === 0) {
-      html += '<p class="kl-rsmall">No waste recorded yet. Good — keep it that way.</p>';
+      html += '<p class="kl-rsmall">'+t('r.noWaste')+'</p>';
     } else {
       html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
-        + '<th>Item</th><th>Wasted</th><th>Money lost</th><th>Reason</th></tr></thead><tbody>';
+        + '<th>'+t('r.colItem')+'</th><th>'+t('r.colWasted')+'</th><th>'+t('r.colLost')+'</th><th>'+t('r.colReason')+'</th></tr></thead><tbody>';
       topWaste.forEach(r=>{
         html += '<tr><td>'+h(r.name)+'</td><td>'+fmtQty(r.qty_wasted)+' '+h(r.unit||'')+'</td>'
           + '<td style="color:#a32d2d;font-weight:600">'+money(r.money_lost)+'</td>'
@@ -1670,12 +1931,12 @@ async function initReportsPage() {
     html += '</div>';
 
     // Reorder advisor — what to DO
-    html += '<div class="kl-rcard info"><p class="kl-rlabel" style="font-weight:600;font-size:14px">Reorder advisor — what to buy</p>';
+    html += '<div class="kl-rcard info"><p class="kl-rlabel" style="font-weight:600;font-size:16px">'+t('r.advisor')+'</p>';
     if (needRe.length === 0) {
-      html += '<p class="kl-rsmall">Nothing needs reordering right now.</p>';
+      html += '<p class="kl-rsmall">'+t('r.noReorder')+'</p>';
     } else {
       html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
-        + '<th>Item</th><th>On hand</th><th>Use/day</th><th>Suggest order</th><th>Usual supplier</th></tr></thead><tbody>';
+        + '<th>'+t('r.colItem')+'</th><th>'+t('r.colOnHand')+'</th><th>'+t('r.colPerDay')+'</th><th>'+t('r.colSuggest')+'</th><th>'+t('r.colSupplier')+'</th></tr></thead><tbody>';
       needRe.forEach(r=>{
         const perDay = Number(r.used_per_day||0);
         const suggest = Math.max(Number(r.par_level||0) - Number(r.on_hand||0), Math.ceil(perDay*7));
@@ -1690,7 +1951,148 @@ async function initReportsPage() {
 
     body.innerHTML = html;
   } catch (e) {
-    body.innerHTML = '<div class="kl-rcard bad"><p class="kl-rbig">Could not load reports</p>'
+    body.innerHTML = '<div class="kl-rcard bad"><p class="kl-rbig">'+t('r.loadFail')+'</p>'
+      + '<p class="kl-rsmall">'+h(e.message||String(e))+'</p></div>';
+  }
+}
+
+// =====================================================================
+// v2.4 — OVERVIEW PAGE (owner cockpit: gauges + order-today + expiring)
+// =====================================================================
+async function initOverviewPage() {
+  const u = await klRequireLogin(); if (!u) return;
+  document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
+  const body = document.getElementById('overviewBody');
+  // Owner cockpit is sensitive management data — owner/manager/sa only.
+  if (!['sa','owner','manager'].includes(u.user.role)) {
+    body.innerHTML = '<div class="kl-ov-card warn"><div class="kl-ov-head">'+t('ov.noAccess')+'</div>'
+      + '<p class="kl-rsmall">'+t('ov.mgrOnly')+' "'+h(u.user.role)+'".</p></div>';
+    return;
+  }
+  body.innerHTML = '<p class="kl-muted">'+t('common.loading')+'</p>';
+
+  try {
+    const today = new Date();
+    const in7 = new Date(); in7.setDate(in7.getDate()+7);
+    const in7s = in7.toISOString().slice(0,10);
+
+    // Pull reorder advisor (has on_hand, used_per_day, reorder/par, supplier)
+    // and expiring batches within 7 days. RLS auto-scopes to this restaurant.
+    const [adv, exp] = await Promise.all([
+      sb.from('v_reorder_advisor').select('*').order('name'),
+      sb.from('batches')
+        .select('quantity_remaining, unit_cost, expiry_date, status, item_id, items(name,name_lao,unit)')
+        .eq('status','active').not('expiry_date','is',null)
+        .lte('expiry_date', in7s).order('expiry_date'),
+    ]);
+    const rows = (adv.data || []);
+    const expAll = (exp.data || []);
+
+    // ---- SECTION 1: ORDER TODAY (below min / reorder level) ----
+    const orderNow = rows.filter(r => r.needs_reorder)
+      .sort((a,b)=> Number(b.used_per_day||0) - Number(a.used_per_day||0));
+    let html = '';
+    html += '<div class="kl-ov-card '+(orderNow.length?'bad':'')+'">';
+    html += '<div class="kl-ov-head"><i class="ti ti-alert-triangle" aria-hidden="true"></i> '
+      + t('ov.orderToday') + ' ('+orderNow.length+')</div>';
+    if (orderNow.length === 0) {
+      html += '<p class="kl-rsmall">'+t('ov.nothingOrder')+'</p>';
+    } else {
+      html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+        + '<th>'+t('r.colItem')+'</th><th>'+t('ov.haveUse')+'</th><th>'+t('ov.orderQty')+'</th><th>'+t('r.colSupplier')+'</th>'
+        + '</tr></thead><tbody>';
+      orderNow.forEach(r=>{
+        const perDay = Number(r.used_per_day||0);
+        const onHand = Number(r.on_hand||0);
+        const suggest = Math.max(Number(r.par_level||0) - onHand, Math.ceil(perDay*7), 1);
+        html += '<tr><td><strong>'+h(r.name)+'</strong></td>'
+          + '<td>'+fmtQty(onHand)+' '+h(r.unit||'')+' · '+fmtQty(perDay)+'/'+t('ov.day')+'</td>'
+          + '<td style="font-weight:700;color:#a32d2d">'+fmtQty(suggest)+' '+h(r.unit||'')+'</td>'
+          + '<td>'+h(r.usual_supplier||'—')+'</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    html += '</div>';
+
+    // ---- SECTION 2: EXPIRING — split into 3-day urgent + 7-day this week ----
+    const dDays = (d) => Math.round((new Date(d) - today) / 86400000);
+    const whenLabel = (days) => days <= 0 ? t('ov.today')
+      : days === 1 ? t('ov.tomorrow') : days + ' ' + t('ov.days');
+    const exp3 = expAll.filter(r => dDays(r.expiry_date) <= 3);
+    const exp7 = expAll.filter(r => { const d = dDays(r.expiry_date); return d > 3 && d <= 7; });
+
+    const buildExpCard = (list, headKey, emptyKey, cls, txtCol) => {
+      let val = 0;
+      list.forEach(r=> val += Number(r.quantity_remaining||0)*Number(r.unit_cost||0));
+      let s = '<div class="kl-ov-card '+(list.length?cls:'')+'">';
+      s += '<div class="kl-ov-head"><i class="ti ti-clock" aria-hidden="true"></i> '
+        + t(headKey) + ' ('+money(val)+')</div>';
+      if (list.length === 0) {
+        s += '<p class="kl-rsmall">'+t(emptyKey)+'</p>';
+      } else {
+        s += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+          + '<th>'+t('r.colItem')+'</th><th>'+t('ov.qty')+'</th><th>'+t('ov.expires')+'</th>'
+          + '</tr></thead><tbody>';
+        list.forEach(r=>{
+          const nm = (r.items && (__lang==='lo' && r.items.name_lao ? r.items.name_lao : r.items.name)) || '?';
+          const un = (r.items && r.items.unit) || '';
+          s += '<tr><td>'+h(nm)+'</td><td>'+fmtQty(r.quantity_remaining)+' '+h(un)+'</td>'
+            + '<td style="color:'+txtCol+';font-weight:600">'+whenLabel(dDays(r.expiry_date))+'</td></tr>';
+        });
+        s += '</tbody></table></div>';
+      }
+      s += '</div>';
+      return s;
+    };
+
+    // Urgent first (3 days, red), then this-week (4-7 days, yellow)
+    html += buildExpCard(exp3, 'ov.expiring3', 'ov.nothing3', 'bad',  '#a32d2d');
+    html += buildExpCard(exp7, 'ov.expiring7', 'ov.nothing7', 'warn', '#854f0b');
+
+    // ---- SECTION 3: STOCK GAUGES (red/yellow/green zones) ----
+    html += '<div class="kl-ov-card"><div class="kl-ov-head">'
+      + '<i class="ti ti-chart-bar" aria-hidden="true"></i> '+t('ov.stockLevels')+'</div>';
+    const gauged = rows.filter(r => r.reorder_level != null || r.par_level != null);
+    if (gauged.length === 0) {
+      html += '<p class="kl-rsmall">'+t('ov.setLevels')+'</p>';
+    } else {
+      // Sort worst first (lowest fill ratio)
+      gauged.sort((a,b)=>{
+        const fa = Number(a.on_hand||0) / Math.max(Number(a.par_level||a.reorder_level||1),1);
+        const fb = Number(b.on_hand||0) / Math.max(Number(b.par_level||b.reorder_level||1),1);
+        return fa - fb;
+      });
+      gauged.forEach(r=>{
+        const onHand = Number(r.on_hand||0);
+        const minL = Number(r.reorder_level||0);
+        const maxL = Number(r.par_level||0) || (minL*4) || 1;
+        const scaleMax = Math.max(maxL, onHand, 1);
+        const pct = Math.min(100, Math.round(onHand/scaleMax*100));
+        const minPct = Math.min(100, Math.round(minL/scaleMax*100));
+        const maxPct = Math.min(100, Math.round(maxL/scaleMax*100));
+        // zone: red below min, yellow below ~60% of max, green above
+        let zone='z-green', label=t('ov.ok'), labCol='#1d9e75';
+        if (onHand <= minL)        { zone='z-red';    label=t('ov.belowMin'); labCol='#a32d2d'; }
+        else if (onHand < maxL*0.6){ zone='z-yellow'; label=t('ov.low');      labCol='#854f0b'; }
+        html += '<div class="kl-gauge-row">'
+          + '<div class="kl-gauge-top"><span class="kl-gauge-name">'+h(r.name)+'</span>'
+          + '<span class="kl-gauge-status" style="color:'+labCol+'">'+fmtQty(onHand)+' '+h(r.unit||'')+' — '+label+'</span></div>'
+          + '<div class="kl-gauge-bar">'
+          + '<div class="kl-gauge-fill '+zone+'" style="width:'+pct+'%"></div>'
+          + '<div class="kl-gauge-mark" style="left:'+minPct+'%"></div>'
+          + '<div class="kl-gauge-mark" style="left:'+maxPct+'%"></div>'
+          + '</div>'
+          + '<div class="kl-gauge-scale"><span>'+t('ov.min')+' '+fmtQty(minL)+'</span>'
+          + '<span>'+t('ov.max')+' '+fmtQty(maxL)+' '+h(r.unit||'')+'</span></div>'
+          + '</div>';
+      });
+      html += '<p class="kl-ov-legend">'+t('ov.legend')+'</p>';
+    }
+    html += '</div>';
+
+    body.innerHTML = html;
+  } catch (e) {
+    body.innerHTML = '<div class="kl-ov-card bad"><div class="kl-ov-head">'+t('r.loadFail')+'</div>'
       + '<p class="kl-rsmall">'+h(e.message||String(e))+'</p></div>';
   }
 }
@@ -1703,6 +2105,16 @@ let MANAGE_TAB = 'items';
 async function initManagePage() {
   const u = await klRequireLogin(); if (!u) return;
   document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
+  // Manage is owner/manager/sa only. Staff/receiver get a clean message
+  // (the database RLS also blocks them — this is the friendly UI layer).
+  if (!['sa','owner','manager'].includes(u.user.role)) {
+    document.getElementById('manageTabs').style.display = 'none';
+    document.getElementById('manageBody').innerHTML =
+      '<div class="kl-rcard warn"><p class="kl-rbig">'+t('m.noAccess')+'</p>'
+      + '<p class="kl-rsmall">' + t('m.mgrOnly') + ' "' + h(u.user.role) + '".</p></div>';
+    return;
+  }
+  document.getElementById('manageTabs').style.display = '';
   document.querySelectorAll('#manageTabs .kl-tab').forEach(btn=>{
     btn.onclick = () => {
       MANAGE_TAB = btn.getAttribute('data-mtab');
@@ -1745,9 +2157,9 @@ async function renderItems(u, body) {
     .select('item_id,sku,name,name_lao,category,unit,storage_type,standard_cost,last_cost,default_shelf_life_days,reorder_level,par_level,contains_peanut,contains_shellfish,contains_dairy,contains_gluten,contains_egg,contains_soy,is_active')
     .order('name');
   if (error) throw error;
-  let html = '<button class="kl-btn kl-btn-primary" onclick="itemForm()">+ Add item</button>';
+  let html = '<button class="kl-btn kl-btn-primary" onclick="itemForm()">'+t('m.addItem')+'</button>';
   html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
-    + '<th>Name</th><th>Unit</th><th>Cost</th><th>Reorder</th><th>Allergens</th></tr></thead><tbody>';
+    + '<th>'+t('m.name')+'</th><th>'+t('m.unit')+'</th><th>'+t('m.cost')+'</th><th>'+t('m.reorder')+'</th><th>'+t('m.allergens')+'</th></tr></thead><tbody>';
   (data||[]).forEach(it=>{
     const al = [];
     if (it.contains_peanut) al.push('peanut');
@@ -1759,13 +2171,13 @@ async function renderItems(u, body) {
     html += '<tr class="kl-iedit" onclick=\'itemForm('+it.item_id+')\'>'
       + '<td>'+h(it.name)+(it.name_lao?'<br><small class="kl-muted">'+h(it.name_lao)+'</small>':'')+'</td>'
       + '<td>'+h(it.unit)+'</td>'
-      + '<td>'+(it.standard_cost?money(it.standard_cost):'<span class="kl-muted">set cost</span>')+'</td>'
+      + '<td>'+(it.standard_cost?money(it.standard_cost):'<span class="kl-muted">'+t('m.setCost')+'</span>')+'</td>'
       + '<td>'+(it.reorder_level!=null?fmtQty(it.reorder_level):'-')+'</td>'
       + '<td>'+(al.length?al.map(a=>'<span class="kl-chip al">'+a+'</span>').join(''):'-')+'</td>'
       + '</tr>';
   });
   html += '</tbody></table></div>';
-  if (!(data||[]).length) html += '<p class="kl-muted">No items yet. Tap "+ Add item".</p>';
+  if (!(data||[]).length) html += '<p class="kl-muted">'+t('m.noItems')+'</p>';
   body.innerHTML = html;
   window.__items = data || [];
 }
@@ -1775,25 +2187,25 @@ window.itemForm = function(id) {
   const v = (k,d='')=> (it&&it[k]!=null)?it[k]:d;
   const cb = (k)=> (it&&it[k])?'checked':'';
   const html =
-    '<div class="kl-form-row"><label>Name *</label><input id="if_name" value="'+h(v('name'))+'"></div>'
-   +'<div class="kl-form-row"><label>Name (Lao)</label><input id="if_namelao" value="'+h(v('name_lao'))+'"></div>'
-   +'<div class="kl-form-row"><label>SKU *</label><input id="if_sku" value="'+h(v('sku'))+'"></div>'
-   +'<div class="kl-form-row"><label>Category</label><input id="if_cat" value="'+h(v('category'))+'"></div>'
-   +'<div class="kl-form-row"><label>Unit</label><input id="if_unit" value="'+h(v('unit','kg'))+'"></div>'
-   +'<div class="kl-form-row"><label>Storage</label><select id="if_store">'
+    '<div class="kl-form-row"><label>'+t('m.name')+' *</label><input id="if_name" value="'+h(v('name'))+'"></div>'
+   +'<div class="kl-form-row"><label>'+t('m.nameLao')+'</label><input id="if_namelao" value="'+h(v('name_lao'))+'"></div>'
+   +'<div class="kl-form-row"><label>'+t('m.sku')+' *</label><input id="if_sku" value="'+h(v('sku'))+'"></div>'
+   +'<div class="kl-form-row"><label>'+t('m.category')+'</label><input id="if_cat" value="'+h(v('category'))+'"></div>'
+   +'<div class="kl-form-row"><label>'+t('m.unit')+'</label><input id="if_unit" value="'+h(v('unit','kg'))+'"></div>'
+   +'<div class="kl-form-row"><label>'+t('m.storage')+'</label><select id="if_store">'
      +['freezer','chiller','dry','ambient','bar'].map(z=>'<option '+(v('storage_type','dry')===z?'selected':'')+'>'+z+'</option>').join('')
    +'</select></div>'
-   +'<div class="kl-form-row"><label>Cost price (₭ per unit)</label><input id="if_cost" type="number" value="'+h(v('standard_cost'))+'"></div>'
-   +'<div class="kl-form-row"><label>Shelf life (days)</label><input id="if_shelf" type="number" value="'+h(v('default_shelf_life_days'))+'"></div>'
-   +'<div class="kl-form-row"><label>Reorder level</label><input id="if_re" type="number" value="'+h(v('reorder_level'))+'"></div>'
-   +'<div class="kl-form-row"><label>Par level</label><input id="if_par" type="number" value="'+h(v('par_level'))+'"></div>'
-   +'<div class="kl-form-row"><label>Allergens</label><div style="display:flex;flex-wrap:wrap;gap:8px">'
+   +'<div class="kl-form-row"><label>'+t('m.cost')+'</label><input id="if_cost" type="number" value="'+h(v('standard_cost'))+'"></div>'
+   +'<div class="kl-form-row"><label>'+t('m.shelf')+'</label><input id="if_shelf" type="number" value="'+h(v('default_shelf_life_days'))+'"></div>'
+   +'<div class="kl-form-row"><label>'+t('m.reorder')+'</label><input id="if_re" type="number" value="'+h(v('reorder_level'))+'"></div>'
+   +'<div class="kl-form-row"><label>'+t('m.par')+'</label><input id="if_par" type="number" value="'+h(v('par_level'))+'"></div>'
+   +'<div class="kl-form-row"><label>'+t('m.allergens')+'</label><div style="display:flex;flex-wrap:wrap;gap:8px">'
      +[['peanut','contains_peanut'],['shellfish','contains_shellfish'],['dairy','contains_dairy'],['gluten','contains_gluten'],['egg','contains_egg'],['soy','contains_soy']]
        .map(([lbl,k])=>'<label style="font-size:13px"><input type="checkbox" id="if_'+k+'" '+cb(k)+'> '+lbl+'</label>').join('')
    +'</div></div>'
-   +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveItem('+(id||'null')+')">Save</button> '
-   +'<button class="kl-btn" onclick="closeModal()">Cancel</button>';
-  modal(id?'Edit item':'Add item', html);
+   +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveItem('+(id||'null')+')">'+t('m.save')+'</button> '
+   +'<button class="kl-btn" onclick="closeModal()">'+t('m.cancel')+'</button>';
+  modal(id?t('m.editItem'):t('m.addItem').replace('+ ',''), html);
 };
 
 window.saveItem = async function(id) {
@@ -1816,7 +2228,23 @@ window.saveItem = async function(id) {
     contains_egg: g('if_contains_egg').checked,
     contains_soy: g('if_contains_soy').checked,
   };
-  if (!rec.name || !rec.sku) { alert('Name and SKU are required'); return; }
+  if (!rec.name || !rec.sku) { alert(t('m.needNameSku')); return; }
+  // Production validation: no negative numbers, sane limits
+  const numChecks = [
+    ['standard_cost', rec.standard_cost, 0, 1000000000, 'Cost price'],
+    ['default_shelf_life_days', rec.default_shelf_life_days, 0, 3650, 'Shelf life'],
+    ['reorder_level', rec.reorder_level, 0, 1000000, 'Reorder level'],
+    ['par_level', rec.par_level, 0, 1000000, 'Par level'],
+  ];
+  for (const [, val, min, max, label] of numChecks) {
+    if (val != null && (isNaN(val) || val < min || val > max)) {
+      alert(label + ' must be a number between ' + min + ' and ' + max.toLocaleString());
+      return;
+    }
+  }
+  if (rec.name.length > 150 || rec.sku.length > 40) {
+    alert('Name max 150 chars, SKU max 40 chars'); return;
+  }
   try {
     let res;
     if (id) {
@@ -1828,7 +2256,7 @@ window.saveItem = async function(id) {
     if (res.error) throw res.error;
     closeModal();
     renderManageTab(klSession());
-  } catch (e) { alert('Save failed: ' + (e.message||e)); }
+  } catch (e) { alert(t('m.saveFail')+': ' + (e.message||e)); }
 };
 
 // ---- SUPPLIERS ----
@@ -1836,44 +2264,45 @@ async function renderSuppliers(u, body) {
   const { data, error } = await sb.from('suppliers')
     .select('supplier_id,name,contact_person,phone,whatsapp,payment_terms,is_active').order('name');
   if (error) throw error;
-  let html = '<button class="kl-btn kl-btn-primary" onclick="supForm()">+ Add supplier</button>';
+  let html = '<button class="kl-btn kl-btn-primary" onclick="supForm()">'+t('m.addSup')+'</button>';
   html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
-    + '<th>Name</th><th>Contact</th><th>Phone</th><th>Terms</th></tr></thead><tbody>';
+    + '<th>'+t('m.name')+'</th><th>'+t('m.contact')+'</th><th>'+t('m.phone')+'</th><th>'+t('m.terms')+'</th></tr></thead><tbody>';
   (data||[]).forEach(s=>{
     html += '<tr class="kl-iedit" onclick=\'supForm('+s.supplier_id+')\'>'
       + '<td>'+h(s.name)+'</td><td>'+h(s.contact_person||'-')+'</td>'
       + '<td>'+h(s.phone||'-')+'</td><td>'+h(s.payment_terms||'-')+'</td></tr>';
   });
   html += '</tbody></table></div>';
-  if (!(data||[]).length) html += '<p class="kl-muted">No suppliers yet.</p>';
+  if (!(data||[]).length) html += '<p class="kl-muted">'+t('m.noSup')+'</p>';
   body.innerHTML = html;
   window.__sups = data || [];
 }
 window.supForm = function(id) {
   const s = id ? (window.__sups||[]).find(x=>x.supplier_id===id) : {};
   const v=(k,d='')=>(s&&s[k]!=null)?s[k]:d;
-  modal(id?'Edit supplier':'Add supplier',
-     '<div class="kl-form-row"><label>Name *</label><input id="sf_name" value="'+h(v('name'))+'"></div>'
-    +'<div class="kl-form-row"><label>Contact person</label><input id="sf_cp" value="'+h(v('contact_person'))+'"></div>'
-    +'<div class="kl-form-row"><label>Phone</label><input id="sf_ph" value="'+h(v('phone'))+'"></div>'
+  modal(id?t('m.editSup'):t('m.addSup').replace('+ ',''),
+     '<div class="kl-form-row"><label>'+t('m.name')+' *</label><input id="sf_name" value="'+h(v('name'))+'"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.contact')+'</label><input id="sf_cp" value="'+h(v('contact_person'))+'"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.phone')+'</label><input id="sf_ph" value="'+h(v('phone'))+'"></div>'
     +'<div class="kl-form-row"><label>WhatsApp</label><input id="sf_wa" value="'+h(v('whatsapp'))+'"></div>'
-    +'<div class="kl-form-row"><label>Payment terms</label><input id="sf_pt" value="'+h(v('payment_terms'))+'"></div>'
-    +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveSup('+(id||'null')+')">Save</button> '
-    +'<button class="kl-btn" onclick="closeModal()">Cancel</button>');
+    +'<div class="kl-form-row"><label>'+t('m.terms')+'</label><input id="sf_pt" value="'+h(v('payment_terms'))+'"></div>'
+    +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveSup('+(id||'null')+')">'+t('m.save')+'</button> '
+    +'<button class="kl-btn" onclick="closeModal()">'+t('m.cancel')+'</button>');
 };
 window.saveSup = async function(id){
   const g=(x)=>document.getElementById(x);
   const rec={ name:g('sf_name').value.trim(), contact_person:g('sf_cp').value.trim()||null,
     phone:g('sf_ph').value.trim()||null, whatsapp:g('sf_wa').value.trim()||null,
     payment_terms:g('sf_pt').value.trim()||null };
-  if(!rec.name){ alert('Name required'); return; }
+  if(!rec.name){ alert(t('m.needName')); return; }
+  if(rec.name.length>150){ alert('Name max 150 chars'); return; }
   try{
     let res;
     if(id) res=await sb.from('suppliers').update(rec).eq('supplier_id',id);
     else { rec.restaurant_id=__profile.restaurant_id; res=await sb.from('suppliers').insert(rec); }
     if(res.error) throw res.error;
     closeModal(); renderManageTab(klSession());
-  }catch(e){ alert('Save failed: '+(e.message||e)); }
+  }catch(e){ alert(t('m.saveFail')+': '+(e.message||e)); }
 };
 
 // ---- LOCATIONS ----
@@ -1881,32 +2310,32 @@ async function renderLocations(u, body) {
   const { data, error } = await sb.from('locations')
     .select('location_id,code,name,temp_zone,target_temp_min_c,target_temp_max_c,is_active').order('code');
   if (error) throw error;
-  let html = '<button class="kl-btn kl-btn-primary" onclick="locForm()">+ Add location</button>';
+  let html = '<button class="kl-btn kl-btn-primary" onclick="locForm()">'+t('m.addLoc')+'</button>';
   html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
-    + '<th>Code</th><th>Name</th><th>Zone</th><th>Temp °C</th></tr></thead><tbody>';
+    + '<th>'+t('m.code')+'</th><th>'+t('m.name')+'</th><th>'+t('m.zone')+'</th><th>'+t('m.tmin')+'</th></tr></thead><tbody>';
   (data||[]).forEach(l=>{
     const t=(l.target_temp_min_c!=null?l.target_temp_min_c+' to '+l.target_temp_max_c:'-');
     html += '<tr class="kl-iedit" onclick=\'locForm('+l.location_id+')\'>'
       + '<td>'+h(l.code)+'</td><td>'+h(l.name)+'</td><td>'+h(l.temp_zone)+'</td><td>'+h(t)+'</td></tr>';
   });
   html += '</tbody></table></div>';
-  if (!(data||[]).length) html += '<p class="kl-muted">No locations yet.</p>';
+  if (!(data||[]).length) html += '<p class="kl-muted">'+t('m.noLoc')+'</p>';
   body.innerHTML = html;
   window.__locs = data || [];
 }
 window.locForm = function(id){
   const l=id?(window.__locs||[]).find(x=>x.location_id===id):{};
   const v=(k,d='')=>(l&&l[k]!=null)?l[k]:d;
-  modal(id?'Edit location':'Add location',
-     '<div class="kl-form-row"><label>Code *</label><input id="lf_code" value="'+h(v('code'))+'"></div>'
-    +'<div class="kl-form-row"><label>Name *</label><input id="lf_name" value="'+h(v('name'))+'"></div>'
-    +'<div class="kl-form-row"><label>Zone</label><select id="lf_zone">'
+  modal(id?t('m.editLoc'):t('m.addLoc').replace('+ ',''),
+     '<div class="kl-form-row"><label>'+t('m.code')+' *</label><input id="lf_code" value="'+h(v('code'))+'"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.name')+' *</label><input id="lf_name" value="'+h(v('name'))+'"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.zone')+'</label><select id="lf_zone">'
       +['freezer','chiller','dry','ambient','bar'].map(z=>'<option '+(v('temp_zone','dry')===z?'selected':'')+'>'+z+'</option>').join('')
     +'</select></div>'
-    +'<div class="kl-form-row"><label>Temp min °C</label><input id="lf_min" type="number" value="'+h(v('target_temp_min_c'))+'"></div>'
-    +'<div class="kl-form-row"><label>Temp max °C</label><input id="lf_max" type="number" value="'+h(v('target_temp_max_c'))+'"></div>'
-    +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveLoc('+(id||'null')+')">Save</button> '
-    +'<button class="kl-btn" onclick="closeModal()">Cancel</button>');
+    +'<div class="kl-form-row"><label>'+t('m.tmin')+'</label><input id="lf_min" type="number" value="'+h(v('target_temp_min_c'))+'"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.tmax')+'</label><input id="lf_max" type="number" value="'+h(v('target_temp_max_c'))+'"></div>'
+    +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveLoc('+(id||'null')+')">'+t('m.save')+'</button> '
+    +'<button class="kl-btn" onclick="closeModal()">'+t('m.cancel')+'</button>');
 };
 window.saveLoc = async function(id){
   const g=(x)=>document.getElementById(x);
@@ -1914,7 +2343,14 @@ window.saveLoc = async function(id){
     temp_zone:g('lf_zone').value,
     target_temp_min_c:g('lf_min').value?Number(g('lf_min').value):null,
     target_temp_max_c:g('lf_max').value?Number(g('lf_max').value):null };
-  if(!rec.code||!rec.name){ alert('Code and name required'); return; }
+  if(!rec.code||!rec.name){ alert(t('m.needCodeName')); return; }
+  if(rec.target_temp_min_c!=null && rec.target_temp_max_c!=null
+     && rec.target_temp_min_c > rec.target_temp_max_c){
+    alert(t('m.tempErr')); return;
+  }
+  if(rec.code.length>20 || rec.name.length>100){
+    alert('Code max 20 chars, name max 100 chars'); return;
+  }
   try{
     let res;
     if(id) res=await sb.from('locations').update(rec).eq('location_id',id);
@@ -1936,7 +2372,7 @@ async function renderUsers(u, body) {
   if (error) throw error;
   let html = '<div class="kl-rcard info"><p class="kl-rsmall">To add a new staff login: create them in Supabase → Authentication → Users, then link via user_profiles. (Self-service staff signup is a future feature.)</p></div>';
   html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
-    + '<th>Name</th><th>Role</th><th>Phone</th><th>Active</th></tr></thead><tbody>';
+    + '<th>'+t('m.name')+'</th><th>'+t('m.role')+'</th><th>'+t('m.phone')+'</th><th>'+t('m.active')+'</th></tr></thead><tbody>';
   (data||[]).forEach(p=>{
     html += '<tr><td>'+h(p.full_name)+'</td><td>'+h(p.role)+'</td>'
       + '<td>'+h(p.phone||'-')+'</td><td>'+(p.is_active?'✓':'✗')+'</td></tr>';
