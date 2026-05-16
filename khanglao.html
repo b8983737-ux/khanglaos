@@ -234,34 +234,69 @@ a:hover { text-decoration: underline; }
 .kl-login-wrap {
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
-  padding: 16px;
+  padding: 20px;
   background: var(--kl-bg);
 }
-.kl-login-card {
-  background: #fff; padding: 36px 32px; border-radius: 18px;
+.kl-login-split {
+  display: flex; width: 100%; max-width: 920px;
+  min-height: 560px;
+  background: #fff; border-radius: 24px; overflow: hidden;
   box-shadow: var(--kl-shadow-lg);
   border: 1px solid var(--kl-border);
-  width: 100%; max-width: 400px;
 }
-.kl-login-brand {
-  text-align: center; font-size: 26px; font-weight: 700;
-  color: var(--kl-primary); margin-bottom: 4px; letter-spacing: -0.4px;
+.kl-login-brandside {
+  flex: 1 1 44%;
+  background: linear-gradient(160deg, #15795f 0%, #0f5d49 60%, #0b4537 100%);
+  color: #fff; padding: 48px 44px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  position: relative;
 }
-.kl-login-tag {
-  text-align: center; color: var(--kl-text-soft);
-  font-size: 12px; margin-bottom: 20px;
+.kl-login-brandmark { }
+.kl-login-logo { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; }
+.kl-login-logo-lao { font-size: 17px; font-weight: 500; opacity: .82; margin-top: 2px; }
+.kl-login-pitch-h { font-size: 21px; font-weight: 600; line-height: 1.35; margin-bottom: 26px; letter-spacing: -0.3px; }
+.kl-login-feats { list-style: none; padding: 0; margin: 0; }
+.kl-login-feats li {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 15px; opacity: .94; margin-bottom: 16px; line-height: 1.4;
 }
+.kl-login-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #fff; opacity: .8; flex-shrink: 0;
+}
+.kl-login-foot { font-size: 13px; opacity: .7; }
+.kl-login-formside {
+  flex: 1 1 56%;
+  padding: 52px 48px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.kl-login-form { width: 100%; max-width: 360px; margin: 0 auto; }
+.kl-login-formhead { margin-bottom: 26px; }
+.kl-login-formhead h1 {
+  font-size: 26px; font-weight: 700; margin: 0 0 6px 0;
+  letter-spacing: -0.5px; color: var(--kl-text);
+}
+.kl-login-formhead p { font-size: 15px; color: var(--kl-text-soft); margin: 0; }
 .kl-login-lang {
-  display: flex; justify-content: center; gap: 6px;
-  margin-bottom: 14px; flex-wrap: wrap;
+  display: flex; gap: 6px; margin-bottom: 22px; flex-wrap: wrap;
 }
 .kl-login-lang button {
-  background: none; border: 1px solid var(--kl-border);
-  padding: 4px 10px; border-radius: 4px;
-  font-size: 12px; cursor: pointer;
+  background: var(--kl-surface-2); border: 1px solid var(--kl-border);
+  padding: 6px 13px; border-radius: 8px;
+  font-size: 13px; cursor: pointer; color: var(--kl-text-soft);
+  font-family: inherit; transition: all .14s;
 }
+.kl-login-lang button:hover { border-color: var(--kl-border-strong); color: var(--kl-text); }
 .kl-login-lang button.active {
-  background: var(--kl-primary); color: #fff; border-color: var(--kl-primary);
+  background: var(--kl-primary); color: #fff; border-color: var(--kl-primary); font-weight: 600;
+}
+@media (max-width: 720px) {
+  .kl-login-split { flex-direction: column; max-width: 420px; min-height: 0; }
+  .kl-login-brandside { padding: 36px 32px; }
+  .kl-login-pitch { display: none; }
+  .kl-login-foot { display: none; }
+  .kl-login-brandside { flex: none; }
+  .kl-login-formside { padding: 36px 32px; }
 }
 
 .kl-scanner-box {
@@ -363,30 +398,54 @@ a:hover { text-decoration: underline; }
 <!-- page -->
 <div id="page-login" class="kl-page">
   <div class="kl-login-wrap">
-    <form class="kl-login-card" id="loginForm" autocomplete="off">
-      <div class="kl-login-brand">KHANGLAOS</div>
-      <div class="kl-login-tag">ຄັງລາວ · <span data-i18n="app.tag">Warehouse Management</span></div>
+    <div class="kl-login-split">
 
-      <div class="kl-login-lang" id="loginLangBar">
-        <button type="button" data-lang="en">🇬🇧 EN</button>
-        <button type="button" data-lang="lo">🇱🇦 ລາວ</button>
-        <button type="button" data-lang="th">🇹🇭 ไทย</button>
-        <button type="button" data-lang="zh">🇨🇳 中文</button>
-        <button type="button" data-lang="ko">🇰🇷 한국어</button>
+      <div class="kl-login-brandside">
+        <div class="kl-login-brandmark">
+          <div class="kl-login-logo">KHANGLAOS</div>
+          <div class="kl-login-logo-lao">ຄັງລາວ</div>
+        </div>
+        <div class="kl-login-pitch">
+          <div class="kl-login-pitch-h" data-i18n="app.tag">Warehouse Management</div>
+          <ul class="kl-login-feats">
+            <li><span class="kl-login-dot"></span><span data-i18n="login.feat1">Real-time stock &amp; expiry tracking</span></li>
+            <li><span class="kl-login-dot"></span><span data-i18n="login.feat2">Scan to receive &amp; check-out</span></li>
+            <li><span class="kl-login-dot"></span><span data-i18n="login.feat3">Waste &amp; profit reports</span></li>
+          </ul>
+        </div>
+        <div class="kl-login-foot">KHANGLAOS · 🇱🇦 Laos</div>
       </div>
 
-      <div id="loginMsg"></div>
+      <div class="kl-login-formside">
+        <form class="kl-login-form" id="loginForm" autocomplete="off">
+          <div class="kl-login-formhead">
+            <h1 data-i18n="login.welcome">Welcome back</h1>
+            <p data-i18n="login.signinto">Sign in to your warehouse</p>
+          </div>
 
-      <div class="kl-form-row">
-        <label data-i18n="login.email">Email</label>
-        <input type="email" id="loginUsername" required autocomplete="username" autocapitalize="none">
+          <div class="kl-login-lang" id="loginLangBar">
+            <button type="button" data-lang="en">EN</button>
+            <button type="button" data-lang="lo">ລາວ</button>
+            <button type="button" data-lang="th">ไทย</button>
+            <button type="button" data-lang="zh">中文</button>
+            <button type="button" data-lang="ko">한국어</button>
+          </div>
+
+          <div id="loginMsg"></div>
+
+          <div class="kl-form-row">
+            <label data-i18n="login.email">Email</label>
+            <input type="email" id="loginUsername" required autocomplete="username" autocapitalize="none" placeholder="you@restaurant.la">
+          </div>
+          <div class="kl-form-row">
+            <label data-i18n="login.password">Password</label>
+            <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••">
+          </div>
+          <button type="submit" id="loginBtn" class="kl-btn kl-btn-primary kl-btn-lg kl-btn-block" data-i18n="login.button">Sign in</button>
+        </form>
       </div>
-      <div class="kl-form-row">
-        <label data-i18n="login.password">Password</label>
-        <input type="password" id="loginPassword" required autocomplete="current-password">
-      </div>
-      <button type="submit" id="loginBtn" class="kl-btn kl-btn-primary kl-btn-lg kl-btn-block" data-i18n="login.button">Sign in</button>
-    </form>
+
+    </div>
   </div>
 </div>
 
@@ -732,6 +791,8 @@ const I18N = {
     "ov.min":"min", "ov.max":"max",
     "ov.legend":"Red = below min · Yellow = low · Green = healthy · lines = min & max markers",
     "ov.noAccess":"No access", "ov.mgrOnly":"The Overview cockpit is for owners and managers. Your role is",
+    "login.welcome":"Welcome back", "login.signinto":"Sign in to your warehouse",
+    "login.feat1":"Real-time stock & expiry tracking", "login.feat2":"Scan to receive & check-out", "login.feat3":"Waste & profit reports",
     "common.cancel":"Cancel", "common.confirm":"Are you sure?",
   },
   lo: {
@@ -829,6 +890,8 @@ const I18N = {
     "ov.min":"ຕ່ຳ", "ov.max":"ສູງ",
     "ov.legend":"ແດງ = ຕ່ຳກວ່າຂັ້ນຕ່ຳ · ເຫຼືອງ = ໜ້ອຍ · ຂຽວ = ພຽງພໍ · ເສັ້ນ = ຈຸດຕ່ຳ&ສູງ",
     "ov.noAccess":"ບໍ່ມີສິດ", "ov.mgrOnly":"ໜ້າພາບລວມ ສຳລັບເຈົ້າຂອງ ແລະ ຜູ້ຈັດການ. ໜ້າທີ່ຂອງທ່ານຄື",
+    "login.welcome":"ຍິນດີຕ້ອນຮັບກັບ", "login.signinto":"ເຂົ້າສູ່ລະບົບຄັງສິນຄ້າ",
+    "login.feat1":"ຕິດຕາມສິນຄ້າ ແລະ ວັນໝົດອາຍຸ ແບບສົດ", "login.feat2":"ສະແກນເພື່ອຮັບ ແລະ ເບີກສິນຄ້າ", "login.feat3":"ລາຍງານ ຂີ້ເສດ ແລະ ກຳໄລ",
     "common.cancel":"ຍົກເລີກ", "common.confirm":"ແນ່ໃຈບໍ?",
   },
   th: {
@@ -926,6 +989,8 @@ const I18N = {
     "ov.min":"ต่ำ", "ov.max":"สูง",
     "ov.legend":"แดง = ต่ำกว่าขั้นต่ำ · เหลือง = น้อย · เขียว = พอ · เส้น = จุดต่ำ&สูง",
     "ov.noAccess":"ไม่มีสิทธิ์", "ov.mgrOnly":"หน้าภาพรวม สำหรับเจ้าของและผู้จัดการ. ตำแหน่งของคุณคือ",
+    "login.welcome":"ยินดีต้อนรับกลับ", "login.signinto":"เข้าสู่ระบบคลังสินค้า",
+    "login.feat1":"ติดตามสต็อกและวันหมดอายุแบบเรียลไทม์", "login.feat2":"สแกนเพื่อรับและเบิกสินค้า", "login.feat3":"รายงานของเสียและกำไร",
     "common.cancel":"ยกเลิก", "common.confirm":"แน่ใจไหม?",
   },
   zh: {
@@ -1021,6 +1086,8 @@ const I18N = {
     "ov.min":"最低", "ov.max":"最高",
     "ov.legend":"红 = 低于最低 · 黄 = 偏低 · 绿 = 充足 · 线 = 最低&最高标记",
     "ov.noAccess":"无权限", "ov.mgrOnly":"总览驾驶舱仅限业主和经理。您的角色是",
+    "login.welcome":"欢迎回来", "login.signinto":"登录您的仓库",
+    "login.feat1":"实时库存和过期跟踪", "login.feat2":"扫描入库和出库", "login.feat3":"浪费和利润报表",
     "common.cancel":"取消", "common.confirm":"确定吗?",
   },
   ko: {
@@ -1117,6 +1184,8 @@ const I18N = {
     "ov.min":"최소", "ov.max":"최대",
     "ov.legend":"빨강 = 최소 이하 · 노랑 = 부족 · 초록 = 충분 · 선 = 최소&최대 표시",
     "ov.noAccess":"접근 불가", "ov.mgrOnly":"개요 콕핏은 소유자와 관리자용입니다. 귀하의 역할은",
+    "login.welcome":"다시 오신 것을 환영합니다", "login.signinto":"창고에 로그인",
+    "login.feat1":"실시간 재고 및 만료 추적", "login.feat2":"스캔하여 입고 및 출고", "login.feat3":"폐기 및 이익 보고서",
     "common.cancel":"취소", "common.confirm":"확실합니까?",
   },
 };
