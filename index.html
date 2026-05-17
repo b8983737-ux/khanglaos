@@ -14,6 +14,7 @@
   frame-src   'self';
 ">
 <title>KHANGLAOS</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%2315795f'/%3E%3Ctext x='32' y='46' font-family='Arial,Helvetica,sans-serif' font-size='40' font-weight='700' fill='%23fff' text-anchor='middle'%3EK%3C/text%3E%3Ccircle cx='50' cy='18' r='5.5' fill='%23caa24a'/%3E%3C/svg%3E">
 
 <style>
 
@@ -77,7 +78,9 @@ a:hover { text-decoration: underline; }
   min-height: 60px;
   position: sticky; top: 0; z-index: 50;
 }
-.kl-brand { font-weight: 700; font-size: 18px; letter-spacing: -0.3px; color: var(--kl-primary); }
+.kl-brand { font-weight: 700; font-size: 18px; letter-spacing: -0.3px; color: var(--kl-primary); display: flex; align-items: center; gap: 9px; }
+.kl-brand-mark { width: 28px; height: 28px; flex-shrink: 0; }
+.kl-brand-mark svg { width: 100%; height: 100%; display: block; }
 .kl-brand small { color: var(--kl-text-faint); font-weight: 500; margin-left: 6px; font-size: 12px; }
 .kl-topbar nav {
   display: flex; gap: 2px;
@@ -235,50 +238,49 @@ a:hover { text-decoration: underline; }
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
-  background: var(--kl-bg);
+  /* Original warehouse illustration embedded directly in the file:
+     loads instantly, works offline, never breaks on weak internet,
+     zero licensing risk. Dark green overlay keeps the card readable. */
+  background:
+    linear-gradient(165deg, rgba(11,69,55,.72) 0%, rgba(8,52,44,.86) 100%),
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='1000' viewBox='0 0 1600 1000'%3E%3Crect width='1600' height='1000' fill='%230d5e49'/%3E%3Crect width='1600' height='1000' fill='url(%23g)'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23147a5f'/%3E%3Cstop offset='1' stop-color='%230a3f31'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg opacity='0.5'%3E%3Crect x='90' y='250' width='12' height='560' fill='%230a4233'/%3E%3Crect x='440' y='250' width='12' height='560' fill='%230a4233'/%3E%3Crect x='80' y='250' width='372' height='10' fill='%230a4233'/%3E%3Crect x='80' y='420' width='372' height='10' fill='%230a4233'/%3E%3Crect x='80' y='590' width='372' height='10' fill='%230a4233'/%3E%3Crect x='80' y='760' width='372' height='10' fill='%230a4233'/%3E%3Crect x='120' y='280' width='90' height='130' rx='4' fill='%2316876a'/%3E%3Crect x='225' y='290' width='80' height='120' rx='4' fill='%231c9576'/%3E%3Crect x='320' y='280' width='95' height='130' rx='4' fill='%2316876a'/%3E%3Crect x='130' y='450' width='85' height='130' rx='4' fill='%231c9576'/%3E%3Crect x='230' y='460' width='90' height='120' rx='4' fill='%2316876a'/%3E%3Crect x='335' y='450' width='80' height='130' rx='4' fill='%231c9576'/%3E%3Crect x='120' y='620' width='95' height='130' rx='4' fill='%231c9576'/%3E%3Crect x='230' y='630' width='80' height='120' rx='4' fill='%2316876a'/%3E%3Crect x='325' y='620' width='90' height='130' rx='4' fill='%231c9576'/%3E%3C/g%3E%3Cg opacity='0.42'%3E%3Crect x='1140' y='250' width='12' height='560' fill='%230a4233'/%3E%3Crect x='1500' y='250' width='12' height='560' fill='%230a4233'/%3E%3Crect x='1130' y='250' width='382' height='10' fill='%230a4233'/%3E%3Crect x='1130' y='420' width='382' height='10' fill='%230a4233'/%3E%3Crect x='1130' y='590' width='382' height='10' fill='%230a4233'/%3E%3Crect x='1130' y='760' width='382' height='10' fill='%230a4233'/%3E%3Crect x='1170' y='280' width='90' height='130' rx='4' fill='%2316876a'/%3E%3Crect x='1275' y='290' width='80' height='120' rx='4' fill='%231c9576'/%3E%3Crect x='1370' y='280' width='95' height='130' rx='4' fill='%2316876a'/%3E%3Crect x='1180' y='450' width='85' height='130' rx='4' fill='%231c9576'/%3E%3Crect x='1280' y='460' width='90' height='120' rx='4' fill='%2316876a'/%3E%3Crect x='1385' y='450' width='80' height='130' rx='4' fill='%231c9576'/%3E%3Crect x='1170' y='620' width='95' height='130' rx='4' fill='%231c9576'/%3E%3Crect x='1280' y='630' width='80' height='120' rx='4' fill='%2316876a'/%3E%3Crect x='1375' y='620' width='90' height='130' rx='4' fill='%231c9576'/%3E%3C/g%3E%3Cg opacity='0.3'%3E%3Crect x='690' y='720' width='220' height='30' rx='3' fill='%230a4233'/%3E%3Crect x='710' y='620' width='80' height='100' rx='4' fill='%2316876a'/%3E%3Crect x='805' y='630' width='90' height='90' rx='4' fill='%231c9576'/%3E%3C/g%3E%3C/svg%3E")
+      center/cover no-repeat,
+    linear-gradient(160deg, #15795f 0%, #0f5d49 60%, #0b4537 100%);
 }
 .kl-login-split {
-  display: flex; width: 100%; max-width: 920px;
-  min-height: 560px;
-  background: #fff; border-radius: 24px; overflow: hidden;
-  box-shadow: var(--kl-shadow-lg);
-  border: 1px solid var(--kl-border);
+  display: flex; flex-direction: column;
+  width: 100%; max-width: 440px;
+  background: #fff; border-radius: 22px; overflow: hidden;
+  box-shadow: 0 30px 80px -20px rgba(0,0,0,.45);
+  border: 1px solid rgba(255,255,255,.15);
 }
 .kl-login-brandside {
-  flex: 1 1 44%;
-  background: linear-gradient(160deg, #15795f 0%, #0f5d49 60%, #0b4537 100%);
-  color: #fff; padding: 48px 44px;
-  display: flex; flex-direction: column; justify-content: space-between;
-  position: relative;
+  background: #fff; color: var(--kl-text);
+  padding: 40px 44px 8px; text-align: center;
+  display: flex; flex-direction: column; align-items: center;
 }
-.kl-login-brandmark { }
-.kl-login-logo { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; }
-.kl-login-logo-lao { font-size: 17px; font-weight: 500; opacity: .82; margin-top: 2px; }
-.kl-login-pitch-h { font-size: 21px; font-weight: 600; line-height: 1.35; margin-bottom: 26px; letter-spacing: -0.3px; }
-.kl-login-feats { list-style: none; padding: 0; margin: 0; }
-.kl-login-feats li {
-  display: flex; align-items: center; gap: 12px;
-  font-size: 15px; opacity: .94; margin-bottom: 16px; line-height: 1.4;
-}
-.kl-login-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #fff; opacity: .8; flex-shrink: 0;
-}
-.kl-login-foot { font-size: 13px; opacity: .7; }
+.kl-login-brandmark { display: flex; flex-direction: column; align-items: center; }
+.kl-login-mark { width: 64px; height: 64px; margin-bottom: 16px; }
+.kl-login-mark svg { width: 100%; height: 100%; display: block; }
+.kl-login-logo { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; color: var(--kl-text); }
+.kl-login-logo-lao { font-size: 16px; font-weight: 500; color: var(--kl-text-soft); margin-top: 2px; }
+/* Feature pitch hidden on the compact centered card — keeps it clean like MarketMan */
+.kl-login-pitch { display: none; }
+.kl-login-foot { display: none; }
 .kl-login-formside {
-  flex: 1 1 56%;
-  padding: 52px 48px;
-  display: flex; flex-direction: column; justify-content: center;
+  background: #fff;
+  padding: 14px 44px 44px;
+  display: flex; flex-direction: column;
 }
 .kl-login-form { width: 100%; max-width: 360px; margin: 0 auto; }
-.kl-login-formhead { margin-bottom: 26px; }
+.kl-login-formhead { margin-bottom: 22px; text-align: center; }
 .kl-login-formhead h1 {
-  font-size: 26px; font-weight: 700; margin: 0 0 6px 0;
+  font-size: 24px; font-weight: 700; margin: 0 0 5px 0;
   letter-spacing: -0.5px; color: var(--kl-text);
 }
-.kl-login-formhead p { font-size: 15px; color: var(--kl-text-soft); margin: 0; }
+.kl-login-formhead p { font-size: 14.5px; color: var(--kl-text-soft); margin: 0; }
 .kl-login-lang {
-  display: flex; gap: 6px; margin-bottom: 22px; flex-wrap: wrap;
+  display: flex; gap: 6px; margin-bottom: 22px; flex-wrap: wrap; justify-content: center;
 }
 .kl-login-lang button {
   background: var(--kl-surface-2); border: 1px solid var(--kl-border);
@@ -291,12 +293,10 @@ a:hover { text-decoration: underline; }
   background: var(--kl-primary); color: #fff; border-color: var(--kl-primary); font-weight: 600;
 }
 @media (max-width: 720px) {
-  .kl-login-split { flex-direction: column; max-width: 420px; min-height: 0; }
-  .kl-login-brandside { padding: 36px 32px; }
-  .kl-login-pitch { display: none; }
-  .kl-login-foot { display: none; }
-  .kl-login-brandside { flex: none; }
-  .kl-login-formside { padding: 36px 32px; }
+  .kl-login-wrap { padding: 14px; }
+  .kl-login-split { max-width: 400px; }
+  .kl-login-brandside { padding: 34px 30px 6px; }
+  .kl-login-formside { padding: 12px 30px 36px; }
 }
 
 .kl-scanner-box {
@@ -402,6 +402,7 @@ a:hover { text-decoration: underline; }
 
       <div class="kl-login-brandside">
         <div class="kl-login-brandmark">
+          <div class="kl-login-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
           <div class="kl-login-logo">KHANGLAOS</div>
           <div class="kl-login-logo-lao">ຄັງລາວ</div>
         </div>
@@ -453,12 +454,13 @@ a:hover { text-decoration: underline; }
      SHARED TOPBAR  (shown on all authenticated pages)
 ═══════════════════════════════════════════════════════════════ -->
 <header id="kl-topbar" class="kl-topbar kl-no-print" style="display:none">
-  <div class="kl-brand">KHANGLAOS <small>ຄັງລາວ</small></div>
+  <div class="kl-brand"><span class="kl-brand-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></span>KHANGLAOS <small>ຄັງລາວ</small></div>
   <nav>
     <a href="#/dashboard" data-nav="dashboard" data-i18n="nav.dashboard">Dashboard</a>
     <a href="#/overview"  data-nav="overview"  data-i18n="nav.overview">Overview</a>
     <a href="#/receive"   data-nav="receive"   data-i18n="nav.receive">Receive</a>
     <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout">Check-Out</a>
+    <a href="#/sales"     data-nav="sales"     data-i18n="nav.sales">Sales</a>
     <a href="#/reports"   data-nav="reports"   data-i18n="nav.reports">Reports</a>
     <a href="#/manage"    data-nav="manage"    data-i18n="nav.manage">Manage</a>
   </nav>
@@ -505,6 +507,12 @@ a:hover { text-decoration: underline; }
     <div class="kl-card">
       <h2 data-i18n="dashboard.fefo.title">Expiring Soonest (FEFO queue)</h2>
       <div id="fefoBox"><p style="color:var(--kl-text-soft);margin:0" data-i18n="common.loading">Loading...</p></div>
+    </div>
+
+    <div class="kl-card" id="expWasteCard" style="display:none">
+      <h2 data-i18n="ew.title">Expired — tap to waste (one tap)</h2>
+      <p class="kl-page-sub" data-i18n="ew.sub">These are expired or expiring. Tap to record waste — quantity and money are filled for you.</p>
+      <div id="expWasteBox"></div>
     </div>
 
     <div class="kl-card">
@@ -669,7 +677,21 @@ a:hover { text-decoration: underline; }
   <div class="kl-wrap">
     <h1 class="kl-page-title" data-i18n="reports.title">Reports — Money &amp; Profit</h1>
     <p class="kl-page-sub" data-i18n="reports.sub">What is making money, what is losing money. Red = problem.</p>
+    <div class="kl-tabs" id="reportsTabs">
+      <button class="kl-tab active" data-rtab="waste"    data-i18n="rt.waste">Waste &amp; Stock</button>
+      <button class="kl-tab"        data-rtab="recipes"  data-i18n="rt.recipes">Recipes — Profit per Dish</button>
+      <button class="kl-tab"        data-rtab="purchasing" data-i18n="rt.purchasing">Purchasing</button>
+      <button class="kl-tab"        data-rtab="variance" data-i18n="rt.variance">Variance — Loss Finder</button>
+    </div>
     <div id="reportsBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
+  </div>
+</div>
+
+<div id="page-sales" class="kl-page">
+  <div class="kl-wrap">
+    <h1 class="kl-page-title" data-i18n="sales.title">Sales — log dishes sold</h1>
+    <p class="kl-page-sub" data-i18n="sales.sub">Tap a dish, set how many sold, confirm. Ingredients auto-deduct from stock (FEFO). Makes the Variance report work.</p>
+    <div id="salesBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
   </div>
 </div>
 
@@ -794,6 +816,69 @@ const I18N = {
     "login.welcome":"Welcome back", "login.signinto":"Sign in to your warehouse",
     "login.feat1":"Real-time stock & expiry tracking", "login.feat2":"Scan to receive & check-out", "login.feat3":"Waste & profit reports",
     "common.cancel":"Cancel", "common.confirm":"Are you sure?",
+    "rt.waste":"Waste & Stock", "rt.recipes":"Recipes — Profit per Dish",
+    "rc.title":"Recipes — Profit per Dish", "rc.sub":"Cost is auto-calculated from live ingredient prices. Red = losing money.",
+    "rc.add":"+ Add recipe", "rc.edit":"Edit recipe", "rc.name":"Dish name", "rc.nameLao":"Dish name (Lao)",
+    "rc.category":"Category", "rc.yield":"Makes (portions)", "rc.yieldUnit":"Portion unit",
+    "rc.price":"Selling price (per portion)", "rc.target":"Target food cost %",
+    "rc.isSub":"This is a sub-recipe (used inside other dishes, not sold directly)",
+    "rc.notes":"Notes", "rc.ingredients":"Ingredients", "rc.addLine":"+ Add ingredient",
+    "rc.ingType":"Type", "rc.rawItem":"Stock item", "rc.subRecipe":"Sub-recipe",
+    "rc.choose":"— Choose —", "rc.qty":"Quantity", "rc.unit":"Unit",
+    "rc.waste":"Waste factor", "rc.wasteHint":"1.10 = buy 10% more for trim loss",
+    "rc.lineNote":"Note", "rc.save":"Save recipe", "rc.del":"Delete recipe",
+    "rc.delConfirm":"Delete this recipe? This cannot be undone.",
+    "rc.colDish":"Dish", "rc.colCost":"Cost/portion", "rc.colPrice":"Sell price",
+    "rc.colProfit":"Profit/portion", "rc.colFcpct":"Food cost %", "rc.colStatus":"Status",
+    "rc.none":"No recipes yet. Tap Add recipe to build your first dish.",
+    "rc.needName":"Dish name is required.", "rc.needLines":"Add at least one ingredient.",
+    "rc.st.GOOD":"GOOD", "rc.st.WATCH":"WATCH — cost high", "rc.st.LOSER":"LOSER — losing money",
+    "rc.st.NO_PRICE":"No price set", "rc.st.NO_COST":"No cost yet", "rc.st.SUB":"Sub-recipe",
+    "rc.kpiDishes":"Dishes priced", "rc.kpiLosers":"Losing money", "rc.kpiWatch":"Watch list",
+    "rc.kpiAvgFc":"Avg food cost %", "rc.fixFirst":"Fix these first — losing money on every sale",
+    "rc.noLosers":"No losing dishes. Good — every dish makes money.",
+    "rc.costFrom":"Cost auto-calculated. Set ingredient cost prices in Manage → Items for accuracy.",
+    "rc.loadFail":"Could not load recipes", "rc.saveFail":"Save failed", "rc.subOpt":"(sub-recipe)",
+    "rt.purchasing":"Purchasing", "rt.variance":"Variance — Loss Finder",
+    "po.title":"Purchase Orders", "po.sub":"Order stock from suppliers. Build from reorder advisor in one tap.",
+    "po.new":"+ New order", "po.fromAdvisor":"Build from reorder advisor", "po.edit":"Edit order",
+    "po.supplier":"Supplier", "po.number":"PO number", "po.status":"Status", "po.expected":"Expected date",
+    "po.notes":"Notes", "po.lines":"Items to order", "po.addLine":"+ Add item", "po.item":"Item",
+    "po.qty":"Quantity", "po.unit":"Unit", "po.cost":"Unit cost", "po.lineTotal":"Line total",
+    "po.total":"Order total", "po.save":"Save order", "po.send":"Mark sent", "po.receive":"Receive order",
+    "po.cancel":"Cancel order", "po.del":"Delete order", "po.delConfirm":"Delete this order? Cannot be undone.",
+    "po.st.draft":"Draft", "po.st.sent":"Sent", "po.st.received":"Received", "po.st.cancelled":"Cancelled",
+    "po.none":"No purchase orders yet. Tap New order or build from reorder advisor.",
+    "po.needSup":"Choose a supplier.", "po.needLines":"Add at least one item.",
+    "po.colNum":"PO #", "po.colSup":"Supplier", "po.colStatus":"Status", "po.colTotal":"Total", "po.colDate":"Date",
+    "po.advisorEmpty":"Nothing needs reordering right now.",
+    "po.sendConfirm":"Mark this order as sent to supplier?",
+    "po.recvConfirm":"Receive this order? This will add the items to stock as new batches.",
+    "po.recvDone":"Order received. Stock batches created.",
+    "po.alerts":"Supplier price alerts", "po.alertsNone":"No price changes detected.",
+    "po.colOld":"Was", "po.colNew":"Now", "po.colChange":"Change", "po.priceUp":"price up",
+    "po.loadFail":"Could not load purchasing", "po.saveFail":"Save failed",
+    "var.title":"Variance — where money leaks", "var.sub":"What recipes SAY you used vs what stock ACTUALLY left. Red gap = theft, over-portioning, or untracked waste.",
+    "var.kpiLeak":"Total money leaking", "var.kpiItems":"Items with gap", "var.kpiWorst":"Worst item",
+    "var.colItem":"Item", "var.colTheo":"Should use", "var.colActual":"Actually used",
+    "var.colGap":"Gap", "var.colValue":"Money lost", "var.colPct":"Gap %",
+    "var.none":"No variance data yet. Connect EATLAOS POS sales to see theoretical vs actual.",
+    "var.good":"No leaks detected. Recipes match actual usage — good control.",
+    "var.explainTitle":"What this means",
+    "var.explain":"Positive gap = more stock left than recipes explain. Investigate: portion sizes too big, staff taking food, or waste not logged. Negative gap = used less than recipes (good, or recipes overstated).",
+    "var.loadFail":"Could not load variance",
+    "nav.sales":"Sales",
+    "sales.title":"Sales — log dishes sold", "sales.sub":"Tap a dish, set how many sold, confirm. Ingredients auto-deduct from stock (FEFO). Makes the Variance report work.",
+    "sales.none":"No recipes with a selling price yet. Add priced dishes in Reports → Recipes first.",
+    "sales.qtySold":"How many sold?", "sales.confirm":"Confirm sale", "sales.confirmMsg":"Log {n} × {dish} sold? Ingredients will be deducted from stock.",
+    "sales.done":"Sale logged. Ingredients deducted.", "sales.shortWarn":"Logged, but stock was short on some ingredients — reorder needed.",
+    "sales.todayRef":"Auto reference (today + dish + count)", "sales.fail":"Could not log sale",
+    "sales.recent":"Logged today", "sales.recentNone":"No sales logged yet today.",
+    "ew.title":"Expired — tap to waste (one tap)", "ew.sub":"These are expired or expiring. Tap to record waste — quantity and money are filled for you.",
+    "ew.tap":"Tap to waste", "ew.confirm":"Waste all {q} {unit} of {name}? Money lost: {money}.",
+    "ew.done":"Waste recorded.", "ew.fail":"Could not record waste", "ew.expired":"EXPIRED", "ew.expiring":"EXPIRING",
+    "po.autoDraft":"Auto-create draft orders", "po.autoConfirm":"Auto-create draft purchase orders for everything that needs reordering?",
+    "po.autoDone":"{n} draft order(s) created. Review and send.", "po.autoNone":"Nothing needs reordering — no drafts created.", "po.autoFail":"Auto-draft failed",
   },
   lo: {
     "app.tag": "ລະບົບຈັດການສາງສິນຄ້າ",
@@ -893,6 +978,69 @@ const I18N = {
     "login.welcome":"ຍິນດີຕ້ອນຮັບກັບ", "login.signinto":"ເຂົ້າສູ່ລະບົບຄັງສິນຄ້າ",
     "login.feat1":"ຕິດຕາມສິນຄ້າ ແລະ ວັນໝົດອາຍຸ ແບບສົດ", "login.feat2":"ສະແກນເພື່ອຮັບ ແລະ ເບີກສິນຄ້າ", "login.feat3":"ລາຍງານ ຂີ້ເສດ ແລະ ກຳໄລ",
     "common.cancel":"ຍົກເລີກ", "common.confirm":"ແນ່ໃຈບໍ?",
+    "rt.waste":"ສິນຄ້າເສຍ & ສະຕັອກ", "rt.recipes":"ສູດອາຫານ — ກຳໄລຕໍ່ຈານ",
+    "rc.title":"ສູດອາຫານ — ກຳໄລຕໍ່ຈານ", "rc.sub":"ຄ່າທຶນຄິດໄລ່ອັດຕະໂນມັດຈາກລາຄາວັດຖຸດິບ. ສີແດງ = ຂາດທຶນ.",
+    "rc.add":"+ ເພີ່ມສູດ", "rc.edit":"ແກ້ໄຂສູດ", "rc.name":"ຊື່ເມນູ", "rc.nameLao":"ຊື່ເມນູ (ລາວ)",
+    "rc.category":"ໝວດ", "rc.yield":"ໄດ້ (ຈານ)", "rc.yieldUnit":"ໜ່ວຍຈານ",
+    "rc.price":"ລາຄາຂາຍ (ຕໍ່ຈານ)", "rc.target":"ເປົ້າໝາຍ ຄ່າທຶນ %",
+    "rc.isSub":"ນີ້ແມ່ນສູດຍ່ອຍ (ໃຊ້ໃນເມນູອື່ນ ບໍ່ຂາຍໂດຍກົງ)",
+    "rc.notes":"ໝາຍເຫດ", "rc.ingredients":"ວັດຖຸດິບ", "rc.addLine":"+ ເພີ່ມວັດຖຸດິບ",
+    "rc.ingType":"ປະເພດ", "rc.rawItem":"ສິນຄ້າສະຕັອກ", "rc.subRecipe":"ສູດຍ່ອຍ",
+    "rc.choose":"— ເລືອກ —", "rc.qty":"ຈຳນວນ", "rc.unit":"ໜ່ວຍ",
+    "rc.waste":"ຄ່າສູນເສຍ", "rc.wasteHint":"1.10 = ຊື້ເພີ່ມ 10% ສຳລັບສ່ວນຖິ້ມ",
+    "rc.lineNote":"ໝາຍເຫດ", "rc.save":"ບັນທຶກສູດ", "rc.del":"ລຶບສູດ",
+    "rc.delConfirm":"ລຶບສູດນີ້ບໍ? ກູ້ຄືນບໍ່ໄດ້.",
+    "rc.colDish":"ເມນູ", "rc.colCost":"ຄ່າທຶນ/ຈານ", "rc.colPrice":"ລາຄາຂາຍ",
+    "rc.colProfit":"ກຳໄລ/ຈານ", "rc.colFcpct":"ຄ່າທຶນ %", "rc.colStatus":"ສະຖານະ",
+    "rc.none":"ຍັງບໍ່ມີສູດ. ກົດ ເພີ່ມສູດ ເພື່ອສ້າງເມນູທຳອິດ.",
+    "rc.needName":"ຕ້ອງມີຊື່ເມນູ.", "rc.needLines":"ເພີ່ມວັດຖຸດິບຢ່າງໜ້ອຍ 1 ລາຍການ.",
+    "rc.st.GOOD":"ດີ", "rc.st.WATCH":"ລະວັງ — ຄ່າທຶນສູງ", "rc.st.LOSER":"ຂາດທຶນ",
+    "rc.st.NO_PRICE":"ຍັງບໍ່ຕັ້ງລາຄາ", "rc.st.NO_COST":"ຍັງບໍ່ມີຄ່າທຶນ", "rc.st.SUB":"ສູດຍ່ອຍ",
+    "rc.kpiDishes":"ເມນູມີລາຄາ", "rc.kpiLosers":"ຂາດທຶນ", "rc.kpiWatch":"ລາຍການລະວັງ",
+    "rc.kpiAvgFc":"ຄ່າທຶນສະເລ່ຍ %", "rc.fixFirst":"ແກ້ກ່ອນ — ຂາດທຶນທຸກຄັ້ງທີ່ຂາຍ",
+    "rc.noLosers":"ບໍ່ມີເມນູຂາດທຶນ. ດີ — ທຸກເມນູມີກຳໄລ.",
+    "rc.costFrom":"ຄ່າທຶນຄິດໄລ່ອັດຕະໂນມັດ. ຕັ້ງລາຄາທຶນວັດຖຸດິບໃນ ຈັດການ → ສິນຄ້າ ໃຫ້ຖືກຕ້ອງ.",
+    "rc.loadFail":"ໂຫລດສູດບໍ່ໄດ້", "rc.saveFail":"ບັນທຶກບໍ່ສຳເລັດ", "rc.subOpt":"(ສູດຍ່ອຍ)",
+    "rt.purchasing":"ການສັ່ງຊື້", "rt.variance":"ສ່ວນຕ່າງ — ຫາຈຸດຮົ່ວ",
+    "po.title":"ໃບສັ່ງຊື້", "po.sub":"ສັ່ງສິນຄ້າຈາກຜູ້ສະໜອງ. ສ້າງຈາກຄຳແນະນຳສັ່ງຊື້ໃນແຕະດຽວ.",
+    "po.new":"+ ໃບສັ່ງໃໝ່", "po.fromAdvisor":"ສ້າງຈາກຄຳແນະນຳສັ່ງຊື້", "po.edit":"ແກ້ໄຂໃບສັ່ງ",
+    "po.supplier":"ຜູ້ສະໜອງ", "po.number":"ເລກໃບສັ່ງ", "po.status":"ສະຖານະ", "po.expected":"ວັນທີຄາດຮັບ",
+    "po.notes":"ໝາຍເຫດ", "po.lines":"ລາຍການສັ່ງ", "po.addLine":"+ ເພີ່ມລາຍການ", "po.item":"ສິນຄ້າ",
+    "po.qty":"ຈຳນວນ", "po.unit":"ໜ່ວຍ", "po.cost":"ລາຄາຕໍ່ໜ່ວຍ", "po.lineTotal":"ລວມແຖວ",
+    "po.total":"ລວມໃບສັ່ງ", "po.save":"ບັນທຶກໃບສັ່ງ", "po.send":"ໝາຍວ່າສົ່ງແລ້ວ", "po.receive":"ຮັບສິນຄ້າ",
+    "po.cancel":"ຍົກເລີກໃບສັ່ງ", "po.del":"ລຶບໃບສັ່ງ", "po.delConfirm":"ລຶບໃບສັ່ງນີ້? ກູ້ຄືນບໍ່ໄດ້.",
+    "po.st.draft":"ຮ່າງ", "po.st.sent":"ສົ່ງແລ້ວ", "po.st.received":"ຮັບແລ້ວ", "po.st.cancelled":"ຍົກເລີກ",
+    "po.none":"ຍັງບໍ່ມີໃບສັ່ງຊື້. ແຕະ ໃບສັ່ງໃໝ່ ຫຼື ສ້າງຈາກຄຳແນະນຳ.",
+    "po.needSup":"ເລືອກຜູ້ສະໜອງ.", "po.needLines":"ເພີ່ມລາຍການຢ່າງໜ້ອຍ 1.",
+    "po.colNum":"ເລກໃບສັ່ງ", "po.colSup":"ຜູ້ສະໜອງ", "po.colStatus":"ສະຖານະ", "po.colTotal":"ລວມ", "po.colDate":"ວັນທີ",
+    "po.advisorEmpty":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຕອນນີ້.",
+    "po.sendConfirm":"ໝາຍໃບສັ່ງນີ້ວ່າສົ່ງໃຫ້ຜູ້ສະໜອງແລ້ວບໍ?",
+    "po.recvConfirm":"ຮັບໃບສັ່ງນີ້ບໍ? ຈະເພີ່ມສິນຄ້າເຂົ້າສະຕັອກເປັນລ໋ອດໃໝ່.",
+    "po.recvDone":"ຮັບໃບສັ່ງແລ້ວ. ສ້າງລ໋ອດສະຕັອກແລ້ວ.",
+    "po.alerts":"ການແຈ້ງເຕືອນລາຄາຜູ້ສະໜອງ", "po.alertsNone":"ບໍ່ພົບການປ່ຽນລາຄາ.",
+    "po.colOld":"ເກົ່າ", "po.colNew":"ໃໝ່", "po.colChange":"ປ່ຽນແປງ", "po.priceUp":"ລາຄາຂຶ້ນ",
+    "po.loadFail":"ໂຫລດການສັ່ງຊື້ບໍ່ໄດ້", "po.saveFail":"ບັນທຶກບໍ່ສຳເລັດ",
+    "var.title":"ສ່ວນຕ່າງ — ຈຸດທີ່ເງິນຮົ່ວ", "var.sub":"ສິ່ງທີ່ສູດບອກວ່າໃຊ້ ທຽບກັບ ສິນຄ້າທີ່ອອກໄປຈິງ. ຊ່ອງແດງ = ລັກ, ຕັກຫຼາຍ, ຫຼື ເສຍບໍ່ບັນທຶກ.",
+    "var.kpiLeak":"ເງິນຮົ່ວລວມ", "var.kpiItems":"ລາຍການມີສ່ວນຕ່າງ", "var.kpiWorst":"ລາຍການແຍ່ສຸດ",
+    "var.colItem":"ສິນຄ້າ", "var.colTheo":"ຄວນໃຊ້", "var.colActual":"ໃຊ້ຈິງ",
+    "var.colGap":"ສ່ວນຕ່າງ", "var.colValue":"ເງິນເສຍ", "var.colPct":"ສ່ວນຕ່າງ %",
+    "var.none":"ຍັງບໍ່ມີຂໍ້ມູນສ່ວນຕ່າງ. ເຊື່ອມ EATLAOS POS ເພື່ອເບິ່ງທິດສະດີທຽບກັບຈິງ.",
+    "var.good":"ບໍ່ພົບການຮົ່ວ. ສູດກົງກັບການໃຊ້ຈິງ — ຄວບຄຸມດີ.",
+    "var.explainTitle":"ໝາຍຄວາມວ່າແນວໃດ",
+    "var.explain":"ສ່ວນຕ່າງບວກ = ສິນຄ້າອອກຫຼາຍກວ່າທີ່ສູດອະທິບາຍ. ກວດ: ຕັກໃຫຍ່ເກີນ, ພະນັກງານເອົາໄປ, ຫຼື ບໍ່ບັນທຶກເສຍ. ສ່ວນຕ່າງລົບ = ໃຊ້ໜ້ອຍກວ່າສູດ (ດີ ຫຼື ສູດເກີນຈິງ).",
+    "var.loadFail":"ໂຫລດສ່ວນຕ່າງບໍ່ໄດ້",
+    "nav.sales":"ການຂາຍ",
+    "sales.title":"ການຂາຍ — ບັນທຶກເມນູທີ່ຂາຍ", "sales.sub":"ແຕະເມນູ, ໃສ່ຈຳນວນທີ່ຂາຍ, ຢືນຢັນ. ວັດຖຸດິບຫັກອັດຕະໂນມັດ (FEFO). ເຮັດໃຫ້ລາຍງານສ່ວນຕ່າງເຮັດວຽກ.",
+    "sales.none":"ຍັງບໍ່ມີສູດທີ່ມີລາຄາຂາຍ. ເພີ່ມເມນູມີລາຄາໃນ ລາຍງານ → ສູດ ກ່ອນ.",
+    "sales.qtySold":"ຂາຍໄປຈັກ?", "sales.confirm":"ຢືນຢັນການຂາຍ", "sales.confirmMsg":"ບັນທຶກ {n} × {dish} ທີ່ຂາຍບໍ? ວັດຖຸດິບຈະຖືກຫັກຈາກສະຕັອກ.",
+    "sales.done":"ບັນທຶກການຂາຍແລ້ວ. ຫັກວັດຖຸດິບແລ້ວ.", "sales.shortWarn":"ບັນທຶກແລ້ວ ແຕ່ສະຕັອກບໍ່ພໍບາງວັດຖຸດິບ — ຕ້ອງສັ່ງເພີ່ມ.",
+    "sales.todayRef":"ລະຫັດອັດຕະໂນມັດ", "sales.fail":"ບັນທຶກການຂາຍບໍ່ໄດ້",
+    "sales.recent":"ບັນທຶກມື້ນີ້", "sales.recentNone":"ຍັງບໍ່ມີການຂາຍບັນທຶກມື້ນີ້.",
+    "ew.title":"ໝົດອາຍຸ — ແຕະເພື່ອຖິ້ມ (ແຕະດຽວ)", "ew.sub":"ສິ່ງເຫຼົ່ານີ້ໝົດ ຫຼື ໃກ້ໝົດອາຍຸ. ແຕະເພື່ອບັນທຶກການເສຍ — ຈຳນວນ ແລະ ເງິນຖືກຕື່ມໃຫ້ແລ້ວ.",
+    "ew.tap":"ແຕະເພື່ອຖິ້ມ", "ew.confirm":"ຖິ້ມທັງໝົດ {q} {unit} ຂອງ {name}? ເງິນເສຍ: {money}.",
+    "ew.done":"ບັນທຶກການເສຍແລ້ວ.", "ew.fail":"ບັນທຶກການເສຍບໍ່ໄດ້", "ew.expired":"ໝົດອາຍຸ", "ew.expiring":"ໃກ້ໝົດ",
+    "po.autoDraft":"ສ້າງໃບສັ່ງຮ່າງອັດຕະໂນມັດ", "po.autoConfirm":"ສ້າງໃບສັ່ງຊື້ຮ່າງອັດຕະໂນມັດສຳລັບທຸກຢ່າງທີ່ຕ້ອງສັ່ງບໍ?",
+    "po.autoDone":"ສ້າງໃບສັ່ງຮ່າງ {n} ໃບ. ກວດແລ້ວສົ່ງ.", "po.autoNone":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງ — ບໍ່ໄດ້ສ້າງຮ່າງ.", "po.autoFail":"ສ້າງຮ່າງອັດຕະໂນມັດບໍ່ສຳເລັດ",
   },
   th: {
     "app.tag":"ระบบจัดการคลังสินค้า",
@@ -992,6 +1140,69 @@ const I18N = {
     "login.welcome":"ยินดีต้อนรับกลับ", "login.signinto":"เข้าสู่ระบบคลังสินค้า",
     "login.feat1":"ติดตามสต็อกและวันหมดอายุแบบเรียลไทม์", "login.feat2":"สแกนเพื่อรับและเบิกสินค้า", "login.feat3":"รายงานของเสียและกำไร",
     "common.cancel":"ยกเลิก", "common.confirm":"แน่ใจไหม?",
+    "rt.waste":"ของเสีย & สต็อก", "rt.recipes":"สูตรอาหาร — กำไรต่อจาน",
+    "rc.title":"สูตรอาหาร — กำไรต่อจาน", "rc.sub":"ต้นทุนคำนวณอัตโนมัติจากราคาวัตถุดิบ. แดง = ขาดทุน.",
+    "rc.add":"+ เพิ่มสูตร", "rc.edit":"แก้ไขสูตร", "rc.name":"ชื่อเมนู", "rc.nameLao":"ชื่อเมนู (ลาว)",
+    "rc.category":"หมวด", "rc.yield":"ได้ (จาน)", "rc.yieldUnit":"หน่วยจาน",
+    "rc.price":"ราคาขาย (ต่อจาน)", "rc.target":"เป้าหมาย ต้นทุน %",
+    "rc.isSub":"นี่คือสูตรย่อย (ใช้ในเมนูอื่น ไม่ขายตรง)",
+    "rc.notes":"หมายเหตุ", "rc.ingredients":"วัตถุดิบ", "rc.addLine":"+ เพิ่มวัตถุดิบ",
+    "rc.ingType":"ประเภท", "rc.rawItem":"สินค้าสต็อก", "rc.subRecipe":"สูตรย่อย",
+    "rc.choose":"— เลือก —", "rc.qty":"จำนวน", "rc.unit":"หน่วย",
+    "rc.waste":"ค่าสูญเสีย", "rc.wasteHint":"1.10 = ซื้อเพิ่ม 10% สำหรับส่วนตัดทิ้ง",
+    "rc.lineNote":"หมายเหตุ", "rc.save":"บันทึกสูตร", "rc.del":"ลบสูตร",
+    "rc.delConfirm":"ลบสูตรนี้? กู้คืนไม่ได้.",
+    "rc.colDish":"เมนู", "rc.colCost":"ต้นทุน/จาน", "rc.colPrice":"ราคาขาย",
+    "rc.colProfit":"กำไร/จาน", "rc.colFcpct":"ต้นทุน %", "rc.colStatus":"สถานะ",
+    "rc.none":"ยังไม่มีสูตร. กด เพิ่มสูตร เพื่อสร้างเมนูแรก.",
+    "rc.needName":"ต้องมีชื่อเมนู.", "rc.needLines":"เพิ่มวัตถุดิบอย่างน้อย 1 รายการ.",
+    "rc.st.GOOD":"ดี", "rc.st.WATCH":"ระวัง — ต้นทุนสูง", "rc.st.LOSER":"ขาดทุน",
+    "rc.st.NO_PRICE":"ยังไม่ตั้งราคา", "rc.st.NO_COST":"ยังไม่มีต้นทุน", "rc.st.SUB":"สูตรย่อย",
+    "rc.kpiDishes":"เมนูมีราคา", "rc.kpiLosers":"ขาดทุน", "rc.kpiWatch":"รายการเฝ้าระวัง",
+    "rc.kpiAvgFc":"ต้นทุนเฉลี่ย %", "rc.fixFirst":"แก้ก่อน — ขาดทุนทุกครั้งที่ขาย",
+    "rc.noLosers":"ไม่มีเมนูขาดทุน. ดี — ทุกเมนูมีกำไร.",
+    "rc.costFrom":"ต้นทุนคำนวณอัตโนมัติ. ตั้งราคาทุนวัตถุดิบใน จัดการ → สินค้า เพื่อความแม่นยำ.",
+    "rc.loadFail":"โหลดสูตรไม่ได้", "rc.saveFail":"บันทึกไม่สำเร็จ", "rc.subOpt":"(สูตรย่อย)",
+    "rt.purchasing":"การสั่งซื้อ", "rt.variance":"ส่วนต่าง — หาจุดรั่ว",
+    "po.title":"ใบสั่งซื้อ", "po.sub":"สั่งสินค้าจากซัพพลายเออร์ สร้างจากคำแนะนำสั่งซื้อในแตะเดียว.",
+    "po.new":"+ ใบสั่งใหม่", "po.fromAdvisor":"สร้างจากคำแนะนำสั่งซื้อ", "po.edit":"แก้ไขใบสั่ง",
+    "po.supplier":"ซัพพลายเออร์", "po.number":"เลขใบสั่ง", "po.status":"สถานะ", "po.expected":"วันที่คาดรับ",
+    "po.notes":"หมายเหตุ", "po.lines":"รายการสั่ง", "po.addLine":"+ เพิ่มรายการ", "po.item":"สินค้า",
+    "po.qty":"จำนวน", "po.unit":"หน่วย", "po.cost":"ราคาต่อหน่วย", "po.lineTotal":"รวมแถว",
+    "po.total":"รวมใบสั่ง", "po.save":"บันทึกใบสั่ง", "po.send":"ทำเครื่องหมายส่งแล้ว", "po.receive":"รับสินค้า",
+    "po.cancel":"ยกเลิกใบสั่ง", "po.del":"ลบใบสั่ง", "po.delConfirm":"ลบใบสั่งนี้? กู้คืนไม่ได้.",
+    "po.st.draft":"ร่าง", "po.st.sent":"ส่งแล้ว", "po.st.received":"รับแล้ว", "po.st.cancelled":"ยกเลิก",
+    "po.none":"ยังไม่มีใบสั่งซื้อ แตะ ใบสั่งใหม่ หรือสร้างจากคำแนะนำ.",
+    "po.needSup":"เลือกซัพพลายเออร์.", "po.needLines":"เพิ่มรายการอย่างน้อย 1.",
+    "po.colNum":"เลขใบสั่ง", "po.colSup":"ซัพพลายเออร์", "po.colStatus":"สถานะ", "po.colTotal":"รวม", "po.colDate":"วันที่",
+    "po.advisorEmpty":"ไม่มีอะไรต้องสั่งตอนนี้.",
+    "po.sendConfirm":"ทำเครื่องหมายใบสั่งนี้ว่าส่งให้ซัพพลายเออร์แล้ว?",
+    "po.recvConfirm":"รับใบสั่งนี้? จะเพิ่มสินค้าเข้าสต็อกเป็นล็อตใหม่.",
+    "po.recvDone":"รับใบสั่งแล้ว สร้างล็อตสต็อกแล้ว.",
+    "po.alerts":"การแจ้งเตือนราคาซัพพลายเออร์", "po.alertsNone":"ไม่พบการเปลี่ยนราคา.",
+    "po.colOld":"เดิม", "po.colNew":"ใหม่", "po.colChange":"เปลี่ยนแปลง", "po.priceUp":"ราคาขึ้น",
+    "po.loadFail":"โหลดการสั่งซื้อไม่ได้", "po.saveFail":"บันทึกไม่สำเร็จ",
+    "var.title":"ส่วนต่าง — จุดที่เงินรั่ว", "var.sub":"สิ่งที่สูตรบอกว่าใช้ เทียบกับ สินค้าที่ออกไปจริง ช่องแดง = ขโมย, ตักเยอะ, หรือเสียไม่บันทึก.",
+    "var.kpiLeak":"เงินรั่วรวม", "var.kpiItems":"รายการมีส่วนต่าง", "var.kpiWorst":"รายการแย่สุด",
+    "var.colItem":"สินค้า", "var.colTheo":"ควรใช้", "var.colActual":"ใช้จริง",
+    "var.colGap":"ส่วนต่าง", "var.colValue":"เงินเสีย", "var.colPct":"ส่วนต่าง %",
+    "var.none":"ยังไม่มีข้อมูลส่วนต่าง เชื่อม EATLAOS POS เพื่อดูทฤษฎีเทียบจริง.",
+    "var.good":"ไม่พบการรั่ว สูตรตรงกับการใช้จริง — ควบคุมดี.",
+    "var.explainTitle":"หมายความว่าอย่างไร",
+    "var.explain":"ส่วนต่างบวก = สินค้าออกมากกว่าที่สูตรอธิบาย ตรวจ: ตักใหญ่เกิน, พนักงานเอาไป, หรือไม่บันทึกเสีย ส่วนต่างลบ = ใช้น้อยกว่าสูตร (ดี หรือสูตรเกินจริง).",
+    "var.loadFail":"โหลดส่วนต่างไม่ได้",
+    "nav.sales":"การขาย",
+    "sales.title":"การขาย — บันทึกเมนูที่ขาย", "sales.sub":"แตะเมนู ใส่จำนวนที่ขาย ยืนยัน วัตถุดิบหักอัตโนมัติ (FEFO) ทำให้รายงานส่วนต่างทำงาน.",
+    "sales.none":"ยังไม่มีสูตรที่มีราคาขาย เพิ่มเมนูมีราคาใน รายงาน → สูตร ก่อน.",
+    "sales.qtySold":"ขายไปกี่?", "sales.confirm":"ยืนยันการขาย", "sales.confirmMsg":"บันทึก {n} × {dish} ที่ขาย? วัตถุดิบจะถูกหักจากสต็อก.",
+    "sales.done":"บันทึกการขายแล้ว หักวัตถุดิบแล้ว.", "sales.shortWarn":"บันทึกแล้ว แต่สต็อกไม่พอบางวัตถุดิบ — ต้องสั่งเพิ่ม.",
+    "sales.todayRef":"รหัสอัตโนมัติ", "sales.fail":"บันทึกการขายไม่ได้",
+    "sales.recent":"บันทึกวันนี้", "sales.recentNone":"ยังไม่มีการขายบันทึกวันนี้.",
+    "ew.title":"หมดอายุ — แตะเพื่อทิ้ง (แตะเดียว)", "ew.sub":"สิ่งเหล่านี้หมดหรือใกล้หมดอายุ แตะเพื่อบันทึกการเสีย — จำนวนและเงินถูกเติมให้แล้ว.",
+    "ew.tap":"แตะเพื่อทิ้ง", "ew.confirm":"ทิ้งทั้งหมด {q} {unit} ของ {name}? เงินเสีย: {money}.",
+    "ew.done":"บันทึกการเสียแล้ว.", "ew.fail":"บันทึกการเสียไม่ได้", "ew.expired":"หมดอายุ", "ew.expiring":"ใกล้หมด",
+    "po.autoDraft":"สร้างใบสั่งร่างอัตโนมัติ", "po.autoConfirm":"สร้างใบสั่งซื้อร่างอัตโนมัติสำหรับทุกอย่างที่ต้องสั่ง?",
+    "po.autoDone":"สร้างใบสั่งร่าง {n} ใบ ตรวจแล้วส่ง.", "po.autoNone":"ไม่มีอะไรต้องสั่ง — ไม่ได้สร้างร่าง.", "po.autoFail":"สร้างร่างอัตโนมัติไม่สำเร็จ",
   },
   zh: {
     "app.tag":"仓库管理系统",
@@ -1089,6 +1300,69 @@ const I18N = {
     "login.welcome":"欢迎回来", "login.signinto":"登录您的仓库",
     "login.feat1":"实时库存和过期跟踪", "login.feat2":"扫描入库和出库", "login.feat3":"浪费和利润报表",
     "common.cancel":"取消", "common.confirm":"确定吗?",
+    "rt.waste":"损耗 & 库存", "rt.recipes":"配方 — 每道菜利润",
+    "rc.title":"配方 — 每道菜利润", "rc.sub":"成本根据实时原料价格自动计算。红色 = 亏损。",
+    "rc.add":"+ 添加配方", "rc.edit":"编辑配方", "rc.name":"菜品名称", "rc.nameLao":"菜品名称 (老挝语)",
+    "rc.category":"类别", "rc.yield":"产出 (份)", "rc.yieldUnit":"份单位",
+    "rc.price":"售价 (每份)", "rc.target":"目标食材成本 %",
+    "rc.isSub":"这是子配方 (用于其他菜品，不直接销售)",
+    "rc.notes":"备注", "rc.ingredients":"原料", "rc.addLine":"+ 添加原料",
+    "rc.ingType":"类型", "rc.rawItem":"库存物料", "rc.subRecipe":"子配方",
+    "rc.choose":"— 选择 —", "rc.qty":"数量", "rc.unit":"单位",
+    "rc.waste":"损耗系数", "rc.wasteHint":"1.10 = 多买10%用于修整损耗",
+    "rc.lineNote":"备注", "rc.save":"保存配方", "rc.del":"删除配方",
+    "rc.delConfirm":"删除此配方？无法撤销。",
+    "rc.colDish":"菜品", "rc.colCost":"成本/份", "rc.colPrice":"售价",
+    "rc.colProfit":"利润/份", "rc.colFcpct":"食材成本 %", "rc.colStatus":"状态",
+    "rc.none":"还没有配方。点击添加配方创建第一道菜。",
+    "rc.needName":"需要菜品名称。", "rc.needLines":"至少添加一种原料。",
+    "rc.st.GOOD":"良好", "rc.st.WATCH":"注意 — 成本高", "rc.st.LOSER":"亏损",
+    "rc.st.NO_PRICE":"未设价格", "rc.st.NO_COST":"暂无成本", "rc.st.SUB":"子配方",
+    "rc.kpiDishes":"已定价菜品", "rc.kpiLosers":"亏损", "rc.kpiWatch":"关注列表",
+    "rc.kpiAvgFc":"平均食材成本 %", "rc.fixFirst":"优先处理 — 每次销售都亏损",
+    "rc.noLosers":"没有亏损菜品。很好 — 每道菜都赚钱。",
+    "rc.costFrom":"成本自动计算。在 管理 → 物料 中设置原料成本价以确保准确。",
+    "rc.loadFail":"无法加载配方", "rc.saveFail":"保存失败", "rc.subOpt":"(子配方)",
+    "rt.purchasing":"采购", "rt.variance":"差异 — 损失查找器",
+    "po.title":"采购订单", "po.sub":"向供应商订货。一键从补货建议生成。",
+    "po.new":"+ 新订单", "po.fromAdvisor":"从补货建议生成", "po.edit":"编辑订单",
+    "po.supplier":"供应商", "po.number":"订单号", "po.status":"状态", "po.expected":"预计到货日",
+    "po.notes":"备注", "po.lines":"订购项目", "po.addLine":"+ 添加项目", "po.item":"物料",
+    "po.qty":"数量", "po.unit":"单位", "po.cost":"单价", "po.lineTotal":"行小计",
+    "po.total":"订单总计", "po.save":"保存订单", "po.send":"标记已发送", "po.receive":"收货",
+    "po.cancel":"取消订单", "po.del":"删除订单", "po.delConfirm":"删除此订单？无法撤销。",
+    "po.st.draft":"草稿", "po.st.sent":"已发送", "po.st.received":"已收货", "po.st.cancelled":"已取消",
+    "po.none":"还没有采购订单。点击新订单或从补货建议生成。",
+    "po.needSup":"请选择供应商。", "po.needLines":"至少添加一个项目。",
+    "po.colNum":"订单号", "po.colSup":"供应商", "po.colStatus":"状态", "po.colTotal":"总计", "po.colDate":"日期",
+    "po.advisorEmpty":"目前无需补货。",
+    "po.sendConfirm":"将此订单标记为已发送给供应商？",
+    "po.recvConfirm":"收此订单？将作为新批次加入库存。",
+    "po.recvDone":"订单已收货。库存批次已创建。",
+    "po.alerts":"供应商价格提醒", "po.alertsNone":"未检测到价格变动。",
+    "po.colOld":"原价", "po.colNew":"现价", "po.colChange":"变动", "po.priceUp":"价格上涨",
+    "po.loadFail":"无法加载采购", "po.saveFail":"保存失败",
+    "var.title":"差异 — 钱漏在哪里", "var.sub":"配方说应该用的 对比 实际出库的。红色差距 = 偷窃、超量、或未记录的损耗。",
+    "var.kpiLeak":"总漏损金额", "var.kpiItems":"有差距的物料", "var.kpiWorst":"最差物料",
+    "var.colItem":"物料", "var.colTheo":"应使用", "var.colActual":"实际使用",
+    "var.colGap":"差距", "var.colValue":"损失金额", "var.colPct":"差距 %",
+    "var.none":"暂无差异数据。连接 EATLAOS POS 销售以查看理论对比实际。",
+    "var.good":"未发现漏损。配方与实际使用一致 — 控制良好。",
+    "var.explainTitle":"这意味着什么",
+    "var.explain":"正差距 = 出库多于配方解释。调查：份量过大、员工拿取、或损耗未记录。负差距 = 用量少于配方（好，或配方高估）。",
+    "var.loadFail":"无法加载差异",
+    "nav.sales":"销售",
+    "sales.title":"销售 — 记录已售菜品", "sales.sub":"点击菜品，设置售出数量，确认。配料自动从库存扣除（FEFO）。让差异报表生效。",
+    "sales.none":"还没有定价的配方。请先在 报表 → 配方 中添加已定价菜品。",
+    "sales.qtySold":"售出多少？", "sales.confirm":"确认销售", "sales.confirmMsg":"记录售出 {n} × {dish}？配料将从库存扣除。",
+    "sales.done":"销售已记录。配料已扣除。", "sales.shortWarn":"已记录，但部分配料库存不足 — 需补货。",
+    "sales.todayRef":"自动参考号", "sales.fail":"无法记录销售",
+    "sales.recent":"今日已记录", "sales.recentNone":"今天还没有销售记录。",
+    "ew.title":"已过期 — 点击报废（一键）", "ew.sub":"这些已过期或即将过期。点击记录报废 — 数量和金额已为您填好。",
+    "ew.tap":"点击报废", "ew.confirm":"报废 {name} 的全部 {q} {unit}？损失金额：{money}。",
+    "ew.done":"报废已记录。", "ew.fail":"无法记录报废", "ew.expired":"已过期", "ew.expiring":"即将过期",
+    "po.autoDraft":"自动创建草稿订单", "po.autoConfirm":"为所有需要补货的物料自动创建草稿采购订单？",
+    "po.autoDone":"已创建 {n} 个草稿订单。请审核并发送。", "po.autoNone":"无需补货 — 未创建草稿。", "po.autoFail":"自动草稿失败",
   },
   ko: {
     "app.tag":"창고 관리 시스템",
@@ -1187,6 +1461,69 @@ const I18N = {
     "login.welcome":"다시 오신 것을 환영합니다", "login.signinto":"창고에 로그인",
     "login.feat1":"실시간 재고 및 만료 추적", "login.feat2":"스캔하여 입고 및 출고", "login.feat3":"폐기 및 이익 보고서",
     "common.cancel":"취소", "common.confirm":"확실합니까?",
+    "rt.waste":"폐기 & 재고", "rt.recipes":"레시피 — 요리당 이익",
+    "rc.title":"레시피 — 요리당 이익", "rc.sub":"원가는 실시간 재료 가격에서 자동 계산됩니다. 빨강 = 손실.",
+    "rc.add":"+ 레시피 추가", "rc.edit":"레시피 편집", "rc.name":"요리 이름", "rc.nameLao":"요리 이름 (라오어)",
+    "rc.category":"분류", "rc.yield":"생산량 (인분)", "rc.yieldUnit":"인분 단위",
+    "rc.price":"판매가 (인분당)", "rc.target":"목표 식자재 원가 %",
+    "rc.isSub":"이것은 서브 레시피입니다 (다른 요리에 사용, 직접 판매 안 함)",
+    "rc.notes":"메모", "rc.ingredients":"재료", "rc.addLine":"+ 재료 추가",
+    "rc.ingType":"유형", "rc.rawItem":"재고 품목", "rc.subRecipe":"서브 레시피",
+    "rc.choose":"— 선택 —", "rc.qty":"수량", "rc.unit":"단위",
+    "rc.waste":"손실 계수", "rc.wasteHint":"1.10 = 손질 손실 위해 10% 더 구매",
+    "rc.lineNote":"메모", "rc.save":"레시피 저장", "rc.del":"레시피 삭제",
+    "rc.delConfirm":"이 레시피를 삭제할까요? 되돌릴 수 없습니다.",
+    "rc.colDish":"요리", "rc.colCost":"원가/인분", "rc.colPrice":"판매가",
+    "rc.colProfit":"이익/인분", "rc.colFcpct":"식자재 원가 %", "rc.colStatus":"상태",
+    "rc.none":"아직 레시피가 없습니다. 레시피 추가를 눌러 첫 요리를 만드세요.",
+    "rc.needName":"요리 이름이 필요합니다.", "rc.needLines":"재료를 하나 이상 추가하세요.",
+    "rc.st.GOOD":"좋음", "rc.st.WATCH":"주의 — 원가 높음", "rc.st.LOSER":"손실",
+    "rc.st.NO_PRICE":"가격 미설정", "rc.st.NO_COST":"원가 없음", "rc.st.SUB":"서브 레시피",
+    "rc.kpiDishes":"가격 책정된 요리", "rc.kpiLosers":"손실", "rc.kpiWatch":"주의 목록",
+    "rc.kpiAvgFc":"평균 식자재 원가 %", "rc.fixFirst":"먼저 해결 — 판매할 때마다 손실",
+    "rc.noLosers":"손실 요리 없음. 좋음 — 모든 요리가 수익.",
+    "rc.costFrom":"원가 자동 계산. 정확도를 위해 관리 → 품목에서 재료 원가를 설정하세요.",
+    "rc.loadFail":"레시피를 불러올 수 없습니다", "rc.saveFail":"저장 실패", "rc.subOpt":"(서브 레시피)",
+    "rt.purchasing":"구매", "rt.variance":"편차 — 손실 추적기",
+    "po.title":"구매 주문", "po.sub":"공급업체에 재고 주문. 재주문 권고에서 한 번에 생성.",
+    "po.new":"+ 새 주문", "po.fromAdvisor":"재주문 권고에서 생성", "po.edit":"주문 편집",
+    "po.supplier":"공급업체", "po.number":"주문 번호", "po.status":"상태", "po.expected":"예상 입고일",
+    "po.notes":"메모", "po.lines":"주문 품목", "po.addLine":"+ 품목 추가", "po.item":"품목",
+    "po.qty":"수량", "po.unit":"단위", "po.cost":"단가", "po.lineTotal":"행 합계",
+    "po.total":"주문 합계", "po.save":"주문 저장", "po.send":"발송 표시", "po.receive":"입고",
+    "po.cancel":"주문 취소", "po.del":"주문 삭제", "po.delConfirm":"이 주문을 삭제할까요? 되돌릴 수 없습니다.",
+    "po.st.draft":"초안", "po.st.sent":"발송됨", "po.st.received":"입고됨", "po.st.cancelled":"취소됨",
+    "po.none":"아직 구매 주문이 없습니다. 새 주문을 누르거나 권고에서 생성하세요.",
+    "po.needSup":"공급업체를 선택하세요.", "po.needLines":"품목을 하나 이상 추가하세요.",
+    "po.colNum":"주문번호", "po.colSup":"공급업체", "po.colStatus":"상태", "po.colTotal":"합계", "po.colDate":"날짜",
+    "po.advisorEmpty":"지금 재주문할 것이 없습니다.",
+    "po.sendConfirm":"이 주문을 공급업체에 발송 표시할까요?",
+    "po.recvConfirm":"이 주문을 입고할까요? 품목이 새 배치로 재고에 추가됩니다.",
+    "po.recvDone":"주문 입고 완료. 재고 배치 생성됨.",
+    "po.alerts":"공급업체 가격 알림", "po.alertsNone":"가격 변동이 감지되지 않았습니다.",
+    "po.colOld":"이전", "po.colNew":"현재", "po.colChange":"변동", "po.priceUp":"가격 인상",
+    "po.loadFail":"구매를 불러올 수 없습니다", "po.saveFail":"저장 실패",
+    "var.title":"편차 — 돈이 새는 곳", "var.sub":"레시피가 사용했다고 하는 것 대 실제 출고된 것. 빨간 격차 = 도난, 과다 분량, 또는 미기록 폐기.",
+    "var.kpiLeak":"총 누수 금액", "var.kpiItems":"격차 있는 품목", "var.kpiWorst":"최악 품목",
+    "var.colItem":"품목", "var.colTheo":"사용 예상", "var.colActual":"실제 사용",
+    "var.colGap":"격차", "var.colValue":"손실 금액", "var.colPct":"격차 %",
+    "var.none":"편차 데이터 없음. EATLAOS POS 판매를 연결하여 이론 대 실제를 확인하세요.",
+    "var.good":"누수 없음. 레시피가 실제 사용과 일치 — 관리 양호.",
+    "var.explainTitle":"이것의 의미",
+    "var.explain":"양의 격차 = 레시피 설명보다 많이 출고. 조사: 분량 과다, 직원 반출, 또는 폐기 미기록. 음의 격차 = 레시피보다 적게 사용 (양호 또는 레시피 과대).",
+    "var.loadFail":"편차를 불러올 수 없습니다",
+    "nav.sales":"판매",
+    "sales.title":"판매 — 판매된 요리 기록", "sales.sub":"요리를 누르고 판매 수량을 설정한 후 확인. 재료가 재고에서 자동 차감 (FEFO). 편차 보고서가 작동합니다.",
+    "sales.none":"판매 가격이 있는 레시피가 없습니다. 보고서 → 레시피에서 가격이 있는 요리를 먼저 추가하세요.",
+    "sales.qtySold":"몇 개 판매?", "sales.confirm":"판매 확인", "sales.confirmMsg":"{n} × {dish} 판매 기록할까요? 재료가 재고에서 차감됩니다.",
+    "sales.done":"판매 기록됨. 재료 차감됨.", "sales.shortWarn":"기록됨, 그러나 일부 재료 재고 부족 — 재주문 필요.",
+    "sales.todayRef":"자동 참조", "sales.fail":"판매를 기록할 수 없습니다",
+    "sales.recent":"오늘 기록됨", "sales.recentNone":"오늘 기록된 판매가 없습니다.",
+    "ew.title":"만료됨 — 눌러서 폐기 (한 번 탭)", "ew.sub":"만료되었거나 만료 임박. 눌러서 폐기 기록 — 수량과 금액이 채워져 있습니다.",
+    "ew.tap":"눌러서 폐기", "ew.confirm":"{name}의 전체 {q} {unit}을 폐기할까요? 손실 금액: {money}.",
+    "ew.done":"폐기 기록됨.", "ew.fail":"폐기를 기록할 수 없습니다", "ew.expired":"만료됨", "ew.expiring":"만료 임박",
+    "po.autoDraft":"자동 초안 주문 생성", "po.autoConfirm":"재주문이 필요한 모든 항목에 대해 자동으로 초안 구매 주문을 생성할까요?",
+    "po.autoDone":"{n}개 초안 주문 생성됨. 검토 후 발송하세요.", "po.autoNone":"재주문할 것 없음 — 초안 미생성.", "po.autoFail":"자동 초안 실패",
   },
 };
 
@@ -1205,12 +1542,19 @@ function setLang(lang) {
   // Manage tables, dashboard) also switches language immediately.
   try {
     const r = currentRoute();
+    // If logged in and on an app page, make sure its HTML is restored
+    // before re-init (language switch must not blank a gated page).
+    if (r !== 'login' && klSession() && typeof GATED_PAGES !== 'undefined'
+        && GATED_PAGES.includes(r)) {
+      ungateAppPage(r);
+    }
     if (r === 'reports')        initReportsPage();
     else if (r === 'manage')    initManagePage();
     else if (r === 'overview')  initOverviewPage();
     else if (r === 'dashboard') initDashboardPage();
     else if (r === 'receive')   initReceivePage();
     else if (r === 'checkout')  initCheckoutPage();
+    else if (r === 'sales')     initSalesPage();
   } catch (e) { /* page not ready yet — applyI18n already handled static text */ }
 }
 function applyI18n() {
@@ -1255,6 +1599,12 @@ async function loadProfile() {
 }
 
 function klSession() { return __profile ? { user: __profile } : null; }
+// Role gate: management = owner/manager/sa see money + reports.
+// Staff see only their work, never money. Mirrors DB kl_is_manager().
+function klIsManager() {
+  const r = (__profile && __profile.role) || '';
+  return ['owner','manager','sa'].includes(r);
+}
 
 async function klLogin(email, password) {
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
@@ -1281,6 +1631,17 @@ async function klLogin(email, password) {
 async function klLogout() {
   await sb.auth.signOut();
   __profile = null;
+  // Clear cached recipe/cost data so the next user on a shared kitchen
+  // tablet cannot see the previous restaurant's pricing or recipes.
+  window.__recipes = null; window.__rcLines = null;
+  window.__rcItems = null; window.__rcAllRecipes = null;
+  window.__items = null; window.__sups = null; window.__locs = null;
+  window.__pos = null; window.__poLines = null;
+  window.__poSups = null; window.__poItems = null;
+  window.__salesDishes = null; window.__ewRows = null;
+  // Re-hide app page structure from the DOM (next person on a shared
+  // tablet sees only the login screen, like a fresh load).
+  regateAppPages();
   location.hash = '#/login';
 }
 
@@ -1365,12 +1726,18 @@ function showMsg(elId, text, type) {
   if (type === 'ok') setTimeout(() => el.innerHTML = '', 4000);
 }
 
-const ROUTES = ['login','dashboard','overview','receive','checkout','reports','manage'];
+const ROUTES = ['login','dashboard','overview','receive','checkout','sales','reports','manage'];
 function currentRoute() {
   const h = (location.hash || '').replace(/^#\//, '');
   return ROUTES.includes(h) ? h : (klSession() ? 'dashboard' : 'login');
 }
 function showPage(name) {
+  // Gating: if authenticated and this is an app page, restore its HTML
+  // from the stash BEFORE we toggle/active or init it. If not
+  // authenticated, the page stays empty (snoop sees nothing).
+  if (name !== 'login' && klSession() && GATED_PAGES.includes(name)) {
+    ungateAppPage(name);
+  }
   ROUTES.forEach(r => {
     const el = document.getElementById('page-' + r);
     if (el) el.classList.toggle('active', r === name);
@@ -1394,6 +1761,7 @@ function showPage(name) {
   else if (name === 'overview')  initOverviewPage();
   else if (name === 'receive')   initReceivePage();
   else if (name === 'checkout')  initCheckoutPage();
+  else if (name === 'sales')     initSalesPage();
   else if (name === 'reports')   initReportsPage();
   else if (name === 'manage')    initManagePage();
 }
@@ -1412,6 +1780,45 @@ async function route() {
   showPage(r);
 }
 window.addEventListener('hashchange', route);
+
+// =====================================================================
+// PAGE-CONTENT GATING (MarketMan-style): the app pages' HTML is removed
+// from the DOM at boot and only injected after a valid login. A snoop
+// opening dev tools on the login screen sees empty page shells — no
+// dashboard/reports/manage structure exposed. This is UX/obscurity
+// hardening; the real security is the database RLS (anon = zero rows),
+// proven separately. Both layers together = MarketMan's model.
+// =====================================================================
+const GATED_PAGES = ['dashboard','overview','receive','checkout','sales','reports','manage'];
+const __pageStash = {};
+let __pagesGated = false;
+
+function gateAppPages() {
+  // Pull each app page's inner HTML into memory, blank the container.
+  GATED_PAGES.forEach(r => {
+    const el = document.getElementById('page-' + r);
+    if (el && !(r in __pageStash)) {
+      __pageStash[r] = el.innerHTML;
+      el.innerHTML = '';
+    }
+  });
+  __pagesGated = true;
+}
+function ungateAppPage(r) {
+  // Restore one page's HTML just-in-time (only call when authenticated).
+  const el = document.getElementById('page-' + r);
+  if (el && (r in __pageStash) && el.innerHTML === '') {
+    el.innerHTML = __pageStash[r];
+  }
+}
+function regateAppPages() {
+  // On logout: blank the app pages again so structure is hidden once more.
+  GATED_PAGES.forEach(r => {
+    const el = document.getElementById('page-' + r);
+    if (el) el.innerHTML = '';
+  });
+  __pagesGated = true;
+}
 
 function initLoginPage() {
   document.getElementById('loginMsg').innerHTML = '';
@@ -1468,6 +1875,8 @@ document.addEventListener('DOMContentLoaded', () => {
     b.classList.toggle('active', b.dataset.lang === __lang));
   document.documentElement.lang = __lang;
   applyI18n();
+  // Hide app page structure from the DOM until authenticated (MarketMan-style)
+  gateAppPages();
   route();
 });
 
@@ -1515,6 +1924,9 @@ async function initDashboardPage() {
       .not('expiry_date', 'is', null)
       .order('expiry_date', { ascending: true }).limit(10);
     renderFefo(fefo.data || []);
+
+    // v3.1 one-tap expiry waste queue (auto-hides if nothing expired)
+    renderExpiryWasteQueue();
 
     // Recent movements
     const moves = await sb.from('movements')
@@ -1956,16 +2368,39 @@ function money(n) {
   return v.toLocaleString('en-US') + ' ₭';
 }
 
+// v2.5 — REPORTS is now tabbed: Waste & Stock | Recipes (profit per dish)
+let REPORT_TAB = 'waste';
 async function initReportsPage() {
   const u = await klRequireLogin(); if (!u) return;
   document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
   const body = document.getElementById('reportsBody');
   // Money/profit reports are sensitive — owner/manager/sa only.
   if (!['sa','owner','manager'].includes(u.user.role)) {
+    document.getElementById('reportsTabs').style.display = 'none';
     body.innerHTML = '<div class="kl-rcard warn"><p class="kl-rbig">'+t('r.noAccess')+'</p>'
       + '<p class="kl-rsmall">'+t('r.mgrOnly')+' "' + h(u.user.role) + '".</p></div>';
     return;
   }
+  const tabs = document.getElementById('reportsTabs');
+  tabs.style.display = '';
+  const dispatch = (tab) => {
+    if (tab === 'recipes')         renderRecipesReport(u);
+    else if (tab === 'purchasing') renderPurchasingReport(u);
+    else if (tab === 'variance')   renderVarianceReport(u);
+    else                           renderWasteReport(u);
+  };
+  tabs.querySelectorAll('.kl-tab').forEach(btn=>{
+    btn.onclick = () => {
+      REPORT_TAB = btn.getAttribute('data-rtab');
+      tabs.querySelectorAll('.kl-tab').forEach(b=>b.classList.toggle('active', b===btn));
+      dispatch(REPORT_TAB);
+    };
+  });
+  dispatch(REPORT_TAB);
+}
+
+async function renderWasteReport(u) {
+  const body = document.getElementById('reportsBody');
   body.innerHTML = '<p class="kl-muted">Loading…</p>';
 
   try {
@@ -2057,6 +2492,1000 @@ async function initReportsPage() {
       + '<p class="kl-rsmall">'+h(e.message||String(e))+'</p></div>';
   }
 }
+
+// =====================================================================
+// v2.5 — RECIPES REPORT (cost & profit per dish, color-coded)
+// Reads v_recipe_profit (cost auto-calculated by SQL recursive engine).
+// =====================================================================
+function rcStatusChip(st) {
+  const map = {
+    GOOD:    ['var(--kl-success)', 'rc.st.GOOD'],
+    WATCH:   ['var(--kl-warn)',    'rc.st.WATCH'],
+    LOSER:   ['var(--kl-danger)',  'rc.st.LOSER'],
+    NO_PRICE:['var(--kl-text-soft)','rc.st.NO_PRICE'],
+    NO_COST: ['var(--kl-text-soft)','rc.st.NO_COST'],
+    SUB:     ['var(--kl-text-soft)','rc.st.SUB'],
+  };
+  const [col, key] = map[st] || map.NO_COST;
+  return '<span style="display:inline-block;padding:3px 9px;border-radius:999px;'
+    + 'font-size:12px;font-weight:600;color:#fff;background:'+col+'">'+t(key)+'</span>';
+}
+
+async function renderRecipesReport(u) {
+  const body = document.getElementById('reportsBody');
+  body.innerHTML = '<p class="kl-muted">'+t('common.loading')+'</p>';
+  try {
+    const { data, error } = await sb.from('v_recipe_profit').select('*').order('name');
+    if (error) throw error;
+    const rows = (data || []);
+    window.__recipes = rows; // cache for the editor
+
+    // ---- KPI strip ----
+    const sellable = rows.filter(r => !r.is_sub_recipe);
+    const priced   = sellable.filter(r => r.selling_price != null && r.selling_price > 0);
+    const losers   = sellable.filter(r => r.status === 'LOSER');
+    const watch    = sellable.filter(r => r.status === 'WATCH');
+    const fcVals   = priced.filter(r => r.food_cost_pct != null).map(r => Number(r.food_cost_pct));
+    const avgFc    = fcVals.length ? Math.round(fcVals.reduce((a,b)=>a+b,0)/fcVals.length*10)/10 : null;
+
+    let html = '<div class="kl-rgrid">';
+    html += '<div class="kl-rcard '+(priced.length?'good':'')+'">'
+      + '<p class="kl-rlabel">'+t('rc.kpiDishes')+'</p>'
+      + '<p class="kl-rbig">'+priced.length+'</p>'
+      + '<p class="kl-rsmall">/ '+sellable.length+'</p></div>';
+    html += '<div class="kl-rcard '+(losers.length?'bad':'good')+'">'
+      + '<p class="kl-rlabel">'+t('rc.kpiLosers')+'</p>'
+      + '<p class="kl-rbig">'+losers.length+'</p>'
+      + '<p class="kl-rsmall">'+t('rc.colDish')+'</p></div>';
+    html += '<div class="kl-rcard '+(watch.length?'warn':'good')+'">'
+      + '<p class="kl-rlabel">'+t('rc.kpiWatch')+'</p>'
+      + '<p class="kl-rbig">'+watch.length+'</p>'
+      + '<p class="kl-rsmall">'+t('rc.colDish')+'</p></div>';
+    html += '<div class="kl-rcard '+(avgFc!=null && avgFc>35?'warn':'good')+'">'
+      + '<p class="kl-rlabel">'+t('rc.kpiAvgFc')+'</p>'
+      + '<p class="kl-rbig">'+(avgFc!=null?avgFc+'%':'—')+'</p>'
+      + '<p class="kl-rsmall">'+t('rc.colFcpct')+'</p></div>';
+    html += '</div>';
+
+    // ---- info + add button ----
+    html += '<div class="kl-rcard info"><p class="kl-rsmall">'+t('rc.costFrom')+'</p></div>';
+    html += '<button class="kl-btn kl-btn-primary" onclick="recipeForm()">'+t('rc.add')+'</button>';
+
+    // ---- Losers first (fix these) ----
+    html += '<div class="kl-rcard"><p class="kl-rlabel" style="font-weight:600;font-size:16px">'
+      + t('rc.fixFirst')+'</p>';
+    if (losers.length === 0) {
+      html += '<p class="kl-rsmall">'+t('rc.noLosers')+'</p>';
+    } else {
+      html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+        + '<th>'+t('rc.colDish')+'</th><th>'+t('rc.colCost')+'</th><th>'+t('rc.colPrice')+'</th>'
+        + '<th>'+t('rc.colProfit')+'</th></tr></thead><tbody>';
+      losers.sort((a,b)=> Number(a.profit_per_portion||0)-Number(b.profit_per_portion||0))
+        .forEach(r=>{
+          html += '<tr class="kl-iedit" onclick=\'recipeForm('+r.recipe_id+')\'>'
+            + '<td><strong>'+h(r.name)+'</strong></td>'
+            + '<td>'+money(r.cost_per_portion)+'</td>'
+            + '<td>'+money(r.selling_price)+'</td>'
+            + '<td style="color:var(--kl-danger);font-weight:700">'
+            + money(r.profit_per_portion)+'</td></tr>';
+        });
+      html += '</tbody></table></div>';
+    }
+    html += '</div>';
+
+    // ---- All recipes table ----
+    html += '<div class="kl-rcard"><p class="kl-rlabel" style="font-weight:600;font-size:16px">'
+      + t('rc.title')+'</p>';
+    if (rows.length === 0) {
+      html += '<p class="kl-rsmall">'+t('rc.none')+'</p>';
+    } else {
+      html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+        + '<th>'+t('rc.colDish')+'</th><th>'+t('rc.colCost')+'</th><th>'+t('rc.colPrice')+'</th>'
+        + '<th>'+t('rc.colProfit')+'</th><th>'+t('rc.colFcpct')+'</th><th>'+t('rc.colStatus')+'</th>'
+        + '</tr></thead><tbody>';
+      rows.forEach(r=>{
+        const nm = (__lang==='lo' && r.name_lao) ? r.name_lao : r.name;
+        const profCol = r.profit_per_portion == null ? ''
+          : (Number(r.profit_per_portion) < 0 ? 'color:var(--kl-danger);font-weight:700'
+             : 'color:var(--kl-success);font-weight:600');
+        const fcCol = r.food_cost_pct == null ? '' :
+          (Number(r.food_cost_pct) > (r.target_cost_pct || 35)
+            ? 'color:var(--kl-danger);font-weight:600' : 'color:var(--kl-success)');
+        html += '<tr class="kl-iedit" onclick=\'recipeForm('+r.recipe_id+')\'>'
+          + '<td>'+h(nm)+(r.is_sub_recipe?' <small class="kl-muted">'+t('rc.subOpt')+'</small>':'')+'</td>'
+          + '<td>'+money(r.cost_per_portion)+'</td>'
+          + '<td>'+(r.selling_price!=null?money(r.selling_price):'<span class="kl-muted">—</span>')+'</td>'
+          + '<td style="'+profCol+'">'+(r.profit_per_portion!=null?money(r.profit_per_portion):'<span class="kl-muted">—</span>')+'</td>'
+          + '<td style="'+fcCol+'">'+(r.food_cost_pct!=null?r.food_cost_pct+'%':'<span class="kl-muted">—</span>')+'</td>'
+          + '<td>'+rcStatusChip(r.status)+'</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    html += '</div>';
+
+    body.innerHTML = html;
+  } catch (e) {
+    body.innerHTML = '<div class="kl-rcard bad"><p class="kl-rbig">'+t('rc.loadFail')+'</p>'
+      + '<p class="kl-rsmall">'+h(e.message||String(e))+'</p></div>';
+  }
+}
+
+// ---- Recipe editor modal (build/edit a dish + its ingredient lines) ----
+// Loads stock items + other recipes for the ingredient dropdowns, then
+// renders a line editor. Lines are kept in window.__rcLines while editing.
+window.recipeForm = async function(id) {
+  try {
+    // Pull items (for raw lines) and recipes (for sub-recipe lines)
+    const [itemsRes, recRes] = await Promise.all([
+      sb.from('items').select('item_id,name,name_lao,unit,last_cost,standard_cost,is_active').eq('is_active',true).order('name'),
+      sb.from('recipes').select('recipe_id,name,is_sub_recipe').order('name'),
+    ]);
+    if (itemsRes.error) throw itemsRes.error;
+    window.__rcItems = itemsRes.data || [];
+    window.__rcAllRecipes = (recRes.data || []);
+
+    let rec = {}, lines = [];
+    if (id) {
+      const rRes = await sb.from('recipes').select('*').eq('recipe_id', id).single();
+      if (rRes.error) throw rRes.error;
+      rec = rRes.data;
+      const lRes = await sb.from('recipe_lines').select('*').eq('recipe_id', id).order('line_id');
+      if (lRes.error) throw lRes.error;
+      lines = (lRes.data || []).map(l => ({
+        item_id: l.item_id, sub_recipe_id: l.sub_recipe_id,
+        qty: l.qty, unit: l.unit || '', waste_factor: l.waste_factor || 1.0,
+        note: l.note || ''
+      }));
+    }
+    window.__rcLines = lines;
+
+    const v = (k,d='')=> (rec && rec[k]!=null) ? rec[k] : d;
+    const html =
+       '<div class="kl-form-row"><label>'+t('rc.name')+' *</label><input id="rf_name" value="'+h(v('name'))+'"></div>'
+      +'<div class="kl-form-row"><label>'+t('rc.nameLao')+'</label><input id="rf_namelao" value="'+h(v('name_lao'))+'"></div>'
+      +'<div class="kl-form-row"><label>'+t('rc.category')+'</label><input id="rf_cat" value="'+h(v('category'))+'"></div>'
+      +'<div class="kl-form-row"><label>'+t('rc.yield')+'</label><input id="rf_yield" type="number" step="0.001" value="'+h(v('yield_qty',1))+'" oninput="rcCostPreview()"></div>'
+      +'<div class="kl-form-row"><label>'+t('rc.yieldUnit')+'</label><input id="rf_yunit" value="'+h(v('yield_unit','portion'))+'"></div>'
+      +'<div class="kl-form-row"><label>'+t('rc.price')+'</label><input id="rf_price" type="number" step="0.01" value="'+h(v('selling_price'))+'" oninput="rcCostPreview()"></div>'
+      +'<div class="kl-form-row"><label>'+t('rc.target')+'</label><input id="rf_target" type="number" step="0.1" value="'+h(v('target_cost_pct'))+'"></div>'
+      +'<div class="kl-form-row"><label style="font-size:13px;font-weight:400"><input type="checkbox" id="rf_issub" '+(v('is_sub_recipe')?'checked':'')+'> '+t('rc.isSub')+'</label></div>'
+      +'<div class="kl-form-row"><label>'+t('rc.notes')+'</label><input id="rf_notes" value="'+h(v('notes'))+'"></div>'
+      +'<hr style="border:none;border-top:1px solid var(--kl-border);margin:14px 0">'
+      +'<p style="font-weight:600;margin:0 0 8px">'+t('rc.ingredients')+'</p>'
+      +'<div id="rf_lines"></div>'
+      +'<button class="kl-btn" type="button" onclick="rcAddLine()">'+t('rc.addLine')+'</button>'
+      +'<p id="rf_costPreview" class="kl-rsmall" style="margin-top:10px"></p>'
+      +'<hr style="border:none;border-top:1px solid var(--kl-border);margin:14px 0">'
+      +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveRecipe('+(id||'null')+')">'+t('rc.save')+'</button> '
+      +(id?'<button class="kl-btn" style="color:var(--kl-danger)" onclick="deleteRecipe('+id+')">'+t('rc.del')+'</button> ':'')
+      +'<button class="kl-btn" onclick="closeModal()">'+t('m.cancel')+'</button>';
+    modal(id ? t('rc.edit') : t('rc.add').replace('+ ',''), html);
+    rcRenderLines();
+  } catch (e) {
+    alert(t('rc.loadFail')+': '+(e.message||e));
+  }
+};
+
+window.rcAddLine = function() {
+  window.__rcLines = window.__rcLines || [];
+  window.__rcLines.push({ item_id:null, sub_recipe_id:null, qty:1, unit:'', waste_factor:1.0, note:'', _mode:'item' });
+  rcRenderLines();
+};
+window.rcDelLine = function(i) {
+  window.__rcLines.splice(i,1);
+  rcRenderLines();
+};
+
+function rcRenderLines() {
+  const wrap = document.getElementById('rf_lines');
+  if (!wrap) return;
+  const lines = window.__rcLines || [];
+  const items = window.__rcItems || [];
+  const subs  = (window.__rcAllRecipes || []);
+  let html = '';
+  lines.forEach((ln, i) => {
+    const mode = ln._mode || (ln.sub_recipe_id != null ? 'sub' : 'item');
+    const isSub = mode === 'sub';
+    const itemOpts = '<option value="">'+t('rc.choose')+'</option>' +
+      items.map(it=>'<option value="'+it.item_id+'" '
+        +(!isSub && Number(ln.item_id)===it.item_id?'selected':'')+'>'
+        +h(it.name)+'</option>').join('');
+    const subOpts = '<option value="">'+t('rc.choose')+'</option>' +
+      subs.map(s=>'<option value="'+s.recipe_id+'" '
+        +(isSub && Number(ln.sub_recipe_id)===s.recipe_id?'selected':'')+'>'
+        +h(s.name)+'</option>').join('');
+    html += '<div class="kl-rcard" style="padding:12px;margin:8px 0">'
+      + '<div class="kl-form-row"><label>'+t('rc.ingType')+'</label>'
+      + '<select onchange="rcLineType('+i+',this.value)">'
+      + '<option value="item" '+(!isSub?'selected':'')+'>'+t('rc.rawItem')+'</option>'
+      + '<option value="sub" '+(isSub?'selected':'')+'>'+t('rc.subRecipe')+'</option>'
+      + '</select></div>'
+      + '<div class="kl-form-row"><label>'+(isSub?t('rc.subRecipe'):t('rc.rawItem'))+'</label>'
+      + '<select onchange="rcLineRef('+i+',this.value)">'
+      + (isSub ? subOpts : itemOpts) + '</select></div>'
+      + '<div class="kl-form-row"><label>'+t('rc.qty')+'</label>'
+      + '<input type="number" step="0.0001" value="'+h(ln.qty)+'" oninput="rcLineSet('+i+',\'qty\',this.value)"></div>'
+      + '<div class="kl-form-row"><label>'+t('rc.unit')+'</label>'
+      + '<input value="'+h(ln.unit||'')+'" oninput="rcLineSet('+i+',\'unit\',this.value)"></div>'
+      + '<div class="kl-form-row"><label>'+t('rc.waste')+'</label>'
+      + '<input type="number" step="0.001" value="'+h(ln.waste_factor||1.0)+'" oninput="rcLineSet('+i+',\'waste_factor\',this.value)">'
+      + '<small class="kl-muted">'+t('rc.wasteHint')+'</small></div>'
+      + '<div class="kl-form-row"><label>'+t('rc.lineNote')+'</label>'
+      + '<input value="'+h(ln.note||'')+'" oninput="rcLineSet('+i+',\'note\',this.value)"></div>'
+      + '<button class="kl-btn" type="button" style="color:var(--kl-danger)" onclick="rcDelLine('+i+')">✕</button>'
+      + '</div>';
+  });
+  wrap.innerHTML = html || '<p class="kl-muted">'+t('rc.needLines')+'</p>';
+  rcCostPreview();
+}
+
+window.rcLineType = function(i, val) {
+  const ln = window.__rcLines[i];
+  if (val === 'sub') { ln.item_id = null; ln._mode = 'sub'; }
+  else { ln.sub_recipe_id = null; ln._mode = 'item'; }
+  rcRenderLines();
+};
+window.rcLineRef = function(i, val) {
+  const ln = window.__rcLines[i];
+  const num = val ? Number(val) : null;
+  const mode = ln._mode || (ln.sub_recipe_id != null ? 'sub' : 'item');
+  if (mode === 'sub') { ln.sub_recipe_id = num; ln.item_id = null; }
+  else {
+    ln.item_id = num; ln.sub_recipe_id = null;
+    // auto-fill unit from the chosen item (scan-don't-type principle)
+    if (num) {
+      const it = (window.__rcItems||[]).find(x=>x.item_id===num);
+      if (it) ln.unit = it.unit || ln.unit || '';
+    }
+  }
+  rcRenderLines();
+};
+window.rcLineSet = function(i, k, v) {
+  window.__rcLines[i][k] = (k==='unit'||k==='note') ? v : (v===''?'':Number(v));
+  if (k==='qty' || k==='waste_factor') rcCostPreview();
+};
+
+// Live cost preview in the editor. Mirrors the SQL engine fallback
+// (last_cost -> standard_cost -> 0). Sub-recipe lines can't be priced
+// client-side (their cost lives in the recursive SQL view), so we flag
+// them and tell the user the exact figure appears after Save.
+function rcCostPreview() {
+  const el = document.getElementById('rf_costPreview');
+  if (!el) return;
+  const lines = window.__rcLines || [];
+  let cost = 0, hasSub = false, missingCost = false;
+  lines.forEach(ln=>{
+    if (ln.item_id) {
+      const it = (window.__rcItems||[]).find(x=>x.item_id===Number(ln.item_id));
+      if (!it) return;
+      const uc = (it.last_cost != null ? Number(it.last_cost)
+                 : it.standard_cost != null ? Number(it.standard_cost) : null);
+      if (uc == null) { missingCost = true; return; }
+      const q  = Number(ln.qty)||0;
+      const wf = Number(ln.waste_factor)||1;
+      cost += q * wf * uc;
+    } else if (ln.sub_recipe_id) {
+      hasSub = true;
+    }
+  });
+  const yld = Number((document.getElementById('rf_yield')||{}).value || 1) || 1;
+  const perPortion = cost / (yld>0?yld:1);
+  let msg = '<strong>'+t('rc.colCost')+': '+money(perPortion)+'</strong>';
+  const priceEl = document.getElementById('rf_price');
+  const price = priceEl && priceEl.value ? Number(priceEl.value) : null;
+  if (price && price > 0) {
+    const profit = price - perPortion;
+    const fcpct = Math.round(perPortion/price*1000)/10;
+    const col = profit < 0 ? 'var(--kl-danger)' : 'var(--kl-success)';
+    msg += ' · <span style="color:'+col+';font-weight:600">'+t('rc.colProfit')+': '
+      + money(profit)+' ('+fcpct+'% '+t('rc.colFcpct')+')</span>';
+  }
+  if (hasSub)      msg += '<br><span class="kl-muted">'+t('rc.subOpt')+' — '+t('rc.costFrom')+'</span>';
+  if (missingCost) msg += '<br><span style="color:var(--kl-warn)">'+t('rc.costFrom')+'</span>';
+  el.innerHTML = msg;
+}
+
+window.saveRecipe = async function(id) {
+  const g = (x)=>document.getElementById(x);
+  const rec = {
+    name: g('rf_name').value.trim(),
+    name_lao: g('rf_namelao').value.trim() || null,
+    category: g('rf_cat').value.trim() || null,
+    yield_qty: g('rf_yield').value ? Number(g('rf_yield').value) : 1,
+    yield_unit: g('rf_yunit').value.trim() || 'portion',
+    selling_price: g('rf_price').value ? Number(g('rf_price').value) : null,
+    target_cost_pct: g('rf_target').value ? Number(g('rf_target').value) : null,
+    is_sub_recipe: g('rf_issub').checked,
+    notes: g('rf_notes').value.trim() || null,
+  };
+  if (!rec.name) { alert(t('rc.needName')); return; }
+  if (rec.name.length > 150) { alert('Name max 150 chars'); return; }
+  if (rec.yield_qty <= 0 || isNaN(rec.yield_qty)) { alert('Yield must be > 0'); return; }
+  // Validate numeric ranges (no negatives, sane caps)
+  const checks = [
+    ['selling_price', rec.selling_price, 0, 1000000000],
+    ['target_cost_pct', rec.target_cost_pct, 0, 100],
+  ];
+  for (const [, val, mn, mx] of checks) {
+    if (val != null && (isNaN(val) || val < mn || val > mx)) {
+      alert('Value out of range (0–'+mx+')'); return;
+    }
+  }
+  const lines = (window.__rcLines || []).filter(l =>
+    (l.item_id != null && l.item_id !== '') ||
+    (l.sub_recipe_id != null && l.sub_recipe_id !== ''));
+  if (lines.length === 0) { alert(t('rc.needLines')); return; }
+  for (const ln of lines) {
+    if (!ln.qty || Number(ln.qty) <= 0) { alert(t('rc.qty')+': > 0'); return; }
+    if (ln.waste_factor != null && Number(ln.waste_factor) < 1.0) {
+      alert(t('rc.waste')+' ≥ 1.0'); return;
+    }
+    if (ln.sub_recipe_id && id && Number(ln.sub_recipe_id) === Number(id)) {
+      alert('A recipe cannot contain itself.'); return;
+    }
+  }
+  try {
+    const rid = __profile.restaurant_id;
+    let recipeId = id;
+    if (id) {
+      const r = await sb.from('recipes').update(rec).eq('recipe_id', id);
+      if (r.error) throw r.error;
+    } else {
+      rec.restaurant_id = rid;
+      const r = await sb.from('recipes').insert(rec).select('recipe_id').single();
+      if (r.error) throw r.error;
+      recipeId = r.data.recipe_id;
+    }
+    // Failure-safe line replacement: capture the OLD line IDs first,
+    // INSERT the new lines, verify success, then delete ONLY the old
+    // IDs. If the insert fails (network drop), the old lines are still
+    // intact — the recipe is never left with zero ingredients.
+    let oldIds = [];
+    if (id) {
+      const oldRes = await sb.from('recipe_lines').select('line_id').eq('recipe_id', recipeId);
+      if (oldRes.error) throw oldRes.error;
+      oldIds = (oldRes.data || []).map(x => x.line_id);
+    }
+    const payload = lines.map(l => ({
+      restaurant_id: rid,
+      recipe_id: recipeId,
+      item_id: l.item_id ? Number(l.item_id) : null,
+      sub_recipe_id: l.sub_recipe_id ? Number(l.sub_recipe_id) : null,
+      qty: Number(l.qty),
+      unit: l.unit || null,
+      waste_factor: l.waste_factor ? Number(l.waste_factor) : 1.0,
+      note: l.note || null,
+    }));
+    const ins = await sb.from('recipe_lines').insert(payload);
+    if (ins.error) throw ins.error;            // old lines untouched on failure
+    if (oldIds.length) {
+      const del = await sb.from('recipe_lines').delete().in('line_id', oldIds);
+      if (del.error) throw del.error;          // worst case: duplicate lines, never zero
+    }
+    closeModal();
+    renderRecipesReport(klSession());
+  } catch (e) {
+    alert(t('rc.saveFail')+': '+(e.message||e));
+  }
+};
+
+window.deleteRecipe = async function(id) {
+  if (!confirm(t('rc.delConfirm'))) return;
+  try {
+    // recipe_lines cascade-delete via FK ON DELETE CASCADE
+    const r = await sb.from('recipes').delete().eq('recipe_id', id);
+    if (r.error) throw r.error;
+    closeModal();
+    renderRecipesReport(klSession());
+  } catch (e) {
+    alert(t('rc.saveFail')+': '+(e.message||e));
+  }
+};
+
+// =====================================================================
+// v2.6 — PURCHASING REPORT (purchase orders + supplier price alerts)
+// =====================================================================
+function poStatusChip(st) {
+  const map = {
+    draft:    ['var(--kl-text-soft)','po.st.draft'],
+    sent:     ['var(--kl-warn)',     'po.st.sent'],
+    received: ['var(--kl-success)',  'po.st.received'],
+    cancelled:['var(--kl-danger)',   'po.st.cancelled'],
+  };
+  const [col,key] = map[st] || map.draft;
+  return '<span style="display:inline-block;padding:3px 9px;border-radius:999px;'
+    + 'font-size:12px;font-weight:600;color:#fff;background:'+col+'">'+t(key)+'</span>';
+}
+
+async function renderPurchasingReport(u) {
+  const body = document.getElementById('reportsBody');
+  body.innerHTML = '<p class="kl-muted">'+t('common.loading')+'</p>';
+  try {
+    const [poRes, alertRes] = await Promise.all([
+      sb.from('purchase_orders')
+        .select('po_id,po_number,status,expected_date,created_at,supplier_id,suppliers(name)')
+        .order('created_at',{ascending:false}),
+      sb.from('v_price_alerts').select('*').order('change_pct',{ascending:false}),
+    ]);
+    if (poRes.error) throw poRes.error;
+    const pos = poRes.data || [];
+    const alerts = (alertRes.data || []);
+    window.__pos = pos;
+
+    // Pull line totals for each PO (one query, grouped client-side)
+    let totals = {};
+    if (pos.length) {
+      const lr = await sb.from('po_lines')
+        .select('po_id,qty_ordered,unit_cost').in('po_id', pos.map(p=>p.po_id));
+      (lr.data||[]).forEach(l=>{
+        totals[l.po_id] = (totals[l.po_id]||0) + Number(l.qty_ordered||0)*Number(l.unit_cost||0);
+      });
+    }
+
+    let html = '';
+    html += '<button class="kl-btn kl-btn-primary" onclick="poForm()">'+t('po.new')+'</button> ';
+    html += '<button class="kl-btn" onclick="poFromAdvisor()">'+t('po.fromAdvisor')+'</button> ';
+    html += '<button class="kl-btn" onclick="poAutoDraft()">'+t('po.autoDraft')+'</button>';
+
+    // ---- Price alerts card (supplier price jumped) ----
+    html += '<div class="kl-rcard '+(alerts.length?'warn':'good')+'" style="margin-top:14px">'
+      + '<p class="kl-rlabel" style="font-weight:600;font-size:16px">'+t('po.alerts')+'</p>';
+    if (alerts.length === 0) {
+      html += '<p class="kl-rsmall">'+t('po.alertsNone')+'</p>';
+    } else {
+      html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+        + '<th>'+t('po.item')+'</th><th>'+t('po.colOld')+'</th><th>'+t('po.colNew')+'</th>'
+        + '<th>'+t('po.colChange')+'</th><th>'+t('po.colSup')+'</th></tr></thead><tbody>';
+      alerts.forEach(a=>{
+        const up = Number(a.change_pct) > 0;
+        const col = up ? 'var(--kl-danger)' : 'var(--kl-success)';
+        const nm = (__lang==='lo' && a.name_lao) ? a.name_lao : a.name;
+        html += '<tr><td>'+h(nm)+'</td><td>'+money(a.old_cost)+'</td><td>'+money(a.new_cost)+'</td>'
+          + '<td style="color:'+col+';font-weight:600">'
+          + (up?'+':'')+ (a.change_pct!=null?a.change_pct+'%':'-') +'</td>'
+          + '<td>'+h(a.supplier_name||'—')+'</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    html += '</div>';
+
+    // ---- Purchase orders list ----
+    html += '<div class="kl-rcard"><p class="kl-rlabel" style="font-weight:600;font-size:16px">'
+      + t('po.title')+'</p>';
+    if (pos.length === 0) {
+      html += '<p class="kl-rsmall">'+t('po.none')+'</p>';
+    } else {
+      html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+        + '<th>'+t('po.colNum')+'</th><th>'+t('po.colSup')+'</th><th>'+t('po.colStatus')+'</th>'
+        + '<th>'+t('po.colTotal')+'</th><th>'+t('po.colDate')+'</th></tr></thead><tbody>';
+      pos.forEach(p=>{
+        const sup = (p.suppliers && p.suppliers.name) || '—';
+        html += '<tr class="kl-iedit" onclick=\'poForm('+p.po_id+')\'>'
+          + '<td><strong>'+h(p.po_number)+'</strong></td>'
+          + '<td>'+h(sup)+'</td><td>'+poStatusChip(p.status)+'</td>'
+          + '<td>'+money(totals[p.po_id]||0)+'</td>'
+          + '<td>'+h((p.expected_date||p.created_at||'').slice(0,10))+'</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    html += '</div>';
+    body.innerHTML = html;
+  } catch (e) {
+    body.innerHTML = '<div class="kl-rcard bad"><p class="kl-rbig">'+t('po.loadFail')+'</p>'
+      + '<p class="kl-rsmall">'+h(e.message||String(e))+'</p></div>';
+  }
+}
+
+// ---- PO editor: build/edit an order + its lines ----
+window.poForm = async function(id, prefillLines) {
+  try {
+    const [supRes, itemRes] = await Promise.all([
+      sb.from('suppliers').select('supplier_id,name,is_active').eq('is_active',true).order('name'),
+      sb.from('items').select('item_id,name,name_lao,unit,last_cost,standard_cost,is_active').eq('is_active',true).order('name'),
+    ]);
+    if (supRes.error) throw supRes.error;
+    window.__poSups = supRes.data || [];
+    window.__poItems = itemRes.data || [];
+
+    let po = {}, lines = prefillLines || [];
+    if (id) {
+      const pRes = await sb.from('purchase_orders').select('*').eq('po_id',id).single();
+      if (pRes.error) throw pRes.error;
+      po = pRes.data;
+      const lRes = await sb.from('po_lines').select('*').eq('po_id',id).order('po_line_id');
+      if (lRes.error) throw lRes.error;
+      lines = (lRes.data||[]).map(l=>({
+        item_id:l.item_id, qty_ordered:l.qty_ordered, unit_cost:l.unit_cost,
+        unit:l.unit||'', note:l.note||''
+      }));
+    }
+    window.__poLines = lines;
+    const v=(k,d='')=>(po&&po[k]!=null)?po[k]:d;
+    const editable = !id || po.status === 'draft';
+
+    const supOpts = '<option value="">'+t('rc.choose')+'</option>' +
+      (window.__poSups).map(s=>'<option value="'+s.supplier_id+'" '
+        +(Number(v('supplier_id'))===s.supplier_id?'selected':'')+'>'+h(s.name)+'</option>').join('');
+
+    let html =
+       '<div class="kl-form-row"><label>'+t('po.number')+' *</label>'
+       +'<input id="po_num" value="'+h(v('po_number', 'PO-'+Date.now().toString().slice(-6)))+'" '+(editable?'':'disabled')+'></div>'
+      +'<div class="kl-form-row"><label>'+t('po.supplier')+' *</label>'
+       +'<select id="po_sup" '+(editable?'':'disabled')+'>'+supOpts+'</select></div>'
+      +'<div class="kl-form-row"><label>'+t('po.expected')+'</label>'
+       +'<input id="po_exp" type="date" value="'+h((v('expected_date')||'').slice(0,10))+'" '+(editable?'':'disabled')+'></div>'
+      +'<div class="kl-form-row"><label>'+t('po.notes')+'</label>'
+       +'<input id="po_notes" value="'+h(v('notes'))+'" '+(editable?'':'disabled')+'></div>'
+      +'<div class="kl-form-row"><label>'+t('po.status')+'</label> '+poStatusChip(v('status','draft'))+'</div>'
+      +'<hr style="border:none;border-top:1px solid var(--kl-border);margin:14px 0">'
+      +'<p style="font-weight:600;margin:0 0 8px">'+t('po.lines')+'</p>'
+      +'<div id="po_linesBox"></div>'
+      +(editable?'<button class="kl-btn" type="button" onclick="poAddLine()">'+t('po.addLine')+'</button>':'')
+      +'<p id="po_totalBox" class="kl-rsmall" style="margin-top:10px;font-weight:600"></p>'
+      +'<hr style="border:none;border-top:1px solid var(--kl-border);margin:14px 0">';
+    if (editable)
+      html += '<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="savePO('+(id||'null')+')">'+t('po.save')+'</button> ';
+    if (id && po.status === 'draft')
+      html += '<button class="kl-btn" onclick="poSend('+id+')">'+t('po.send')+'</button> ';
+    if (id && po.status === 'sent')
+      html += '<button class="kl-btn kl-btn-primary" onclick="poReceive('+id+')">'+t('po.receive')+'</button> ';
+    if (id && po.status === 'draft')
+      html += '<button class="kl-btn" style="color:var(--kl-danger)" onclick="deletePO('+id+')">'+t('po.del')+'</button> ';
+    html += '<button class="kl-btn" onclick="closeModal()">'+t('m.cancel')+'</button>';
+
+    modal(id ? t('po.edit') : t('po.new').replace('+ ',''), html);
+    poRenderLines(editable);
+  } catch (e) {
+    alert(t('po.loadFail')+': '+(e.message||e));
+  }
+};
+
+window.poFromAdvisor = async function() {
+  try {
+    const { data, error } = await sb.from('v_reorder_advisor').select('*');
+    if (error) throw error;
+    const need = (data||[]).filter(r=>r.needs_reorder);
+    if (need.length === 0) { alert(t('po.advisorEmpty')); return; }
+    const items = window.__poItems || [];
+    const lines = need.map(r=>{
+      const it = (items).find(x=>x.item_id===r.item_id);
+      const perDay = Number(r.used_per_day||0);
+      const suggest = Math.max(Number(r.par_level||0)-Number(r.on_hand||0), Math.ceil(perDay*7), 1);
+      return { item_id:r.item_id, qty_ordered:suggest,
+        unit_cost: it ? (it.last_cost ?? it.standard_cost ?? null) : null,
+        unit: r.unit||'', note:'' };
+    });
+    poForm(null, lines);
+  } catch (e) { alert(t('po.loadFail')+': '+(e.message||e)); }
+};
+
+window.poAddLine = function() {
+  window.__poLines = window.__poLines || [];
+  window.__poLines.push({ item_id:null, qty_ordered:1, unit_cost:null, unit:'', note:'' });
+  poRenderLines(true);
+};
+window.poDelLine = function(i){ window.__poLines.splice(i,1); poRenderLines(true); };
+window.poLineSet = function(i,k,val){
+  const ln = window.__poLines[i];
+  ln[k] = (k==='unit'||k==='note') ? val : (val===''?'':Number(val));
+  if (k==='item_id' && val) {
+    const it=(window.__poItems||[]).find(x=>x.item_id===Number(val));
+    if (it){ if(!ln.unit) ln.unit=it.unit||''; if(ln.unit_cost==null) ln.unit_cost=it.last_cost??it.standard_cost??null; }
+    poRenderLines(true);
+  } else poTotal();
+};
+
+function poRenderLines(editable) {
+  const box = document.getElementById('po_linesBox');
+  if (!box) return;
+  const lines = window.__poLines || [];
+  const items = window.__poItems || [];
+  let html = '';
+  lines.forEach((ln,i)=>{
+    const itemOpts = '<option value="">'+t('rc.choose')+'</option>' +
+      items.map(it=>'<option value="'+it.item_id+'" '
+        +(Number(ln.item_id)===it.item_id?'selected':'')+'>'+h(it.name)+'</option>').join('');
+    if (editable) {
+      html += '<div class="kl-rcard" style="padding:12px;margin:8px 0">'
+        + '<div class="kl-form-row"><label>'+t('po.item')+'</label>'
+        + '<select onchange="poLineSet('+i+',\'item_id\',this.value)">'+itemOpts+'</select></div>'
+        + '<div class="kl-form-row"><label>'+t('po.qty')+'</label>'
+        + '<input type="number" step="0.001" value="'+h(ln.qty_ordered)+'" oninput="poLineSet('+i+',\'qty_ordered\',this.value)"></div>'
+        + '<div class="kl-form-row"><label>'+t('po.unit')+'</label>'
+        + '<input value="'+h(ln.unit||'')+'" oninput="poLineSet('+i+',\'unit\',this.value)"></div>'
+        + '<div class="kl-form-row"><label>'+t('po.cost')+'</label>'
+        + '<input type="number" step="0.01" value="'+h(ln.unit_cost!=null?ln.unit_cost:'')+'" oninput="poLineSet('+i+',\'unit_cost\',this.value)"></div>'
+        + '<button class="kl-btn" type="button" style="color:var(--kl-danger)" onclick="poDelLine('+i+')">✕</button>'
+        + '</div>';
+    } else {
+      const it = items.find(x=>x.item_id===Number(ln.item_id));
+      html += '<div class="kl-rcard" style="padding:10px;margin:6px 0">'
+        + '<strong>'+h(it?it.name:'?')+'</strong> — '+fmtQty(ln.qty_ordered)+' '+h(ln.unit||'')
+        + ' @ '+money(ln.unit_cost||0)+' = '+money(Number(ln.qty_ordered||0)*Number(ln.unit_cost||0))
+        + '</div>';
+    }
+  });
+  box.innerHTML = html || '<p class="kl-muted">'+t('po.needLines')+'</p>';
+  poTotal();
+}
+function poTotal() {
+  const el = document.getElementById('po_totalBox');
+  if (!el) return;
+  const total = (window.__poLines||[]).reduce((s,l)=>
+    s + Number(l.qty_ordered||0)*Number(l.unit_cost||0), 0);
+  el.textContent = t('po.total')+': '+money(total);
+}
+
+window.savePO = async function(id) {
+  const g=(x)=>document.getElementById(x);
+  const rec = {
+    po_number: g('po_num').value.trim(),
+    supplier_id: g('po_sup').value ? Number(g('po_sup').value) : null,
+    expected_date: g('po_exp').value || null,
+    notes: g('po_notes').value.trim() || null,
+  };
+  if (!rec.po_number) { alert(t('po.number')); return; }
+  if (!rec.supplier_id) { alert(t('po.needSup')); return; }
+  const lines = (window.__poLines||[]).filter(l=>l.item_id && Number(l.qty_ordered)>0);
+  if (lines.length === 0) { alert(t('po.needLines')); return; }
+  for (const ln of lines) {
+    if (Number(ln.qty_ordered)<=0) { alert(t('po.qty')+': > 0'); return; }
+    if (ln.unit_cost!=null && ln.unit_cost!=='' && Number(ln.unit_cost)<0) { alert(t('po.cost')+' ≥ 0'); return; }
+  }
+  try {
+    const rid = __profile.restaurant_id;
+    let poId = id;
+    if (id) {
+      const r = await sb.from('purchase_orders').update(rec).eq('po_id',id);
+      if (r.error) throw r.error;
+    } else {
+      rec.restaurant_id = rid;
+      const r = await sb.from('purchase_orders').insert(rec).select('po_id').single();
+      if (r.error) throw r.error;
+      poId = r.data.po_id;
+    }
+    // failure-safe line replace: capture old ids, insert new, delete old
+    let oldIds = [];
+    if (id) {
+      const o = await sb.from('po_lines').select('po_line_id').eq('po_id',poId);
+      if (o.error) throw o.error;
+      oldIds = (o.data||[]).map(x=>x.po_line_id);
+    }
+    const payload = lines.map(l=>({
+      restaurant_id: rid, po_id: poId,
+      item_id: Number(l.item_id), qty_ordered: Number(l.qty_ordered),
+      unit_cost: (l.unit_cost===''||l.unit_cost==null)?null:Number(l.unit_cost),
+      unit: l.unit||null, note: l.note||null,
+    }));
+    const ins = await sb.from('po_lines').insert(payload);
+    if (ins.error) throw ins.error;
+    if (oldIds.length) {
+      const d = await sb.from('po_lines').delete().in('po_line_id', oldIds);
+      if (d.error) throw d.error;
+    }
+    closeModal();
+    renderPurchasingReport(klSession());
+  } catch (e) { alert(t('po.saveFail')+': '+(e.message||e)); }
+};
+
+window.poSend = async function(id) {
+  if (!confirm(t('po.sendConfirm'))) return;
+  try {
+    const r = await sb.from('purchase_orders')
+      .update({ status:'sent', sent_at:new Date().toISOString() })
+      .eq('po_id',id).eq('status','draft');
+    if (r.error) throw r.error;
+    closeModal(); renderPurchasingReport(klSession());
+  } catch (e) { alert(t('po.saveFail')+': '+(e.message||e)); }
+};
+
+window.poReceive = async function(id) {
+  if (!confirm(t('po.recvConfirm'))) return;
+  try {
+    const u = klSession();
+    const rid = __profile.restaurant_id;
+    const lr = await sb.from('po_lines').select('*').eq('po_id',id);
+    if (lr.error) throw lr.error;
+    const lines = lr.data || [];
+    if (lines.length === 0) { alert(t('po.needLines')); return; }
+    // Create a stock batch per ordered line (received into stock)
+    const today = new Date().toISOString().slice(0,10);
+    for (const l of lines) {
+      const ins = await sb.from('batches').insert({
+        restaurant_id: rid, item_id: l.item_id,
+        quantity_in: l.qty_ordered, quantity_remaining: l.qty_ordered,
+        unit_cost: l.unit_cost, received_date: today, status:'active',
+      });
+      if (ins.error) throw ins.error;
+      await sb.from('po_lines').update({ qty_received: l.qty_ordered }).eq('po_line_id', l.po_line_id);
+    }
+    const r = await sb.from('purchase_orders')
+      .update({ status:'received', received_at:new Date().toISOString() })
+      .eq('po_id',id).eq('status','sent');
+    if (r.error) throw r.error;
+    alert(t('po.recvDone'));
+    closeModal(); renderPurchasingReport(klSession());
+  } catch (e) { alert(t('po.saveFail')+': '+(e.message||e)); }
+};
+
+window.deletePO = async function(id) {
+  if (!confirm(t('po.delConfirm'))) return;
+  try {
+    const r = await sb.from('purchase_orders').delete().eq('po_id',id).eq('status','draft');
+    if (r.error) throw r.error;
+    closeModal(); renderPurchasingReport(klSession());
+  } catch (e) { alert(t('po.saveFail')+': '+(e.message||e)); }
+};
+
+// =====================================================================
+// v3.0 — VARIANCE REPORT (theoretical vs actual — the loss finder)
+// This is the feature MarketMan charges the most for. KHANGLAOS owns
+// both POS (EATLAOS) and warehouse, so the numbers are exact.
+// =====================================================================
+async function renderVarianceReport(u) {
+  const body = document.getElementById('reportsBody');
+  body.innerHTML = '<p class="kl-muted">'+t('common.loading')+'</p>';
+  try {
+    const { data, error } = await sb.from('v_variance').select('*');
+    if (error) throw error;
+    const rows = (data || []);
+
+    // Positive variance value = money leaking (used more than recipes say)
+    const leaking = rows.filter(r => Number(r.variance_value) > 0)
+      .sort((a,b)=> Number(b.variance_value)-Number(a.variance_value));
+    const totalLeak = leaking.reduce((s,r)=> s + Number(r.variance_value||0), 0);
+    const worst = leaking[0];
+
+    let html = '<div class="kl-rgrid">';
+    html += '<div class="kl-rcard '+(totalLeak>0?'bad':'good')+'">'
+      + '<p class="kl-rlabel">'+t('var.kpiLeak')+'</p>'
+      + '<p class="kl-rbig">'+money(totalLeak)+'</p>'
+      + '<p class="kl-rsmall">'+t('var.sub').slice(0,40)+'…</p></div>';
+    html += '<div class="kl-rcard '+(leaking.length?'warn':'good')+'">'
+      + '<p class="kl-rlabel">'+t('var.kpiItems')+'</p>'
+      + '<p class="kl-rbig">'+leaking.length+'</p>'
+      + '<p class="kl-rsmall">'+t('var.colItem')+'</p></div>';
+    html += '<div class="kl-rcard '+(worst?'bad':'good')+'">'
+      + '<p class="kl-rlabel">'+t('var.kpiWorst')+'</p>'
+      + '<p class="kl-rbig" style="font-size:20px">'+(worst?h((__lang==='lo'&&worst.name_lao)?worst.name_lao:worst.name):'—')+'</p>'
+      + '<p class="kl-rsmall">'+(worst?money(worst.variance_value):'')+'</p></div>';
+    html += '</div>';
+
+    html += '<div class="kl-rcard info"><p class="kl-rsmall" style="font-weight:600">'
+      + t('var.explainTitle')+'</p><p class="kl-rsmall">'+t('var.explain')+'</p></div>';
+
+    html += '<div class="kl-rcard"><p class="kl-rlabel" style="font-weight:600;font-size:16px">'
+      + t('var.title')+'</p>';
+    if (rows.length === 0) {
+      html += '<p class="kl-rsmall">'+t('var.none')+'</p>';
+    } else if (leaking.length === 0) {
+      html += '<p class="kl-rsmall">'+t('var.good')+'</p>';
+    } else {
+      html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+        + '<th>'+t('var.colItem')+'</th><th>'+t('var.colTheo')+'</th><th>'+t('var.colActual')+'</th>'
+        + '<th>'+t('var.colGap')+'</th><th>'+t('var.colValue')+'</th><th>'+t('var.colPct')+'</th>'
+        + '</tr></thead><tbody>';
+      // Show all rows, leaking first, sorted worst money first
+      const ordered = rows.slice().sort((a,b)=> Number(b.variance_value)-Number(a.variance_value));
+      ordered.forEach(r=>{
+        const nm = (__lang==='lo' && r.name_lao) ? r.name_lao : r.name;
+        const leak = Number(r.variance_value) > 0;
+        const gapCol = leak ? 'color:var(--kl-danger);font-weight:700'
+                            : (Number(r.variance_value)<0 ? 'color:var(--kl-success)' : '');
+        html += '<tr><td>'+h(nm)+'</td>'
+          + '<td>'+fmtQty(r.theoretical_used)+' '+h(r.unit||'')+'</td>'
+          + '<td>'+fmtQty(r.actual_used)+' '+h(r.unit||'')+'</td>'
+          + '<td style="'+gapCol+'">'+fmtQty(r.variance_qty)+' '+h(r.unit||'')+'</td>'
+          + '<td style="'+gapCol+'">'+money(r.variance_value)+'</td>'
+          + '<td style="'+gapCol+'">'+(r.variance_pct!=null?r.variance_pct+'%':'—')+'</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    html += '</div>';
+    body.innerHTML = html;
+  } catch (e) {
+    body.innerHTML = '<div class="kl-rcard bad"><p class="kl-rbig">'+t('var.loadFail')+'</p>'
+      + '<p class="kl-rsmall">'+h(e.message||String(e))+'</p></div>';
+  }
+}
+
+// =====================================================================
+// v3.1 — AUTO-WORK: auto-draft POs, sales entry, one-tap expiry waste
+// =====================================================================
+
+// --- Auto-create draft purchase orders (no typing) ---
+window.poAutoDraft = async function() {
+  if (!confirm(t('po.autoConfirm'))) return;
+  try {
+    const rid = __profile.restaurant_id;
+    const { data, error } = await sb.rpc('fn_auto_draft_pos', { p_restaurant_id: rid });
+    if (error) throw error;
+    if (!data || data.ok === false) throw new Error((data && data.error) || 'failed');
+    const n = data.pos_created || 0;
+    alert(n > 0 ? t('po.autoDone').replace('{n}', n) : t('po.autoNone'));
+    renderPurchasingReport(klSession());
+  } catch (e) {
+    alert(t('po.autoFail') + ': ' + (e.message || e));
+  }
+};
+
+// --- Sales entry page: tap dish, set qty, confirm -> FEFO auto-deduct ---
+async function initSalesPage() {
+  const u = await klRequireLogin(); if (!u) return;
+  document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
+  const body = document.getElementById('salesBody');
+  body.innerHTML = '<p class="kl-muted">' + t('common.loading') + '</p>';
+  try {
+    // Staff-safe: fn_sellable_dishes exposes only name + selling price
+    // (no cost/profit). Works for staff AND management.
+    const { data, error } = await sb.rpc('fn_sellable_dishes',
+      { p_restaurant_id: __profile.restaurant_id });
+    if (error) throw error;
+    const dishes = (data || []).filter(r =>
+      r.selling_price != null && r.selling_price > 0);
+
+    let html = '';
+    if (dishes.length === 0) {
+      body.innerHTML = '<div class="kl-rcard info"><p class="kl-rsmall">'
+        + t('sales.none') + '</p></div>';
+      return;
+    }
+    window.__salesDishes = {};
+    html += '<div class="kl-rgrid">';
+    dishes.forEach(d => {
+      const nm = (__lang === 'lo' && d.name_lao) ? d.name_lao : d.name;
+      window.__salesDishes[d.recipe_id] = nm;
+      html += '<div class="kl-rcard kl-iedit" onclick="salesDish(' + d.recipe_id + ')">'
+        + '<p class="kl-rbig" style="font-size:18px">' + h(nm) + '</p>'
+        + '<p class="kl-rsmall">' + money(d.selling_price) + '</p></div>';
+    });
+    html += '</div>';
+
+    // "Logged today" review list is management-only — pos_sales is
+    // blocked for staff at the DB (v3.2). Staff just log; they don't
+    // see the running history. This keeps the page clean and avoids a
+    // guaranteed RLS-empty query for staff.
+    if (klIsManager()) {
+      const startOfDay = new Date(); startOfDay.setHours(0, 0, 0, 0);
+      const sres = await sb.from('pos_sales')
+        .select('recipe_id,qty_sold,sold_at,deducted_ok')
+        .gte('sold_at', startOfDay.toISOString())
+        .order('sold_at', { ascending: false });
+      html += '<div class="kl-rcard"><p class="kl-rlabel" style="font-weight:600;font-size:16px">'
+        + t('sales.recent') + '</p>';
+      const recent = (sres.data || []);
+      if (recent.length === 0) {
+        html += '<p class="kl-rsmall">' + t('sales.recentNone') + '</p>';
+      } else {
+        const nameById = {};
+        dishes.forEach(d => {
+          nameById[d.recipe_id] = (__lang === 'lo' && d.name_lao) ? d.name_lao : d.name;
+        });
+        html += '<div class="kl-table-wrap"><table class="kl-table"><tbody>';
+        recent.forEach(r => {
+          html += '<tr><td>' + h(nameById[r.recipe_id] || ('#' + r.recipe_id)) + '</td>'
+            + '<td><strong>' + fmtQty(r.qty_sold) + '</strong></td>'
+            + '<td>' + h((r.sold_at || '').slice(11, 16)) + '</td>'
+            + '<td>' + (r.deducted_ok ? '✅' : '⚠️') + '</td></tr>';
+        });
+        html += '</tbody></table></div>';
+      }
+      html += '</div>';
+    }
+    body.innerHTML = html;
+  } catch (e) {
+    body.innerHTML = '<div class="kl-rcard bad"><p class="kl-rbig">' + t('sales.fail') + '</p>'
+      + '<p class="kl-rsmall">' + h(e.message || String(e)) + '</p></div>';
+  }
+}
+
+window.salesDish = function(recipeId) {
+  const dishName = (window.__salesDishes && window.__salesDishes[recipeId]) || ('#' + recipeId);
+  const html =
+     '<p style="font-weight:600;font-size:18px;margin:0 0 12px">' + h(dishName) + '</p>'
+    + '<div class="kl-form-row"><label>' + t('sales.qtySold') + '</label>'
+    + '<input id="sale_qty" type="number" min="1" step="1" value="1" '
+    + 'style="font-size:22px;text-align:center" inputmode="numeric"></div>'
+    + '<div style="display:flex;gap:8px;margin:10px 0">'
+    + '<button class="kl-btn" type="button" onclick="saleStep(-1)" style="flex:1;font-size:20px">−</button>'
+    + '<button class="kl-btn" type="button" onclick="saleStep(1)" style="flex:1;font-size:20px">+</button>'
+    + '</div>'
+    + '<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saleConfirm(' + recipeId
+    + ')">' + t('sales.confirm') + '</button> '
+    + '<button class="kl-btn" onclick="closeModal()">' + t('m.cancel') + '</button>';
+  modal(t('sales.confirm'), html);
+};
+window.saleStep = function(d) {
+  const el = document.getElementById('sale_qty');
+  if (!el) return;
+  el.value = Math.max(1, (parseInt(el.value, 10) || 1) + d);
+};
+window.saleConfirm = async function(recipeId) {
+  const dishName = (window.__salesDishes && window.__salesDishes[recipeId]) || ('#' + recipeId);
+  const qty = parseInt((document.getElementById('sale_qty') || {}).value, 10);
+  if (!(qty > 0)) { alert(t('sales.qtySold')); return; }
+  if (!confirm(t('sales.confirmMsg').replace('{n}', qty).replace('{dish}', dishName))) return;
+  try {
+    const rid = __profile.restaurant_id;
+    const ref = 'MANUAL-' + rid + '-' + recipeId + '-' + Date.now();
+    const { data, error } = await sb.rpc('fn_pos_sale_deduct', {
+      p_restaurant_id: rid, p_recipe_id: recipeId,
+      p_qty_sold: qty, p_external_ref: ref
+    });
+    if (error) throw error;
+    if (!data || data.ok === false) throw new Error((data && data.error) || 'failed');
+    const short = (data.shortfalls && data.shortfalls.length > 0);
+    closeModal();
+    alert(short ? t('sales.shortWarn') : t('sales.done'));
+    initSalesPage();
+  } catch (e) {
+    alert(t('sales.fail') + ': ' + (e.message || e));
+  }
+};
+
+// --- One-tap expiry waste queue (rendered on dashboard) ---
+// Role-aware: management reads the money view (shows ₭ at risk),
+// staff read the staff-safe view (NO money). DB RLS enforces this too —
+// the UI choice here is for clean UX, the database is the real wall.
+async function renderExpiryWasteQueue() {
+  const card = document.getElementById('expWasteCard');
+  const box = document.getElementById('expWasteBox');
+  if (!card || !box) return;
+  const isMgr = klIsManager();
+  try {
+    const view = isMgr ? 'v_expiry_waste_queue' : 'v_expiry_waste_staff';
+    const { data, error } = await sb.from(view).select('*');
+    if (error) throw error;
+    const rows = (data || []);
+    if (rows.length === 0) { card.style.display = 'none'; return; }
+    card.style.display = '';
+    window.__ewRows = {};
+    let html = '<div class="kl-table-wrap"><table class="kl-table"><tbody>';
+    rows.forEach(r => {
+      const nm = (__lang === 'lo' && r.name_lao) ? r.name_lao : r.name;
+      window.__ewRows[r.batch_id] = {
+        name: nm, qty: Number(r.quantity_remaining),
+        unit: r.unit || '', money: Number(r.money_at_risk || 0)
+      };
+      const expired = r.urgency === 'EXPIRED';
+      const col = expired ? 'var(--kl-danger)' : 'var(--kl-warn)';
+      const tag = expired ? t('ew.expired') : t('ew.expiring');
+      html += '<tr class="kl-iedit" onclick="expWasteConfirm(' + r.batch_id + ')">'
+        + '<td><strong>' + h(nm) + '</strong><br><small class="kl-muted">'
+        + h(r.barcode || '') + '</small></td>'
+        + '<td>' + fmtQty(r.quantity_remaining) + ' ' + h(r.unit || '') + '</td>'
+        + '<td><span style="color:' + col + ';font-weight:600">' + tag + '</span></td>'
+        + (isMgr
+            ? '<td style="color:var(--kl-danger);font-weight:700">' + money(r.money_at_risk) + '</td>'
+            : '')
+        + '<td><span class="kl-btn" style="pointer-events:none">' + t('ew.tap') + '</span></td></tr>';
+    });
+    html += '</tbody></table></div>';
+    box.innerHTML = html;
+  } catch (e) {
+    card.style.display = 'none'; // non-fatal: dashboard still works
+  }
+}
+window.expWasteConfirm = async function(batchId) {
+  const r = (window.__ewRows && window.__ewRows[batchId]);
+  if (!r) return;
+  const msg = t('ew.confirm')
+    .replace('{q}', fmtQty(r.qty)).replace('{unit}', r.unit)
+    .replace('{name}', r.name).replace('{money}', money(r.money));
+  if (!confirm(msg)) return;
+  try {
+    const rid = __profile.restaurant_id;
+    const { data, error } = await sb.rpc('fn_confirm_expiry_waste', {
+      p_restaurant_id: rid, p_batch_id: batchId, p_reason: 'expired'
+    });
+    if (error) throw error;
+    if (!data || data.ok === false) throw new Error((data && data.error) || 'failed');
+    alert(t('ew.done'));
+    renderExpiryWasteQueue();
+  } catch (e) {
+    alert(t('ew.fail') + ': ' + (e.message || e));
+  }
+};
 
 // =====================================================================
 // v2.4 — OVERVIEW PAGE (owner cockpit: gauges + order-today + expiring)
