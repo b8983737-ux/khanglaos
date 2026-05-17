@@ -348,6 +348,13 @@ a:hover { text-decoration: underline; }
   font-weight:500; transition:color .12s; }
 .kl-tab:hover { color:var(--kl-text); }
 .kl-tab.active { color:var(--kl-primary); border-bottom-color:var(--kl-primary); font-weight:600; }
+/* Date range filter for reports */
+.kl-daterange { display:flex; align-items:center; gap:8px; margin:16px 0 4px; flex-wrap:wrap; }
+.kl-dr-label { font-size:13px; color:var(--kl-text-soft); font-weight:600; margin-right:2px; }
+.kl-dr-btn { background:var(--kl-surface-2); border:1px solid var(--kl-border); color:var(--kl-text-soft);
+  font:inherit; font-size:13px; padding:7px 16px; border-radius:8px; cursor:pointer; transition:all .14s; }
+.kl-dr-btn:hover { border-color:var(--kl-primary); color:var(--kl-primary); }
+.kl-dr-btn.active { background:var(--kl-primary); color:#fff; border-color:var(--kl-primary); font-weight:600; }
 /* Report cards — clean white with a subtle left accent for status */
 .kl-rcard { background:var(--kl-surface); border:1px solid var(--kl-border);
   border-radius:var(--kl-radius); padding:20px; margin:0 0 14px 0; box-shadow:var(--kl-shadow); }
@@ -416,11 +423,15 @@ a:hover { text-decoration: underline; }
     --lao:"Noto Sans Lao","Schibsted Grotesk",sans-serif;}#landing-view *{margin:0;padding:0;box-sizing:border-box}#landing-view html{scroll-behavior:smooth}#landing-view body{font-family:var(--body);color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}#landing-view h1, #landing-view h2, #landing-view h3{font-family:var(--display);font-weight:600;line-height:1.1;letter-spacing:-.02em}#landing-view a{color:inherit;text-decoration:none}#landing-view .wrap{max-width:1180px;margin:0 auto;padding:0 28px}#landing-view .lao{font-family:var(--lao)}#landing-view nav{position:sticky;top:0;z-index:50;background:rgba(251,252,251,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}#landing-view .nav-in{display:flex;align-items:center;justify-content:space-between;height:72px}#landing-view .brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.02em}#landing-view .brand .mark{width:36px;height:36px;flex-shrink:0}#landing-view .brand .mark svg{width:100%;height:100%;display:block}#landing-view .nav-links{display:flex;align-items:center;gap:36px;font-size:15px;font-weight:500}#landing-view .nav-links a{color:var(--soft);transition:color .15s}#landing-view .nav-links a:hover{color:var(--green)}#landing-view .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--body);font-weight:600;font-size:15px;padding:12px 22px;border-radius:10px;cursor:pointer;border:none;transition:transform .12s,box-shadow .2s}#landing-view .btn-primary{background:var(--green);color:#fff;box-shadow:0 6px 20px -8px rgba(21,121,95,.6)}#landing-view .btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 26px -8px rgba(21,121,95,.7)}#landing-view .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}#landing-view .btn-ghost:hover{border-color:var(--green);color:var(--green)}@media(max-width:860px) {#landing-view .nav-links{display:none}
 }#landing-view .hero{position:relative;overflow:hidden;padding:88px 0 96px}#landing-view .hero::before{content:"";position:absolute;inset:0;background:
     radial-gradient(900px 400px at 78% 8%,rgba(21,121,95,.10),transparent 60%),
-    radial-gradient(700px 500px at 8% 90%,rgba(202,162,74,.08),transparent 55%)}#landing-view .hero-grid{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}#landing-view .eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green);background:var(--green-soft);padding:7px 15px;border-radius:999px;margin-bottom:26px}#landing-view .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}#landing-view @keyframes pulse{50%{opacity:.35}}
-  h1.hero-title{font-size:clamp(40px,5.4vw,68px);font-weight:600}#landing-view h1.hero-title em{font-style:normal;color:var(--green);position:relative}#landing-view h1.hero-title em::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:10px;background:var(--gold);opacity:.28;z-index:-1;border-radius:2px}#landing-view .hero-sub{font-size:19px;color:var(--soft);margin:26px 0 36px;max-width:520px}#landing-view .hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}#landing-view .hero-note{font-size:14px;color:var(--faint);margin-top:22px;display:flex;align-items:center;gap:8px}#landing-view .hero-note b{color:var(--green);font-weight:600}#landing-view .hero-visual{position:relative}#landing-view .mock{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:0 30px 70px -30px rgba(10,63,49,.35);overflow:hidden;animation:rise .8s cubic-bezier(.2,.7,.2,1) both}#landing-view @keyframes rise{from{opacity:0;transform:translateY(24px)}}
+    radial-gradient(700px 500px at 8% 90%,rgba(202,162,74,.08),transparent 55%)}#landing-view .hero-grid{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}#landing-view .eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green);background:var(--green-soft);padding:7px 15px;border-radius:999px;margin-bottom:26px}#landing-view .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}@keyframes pulse{50%{opacity:.35}}
+  h1.hero-title{font-size:clamp(40px,5.4vw,68px);font-weight:600}#landing-view h1.hero-title em{font-style:normal;color:var(--green);position:relative}#landing-view h1.hero-title em::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:10px;background:var(--gold);opacity:.28;z-index:-1;border-radius:2px}#landing-view .hero-sub{font-size:19px;color:var(--soft);margin:26px 0 36px;max-width:520px}#landing-view .hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}#landing-view .hero-note{font-size:14px;color:var(--faint);margin-top:22px;display:flex;align-items:center;gap:8px}#landing-view .hero-note b{color:var(--green);font-weight:600}#landing-view .hero-visual{position:relative}#landing-view .mock{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:0 30px 70px -30px rgba(10,63,49,.35);overflow:hidden;animation:rise .8s cubic-bezier(.2,.7,.2,1) both}@keyframes rise{from{opacity:0;transform:translateY(24px)}}
   .mock-top{background:linear-gradient(135deg,var(--green),var(--green-dd));padding:22px 24px;color:#fff}#landing-view .mock-top .lbl{font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.75}#landing-view .mock-top .val{font-family:var(--display);font-size:30px;font-weight:700;margin-top:5px}#landing-view .mock-top .val small{font-size:15px;font-weight:600;opacity:.8}#landing-view .mock-body{padding:20px 24px}#landing-view .mrow{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line);font-size:14.5px}#landing-view .mrow:last-child{border-bottom:none}#landing-view .mrow .name{font-weight:600}#landing-view .mrow .sub{font-size:12.5px;color:var(--faint)}#landing-view .pill{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px}#landing-view .pill.bad{background:#fdeceb;color:var(--danger)}#landing-view .pill.ok{background:var(--green-soft);color:var(--green-d)}#landing-view .pill.warn{background:#fbf1dc;color:#9a7414}#landing-view .float-tag{position:absolute;background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:13px 17px;box-shadow:0 16px 40px -16px rgba(10,63,49,.4);font-size:13px;animation:rise .8s .25s both}#landing-view .float-tag .big{font-family:var(--display);font-size:21px;font-weight:700;color:var(--green)}#landing-view .float-tag.t1{bottom:-26px;left:-30px}#landing-view .float-tag.t2{top:-22px;right:-22px}@media(max-width:960px) {#landing-view .hero-grid{grid-template-columns:1fr;gap:50px}#landing-view .float-tag.t1{left:0}#landing-view .float-tag.t2{right:0}
-}#landing-view .trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface)}#landing-view .trust-in{display:flex;align-items:center;justify-content:space-between;gap:30px;padding:30px 0;flex-wrap:wrap}#landing-view .trust-stat{text-align:center;flex:1;min-width:140px}#landing-view .trust-stat .n{font-family:var(--display);font-size:32px;font-weight:700;color:var(--green)}#landing-view .trust-stat .t{font-size:13.5px;color:var(--soft);margin-top:3px}#landing-view .logos-strip{border-top:1px solid var(--line);background:var(--bg);overflow:hidden}#landing-view .logos-in{padding:38px 0 42px;text-align:center}#landing-view .logos-label{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:26px}#landing-view .logos-marquee{width:100%;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}#landing-view .logos-track{display:flex;gap:18px;width:max-content;animation:logoscroll 32s linear infinite}#landing-view .logos-marquee:hover .logos-track{animation-play-state:paused}#landing-view @keyframes logoscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+}#landing-view .trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface)}#landing-view .trust-in{display:flex;align-items:center;justify-content:space-between;gap:30px;padding:30px 0;flex-wrap:wrap}#landing-view .trust-stat{text-align:center;flex:1;min-width:140px}#landing-view .trust-stat .n{font-family:var(--display);font-size:32px;font-weight:700;color:var(--green)}#landing-view .trust-stat .t{font-size:13.5px;color:var(--soft);margin-top:3px}#landing-view .logos-strip{border-top:1px solid var(--line);background:var(--bg);overflow:hidden}#landing-view .logos-in{padding:38px 0 42px;text-align:center}#landing-view .logos-label{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:26px}#landing-view .logos-marquee{width:100%;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}#landing-view .logos-track{display:flex;gap:18px;width:max-content;animation:logoscroll 32s linear infinite}#landing-view .logos-marquee:hover .logos-track{animation-play-state:paused}@keyframes logoscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
   .logo-chip{display:flex;align-items:center;gap:11px;color:var(--faint);font-weight:600;font-size:18px;justify-content:center;flex-shrink:0;padding:0 36px;white-space:nowrap;opacity:.78;transition:opacity .2s}#landing-view .logo-chip:hover{opacity:1;color:var(--soft)}#landing-view .logo-chip .lc-ic{font-size:22px;flex-shrink:0;filter:grayscale(.15)}#landing-view .logos-note{font-size:13px;color:var(--faint);margin-top:24px;text-align:center}@media(max-width:680px) {#landing-view .logo-chip{font-size:16px;padding:0 24px}#landing-view .logos-track{animation-duration:24s}
+#landing-view .trust-in{display:grid;grid-template-columns:1fr 1fr;gap:20px 16px;padding:26px 4px}
+#landing-view .trust-stat{min-width:0;padding:0 4px}
+#landing-view .trust-stat .n{font-size:21px;line-height:1.2}
+#landing-view .trust-stat .t{font-size:12px;margin-top:5px;line-height:1.35}
 #landing-view .nav-links{display:none !important}
 #landing-view .nav-in{height:60px}
 #landing-view .hero-grid{grid-template-columns:1fr !important;gap:32px}
@@ -967,6 +978,13 @@ a:hover { text-decoration: underline; }
       <button class="kl-tab"        data-rtab="recipes"  data-i18n="rt.recipes">Recipes — Profit per Dish</button>
       <button class="kl-tab"        data-rtab="purchasing" data-i18n="rt.purchasing">Purchasing</button>
       <button class="kl-tab"        data-rtab="variance" data-i18n="rt.variance">Variance — Loss Finder</button>
+      <button class="kl-tab"        data-rtab="activity" data-i18n="rt.activity">Activity by Date</button>
+    </div>
+    <div class="kl-daterange" id="reportsDateRange" style="display:none">
+      <span class="kl-dr-label" data-i18n="rt.period">Period:</span>
+      <button class="kl-dr-btn" data-range="1">1 day</button>
+      <button class="kl-dr-btn active" data-range="7">1 week</button>
+      <button class="kl-dr-btn" data-range="30">1 month</button>
     </div>
     <div id="reportsBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
   </div>
@@ -1125,6 +1143,7 @@ const I18N = {
     "rc.costFrom":"Cost auto-calculated. Set ingredient cost prices in Manage → Items for accuracy.",
     "rc.loadFail":"Could not load recipes", "rc.saveFail":"Save failed", "rc.subOpt":"(sub-recipe)",
     "rt.purchasing":"Purchasing", "rt.variance":"Variance — Loss Finder",
+    "rt.activity":"Activity by Date", "rt.period":"Period:", "rt.d1":"Last 1 day", "rt.d7":"Last 1 week", "rt.d30":"Last 1 month", "rt.movements":"movements", "rt.received":"Received (value)", "rt.checkedout":"Checked out (value)", "rt.wasted":"Wasted (value)", "rt.noactivity":"No activity in this period.",
     "po.title":"Purchase Orders", "po.sub":"Order stock from suppliers. Build from reorder advisor in one tap.",
     "po.new":"+ New order", "po.fromAdvisor":"Build from reorder advisor", "po.edit":"Edit order",
     "po.supplier":"Supplier", "po.number":"PO number", "po.status":"Status", "po.expected":"Expected date",
@@ -1287,6 +1306,7 @@ const I18N = {
     "rc.costFrom":"ຄ່າທຶນຄິດໄລ່ອັດຕະໂນມັດ. ຕັ້ງລາຄາທຶນວັດຖຸດິບໃນ ຈັດການ → ສິນຄ້າ ໃຫ້ຖືກຕ້ອງ.",
     "rc.loadFail":"ໂຫລດສູດບໍ່ໄດ້", "rc.saveFail":"ບັນທຶກບໍ່ສຳເລັດ", "rc.subOpt":"(ສູດຍ່ອຍ)",
     "rt.purchasing":"ການສັ່ງຊື້", "rt.variance":"ສ່ວນຕ່າງ — ຫາຈຸດຮົ່ວ",
+    "rt.activity":"ກິດຈະກຳຕາມວັນທີ", "rt.period":"ໄລຍະ:", "rt.d1":"1 ມື້ຜ່ານມາ", "rt.d7":"1 ອາທິດຜ່ານມາ", "rt.d30":"1 ເດືອນຜ່ານມາ", "rt.movements":"ການເຄື່ອນໄຫວ", "rt.received":"ຮັບເຂົ້າ (ມູນຄ່າ)", "rt.checkedout":"ເບີກອອກ (ມູນຄ່າ)", "rt.wasted":"ເສຍ (ມູນຄ່າ)", "rt.noactivity":"ບໍ່ມີກິດຈະກຳໃນໄລຍະນີ້.",
     "po.title":"ໃບສັ່ງຊື້", "po.sub":"ສັ່ງສິນຄ້າຈາກຜູ້ສະໜອງ. ສ້າງຈາກຄຳແນະນຳສັ່ງຊື້ໃນແຕະດຽວ.",
     "po.new":"+ ໃບສັ່ງໃໝ່", "po.fromAdvisor":"ສ້າງຈາກຄຳແນະນຳສັ່ງຊື້", "po.edit":"ແກ້ໄຂໃບສັ່ງ",
     "po.supplier":"ຜູ້ສະໜອງ", "po.number":"ເລກໃບສັ່ງ", "po.status":"ສະຖານະ", "po.expected":"ວັນທີຄາດຮັບ",
@@ -1449,6 +1469,7 @@ const I18N = {
     "rc.costFrom":"ต้นทุนคำนวณอัตโนมัติ. ตั้งราคาทุนวัตถุดิบใน จัดการ → สินค้า เพื่อความแม่นยำ.",
     "rc.loadFail":"โหลดสูตรไม่ได้", "rc.saveFail":"บันทึกไม่สำเร็จ", "rc.subOpt":"(สูตรย่อย)",
     "rt.purchasing":"การสั่งซื้อ", "rt.variance":"ส่วนต่าง — หาจุดรั่ว",
+    "rt.activity":"กิจกรรมตามวันที่", "rt.period":"ช่วงเวลา:", "rt.d1":"1 วันที่ผ่านมา", "rt.d7":"1 สัปดาห์ที่ผ่านมา", "rt.d30":"1 เดือนที่ผ่านมา", "rt.movements":"การเคลื่อนไหว", "rt.received":"รับเข้า (มูลค่า)", "rt.checkedout":"เบิกออก (มูลค่า)", "rt.wasted":"ของเสีย (มูลค่า)", "rt.noactivity":"ไม่มีกิจกรรมในช่วงนี้",
     "po.title":"ใบสั่งซื้อ", "po.sub":"สั่งสินค้าจากซัพพลายเออร์ สร้างจากคำแนะนำสั่งซื้อในแตะเดียว.",
     "po.new":"+ ใบสั่งใหม่", "po.fromAdvisor":"สร้างจากคำแนะนำสั่งซื้อ", "po.edit":"แก้ไขใบสั่ง",
     "po.supplier":"ซัพพลายเออร์", "po.number":"เลขใบสั่ง", "po.status":"สถานะ", "po.expected":"วันที่คาดรับ",
@@ -1609,6 +1630,7 @@ const I18N = {
     "rc.costFrom":"成本自动计算。在 管理 → 物料 中设置原料成本价以确保准确。",
     "rc.loadFail":"无法加载配方", "rc.saveFail":"保存失败", "rc.subOpt":"(子配方)",
     "rt.purchasing":"采购", "rt.variance":"差异 — 损失查找器",
+    "rt.activity":"按日期活动", "rt.period":"时间段：", "rt.d1":"最近1天", "rt.d7":"最近1周", "rt.d30":"最近1个月", "rt.movements":"笔变动", "rt.received":"入库（金额）", "rt.checkedout":"出库（金额）", "rt.wasted":"损耗（金额）", "rt.noactivity":"此时间段无活动。",
     "po.title":"采购订单", "po.sub":"向供应商订货。一键从补货建议生成。",
     "po.new":"+ 新订单", "po.fromAdvisor":"从补货建议生成", "po.edit":"编辑订单",
     "po.supplier":"供应商", "po.number":"订单号", "po.status":"状态", "po.expected":"预计到货日",
@@ -1770,6 +1792,7 @@ const I18N = {
     "rc.costFrom":"원가 자동 계산. 정확도를 위해 관리 → 품목에서 재료 원가를 설정하세요.",
     "rc.loadFail":"레시피를 불러올 수 없습니다", "rc.saveFail":"저장 실패", "rc.subOpt":"(서브 레시피)",
     "rt.purchasing":"구매", "rt.variance":"편차 — 손실 추적기",
+    "rt.activity":"날짜별 활동", "rt.period":"기간:", "rt.d1":"최근 1일", "rt.d7":"최근 1주", "rt.d30":"최근 1개월", "rt.movements":"건 이동", "rt.received":"입고 (금액)", "rt.checkedout":"출고 (금액)", "rt.wasted":"폐기 (금액)", "rt.noactivity":"이 기간에 활동이 없습니다.",
     "po.title":"구매 주문", "po.sub":"공급업체에 재고 주문. 재주문 권고에서 한 번에 생성.",
     "po.new":"+ 새 주문", "po.fromAdvisor":"재주문 권고에서 생성", "po.edit":"주문 편집",
     "po.supplier":"공급업체", "po.number":"주문 번호", "po.status":"상태", "po.expected":"예상 입고일",
@@ -2066,6 +2089,16 @@ async function route() {
     return;
   }
   if (r === 'login' && klSession()) {
+    location.hash = '#/dashboard';
+    return;
+  }
+  // ROLE GATE: manager-only pages. Staff cannot reach Reports, Manage,
+  // or Overview even by typing the URL directly — not just hidden buttons.
+  // (Database RLS still enforces data access; this blocks the screens too.)
+  const MANAGER_ONLY = ['reports', 'manage', 'overview'];
+  const _role = (__profile && __profile.role) || '';
+  const _canManage = ['sa', 'owner', 'manager'].includes(_role);
+  if (MANAGER_ONLY.includes(r) && !_canManage) {
     location.hash = '#/dashboard';
     return;
   }
@@ -2671,6 +2704,7 @@ function money(n) {
 
 // v2.5 — REPORTS is now tabbed: Waste & Stock | Recipes (profit per dish)
 let REPORT_TAB = 'waste';
+let REPORT_RANGE_DAYS = 7;  // date filter for Activity report: 1 / 7 / 30
 async function initReportsPage() {
   const u = await klRequireLogin(); if (!u) return;
   document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
@@ -2684,10 +2718,14 @@ async function initReportsPage() {
   }
   const tabs = document.getElementById('reportsTabs');
   tabs.style.display = '';
+  const dateRange = document.getElementById('reportsDateRange');
   const dispatch = (tab) => {
+    // Date filter only applies to the Activity report
+    dateRange.style.display = (tab === 'activity') ? 'flex' : 'none';
     if (tab === 'recipes')         renderRecipesReport(u);
     else if (tab === 'purchasing') renderPurchasingReport(u);
     else if (tab === 'variance')   renderVarianceReport(u);
+    else if (tab === 'activity')   renderActivityReport(u);
     else                           renderWasteReport(u);
   };
   tabs.querySelectorAll('.kl-tab').forEach(btn=>{
@@ -2697,7 +2735,63 @@ async function initReportsPage() {
       dispatch(REPORT_TAB);
     };
   });
+  // Date range buttons (1 day / 1 week / 1 month) — re-render activity
+  dateRange.querySelectorAll('.kl-dr-btn').forEach(btn=>{
+    btn.onclick = () => {
+      REPORT_RANGE_DAYS = parseInt(btn.getAttribute('data-range'), 10) || 7;
+      dateRange.querySelectorAll('.kl-dr-btn').forEach(b=>b.classList.toggle('active', b===btn));
+      renderActivityReport(u);
+    };
+  });
   dispatch(REPORT_TAB);
+}
+
+// ===== Activity by Date report (date-filterable: 1 / 7 / 30 days) =====
+async function renderActivityReport(u) {
+  const body = document.getElementById('reportsBody');
+  body.innerHTML = '<p class="kl-muted">' + t('common.loading') + '</p>';
+  try {
+    const days = REPORT_RANGE_DAYS || 7;
+    const since = new Date(Date.now() - days * 86400000).toISOString();
+    // movements: movement_type ('IN'/'OUT'/'WASTE'), quantity, created_at.
+    // Value is derived from the batch's unit_cost (movements has no value column).
+    const { data, error } = await sb.from('movements')
+      .select('movement_type, quantity, created_at, batches(unit_cost, items(name))')
+      .gte('created_at', since)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    const rows = data || [];
+    // Summarise by movement type
+    const sum = {};
+    let totalWasteValue = 0, totalIn = 0, totalOut = 0;
+    rows.forEach(r => {
+      const ty = r.movement_type || 'OTHER';
+      const qn = Number(r.quantity) || 0;
+      const uc = (r.batches && Number(r.batches.unit_cost)) || 0;
+      const val = qn * uc;
+      if (!sum[ty]) sum[ty] = { count: 0, qty: 0, value: 0 };
+      sum[ty].count += 1;
+      sum[ty].qty += qn;
+      sum[ty].value += val;
+      if (ty === 'WASTE') totalWasteValue += val;
+      else if (ty === 'IN') totalIn += val;
+      else if (ty === 'OUT') totalOut += val;
+    });
+    const label = days === 1 ? t('rt.d1') : days === 7 ? t('rt.d7') : t('rt.d30');
+    let html = '<div class="kl-rcard"><p class="kl-rsmall">' + h(label) + '</p>';
+    html += '<p class="kl-rbig">' + rows.length + ' ' + t('rt.movements') + '</p></div>';
+    html += '<div class="kl-rgrid">';
+    html += '<div class="kl-rcard"><p class="kl-rsmall">' + t('rt.received') + '</p><p class="kl-rbig">₭ ' + Math.round(totalIn).toLocaleString() + '</p></div>';
+    html += '<div class="kl-rcard"><p class="kl-rsmall">' + t('rt.checkedout') + '</p><p class="kl-rbig">₭ ' + Math.round(totalOut).toLocaleString() + '</p></div>';
+    html += '<div class="kl-rcard ' + (totalWasteValue > 0 ? 'warn' : '') + '"><p class="kl-rsmall">' + t('rt.wasted') + '</p><p class="kl-rbig">₭ ' + Math.round(totalWasteValue).toLocaleString() + '</p></div>';
+    html += '</div>';
+    if (rows.length === 0) {
+      html += '<p class="kl-muted">' + t('rt.noactivity') + '</p>';
+    }
+    body.innerHTML = html;
+  } catch (e) {
+    body.innerHTML = '<div class="kl-rcard warn"><p class="kl-rsmall">' + h(String(e.message || e)) + '</p></div>';
+  }
 }
 
 async function renderWasteReport(u) {
@@ -4243,5 +4337,78 @@ document.addEventListener('DOMContentLoaded',function(){
   }
 });
 </script>
+
+
+<script>
+/* ===== Landing i18n — robust DOM text-node walker (EN/LO/TH/ZH/KO) ===== */
+var KL_LI = {"Features": {"lo": "ຄຸນສົມບັດ", "th": "ฟีเจอร์", "zh": "功能", "ko": "기능"}, "How it works": {"lo": "ວິທີໃຊ້ງານ", "th": "วิธีใช้งาน", "zh": "如何运作", "ko": "작동 방식"}, "FAQ": {"lo": "ຄຳຖາມ", "th": "คำถามที่พบบ่อย", "zh": "常见问题", "ko": "자주 묻는 질문"}, "Get started →": {"lo": "ເລີ່ມຕົ້ນ →", "th": "เริ่มต้น →", "zh": "开始使用 →", "ko": "시작하기 →"}, "Built for Lao restaurants": {"lo": "ສ້າງມາເພື່ອຮ້ານອາຫານລາວ", "th": "สร้างมาเพื่อร้านอาหารลาว", "zh": "专为老挝餐厅打造", "ko": "라오스 레스토랑을 위해 제작"}, "Stop your kitchen from": {"lo": "ຢຸດການຮົ່ວໄຫຼເງິນ", "th": "หยุดครัวของคุณจาก", "zh": "别让你的厨房", "ko": "주방에서 새는"}, "leaking money": {"lo": "ໃນຄົວຂອງທ່ານ", "th": "การรั่วไหลของเงิน", "zh": "漏钱", "ko": "돈을 막으세요"}, "KHANGLAOS is a warehouse & food-cost system made for restaurants in Laos. Scan to receive, scan to use, and see exactly which dish — and which shelf — is costing you profit.": {"lo": "KHANGLAOS ແມ່ນລະບົບຄຸ້ມຄອງສາງ ແລະ ຕົ້ນທຶນອາຫານ ສ້າງມາສຳລັບຮ້ານອາຫານໃນລາວ. ສະແກນຮັບເຂົ້າ, ສະແກນຕອນໃຊ້, ແລະ ເຫັນຊັດເຈນວ່າເມນູໃດ — ແລະ ຊັ້ນວາງໃດ — ກຳລັງກິນກຳໄລຂອງທ່ານ.", "th": "KHANGLAOS คือระบบจัดการคลังและต้นทุนอาหารสำหรับร้านอาหารในลาว สแกนรับเข้า สแกนตอนใช้ และเห็นชัดเจนว่าเมนูใด — และชั้นวางใด — กำลังกินกำไรของคุณ", "zh": "KHANGLAOS 是专为老挝餐厅打造的仓库与食材成本系统。扫码入库、扫码使用，清楚看到哪道菜、哪个货架正在吞噬你的利润。", "ko": "KHANGLAOS는 라오스 레스토랑을 위한 창고 및 식자재 원가 시스템입니다. 입고 시 스캔, 사용 시 스캔하여 어떤 메뉴와 어떤 선반이 이익을 갉아먹는지 정확히 확인하세요."}, "Start free on your phone": {"lo": "ເລີ່ມຟຣີໃນໂທລະສັບ", "th": "เริ่มฟรีบนมือถือ", "zh": "在手机上免费开始", "ko": "휴대폰에서 무료로 시작"}, "See how it works": {"lo": "ເບິ່ງວິທີໃຊ້ງານ", "th": "ดูวิธีใช้งาน", "zh": "了解运作方式", "ko": "작동 방식 보기"}, "·  No hardware needed": {"lo": "·  ບໍ່ຕ້ອງໃຊ້ອຸປະກອນພິເສດ", "th": "·  ไม่ต้องใช้อุปกรณ์เพิ่ม", "zh": "·  无需任何硬件", "ko": "·  별도 장비 불필요"}, "Money leaking this month": {"lo": "ເງິນຮົ່ວໄຫຼເດືອນນີ້", "th": "เงินรั่วไหลเดือนนี้", "zh": "本月漏掉的钱", "ko": "이번 달 새는 돈"}, "found & flagged": {"lo": "ພົບ & ໝາຍໄວ້", "th": "พบ & ทำเครื่องหมาย", "zh": "已发现并标记", "ko": "발견 및 표시됨"}, "Used 35% more than recipes": {"lo": "ໃຊ້ຫຼາຍກວ່າສູດ 35%", "th": "ใช้มากกว่าสูตร 35%", "zh": "比配方多用 35%", "ko": "레시피보다 35% 더 사용"}, "Investigate": {"lo": "ກວດສອບ", "th": "ตรวจสอบ", "zh": "需调查", "ko": "조사 필요"}, "Expires in 2 days · 3 kg left": {"lo": "ໝົດອາຍຸໃນ 2 ມື້ · ເຫຼືອ 3 ກິໂລ", "th": "หมดอายุใน 2 วัน · เหลือ 3 กก.", "zh": "2天后过期 · 剩 3 公斤", "ko": "2일 후 만료 · 3kg 남음"}, "Use soon": {"lo": "ໃຊ້ດ່ວນ", "th": "ใช้ด่วน", "zh": "尽快使用", "ko": "곧 사용"}, "Below reorder level": {"lo": "ຕ່ຳກວ່າລະດັບສັ່ງຊື້", "th": "ต่ำกว่าระดับสั่งซื้อ", "zh": "低于补货线", "ko": "재주문 수준 이하"}, "Auto-ordered": {"lo": "ສັ່ງອັດຕະໂນມັດ", "th": "สั่งอัตโนมัติ", "zh": "已自动下单", "ko": "자동 주문됨"}, "Food cost 31% · healthy": {"lo": "ຕົ້ນທຶນ 31% · ດີ", "th": "ต้นทุน 31% · ดี", "zh": "食材成本 31% · 健康", "ko": "식자재 원가 31% · 양호"}, "Good": {"lo": "ດີ", "th": "ดี", "zh": "良好", "ko": "양호"}, "food cost, typical": {"lo": "ຕົ້ນທຶນອາຫານ, ໂດຍສະເລ່ຍ", "th": "ต้นทุนอาหารโดยเฉลี่ย", "zh": "食材成本（典型）", "ko": "식자재 원가, 평균"}, "hrs/mo saved": {"lo": "ຊມ./ເດືອນ ທີ່ປະຢັດ", "th": "ชม./เดือน ที่ประหยัด", "zh": "小时/月 节省", "ko": "시간/월 절약"}, "5 langs": {"lo": "5 ພາສາ", "th": "5 ภาษา", "zh": "5 种语言", "ko": "5개 언어"}, "Scan-first": {"lo": "ສະແກນກ່ອນ", "th": "สแกนก่อน", "zh": "扫码优先", "ko": "스캔 우선"}, "No typing for staff": {"lo": "ພະນັກງານບໍ່ຕ້ອງພິມ", "th": "พนักงานไม่ต้องพิมพ์", "zh": "员工无需打字", "ko": "직원 입력 불필요"}, "Real-time": {"lo": "ເວລາຈິງ", "th": "เรียลไทม์", "zh": "实时", "ko": "실시간"}, "Stock, waste & profit": {"lo": "ສະຕັອກ, ການເສຍ & ກຳໄລ", "th": "สต็อก ของเสีย & กำไร", "zh": "库存、损耗与利润", "ko": "재고, 폐기 및 이익"}, "Phone-ready": {"lo": "ພ້ອມໃຊ້ໃນໂທລະສັບ", "th": "พร้อมใช้บนมือถือ", "zh": "手机就绪", "ko": "휴대폰 지원"}, "Works on any device": {"lo": "ໃຊ້ໄດ້ທຸກອຸປະກອນ", "th": "ใช้ได้ทุกอุปกรณ์", "zh": "任何设备都能用", "ko": "모든 기기에서 작동"}, "Built for restaurants across Laos": {"lo": "ສ້າງມາເພື່ອຮ້ານອາຫານທົ່ວລາວ", "th": "สร้างมาเพื่อร้านอาหารทั่วลาว", "zh": "为老挝各地餐厅打造", "ko": "라오스 전역 레스토랑을 위해"}, "Your Restaurant": {"lo": "ຮ້ານຂອງທ່ານ", "th": "ร้านของคุณ", "zh": "您的餐厅", "ko": "당신의 레스토랑"}, "Your Café": {"lo": "ຄາເຟຂອງທ່ານ", "th": "คาเฟ่ของคุณ", "zh": "您的咖啡馆", "ko": "당신의 카페"}, "Your Kitchen": {"lo": "ຄົວຂອງທ່ານ", "th": "ครัวของคุณ", "zh": "您的厨房", "ko": "당신의 주방"}, "Your Group": {"lo": "ກຸ່ມຂອງທ່ານ", "th": "กลุ่มของคุณ", "zh": "您的集团", "ko": "당신의 그룹"}, "Your Brand": {"lo": "ແບຣນຂອງທ່ານ", "th": "แบรนด์ของคุณ", "zh": "您的品牌", "ko": "당신의 브랜드"}, "Your Bistro": {"lo": "ບິສໂຕຣຂອງທ່ານ", "th": "บิสโทรของคุณ", "zh": "您的小馆", "ko": "당신의 비스트로"}, "Your Diner": {"lo": "ຮ້ານອາຫານຂອງທ່ານ", "th": "ร้านอาหารของคุณ", "zh": "您的餐馆", "ko": "당신의 식당"}, "Your Tea Shop": {"lo": "ຮ້ານຊາຂອງທ່ານ", "th": "ร้านชาของคุณ", "zh": "您的茶店", "ko": "당신의 찻집"}, "Your restaurant's name & logo here — KHANGLAOS is built for Lao kitchens of every size.": {"lo": "ຊື່ ແລະ ໂລໂກ້ຮ້ານຂອງທ່ານທີ່ນີ້ — KHANGLAOS ສ້າງມາສຳລັບຄົວລາວທຸກຂະໜາດ.", "th": "ชื่อและโลโก้ร้านของคุณตรงนี้ — KHANGLAOS สร้างมาเพื่อครัวลาวทุกขนาด", "zh": "这里放您的餐厅名称与标志 — KHANGLAOS 适合各种规模的老挝厨房。", "ko": "여기에 귀하의 레스토랑 이름과 로고 — KHANGLAOS는 모든 규모의 라오스 주방을 위해 만들어졌습니다."}, "Core features": {"lo": "ຄຸນສົມບັດຫຼັກ", "th": "ฟีเจอร์หลัก", "zh": "核心功能", "ko": "핵심 기능"}, "Everything to control food cost — in one place": {"lo": "ທຸກຢ່າງເພື່ອຄຸມຕົ້ນທຶນອາຫານ — ໃນບ່ອນດຽວ", "th": "ทุกอย่างเพื่อคุมต้นทุนอาหาร — ในที่เดียว", "zh": "掌控食材成本所需的一切 — 集于一处", "ko": "식자재 원가 관리의 모든 것 — 한 곳에서"}, "Most Lao restaurants run on memory and notebooks. KHANGLAOS turns that into numbers you can act on, without changing how your kitchen works.": {"lo": "ຮ້ານອາຫານລາວສ່ວນຫຼາຍໃຊ້ຄວາມຈຳ ແລະ ປຶ້ມບັນທຶກ. KHANGLAOS ປ່ຽນສິ່ງນັ້ນເປັນຕົວເລກທີ່ທ່ານນຳໃຊ້ໄດ້ ໂດຍບໍ່ຕ້ອງປ່ຽນວິທີເຮັດວຽກຂອງຄົວ.", "th": "ร้านอาหารลาวส่วนใหญ่ใช้ความจำและสมุดจด KHANGLAOS เปลี่ยนสิ่งนั้นเป็นตัวเลขที่นำไปใช้ได้ โดยไม่ต้องเปลี่ยนวิธีทำงานของครัว", "zh": "大多数老挝餐厅靠记忆和笔记本运作。KHANGLAOS 把这些变成可行动的数字，无需改变厨房的工作方式。", "ko": "대부분의 라오스 레스토랑은 기억과 노트로 운영됩니다. KHANGLAOS는 주방 운영 방식을 바꾸지 않고 그것을 실행 가능한 숫자로 바꿉니다."}, "Scan to receive & use": {"lo": "ສະແກນເພື່ອຮັບ & ໃຊ້", "th": "สแกนเพื่อรับ & ใช้", "zh": "扫码入库与使用", "ko": "스캔으로 입고 및 사용"}, "Staff scan a barcode with the phone camera to receive deliveries or take stock out. No long forms, no typing — so they actually use it.": {"lo": "ພະນັກງານສະແກນບາໂຄດດ້ວຍກ້ອງໂທລະສັບເພື່ອຮັບສິນຄ້າ ຫຼື ເບີກສະຕັອກ. ບໍ່ມີແບບຟອມຍາວ, ບໍ່ຕ້ອງພິມ — ສະນັ້ນເຂົາເຈົ້າໃຊ້ມັນແທ້.", "th": "พนักงานสแกนบาร์โค้ดด้วยกล้องมือถือเพื่อรับสินค้าหรือเบิกสต็อก ไม่มีฟอร์มยาว ไม่ต้องพิมพ์ — พวกเขาจึงใช้จริง", "zh": "员工用手机摄像头扫码即可入库或出库。没有冗长表单，无需打字 — 他们才会真正使用。", "ko": "직원이 휴대폰 카메라로 바코드를 스캔해 입고하거나 출고합니다. 긴 양식도, 입력도 없어 실제로 사용합니다."}, "Profit per dish": {"lo": "ກຳໄລຕໍ່ເມນູ", "th": "กำไรต่อเมนู", "zh": "每道菜利润", "ko": "메뉴별 이익"}, "Build recipes once. KHANGLAOS calculates the true cost and profit of every dish from live ingredient prices, and flags the ones losing money.": {"lo": "ສ້າງສູດເທື່ອດຽວ. KHANGLAOS ຄຳນວນຕົ້ນທຶນ ແລະ ກຳໄລຈິງຂອງທຸກເມນູຈາກລາຄາວັດຖຸດິບປັດຈຸບັນ ແລະ ໝາຍເມນູທີ່ຂາດທຶນ.", "th": "สร้างสูตรครั้งเดียว KHANGLAOS คำนวณต้นทุนและกำไรจริงของทุกเมนูจากราคาวัตถุดิบปัจจุบัน และทำเครื่องหมายเมนูที่ขาดทุน", "zh": "配方只需建一次。KHANGLAOS 根据实时食材价格计算每道菜的真实成本与利润，并标记亏损的菜品。", "ko": "레시피는 한 번만 만들면 됩니다. KHANGLAOS는 실시간 재료 가격으로 모든 메뉴의 실제 원가와 이익을 계산하고 손해 보는 메뉴를 표시합니다."}, "Loss finder": {"lo": "ຄົ້ນຫາການສູນເສຍ", "th": "ค้นหาการสูญเสีย", "zh": "损失查找", "ko": "손실 추적"}, "you used versus what actually left stock. The gap is theft, over-portioning, or unrecorded waste — shown in money.": {"lo": "ທີ່ທ່ານໃຊ້ ທຽບກັບສິ່ງທີ່ອອກຈາກສະຕັອກຈິງ. ຊ່ອງຫວ່າງຄືການລັກ, ຕັກເກີນ, ຫຼື ການເສຍທີ່ບໍ່ໄດ້ບັນທຶກ — ສະແດງເປັນເງິນ.", "th": "ที่คุณใช้ เทียบกับที่ออกจากสต็อกจริง ช่องว่างคือการขโมย ตักเกิน หรือของเสียที่ไม่บันทึก — แสดงเป็นเงิน", "zh": "你所用的量与实际出库量的差距。差距就是偷窃、超量或未记录的损耗 — 以金额显示。", "ko": "사용한 양과 실제 출고량의 차이입니다. 그 차이는 도난, 과다 사용, 미기록 폐기 — 금액으로 표시됩니다."}, "Expiry & FEFO": {"lo": "ໝົດອາຍຸ & FEFO", "th": "หมดอายุ & FEFO", "zh": "过期与先到期先出", "ko": "유통기한 & FEFO"}, "The system always uses the oldest stock first and warns you before things expire — one tap to record waste with the cost attached.": {"lo": "ລະບົບໃຊ້ສະຕັອກເກົ່າສຸດກ່ອນສະເໝີ ແລະ ເຕືອນກ່ອນໝົດອາຍຸ — ແຕະຄັ້ງດຽວເພື່ອບັນທຶກການເສຍພ້ອມຕົ້ນທຶນ.", "th": "ระบบใช้สต็อกเก่าสุดก่อนเสมอ และเตือนก่อนหมดอายุ — แตะครั้งเดียวบันทึกของเสียพร้อมต้นทุน", "zh": "系统始终先用最旧库存，并在过期前提醒你 — 一键记录损耗并附带成本。", "ko": "시스템은 항상 가장 오래된 재고를 먼저 사용하고 만료 전에 알려줍니다 — 한 번 탭하면 원가와 함께 폐기 기록."}, "Auto purchase orders": {"lo": "ໃບສັ່ງຊື້ອັດຕະໂນມັດ", "th": "ใบสั่งซื้ออัตโนมัติ", "zh": "自动采购单", "ko": "자동 발주서"}, "When stock runs low, KHANGLAOS drafts the order with quantities and last prices filled in. You just review and send. No typing.": {"lo": "ເມື່ອສະຕັອກໜ້ອຍ, KHANGLAOS ຮ່າງໃບສັ່ງພ້ອມຈຳນວນ ແລະ ລາຄາຫຼ້າສຸດ. ທ່ານພຽງກວດ ແລະ ສົ່ງ. ບໍ່ຕ້ອງພິມ.", "th": "เมื่อสต็อกน้อย KHANGLAOS ร่างใบสั่งพร้อมจำนวนและราคาล่าสุด คุณแค่ตรวจและส่ง ไม่ต้องพิมพ์", "zh": "库存不足时，KHANGLAOS 自动起草采购单并填好数量和最近价格。你只需审核发送，无需打字。", "ko": "재고가 부족하면 KHANGLAOS가 수량과 최근 가격을 채워 발주서를 작성합니다. 검토 후 보내기만 하면 됩니다. 입력 불필요."}, "Manager vs staff": {"lo": "ຜູ້ຈັດການ ທຽບ ພະນັກງານ", "th": "ผู้จัดการ vs พนักงาน", "zh": "经理与员工", "ko": "관리자 vs 직원"}, "Owners and managers see all the money. Staff see only their work — never your margins, costs, or profit. Enforced, not just hidden.": {"lo": "ເຈົ້າຂອງ ແລະ ຜູ້ຈັດການເຫັນເງິນທັງໝົດ. ພະນັກງານເຫັນແຕ່ວຽກຂອງຕົນ — ບໍ່ເຫັນກຳໄລ, ຕົ້ນທຶນ. ບັງຄັບໃຊ້ຈິງ ບໍ່ແມ່ນພຽງເຊື່ອງ.", "th": "เจ้าของและผู้จัดการเห็นเงินทั้งหมด พนักงานเห็นแต่งานของตน — ไม่เห็นกำไร ต้นทุน บังคับใช้จริง ไม่ใช่แค่ซ่อน", "zh": "老板和经理看到所有金额。员工只看到自己的工作 — 永远看不到你的利润和成本。强制执行，不只是隐藏。", "ko": "사장과 관리자는 모든 금액을 봅니다. 직원은 자신의 업무만 봅니다 — 마진, 원가, 이익은 절대 안 보입니다. 숨김이 아닌 강제 적용."}, "Find the leak": {"lo": "ຄົ້ນຫາຈຸດຮົ່ວ", "th": "ค้นหาจุดรั่ว", "zh": "找出漏洞", "ko": "누수 찾기"}, "Know exactly where the money goes": {"lo": "ຮູ້ຊັດເຈນວ່າເງິນໄປໃສ", "th": "รู้ชัดเจนว่าเงินไปไหน", "zh": "清楚知道钱去了哪里", "ko": "돈이 어디로 가는지 정확히 파악"}, "Theoretical vs actual usage — catches theft & over-portioning": {"lo": "ການໃຊ້ຕາມທິດສະດີ ທຽບ ຕົວຈິງ — ຈັບການລັກ & ຕັກເກີນ", "th": "การใช้ตามทฤษฎี vs จริง — จับการขโมย & ตักเกิน", "zh": "理论用量 vs 实际用量 — 抓出偷窃与超量", "ko": "이론 사용량 vs 실제 — 도난 및 과다 사용 적발"}, "Supplier price-jump alerts the moment a delivery costs more": {"lo": "ແຈ້ງເຕືອນທັນທີເມື່ອລາຄາຜູ້ສະໜອງເພີ່ມ", "th": "แจ้งเตือนทันทีเมื่อราคาซัพพลายเออร์ขึ้น", "zh": "供应商涨价时立即提醒", "ko": "공급업체 가격 인상 즉시 알림"}, "Waste tracked with reason, photo, and money lost": {"lo": "ຕິດຕາມການເສຍພ້ອມເຫດຜົນ, ຮູບ, ແລະ ເງິນທີ່ເສຍ", "th": "ติดตามของเสียพร้อมเหตุผล รูป และเงินที่เสีย", "zh": "损耗追踪含原因、照片和损失金额", "ko": "폐기를 사유, 사진, 손실 금액과 함께 추적"}, "Plain colours: red = problem, green = good. No accounting degree needed.": {"lo": "ສີງ່າຍໆ: ແດງ = ບັນຫາ, ຂຽວ = ດີ. ບໍ່ຕ້ອງຮຽນບັນຊີ.", "th": "สีง่ายๆ: แดง = ปัญหา, เขียว = ดี ไม่ต้องเรียนบัญชี", "zh": "简单颜色：红 = 问题，绿 = 良好。无需会计学位。", "ko": "단순한 색상: 빨강 = 문제, 초록 = 양호. 회계 지식 불필요."}, "Variance — money leaking": {"lo": "ຄວາມແຕກຕ່າງ — ເງິນຮົ່ວ", "th": "ส่วนต่าง — เงินรั่ว", "zh": "差异 — 漏钱", "ko": "차이 — 돈 누수"}, "found this month across 3 items": {"lo": "ພົບເດືອນນີ້ໃນ 3 ລາຍການ", "th": "พบเดือนนี้ใน 3 รายการ", "zh": "本月在 3 个项目中发现", "ko": "이번 달 3개 항목에서 발견"}, "Beef — used vs recipes": {"lo": "ຊີ້ນງົວ — ໃຊ້ ທຽບ ສູດ", "th": "เนื้อวัว — ใช้ vs สูตร", "zh": "牛肉 — 用量 vs 配方", "ko": "소고기 — 사용 vs 레시피"}, "Shrimp — expired in freezer": {"lo": "ກຸ້ງ — ໝົດອາຍຸໃນຕູ້ແຊ່", "th": "กุ้ง — หมดอายุในช่องแช่แข็ง", "zh": "虾 — 在冷冻库过期", "ko": "새우 — 냉동고에서 만료"}, "Cooking oil — price up": {"lo": "ນ້ຳມັນ — ລາຄາຂຶ້ນ", "th": "น้ำมัน — ราคาขึ้น", "zh": "食用油 — 涨价", "ko": "식용유 — 가격 인상"}, "Action": {"lo": "ການກະທຳ", "th": "การดำเนินการ", "zh": "行动", "ko": "조치"}, "Reorder 2 items · check portions": {"lo": "ສັ່ງຄືນ 2 ລາຍການ · ກວດການຕັກ", "th": "สั่งซ้ำ 2 รายการ · ตรวจการตัก", "zh": "补订 2 项 · 检查份量", "ko": "2개 항목 재주문 · 분량 확인"}, "Less manual work": {"lo": "ວຽກດ້ວຍມືໜ້ອຍລົງ", "th": "งานมือน้อยลง", "zh": "减少手动操作", "ko": "수작업 감소"}, "Built so staff actually use it": {"lo": "ສ້າງມາໃຫ້ພະນັກງານໃຊ້ແທ້", "th": "สร้างมาให้พนักงานใช้จริง", "zh": "让员工真正会用", "ko": "직원이 실제로 사용하도록 제작"}, "Phone camera barcode scan for receive & check-out": {"lo": "ສະແກນບາໂຄດດ້ວຍກ້ອງເພື່ອຮັບ & ເບີກ", "th": "สแกนบาร์โค้ดด้วยกล้องเพื่อรับ & เบิก", "zh": "用手机摄像头扫码入库与出库", "ko": "카메라 바코드 스캔으로 입고 및 출고"}, "Expiry auto-filled from shelf life, location from item type": {"lo": "ໝົດອາຍຸເຕີມໃຫ້ອັດຕະໂນມັດຈາກອາຍຸສິນຄ້າ, ບ່ອນວາງຈາກປະເພດ", "th": "หมดอายุเติมอัตโนมัติจากอายุสินค้า ตำแหน่งจากประเภท", "zh": "保质期按货架寿命自动填写，位置按品类", "ko": "유통기한은 보관 수명에서, 위치는 품목 유형에서 자동 입력"}, "One-tap waste — quantity and money already calculated": {"lo": "ບັນທຶກການເສຍແຕະດຽວ — ຄຳນວນຈຳນວນ ແລະ ເງິນແລ້ວ", "th": "บันทึกของเสียแตะเดียว — คำนวณจำนวนและเงินแล้ว", "zh": "一键损耗 — 数量和金额已算好", "ko": "원터치 폐기 — 수량과 금액 자동 계산"}, "Purchase orders drafted automatically from low stock": {"lo": "ໃບສັ່ງຊື້ຮ່າງອັດຕະໂນມັດຈາກສະຕັອກໜ້ອຍ", "th": "ใบสั่งซื้อร่างอัตโนมัติจากสต็อกน้อย", "zh": "库存不足时自动起草采购单", "ko": "재고 부족 시 발주서 자동 작성"}, "Today — staff view": {"lo": "ມື້ນີ້ — ມຸມມອງພະນັກງານ", "th": "วันนี้ — มุมมองพนักงาน", "zh": "今天 — 员工视图", "ko": "오늘 — 직원 화면"}, "Scan & go": {"lo": "ສະແກນ & ໄປ", "th": "สแกน & ไป", "zh": "扫码即走", "ko": "스캔하고 끝"}, "No money shown to staff. Just the job.": {"lo": "ບໍ່ສະແດງເງິນໃຫ້ພະນັກງານ. ແຕ່ວຽກ.", "th": "ไม่แสดงเงินให้พนักงาน แค่งาน", "zh": "不向员工显示金额。只有任务。", "ko": "직원에게 금액 미표시. 업무만."}, "Received": {"lo": "ຮັບແລ້ວ", "th": "รับแล้ว", "zh": "已入库", "ko": "입고됨"}, "Checked out": {"lo": "ເບີກແລ້ວ", "th": "เบิกแล้ว", "zh": "已出库", "ko": "출고됨"}, "Expired — tap to waste": {"lo": "ໝົດອາຍຸ — ແຕະເພື່ອບັນທຶກ", "th": "หมดอายุ — แตะเพื่อบันทึก", "zh": "已过期 — 点击记损耗", "ko": "만료 — 탭하여 폐기"}, "Sold today": {"lo": "ຂາຍມື້ນີ້", "th": "ขายวันนี้", "zh": "今日已售", "ko": "오늘 판매"}, "Before, we guessed. Now we open the phone and see exactly which dish loses money and what to order — in Lao. The staff actually use it because they just scan.": {"lo": "ແຕ່ກ່ອນພວກເຮົາເດົາ. ດຽວນີ້ເປີດໂທລະສັບ ເຫັນຊັດເຈນວ່າເມນູໃດຂາດທຶນ ແລະ ຕ້ອງສັ່ງຫຍັງ — ເປັນພາສາລາວ. ພະນັກງານໃຊ້ແທ້ ເພາະພຽງສະແກນ.", "th": "เมื่อก่อนเราเดา ตอนนี้เปิดมือถือ เห็นชัดว่าเมนูใดขาดทุนและต้องสั่งอะไร — เป็นภาษาลาว พนักงานใช้จริงเพราะแค่สแกน", "zh": "以前我们靠猜。现在打开手机就清楚看到哪道菜亏钱、该订什么 — 用老挝语。员工真的会用，因为只需扫码。", "ko": "예전엔 추측했습니다. 이제 휴대폰을 열면 어떤 메뉴가 손해인지, 무엇을 주문할지 정확히 봅니다 — 라오스어로. 직원들은 스캔만 하면 되니 실제로 사용합니다."}, "Restaurant owner": {"lo": "ເຈົ້າຂອງຮ້ານ", "th": "เจ้าของร้าน", "zh": "餐厅老板", "ko": "레스토랑 사장"}, "— Vientiane  ·  early KHANGLAOS user": {"lo": "— ວຽງຈັນ  ·  ຜູ້ໃຊ້ KHANGLAOS ຍຸກທຳອິດ", "th": "— เวียงจันทน์  ·  ผู้ใช้ KHANGLAOS ยุคแรก", "zh": "— 万象  ·  KHANGLAOS 早期用户", "ko": "— 비엔티안  ·  초기 KHANGLAOS 사용자"}, "Questions": {"lo": "ຄຳຖາມ", "th": "คำถาม", "zh": "问题", "ko": "질문"}, "Frequently asked": {"lo": "ທີ່ຖາມເລື້ອຍໆ", "th": "ที่ถามบ่อย", "zh": "常见问题", "ko": "자주 묻는 질문"}, "Do I need to buy any hardware?": {"lo": "ຕ້ອງຊື້ອຸປະກອນພິເສດບໍ?", "th": "ต้องซื้ออุปกรณ์เพิ่มไหม?", "zh": "需要购买任何硬件吗？", "ko": "별도 장비를 사야 하나요?"}, "No. KHANGLAOS runs in any web browser on the phone, tablet or computer you already have. The phone camera is your barcode scanner — nothing to install or buy.": {"lo": "ບໍ່. KHANGLAOS ໃຊ້ໃນເວັບບຣາວເຊີໃດກໍໄດ້ ໃນໂທລະສັບ, ແທັບເລັດ ຫຼື ຄອມຯ ທີ່ມີຢູ່. ກ້ອງໂທລະສັບຄືເຄື່ອງສະແກນ — ບໍ່ຕ້ອງຕິດຕັ້ງ ຫຼື ຊື້.", "th": "ไม่ KHANGLAOS ใช้ในเว็บเบราว์เซอร์ใดก็ได้ บนมือถือ แท็บเล็ต หรือคอมที่มีอยู่ กล้องมือถือคือเครื่องสแกน — ไม่ต้องติดตั้งหรือซื้อ", "zh": "不需要。KHANGLAOS 可在你现有的手机、平板或电脑的任意浏览器中运行。手机摄像头就是条码扫描器 — 无需安装或购买。", "ko": "아니요. KHANGLAOS는 보유한 휴대폰, 태블릿, 컴퓨터의 모든 웹브라우저에서 실행됩니다. 휴대폰 카메라가 바코드 스캐너입니다 — 설치나 구매 불필요."}, "Does it work in Lao language?": {"lo": "ໃຊ້ເປັນພາສາລາວໄດ້ບໍ?", "th": "ใช้เป็นภาษาลาวได้ไหม?", "zh": "支持老挝语吗？", "ko": "라오스어로 작동하나요?"}, "Yes. The whole system is fully translated into Lao, Thai, English, Chinese and Korean. Staff can use the language they're comfortable with.": {"lo": "ໄດ້. ທັງລະບົບແປເປັນລາວ, ໄທ, ອັງກິດ, ຈີນ ແລະ ເກົາຫຼີຄົບ. ພະນັກງານໃຊ້ພາສາທີ່ຖະນັດໄດ້.", "th": "ได้ ทั้งระบบแปลเป็นลาว ไทย อังกฤษ จีน และเกาหลีครบ พนักงานใช้ภาษาที่ถนัดได้", "zh": "支持。整个系统已完整翻译为老挝语、泰语、英语、中文和韩语。员工可使用自己习惯的语言。", "ko": "네. 전체 시스템이 라오스어, 태국어, 영어, 중국어, 한국어로 완전히 번역되어 있습니다. 직원은 편한 언어를 사용할 수 있습니다."}, "Will my staff actually use it?": {"lo": "ພະນັກງານຈະໃຊ້ມັນແທ້ບໍ?", "th": "พนักงานจะใช้จริงไหม?", "zh": "员工真的会用吗？", "ko": "직원들이 실제로 사용할까요?"}, "It's designed around that exact problem. Staff scan and tap — they almost never type. Expiry and locations auto-fill. It feels faster than the notebook.": {"lo": "ອອກແບບມາແກ້ບັນຫານີ້ໂດຍສະເພາະ. ພະນັກງານສະແກນ ແລະ ແຕະ — ແທບບໍ່ພິມ. ໝົດອາຍຸ ແລະ ບ່ອນວາງເຕີມໃຫ້ເອງ. ໄວກວ່າຂຽນປຶ້ມ.", "th": "ออกแบบมาแก้ปัญหานี้โดยเฉพาะ พนักงานสแกนและแตะ — แทบไม่พิมพ์ หมดอายุและตำแหน่งเติมให้เอง เร็วกว่าจดสมุด", "zh": "正是针对这个问题设计的。员工扫码点击 — 几乎不打字。保质期和位置自动填好。比记本子还快。", "ko": "바로 그 문제를 위해 설계되었습니다. 직원은 스캔하고 탭만 합니다 — 거의 입력하지 않습니다. 유통기한과 위치는 자동 입력. 노트보다 빠릅니다."}, "Can staff see my profit and costs?": {"lo": "ພະນັກງານເຫັນກຳໄລ ແລະ ຕົ້ນທຶນຂອງຂ້ອຍບໍ?", "th": "พนักงานเห็นกำไรและต้นทุนของฉันไหม?", "zh": "员工能看到我的利润和成本吗？", "ko": "직원이 내 이익과 원가를 볼 수 있나요?"}, "No. Management (owner/manager) sees all the money. Staff see only stock and their tasks — costs, margins and profit are blocked at the database, not just hidden in the screen.": {"lo": "ບໍ່. ຝ່າຍບໍລິຫານ (ເຈົ້າຂອງ/ຜູ້ຈັດການ) ເຫັນເງິນທັງໝົດ. ພະນັກງານເຫັນແຕ່ສະຕັອກ ແລະ ໜ້າວຽກ — ຕົ້ນທຶນ, ກຳໄລຖືກບລັອກທີ່ຖານຂໍ້ມູນ ບໍ່ແມ່ນພຽງເຊື່ອງ.", "th": "ไม่ ฝ่ายบริหาร (เจ้าของ/ผู้จัดการ) เห็นเงินทั้งหมด พนักงานเห็นแต่สต็อกและงาน — ต้นทุน กำไรถูกบล็อกที่ฐานข้อมูล ไม่ใช่แค่ซ่อน", "zh": "不能。管理层（老板/经理）看到所有金额。员工只看到库存和任务 — 成本、利润在数据库层被阻止，不只是界面隐藏。", "ko": "아니요. 경영진(사장/관리자)은 모든 금액을 봅니다. 직원은 재고와 업무만 봅니다 — 원가, 마진, 이익은 화면이 아닌 데이터베이스에서 차단됩니다."}, "How is this different from a spreadsheet?": {"lo": "ນີ້ຕ່າງຈາກ spreadsheet ແນວໃດ?", "th": "ต่างจาก spreadsheet อย่างไร?", "zh": "这和电子表格有什么不同？", "ko": "스프레드시트와 어떻게 다른가요?"}, "A spreadsheet can't scan a barcode, can't warn you before food expires, can't tell you which dish loses money in real time, and staff won't keep it updated. KHANGLAOS does all of that automatically.": {"lo": "Spreadsheet ສະແກນບາໂຄດບໍ່ໄດ້, ເຕືອນກ່ອນອາຫານໝົດອາຍຸບໍ່ໄດ້, ບອກບໍ່ໄດ້ວ່າເມນູໃດຂາດທຶນແບບເວລາຈິງ, ແລະ ພະນັກງານຈະບໍ່ອັບເດດ. KHANGLAOS ເຮັດທັງໝົດອັດຕະໂນມັດ.", "th": "Spreadsheet สแกนบาร์โค้ดไม่ได้ เตือนก่อนอาหารหมดอายุไม่ได้ บอกไม่ได้ว่าเมนูใดขาดทุนแบบเรียลไทม์ และพนักงานจะไม่อัปเดต KHANGLAOS ทำทั้งหมดอัตโนมัติ", "zh": "电子表格不能扫码、不能在食材过期前提醒、不能实时告诉你哪道菜亏钱，员工也不会持续更新。KHANGLAOS 全部自动完成。", "ko": "스프레드시트는 바코드를 스캔할 수 없고, 식자재 만료 전 경고할 수 없으며, 어떤 메뉴가 손해인지 실시간으로 알 수 없고, 직원이 갱신하지 않습니다. KHANGLAOS는 이 모든 것을 자동으로 합니다."}, "How do I start?": {"lo": "ເລີ່ມຕົ້ນແນວໃດ?", "th": "เริ่มต้นอย่างไร?", "zh": "如何开始？", "ko": "어떻게 시작하나요?"}, "Open KHANGLAOS, create your restaurant, add a few items, and start scanning. You can be tracking real stock the same day — no long setup project.": {"lo": "ເປີດ KHANGLAOS, ສ້າງຮ້ານ, ເພີ່ມສິນຄ້າສອງສາມລາຍການ, ແລະ ເລີ່ມສະແກນ. ຕິດຕາມສະຕັອກຈິງໄດ້ມື້ດຽວກັນ — ບໍ່ມີໂຄງການຕັ້ງຄ່າຍາວ.", "th": "เปิด KHANGLAOS สร้างร้าน เพิ่มสินค้าสองสามรายการ และเริ่มสแกน ติดตามสต็อกจริงได้วันเดียวกัน — ไม่มีโปรเจกต์ตั้งค่ายาว", "zh": "打开 KHANGLAOS，创建餐厅，添加几个项目，开始扫码。当天就能追踪真实库存 — 无需漫长的设置项目。", "ko": "KHANGLAOS를 열고 레스토랑을 만들고 항목 몇 개를 추가한 후 스캔을 시작하세요. 같은 날 실제 재고를 추적할 수 있습니다 — 긴 설정 작업 없음."}, "Your kitchen is leaking money right now.": {"lo": "ຄົວຂອງທ່ານກຳລັງຮົ່ວເງິນຢູ່ຕອນນີ້.", "th": "ครัวของคุณกำลังรั่วเงินอยู่ตอนนี้", "zh": "你的厨房现在正在漏钱。", "ko": "지금 당신의 주방에서 돈이 새고 있습니다."}, "You just can't see it yet. KHANGLAOS shows you — today, on the phone in your pocket.": {"lo": "ທ່ານພຽງຍັງບໍ່ເຫັນ. KHANGLAOS ສະແດງໃຫ້ທ່ານ — ມື້ນີ້, ໃນໂທລະສັບໃນກະເປົາ.", "th": "คุณแค่ยังไม่เห็น KHANGLAOS แสดงให้คุณ — วันนี้ บนมือถือในกระเป๋า", "zh": "你只是还看不到。KHANGLAOS 让你看到 — 就在今天，就在你口袋的手机上。", "ko": "아직 보이지 않을 뿐입니다. KHANGLAOS가 보여드립니다 — 오늘, 주머니 속 휴대폰에서."}, "Open KHANGLAOS free": {"lo": "ເປີດ KHANGLAOS ຟຣີ", "th": "เปิด KHANGLAOS ฟรี", "zh": "免费打开 KHANGLAOS", "ko": "KHANGLAOS 무료로 열기"}, "See features again": {"lo": "ເບິ່ງຄຸນສົມບັດອີກ", "th": "ดูฟีเจอร์อีกครั้ง", "zh": "再看功能", "ko": "기능 다시 보기"}, "Warehouse & food-cost control built for restaurants in Laos. Scan, don't type. See where the money goes.": {"lo": "ການຄຸ້ມຄອງສາງ & ຕົ້ນທຶນອາຫານ ສ້າງມາສຳລັບຮ້ານອາຫານໃນລາວ. ສະແກນ, ບໍ່ພິມ. ເຫັນວ່າເງິນໄປໃສ.", "th": "การจัดการคลัง & ต้นทุนอาหารสำหรับร้านอาหารในลาว สแกน ไม่พิมพ์ เห็นว่าเงินไปไหน", "zh": "为老挝餐厅打造的仓库与食材成本控制。扫码，别打字。看清钱去了哪里。", "ko": "라오스 레스토랑을 위한 창고 및 식자재 원가 관리. 입력하지 말고 스캔하세요. 돈이 어디로 가는지 확인하세요."}, "Product": {"lo": "ຜະລິດຕະພັນ", "th": "ผลิตภัณฑ์", "zh": "产品", "ko": "제품"}, "Open KHANGLAOS": {"lo": "ເປີດ KHANGLAOS", "th": "เปิด KHANGLAOS", "zh": "打开 KHANGLAOS", "ko": "KHANGLAOS 열기"}, "Company": {"lo": "ບໍລິສັດ", "th": "บริษัท", "zh": "公司", "ko": "회사"}, "About": {"lo": "ກ່ຽວກັບ", "th": "เกี่ยวกับ", "zh": "关于", "ko": "소개"}, "Get started": {"lo": "ເລີ່ມຕົ້ນ", "th": "เริ่มต้น", "zh": "开始使用", "ko": "시작하기"}, "Create account": {"lo": "ສ້າງບັນຊີ", "th": "สร้างบัญชี", "zh": "创建账户", "ko": "계정 만들기"}, "Log in": {"lo": "ເຂົ້າສູ່ລະບົບ", "th": "เข้าสู่ระบบ", "zh": "登录", "ko": "로그인"}, "© 2026 KHANGLAOS · Made in Laos 🇱🇦": {"lo": "© 2026 KHANGLAOS · ຜະລິດໃນລາວ 🇱🇦", "th": "© 2026 KHANGLAOS · ผลิตในลาว 🇱🇦", "zh": "© 2026 KHANGLAOS · 老挝制造 🇱🇦", "ko": "© 2026 KHANGLAOS · 라오스에서 제작 🇱🇦"}};
+var KL_LANGS=[{c:'en',n:'English'},{c:'lo',n:'ລາວ'},{c:'th',n:'ໄທ'.replace('ໄທ','ไทย')},{c:'zh',n:'中文'},{c:'ko',n:'한국어'}];
+/* Snapshot original English text nodes once, so switching is reversible */
+var KL_NODES=[];
+function klSnapshot(){
+  var root=document.getElementById('landing-view');
+  if(!root) return;
+  var w=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+  var n;
+  while((n=w.nextNode())){
+    var raw=n.nodeValue;
+    var t=raw.trim();
+    if(!t) continue;
+    if(KL_LI[t]){ KL_NODES.push({node:n, en:raw, key:t}); }
+  }
+}
+function klLandApply(lang){
+  if(!KL_NODES.length) klSnapshot();
+  KL_NODES.forEach(function(o){
+    if(lang==='en'){ o.node.nodeValue=o.en; return; }
+    var tr=KL_LI[o.key];
+    if(tr&&tr[lang]){
+      /* preserve leading/trailing whitespace of the original node */
+      var lead=(o.en.match(/^\s*/)||[''])[0];
+      var trail=(o.en.match(/\s*$/)||[''])[0];
+      o.node.nodeValue=lead+tr[lang]+trail;
+    } else { o.node.nodeValue=o.en; }
+  });
+  try{localStorage.setItem('kl_land_lang',lang);}catch(e){}
+  document.querySelectorAll('#kl-land-langbtn button').forEach(function(x){
+    x.classList.toggle('on', x.getAttribute('data-l')===lang);
+  });
+  document.documentElement.setAttribute('data-land-lang',lang);
+}
+function klLandDetect(){
+  var s=null; try{s=localStorage.getItem('kl_land_lang');}catch(e){}
+  if(s) return s;
+  var b=(navigator.language||'en').toLowerCase();
+  if(b.indexOf('lo')===0)return'lo';
+  if(b.indexOf('th')===0)return'th';
+  if(b.indexOf('zh')===0)return'zh';
+  if(b.indexOf('ko')===0)return'ko';
+  return 'en';
+}
+document.addEventListener('DOMContentLoaded',function(){
+  var nav=document.querySelector('#landing-view nav .nav-in');
+  if(nav&&!document.getElementById('kl-land-langbtn')){
+    var wrap=document.createElement('div');
+    wrap.id='kl-land-langbtn'; wrap.className='kl-land-langbtn';
+    KL_LANGS.forEach(function(L){
+      var btn=document.createElement('button');
+      btn.textContent=L.n; btn.setAttribute('data-l',L.c);
+      btn.onclick=function(){klLandApply(L.c);};
+      wrap.appendChild(btn);
+    });
+    var cta=nav.querySelector('.btn.btn-primary');
+    if(cta){nav.insertBefore(wrap,cta);}else{nav.appendChild(wrap);}
+  }
+  klSnapshot();
+  klLandApply(klLandDetect());
+});
+</script>
+<style>
+#landing-view .kl-land-langbtn{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+#landing-view .kl-land-langbtn button{background:transparent;border:1px solid var(--line);color:var(--soft);font:inherit;font-size:13px;padding:5px 10px;border-radius:7px;cursor:pointer;transition:all .14s}
+#landing-view .kl-land-langbtn button:hover{border-color:var(--green);color:var(--green)}
+#landing-view .kl-land-langbtn button.on{background:var(--green);color:#fff;border-color:var(--green);font-weight:600}
+@media(max-width:680px){#landing-view .kl-land-langbtn{order:3;width:100%;justify-content:center;margin-top:8px}#landing-view .nav-in{flex-wrap:wrap;height:auto;padding:12px 0}}
+</style>
 </body>
 </html>
