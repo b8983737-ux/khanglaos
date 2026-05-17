@@ -15,6 +15,10 @@
 ">
 <title>KHANGLAOS</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%2315795f'/%3E%3Ctext x='32' y='46' font-family='Arial,Helvetica,sans-serif' font-size='40' font-weight='700' fill='%23fff' text-anchor='middle'%3EK%3C/text%3E%3Ccircle cx='50' cy='18' r='5.5' fill='%23caa24a'/%3E%3C/svg%3E">
+<!-- Same fonts as EATLAOS.com (font only, not colors) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=Inter:wght@400;500;600;700&family=Noto+Serif+Lao:wght@400;600;700;900&family=Noto+Sans+Lao:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
@@ -48,12 +52,12 @@
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: Arial, Helvetica, -apple-system, BlinkMacSystemFont, "Segoe UI",
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Noto Sans Lao", "Phetsarath OT", "Saysettha OT",
     "Noto Sans Thai", "Sarabun",
     "Noto Sans SC", "PingFang SC",
     "Noto Sans KR", "Malgun Gothic",
-    Roboto, sans-serif;
+    sans-serif;
   background: var(--kl-bg);
   color: var(--kl-text);
   font-size: 14px;
@@ -349,12 +353,17 @@ a:hover { text-decoration: underline; }
 .kl-tab:hover { color:var(--kl-text); }
 .kl-tab.active { color:var(--kl-primary); border-bottom-color:var(--kl-primary); font-weight:600; }
 /* Date range filter for reports */
-.kl-daterange { display:flex; align-items:center; gap:8px; margin:16px 0 4px; flex-wrap:wrap; }
-.kl-dr-label { font-size:13px; color:var(--kl-text-soft); font-weight:600; margin-right:2px; }
-.kl-dr-btn { background:var(--kl-surface-2); border:1px solid var(--kl-border); color:var(--kl-text-soft);
-  font:inherit; font-size:13px; padding:7px 16px; border-radius:8px; cursor:pointer; transition:all .14s; }
-.kl-dr-btn:hover { border-color:var(--kl-primary); color:var(--kl-primary); }
-.kl-dr-btn.active { background:var(--kl-primary); color:#fff; border-color:var(--kl-primary); font-weight:600; }
+.kl-daterange { display:flex; align-items:center; gap:14px; margin:20px 0 16px; flex-wrap:wrap; }
+.kl-dr-label { font-size:13px; color:var(--kl-text-soft); font-weight:600; letter-spacing:.02em; }
+.kl-dr-group { display:inline-flex; background:var(--kl-surface-2); border:1px solid var(--kl-border);
+  border-radius:10px; padding:3px; gap:2px; }
+.kl-dr-btn { background:transparent; border:none; color:var(--kl-text-soft);
+  font:inherit; font-size:13px; font-weight:500; padding:7px 18px; border-radius:7px;
+  cursor:pointer; transition:all .15s; white-space:nowrap; }
+.kl-dr-btn:hover { color:var(--kl-text); }
+.kl-dr-btn.active { background:var(--kl-primary); color:#fff; font-weight:600;
+  box-shadow:0 1px 3px rgba(0,0,0,.12); }
+@media(max-width:520px){ .kl-dr-group{width:100%;} .kl-dr-btn{flex:1;padding:8px 4px;} }
 /* Report cards — clean white with a subtle left accent for status */
 .kl-rcard { background:var(--kl-surface); border:1px solid var(--kl-border);
   border-radius:var(--kl-radius); padding:20px; margin:0 0 14px 0; box-shadow:var(--kl-shadow); }
@@ -418,8 +427,8 @@ a:hover { text-decoration: underline; }
     --green-soft:#e8f4f0; --ink:#14201b; --soft:#5b6b63;
     --faint:#8a9a91; --line:#e3ebe7; --bg:#fbfcfb; --surface:#fff;
     --gold:#caa24a; --danger:#c1392c;
-    --display:Arial,Helvetica,"Noto Sans Lao","Noto Sans Thai",sans-serif;
-    --body:Arial,Helvetica,"Noto Sans Lao","Noto Sans Thai",sans-serif;
+    --display:'Plus Jakarta Sans',system-ui,-apple-system,"Noto Serif Lao","Noto Sans Lao","Sarabun","Noto Sans SC","Noto Sans KR",sans-serif;
+    --body:'Inter',system-ui,-apple-system,"Noto Sans Lao","Sarabun","Noto Sans SC","Noto Sans KR",sans-serif;
     --lao:"Noto Sans Lao","Schibsted Grotesk",sans-serif;}#landing-view *{margin:0;padding:0;box-sizing:border-box}#landing-view html{scroll-behavior:smooth}#landing-view body{font-family:var(--body);color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}#landing-view h1, #landing-view h2, #landing-view h3{font-family:var(--display);font-weight:600;line-height:1.1;letter-spacing:-.02em}#landing-view a{color:inherit;text-decoration:none}#landing-view .wrap{max-width:1180px;margin:0 auto;padding:0 28px}#landing-view .lao{font-family:var(--lao)}#landing-view nav{position:sticky;top:0;z-index:50;background:rgba(251,252,251,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}#landing-view .nav-in{display:flex;align-items:center;justify-content:space-between;height:72px}#landing-view .brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.02em}#landing-view .brand .mark{width:36px;height:36px;flex-shrink:0}#landing-view .brand .mark svg{width:100%;height:100%;display:block}#landing-view .nav-links{display:flex;align-items:center;gap:36px;font-size:15px;font-weight:500}#landing-view .nav-links a{color:var(--soft);transition:color .15s}#landing-view .nav-links a:hover{color:var(--green)}#landing-view .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--body);font-weight:600;font-size:15px;padding:12px 22px;border-radius:10px;cursor:pointer;border:none;transition:transform .12s,box-shadow .2s}#landing-view .btn-primary{background:var(--green);color:#fff;box-shadow:0 6px 20px -8px rgba(21,121,95,.6)}#landing-view .btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 26px -8px rgba(21,121,95,.7)}#landing-view .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}#landing-view .btn-ghost:hover{border-color:var(--green);color:var(--green)}@media(max-width:860px) {#landing-view .nav-links{display:none}
 }#landing-view .hero{position:relative;overflow:hidden;padding:88px 0 96px}#landing-view .hero::before{content:"";position:absolute;inset:0;background:
     radial-gradient(900px 400px at 78% 8%,rgba(21,121,95,.10),transparent 60%),
@@ -982,9 +991,11 @@ a:hover { text-decoration: underline; }
     </div>
     <div class="kl-daterange" id="reportsDateRange" style="display:none">
       <span class="kl-dr-label" data-i18n="rt.period">Period:</span>
-      <button class="kl-dr-btn" data-range="1">1 day</button>
-      <button class="kl-dr-btn active" data-range="7">1 week</button>
-      <button class="kl-dr-btn" data-range="30">1 month</button>
+      <div class="kl-dr-group">
+        <button class="kl-dr-btn" data-range="1" data-i18n="rt.d1btn">1 day</button>
+        <button class="kl-dr-btn active" data-range="7" data-i18n="rt.d7btn">1 week</button>
+        <button class="kl-dr-btn" data-range="30" data-i18n="rt.d30btn">1 month</button>
+      </div>
     </div>
     <div id="reportsBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
   </div>
@@ -1144,6 +1155,7 @@ const I18N = {
     "rc.loadFail":"Could not load recipes", "rc.saveFail":"Save failed", "rc.subOpt":"(sub-recipe)",
     "rt.purchasing":"Purchasing", "rt.variance":"Variance — Loss Finder",
     "rt.activity":"Activity by Date", "rt.period":"Period:", "rt.d1":"Last 1 day", "rt.d7":"Last 1 week", "rt.d30":"Last 1 month", "rt.movements":"movements", "rt.received":"Received (value)", "rt.checkedout":"Checked out (value)", "rt.wasted":"Wasted (value)", "rt.noactivity":"No activity in this period.",
+    "rt.d1btn":"1 day", "rt.d7btn":"1 week", "rt.d30btn":"1 month",
     "po.title":"Purchase Orders", "po.sub":"Order stock from suppliers. Build from reorder advisor in one tap.",
     "po.new":"+ New order", "po.fromAdvisor":"Build from reorder advisor", "po.edit":"Edit order",
     "po.supplier":"Supplier", "po.number":"PO number", "po.status":"Status", "po.expected":"Expected date",
@@ -1307,6 +1319,7 @@ const I18N = {
     "rc.loadFail":"ໂຫລດສູດບໍ່ໄດ້", "rc.saveFail":"ບັນທຶກບໍ່ສຳເລັດ", "rc.subOpt":"(ສູດຍ່ອຍ)",
     "rt.purchasing":"ການສັ່ງຊື້", "rt.variance":"ສ່ວນຕ່າງ — ຫາຈຸດຮົ່ວ",
     "rt.activity":"ກິດຈະກຳຕາມວັນທີ", "rt.period":"ໄລຍະ:", "rt.d1":"1 ມື້ຜ່ານມາ", "rt.d7":"1 ອາທິດຜ່ານມາ", "rt.d30":"1 ເດືອນຜ່ານມາ", "rt.movements":"ການເຄື່ອນໄຫວ", "rt.received":"ຮັບເຂົ້າ (ມູນຄ່າ)", "rt.checkedout":"ເບີກອອກ (ມູນຄ່າ)", "rt.wasted":"ເສຍ (ມູນຄ່າ)", "rt.noactivity":"ບໍ່ມີກິດຈະກຳໃນໄລຍະນີ້.",
+    "rt.d1btn":"1 ມື້", "rt.d7btn":"1 ອາທິດ", "rt.d30btn":"1 ເດືອນ",
     "po.title":"ໃບສັ່ງຊື້", "po.sub":"ສັ່ງສິນຄ້າຈາກຜູ້ສະໜອງ. ສ້າງຈາກຄຳແນະນຳສັ່ງຊື້ໃນແຕະດຽວ.",
     "po.new":"+ ໃບສັ່ງໃໝ່", "po.fromAdvisor":"ສ້າງຈາກຄຳແນະນຳສັ່ງຊື້", "po.edit":"ແກ້ໄຂໃບສັ່ງ",
     "po.supplier":"ຜູ້ສະໜອງ", "po.number":"ເລກໃບສັ່ງ", "po.status":"ສະຖານະ", "po.expected":"ວັນທີຄາດຮັບ",
@@ -1470,6 +1483,7 @@ const I18N = {
     "rc.loadFail":"โหลดสูตรไม่ได้", "rc.saveFail":"บันทึกไม่สำเร็จ", "rc.subOpt":"(สูตรย่อย)",
     "rt.purchasing":"การสั่งซื้อ", "rt.variance":"ส่วนต่าง — หาจุดรั่ว",
     "rt.activity":"กิจกรรมตามวันที่", "rt.period":"ช่วงเวลา:", "rt.d1":"1 วันที่ผ่านมา", "rt.d7":"1 สัปดาห์ที่ผ่านมา", "rt.d30":"1 เดือนที่ผ่านมา", "rt.movements":"การเคลื่อนไหว", "rt.received":"รับเข้า (มูลค่า)", "rt.checkedout":"เบิกออก (มูลค่า)", "rt.wasted":"ของเสีย (มูลค่า)", "rt.noactivity":"ไม่มีกิจกรรมในช่วงนี้",
+    "rt.d1btn":"1 วัน", "rt.d7btn":"1 สัปดาห์", "rt.d30btn":"1 เดือน",
     "po.title":"ใบสั่งซื้อ", "po.sub":"สั่งสินค้าจากซัพพลายเออร์ สร้างจากคำแนะนำสั่งซื้อในแตะเดียว.",
     "po.new":"+ ใบสั่งใหม่", "po.fromAdvisor":"สร้างจากคำแนะนำสั่งซื้อ", "po.edit":"แก้ไขใบสั่ง",
     "po.supplier":"ซัพพลายเออร์", "po.number":"เลขใบสั่ง", "po.status":"สถานะ", "po.expected":"วันที่คาดรับ",
@@ -1631,6 +1645,7 @@ const I18N = {
     "rc.loadFail":"无法加载配方", "rc.saveFail":"保存失败", "rc.subOpt":"(子配方)",
     "rt.purchasing":"采购", "rt.variance":"差异 — 损失查找器",
     "rt.activity":"按日期活动", "rt.period":"时间段：", "rt.d1":"最近1天", "rt.d7":"最近1周", "rt.d30":"最近1个月", "rt.movements":"笔变动", "rt.received":"入库（金额）", "rt.checkedout":"出库（金额）", "rt.wasted":"损耗（金额）", "rt.noactivity":"此时间段无活动。",
+    "rt.d1btn":"1天", "rt.d7btn":"1周", "rt.d30btn":"1个月",
     "po.title":"采购订单", "po.sub":"向供应商订货。一键从补货建议生成。",
     "po.new":"+ 新订单", "po.fromAdvisor":"从补货建议生成", "po.edit":"编辑订单",
     "po.supplier":"供应商", "po.number":"订单号", "po.status":"状态", "po.expected":"预计到货日",
@@ -1793,6 +1808,7 @@ const I18N = {
     "rc.loadFail":"레시피를 불러올 수 없습니다", "rc.saveFail":"저장 실패", "rc.subOpt":"(서브 레시피)",
     "rt.purchasing":"구매", "rt.variance":"편차 — 손실 추적기",
     "rt.activity":"날짜별 활동", "rt.period":"기간:", "rt.d1":"최근 1일", "rt.d7":"최근 1주", "rt.d30":"최근 1개월", "rt.movements":"건 이동", "rt.received":"입고 (금액)", "rt.checkedout":"출고 (금액)", "rt.wasted":"폐기 (금액)", "rt.noactivity":"이 기간에 활동이 없습니다.",
+    "rt.d1btn":"1일", "rt.d7btn":"1주", "rt.d30btn":"1개월",
     "po.title":"구매 주문", "po.sub":"공급업체에 재고 주문. 재주문 권고에서 한 번에 생성.",
     "po.new":"+ 새 주문", "po.fromAdvisor":"재주문 권고에서 생성", "po.edit":"주문 편집",
     "po.supplier":"공급업체", "po.number":"주문 번호", "po.status":"상태", "po.expected":"예상 입고일",
@@ -2720,8 +2736,11 @@ async function initReportsPage() {
   tabs.style.display = '';
   const dateRange = document.getElementById('reportsDateRange');
   const dispatch = (tab) => {
-    // Date filter only applies to the Activity report
-    dateRange.style.display = (tab === 'activity') ? 'flex' : 'none';
+    // Date filter applies to every report EXCEPT Recipes (a current
+    // cost/price snapshot — it has no time dimension, so showing a
+    // date filter there would be misleading).
+    const DATE_FILTERABLE = ['waste', 'variance', 'purchasing', 'activity'];
+    dateRange.style.display = DATE_FILTERABLE.includes(tab) ? 'flex' : 'none';
     if (tab === 'recipes')         renderRecipesReport(u);
     else if (tab === 'purchasing') renderPurchasingReport(u);
     else if (tab === 'variance')   renderVarianceReport(u);
@@ -2740,7 +2759,8 @@ async function initReportsPage() {
     btn.onclick = () => {
       REPORT_RANGE_DAYS = parseInt(btn.getAttribute('data-range'), 10) || 7;
       dateRange.querySelectorAll('.kl-dr-btn').forEach(b=>b.classList.toggle('active', b===btn));
-      renderActivityReport(u);
+      // Re-render whichever report tab is currently open with the new period
+      dispatch(REPORT_TAB);
     };
   });
   dispatch(REPORT_TAB);
@@ -2803,8 +2823,9 @@ async function renderWasteReport(u) {
     monthStart.setDate(1); monthStart.setHours(0,0,0,0);
 
     // Pull the 3 profit views (RLS auto-scopes to this restaurant)
+    await sb.rpc('set_report_period', { p_days: REPORT_RANGE_DAYS });
     const [waste, stock, reorder] = await Promise.all([
-      sb.from('v_waste_summary').select('*'),
+      sb.from('v_waste_period').select('*'),
       sb.from('v_stock_value').select('*'),
       sb.from('v_reorder_advisor').select('*'),
     ]);
@@ -3296,11 +3317,12 @@ async function renderPurchasingReport(u) {
   const body = document.getElementById('reportsBody');
   body.innerHTML = '<p class="kl-muted">'+t('common.loading')+'</p>';
   try {
+    await sb.rpc('set_report_period', { p_days: REPORT_RANGE_DAYS });
     const [poRes, alertRes] = await Promise.all([
       sb.from('purchase_orders')
         .select('po_id,po_number,status,expected_date,created_at,supplier_id,suppliers(name)')
         .order('created_at',{ascending:false}),
-      sb.from('v_price_alerts').select('*').order('change_pct',{ascending:false}),
+      sb.from('v_price_alerts_period').select('*').order('change_pct',{ascending:false}),
     ]);
     if (poRes.error) throw poRes.error;
     const pos = poRes.data || [];
@@ -3621,7 +3643,8 @@ async function renderVarianceReport(u) {
   const body = document.getElementById('reportsBody');
   body.innerHTML = '<p class="kl-muted">'+t('common.loading')+'</p>';
   try {
-    const { data, error } = await sb.from('v_variance').select('*');
+    await sb.rpc('set_report_period', { p_days: REPORT_RANGE_DAYS });
+    const { data, error } = await sb.from('v_variance_period').select('*');
     if (error) throw error;
     const rows = (data || []);
 
