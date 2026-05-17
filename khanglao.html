@@ -14,6 +14,7 @@
   frame-src   'self';
 ">
 <title>KHANGLAOS</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%2315795f'/%3E%3Ctext x='32' y='46' font-family='Arial,Helvetica,sans-serif' font-size='40' font-weight='700' fill='%23fff' text-anchor='middle'%3EK%3C/text%3E%3Ccircle cx='50' cy='18' r='5.5' fill='%23caa24a'/%3E%3C/svg%3E">
 
 <style>
 
@@ -77,7 +78,9 @@ a:hover { text-decoration: underline; }
   min-height: 60px;
   position: sticky; top: 0; z-index: 50;
 }
-.kl-brand { font-weight: 700; font-size: 18px; letter-spacing: -0.3px; color: var(--kl-primary); }
+.kl-brand { font-weight: 700; font-size: 18px; letter-spacing: -0.3px; color: var(--kl-primary); display: flex; align-items: center; gap: 9px; }
+.kl-brand-mark { width: 28px; height: 28px; flex-shrink: 0; }
+.kl-brand-mark svg { width: 100%; height: 100%; display: block; }
 .kl-brand small { color: var(--kl-text-faint); font-weight: 500; margin-left: 6px; font-size: 12px; }
 .kl-topbar nav {
   display: flex; gap: 2px;
@@ -235,50 +238,49 @@ a:hover { text-decoration: underline; }
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
-  background: var(--kl-bg);
+  /* Original warehouse illustration embedded directly in the file:
+     loads instantly, works offline, never breaks on weak internet,
+     zero licensing risk. Dark green overlay keeps the card readable. */
+  background:
+    linear-gradient(165deg, rgba(11,69,55,.72) 0%, rgba(8,52,44,.86) 100%),
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='1000' viewBox='0 0 1600 1000'%3E%3Crect width='1600' height='1000' fill='%230d5e49'/%3E%3Crect width='1600' height='1000' fill='url(%23g)'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23147a5f'/%3E%3Cstop offset='1' stop-color='%230a3f31'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg opacity='0.5'%3E%3Crect x='90' y='250' width='12' height='560' fill='%230a4233'/%3E%3Crect x='440' y='250' width='12' height='560' fill='%230a4233'/%3E%3Crect x='80' y='250' width='372' height='10' fill='%230a4233'/%3E%3Crect x='80' y='420' width='372' height='10' fill='%230a4233'/%3E%3Crect x='80' y='590' width='372' height='10' fill='%230a4233'/%3E%3Crect x='80' y='760' width='372' height='10' fill='%230a4233'/%3E%3Crect x='120' y='280' width='90' height='130' rx='4' fill='%2316876a'/%3E%3Crect x='225' y='290' width='80' height='120' rx='4' fill='%231c9576'/%3E%3Crect x='320' y='280' width='95' height='130' rx='4' fill='%2316876a'/%3E%3Crect x='130' y='450' width='85' height='130' rx='4' fill='%231c9576'/%3E%3Crect x='230' y='460' width='90' height='120' rx='4' fill='%2316876a'/%3E%3Crect x='335' y='450' width='80' height='130' rx='4' fill='%231c9576'/%3E%3Crect x='120' y='620' width='95' height='130' rx='4' fill='%231c9576'/%3E%3Crect x='230' y='630' width='80' height='120' rx='4' fill='%2316876a'/%3E%3Crect x='325' y='620' width='90' height='130' rx='4' fill='%231c9576'/%3E%3C/g%3E%3Cg opacity='0.42'%3E%3Crect x='1140' y='250' width='12' height='560' fill='%230a4233'/%3E%3Crect x='1500' y='250' width='12' height='560' fill='%230a4233'/%3E%3Crect x='1130' y='250' width='382' height='10' fill='%230a4233'/%3E%3Crect x='1130' y='420' width='382' height='10' fill='%230a4233'/%3E%3Crect x='1130' y='590' width='382' height='10' fill='%230a4233'/%3E%3Crect x='1130' y='760' width='382' height='10' fill='%230a4233'/%3E%3Crect x='1170' y='280' width='90' height='130' rx='4' fill='%2316876a'/%3E%3Crect x='1275' y='290' width='80' height='120' rx='4' fill='%231c9576'/%3E%3Crect x='1370' y='280' width='95' height='130' rx='4' fill='%2316876a'/%3E%3Crect x='1180' y='450' width='85' height='130' rx='4' fill='%231c9576'/%3E%3Crect x='1280' y='460' width='90' height='120' rx='4' fill='%2316876a'/%3E%3Crect x='1385' y='450' width='80' height='130' rx='4' fill='%231c9576'/%3E%3Crect x='1170' y='620' width='95' height='130' rx='4' fill='%231c9576'/%3E%3Crect x='1280' y='630' width='80' height='120' rx='4' fill='%2316876a'/%3E%3Crect x='1375' y='620' width='90' height='130' rx='4' fill='%231c9576'/%3E%3C/g%3E%3Cg opacity='0.3'%3E%3Crect x='690' y='720' width='220' height='30' rx='3' fill='%230a4233'/%3E%3Crect x='710' y='620' width='80' height='100' rx='4' fill='%2316876a'/%3E%3Crect x='805' y='630' width='90' height='90' rx='4' fill='%231c9576'/%3E%3C/g%3E%3C/svg%3E")
+      center/cover no-repeat,
+    linear-gradient(160deg, #15795f 0%, #0f5d49 60%, #0b4537 100%);
 }
 .kl-login-split {
-  display: flex; width: 100%; max-width: 920px;
-  min-height: 560px;
-  background: #fff; border-radius: 24px; overflow: hidden;
-  box-shadow: var(--kl-shadow-lg);
-  border: 1px solid var(--kl-border);
+  display: flex; flex-direction: column;
+  width: 100%; max-width: 440px;
+  background: #fff; border-radius: 22px; overflow: hidden;
+  box-shadow: 0 30px 80px -20px rgba(0,0,0,.45);
+  border: 1px solid rgba(255,255,255,.15);
 }
 .kl-login-brandside {
-  flex: 1 1 44%;
-  background: linear-gradient(160deg, #15795f 0%, #0f5d49 60%, #0b4537 100%);
-  color: #fff; padding: 48px 44px;
-  display: flex; flex-direction: column; justify-content: space-between;
-  position: relative;
+  background: #fff; color: var(--kl-text);
+  padding: 40px 44px 8px; text-align: center;
+  display: flex; flex-direction: column; align-items: center;
 }
-.kl-login-brandmark { }
-.kl-login-logo { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; }
-.kl-login-logo-lao { font-size: 17px; font-weight: 500; opacity: .82; margin-top: 2px; }
-.kl-login-pitch-h { font-size: 21px; font-weight: 600; line-height: 1.35; margin-bottom: 26px; letter-spacing: -0.3px; }
-.kl-login-feats { list-style: none; padding: 0; margin: 0; }
-.kl-login-feats li {
-  display: flex; align-items: center; gap: 12px;
-  font-size: 15px; opacity: .94; margin-bottom: 16px; line-height: 1.4;
-}
-.kl-login-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #fff; opacity: .8; flex-shrink: 0;
-}
-.kl-login-foot { font-size: 13px; opacity: .7; }
+.kl-login-brandmark { display: flex; flex-direction: column; align-items: center; }
+.kl-login-mark { width: 64px; height: 64px; margin-bottom: 16px; }
+.kl-login-mark svg { width: 100%; height: 100%; display: block; }
+.kl-login-logo { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; color: var(--kl-text); }
+.kl-login-logo-lao { font-size: 16px; font-weight: 500; color: var(--kl-text-soft); margin-top: 2px; }
+/* Feature pitch hidden on the compact centered card — keeps it clean like MarketMan */
+.kl-login-pitch { display: none; }
+.kl-login-foot { display: none; }
 .kl-login-formside {
-  flex: 1 1 56%;
-  padding: 52px 48px;
-  display: flex; flex-direction: column; justify-content: center;
+  background: #fff;
+  padding: 14px 44px 44px;
+  display: flex; flex-direction: column;
 }
 .kl-login-form { width: 100%; max-width: 360px; margin: 0 auto; }
-.kl-login-formhead { margin-bottom: 26px; }
+.kl-login-formhead { margin-bottom: 22px; text-align: center; }
 .kl-login-formhead h1 {
-  font-size: 26px; font-weight: 700; margin: 0 0 6px 0;
+  font-size: 24px; font-weight: 700; margin: 0 0 5px 0;
   letter-spacing: -0.5px; color: var(--kl-text);
 }
-.kl-login-formhead p { font-size: 15px; color: var(--kl-text-soft); margin: 0; }
+.kl-login-formhead p { font-size: 14.5px; color: var(--kl-text-soft); margin: 0; }
 .kl-login-lang {
-  display: flex; gap: 6px; margin-bottom: 22px; flex-wrap: wrap;
+  display: flex; gap: 6px; margin-bottom: 22px; flex-wrap: wrap; justify-content: center;
 }
 .kl-login-lang button {
   background: var(--kl-surface-2); border: 1px solid var(--kl-border);
@@ -291,12 +293,10 @@ a:hover { text-decoration: underline; }
   background: var(--kl-primary); color: #fff; border-color: var(--kl-primary); font-weight: 600;
 }
 @media (max-width: 720px) {
-  .kl-login-split { flex-direction: column; max-width: 420px; min-height: 0; }
-  .kl-login-brandside { padding: 36px 32px; }
-  .kl-login-pitch { display: none; }
-  .kl-login-foot { display: none; }
-  .kl-login-brandside { flex: none; }
-  .kl-login-formside { padding: 36px 32px; }
+  .kl-login-wrap { padding: 14px; }
+  .kl-login-split { max-width: 400px; }
+  .kl-login-brandside { padding: 34px 30px 6px; }
+  .kl-login-formside { padding: 12px 30px 36px; }
 }
 
 .kl-scanner-box {
@@ -402,6 +402,7 @@ a:hover { text-decoration: underline; }
 
       <div class="kl-login-brandside">
         <div class="kl-login-brandmark">
+          <div class="kl-login-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
           <div class="kl-login-logo">KHANGLAOS</div>
           <div class="kl-login-logo-lao">ຄັງລາວ</div>
         </div>
@@ -453,7 +454,7 @@ a:hover { text-decoration: underline; }
      SHARED TOPBAR  (shown on all authenticated pages)
 ═══════════════════════════════════════════════════════════════ -->
 <header id="kl-topbar" class="kl-topbar kl-no-print" style="display:none">
-  <div class="kl-brand">KHANGLAOS <small>ຄັງລາວ</small></div>
+  <div class="kl-brand"><span class="kl-brand-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></span>KHANGLAOS <small>ຄັງລາວ</small></div>
   <nav>
     <a href="#/dashboard" data-nav="dashboard" data-i18n="nav.dashboard">Dashboard</a>
     <a href="#/overview"  data-nav="overview"  data-i18n="nav.overview">Overview</a>
