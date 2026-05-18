@@ -68,42 +68,30 @@ body {
 a { color: var(--kl-primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
+/* ===== MarketMan-style layout: left sidebar + thin topbar ===== */
+:root { --kl-sidebar-w: 230px; }
+/* Thin top bar (page title + tools) */
 .kl-topbar {
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: saturate(180%) blur(8px);
-  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  background: var(--kl-surface);
   color: var(--kl-text);
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  padding: 0 28px;
+  display: flex; align-items: center; gap: 14px;
   border-bottom: 1px solid var(--kl-border);
-  min-height: 60px;
-  position: sticky; top: 0; z-index: 50;
+  min-height: 62px;
+  position: sticky; top: 0; z-index: 40;
+  margin-left: var(--kl-sidebar-w);
 }
-.kl-brand { font-weight: 700; font-size: 18px; letter-spacing: -0.3px; color: var(--kl-primary); display: flex; align-items: center; gap: 9px; }
-.kl-brand-mark { width: 28px; height: 28px; flex-shrink: 0; }
-.kl-brand-mark svg { width: 100%; height: 100%; display: block; }
-.kl-brand small { color: var(--kl-text-faint); font-weight: 500; margin-left: 6px; font-size: 12px; }
-.kl-topbar nav {
-  display: flex; gap: 2px;
-  flex: 1 1 auto;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  margin-left: 16px;
+.kl-topbar-title {
+  font-family: var(--kl-font-display);
+  font-size: 19px; font-weight: 700; letter-spacing: -0.3px;
+  color: var(--kl-text); margin: 0; flex: 1 1 auto;
+  text-transform: uppercase; letter-spacing: .04em;
 }
-.kl-topbar nav::-webkit-scrollbar { display: none; }
-.kl-topbar nav a {
-  color: var(--kl-text-soft);
-  padding: 8px 15px; border-radius: var(--kl-radius-sm);
-  font-size: 14px; font-weight: 500; white-space: nowrap;
-  transition: background .14s, color .14s;
+.kl-sb-toggle {
+  display: none; background: none; border: none; font-size: 22px;
+  color: var(--kl-text); cursor: pointer; padding: 4px 8px;
 }
-.kl-topbar nav a:hover { color: var(--kl-text); background: var(--kl-surface-2); text-decoration: none; }
-.kl-topbar nav a.active { background: var(--kl-primary-soft); color: var(--kl-primary); font-weight: 600; }
-.kl-tools { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--kl-text-soft); }
+.kl-tools { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--kl-text-soft); }
 .kl-tools select {
   background: var(--kl-surface); color: var(--kl-text);
   border: 1px solid var(--kl-border);
@@ -113,6 +101,60 @@ a:hover { text-decoration: underline; }
 .kl-tools select:hover { border-color: var(--kl-border-strong); }
 .kl-tools a { color: var(--kl-text-soft); font-size: 13px; font-weight: 500; }
 .kl-tools a:hover { color: var(--kl-text); }
+/* Left sidebar — KHANGLAOS deep green, like MarketMan's dark rail */
+.kl-sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: var(--kl-sidebar-w);
+  background: #103f33;            /* deep KHANGLAOS green */
+  color: #cfe3db;
+  display: flex; flex-direction: column;
+  z-index: 60;
+  overflow-y: auto;
+}
+.kl-sb-brand {
+  display: flex; align-items: center; gap: 11px;
+  padding: 20px 20px 18px; border-bottom: 1px solid rgba(255,255,255,.09);
+}
+.kl-sb-brand .kl-brand-mark { width: 34px; height: 34px; flex-shrink: 0; }
+.kl-sb-brand .kl-brand-mark svg { width: 100%; height: 100%; display: block; }
+.kl-sb-name { font-family: var(--kl-font-display); font-weight: 700; font-size: 17px; color: #fff; letter-spacing: -0.2px; }
+.kl-sb-name small { display:block; color: #8fb9ad; font-weight: 500; font-size: 11px; margin-top: 1px; }
+.kl-sb-nav { display: flex; flex-direction: column; padding: 12px 0; gap: 1px; }
+.kl-sb-nav a {
+  display: flex; align-items: center; gap: 13px;
+  padding: 12px 22px; color: #b8d3ca;
+  font-size: 14px; font-weight: 500; text-decoration: none;
+  border-left: 3px solid transparent; transition: background .14s, color .14s;
+}
+.kl-sb-nav a:hover { background: rgba(255,255,255,.06); color: #fff; text-decoration: none; }
+.kl-sb-nav a.active {
+  background: rgba(202,162,74,.16);   /* KHANGLAOS gold tint */
+  color: #fff; border-left-color: var(--kl-gold, #caa24a); font-weight: 600;
+}
+.kl-sb-ic { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; opacity: .9; }
+.kl-sb-lbl { flex: 1; }
+.kl-sb-backdrop {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.45); z-index: 55;
+}
+/* Push app content right of the sidebar */
+#app-view .kl-container, #app-view #reportsBody, #app-view main,
+.kl-app-active .kl-page-wrap { }
+.kl-shell { margin-left: var(--kl-sidebar-w); }
+/* Push every app page content right of the fixed sidebar */
+body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
+@media (max-width: 880px) {
+  body.kl-has-sidebar #app-view .kl-page { margin-left: 0; }
+}
+/* Mobile: sidebar slides in, topbar full width */
+@media (max-width: 880px) {
+  .kl-topbar { margin-left: 0; padding: 0 16px; }
+  .kl-sb-toggle { display: block; }
+  .kl-sidebar { transform: translateX(-100%); transition: transform .22s ease; }
+  .kl-sidebar.open { transform: translateX(0); }
+  .kl-sb-backdrop.show { display: block; }
+  .kl-shell { margin-left: 0; }
+}
 
 .kl-container { max-width: 1200px; margin: 0 auto; padding: 32px 24px 60px; }
 .kl-page-title { font-family: var(--kl-font-display); font-size: 27px; font-weight: 700; margin: 0 0 6px 0; letter-spacing: -0.5px; }
@@ -770,16 +812,8 @@ a:hover { text-decoration: underline; }
      SHARED TOPBAR  (shown on all authenticated pages)
 ═══════════════════════════════════════════════════════════════ -->
 <header id="kl-topbar" class="kl-topbar kl-no-print" style="display:none">
-  <div class="kl-brand"><span class="kl-brand-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></span>KHANGLAOS <small>ຄັງລາວ</small></div>
-  <nav>
-    <a href="#/dashboard" data-nav="dashboard" data-i18n="nav.dashboard">Dashboard</a>
-    <a href="#/overview"  data-nav="overview"  data-i18n="nav.overview">Overview</a>
-    <a href="#/receive"   data-nav="receive"   data-i18n="nav.receive">Receive</a>
-    <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout">Check-Out</a>
-    <a href="#/sales"     data-nav="sales"     data-i18n="nav.sales">Sales</a>
-    <a href="#/reports"   data-nav="reports"   data-i18n="nav.reports">Reports</a>
-    <a href="#/manage"    data-nav="manage"    data-i18n="nav.manage">Manage</a>
-  </nav>
+  <button id="klSidebarToggle" class="kl-sb-toggle" aria-label="Menu">☰</button>
+  <h1 id="klPageHeading" class="kl-topbar-title"></h1>
   <div class="kl-tools">
     <select id="topLangSel" aria-label="Language">
       <option value="en">🇬🇧 EN</option>
@@ -792,6 +826,22 @@ a:hover { text-decoration: underline; }
     <a href="#" id="topLogoutLink" data-i18n="nav.logout">Logout</a>
   </div>
 </header>
+<aside id="kl-sidebar" class="kl-sidebar kl-no-print" style="display:none">
+  <div class="kl-sb-brand">
+    <span class="kl-brand-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></span>
+    <span class="kl-sb-name">KHANGLAOS <small>ຄັງລາວ</small></span>
+  </div>
+  <nav class="kl-sb-nav">
+    <a href="#/dashboard" data-nav="dashboard" data-i18n="nav.dashboard"><span class="kl-sb-ic">▦</span><span class="kl-sb-lbl">Dashboard</span></a>
+    <a href="#/overview"  data-nav="overview"  data-i18n="nav.overview"><span class="kl-sb-ic">◷</span><span class="kl-sb-lbl">Overview</span></a>
+    <a href="#/receive"   data-nav="receive"   data-i18n="nav.receive"><span class="kl-sb-ic">⬇</span><span class="kl-sb-lbl">Receive</span></a>
+    <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout"><span class="kl-sb-ic">⬆</span><span class="kl-sb-lbl">Check-Out</span></a>
+    <a href="#/sales"     data-nav="sales"     data-i18n="nav.sales"><span class="kl-sb-ic">₭</span><span class="kl-sb-lbl">Sales</span></a>
+    <a href="#/reports"   data-nav="reports"   data-i18n="nav.reports"><span class="kl-sb-ic">▤</span><span class="kl-sb-lbl">Reports</span></a>
+    <a href="#/manage"    data-nav="manage"    data-i18n="nav.manage"><span class="kl-sb-ic">⚙</span><span class="kl-sb-lbl">Manage</span></a>
+  </nav>
+</aside>
+<div id="klSidebarBackdrop" class="kl-sb-backdrop kl-no-print"></div>
 
 <!-- page -->
 <div id="page-dashboard" class="kl-page">
@@ -2087,16 +2137,31 @@ function showPage(name) {
     if (el) el.classList.toggle('active', r === name);
   });
   // topbar visible on all pages except login
-  document.getElementById('kl-topbar').style.display = (name === 'login') ? 'none' : 'flex';
-  // highlight nav
-  document.querySelectorAll('#kl-topbar nav a').forEach(a => {
+  // topbar + sidebar visible on all pages except login
+  const isLogin = (name === 'login');
+  document.getElementById('kl-topbar').style.display = isLogin ? 'none' : 'flex';
+  const sb = document.getElementById('kl-sidebar');
+  if (sb) sb.style.display = isLogin ? 'none' : 'flex';
+  document.body.classList.toggle('kl-has-sidebar', !isLogin);
+  // close mobile drawer on navigation
+  if (sb) sb.classList.remove('open');
+  const bd = document.getElementById('klSidebarBackdrop');
+  if (bd) bd.classList.remove('show');
+  // set the topbar page title from the sidebar label
+  const heading = document.getElementById('klPageHeading');
+  if (heading && !isLogin) {
+    const link = document.querySelector('#kl-sidebar .kl-sb-nav a[data-nav="' + name + '"] .kl-sb-lbl');
+    heading.textContent = link ? link.textContent : '';
+  }
+  // highlight nav (now in the sidebar)
+  document.querySelectorAll('#kl-sidebar .kl-sb-nav a').forEach(a => {
     a.classList.toggle('active', a.getAttribute('data-nav') === name);
   });
   // Show Reports/Manage nav only for owner/manager/sa (cleaner UX —
   // staff don't see buttons they can't use; DB RLS enforces it anyway)
   const role = (__profile && __profile.role) || '';
   const canManage = ['sa','owner','manager'].includes(role);
-  document.querySelectorAll('#kl-topbar nav a[data-nav="reports"], #kl-topbar nav a[data-nav="manage"], #kl-topbar nav a[data-nav="overview"]')
+  document.querySelectorAll('#kl-sidebar .kl-sb-nav a[data-nav="reports"], #kl-sidebar .kl-sb-nav a[data-nav="manage"], #kl-sidebar .kl-sb-nav a[data-nav="overview"]')
     .forEach(a => { a.style.display = canManage ? '' : 'none'; });
   applyI18n();
   // page-specific init
@@ -2228,6 +2293,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // Top bar
   document.getElementById('topLangSel').addEventListener('change', e => setLang(e.target.value));
   document.getElementById('topLogoutLink').addEventListener('click', e => { e.preventDefault(); klLogout(); });
+  // Mobile sidebar drawer toggle
+  (function(){
+    var tBtn = document.getElementById('klSidebarToggle');
+    var sb   = document.getElementById('kl-sidebar');
+    var bd   = document.getElementById('klSidebarBackdrop');
+    function openSb(){ if(sb){sb.classList.add('open');} if(bd){bd.classList.add('show');} }
+    function closeSb(){ if(sb){sb.classList.remove('open');} if(bd){bd.classList.remove('show');} }
+    if (tBtn) tBtn.addEventListener('click', function(){
+      if (sb && sb.classList.contains('open')) closeSb(); else openSb();
+    });
+    if (bd) bd.addEventListener('click', closeSb);
+  })();
 
   // Boot — sync UI controls to the SAVED language (persists across refresh)
   const sel = document.getElementById('topLangSel');
