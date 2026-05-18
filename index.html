@@ -364,6 +364,16 @@ a:hover { text-decoration: underline; }
 .kl-dr-btn.active { background:var(--kl-primary); color:#fff; font-weight:600;
   box-shadow:0 1px 3px rgba(0,0,0,.12); }
 @media(max-width:520px){ .kl-dr-group{width:100%;} .kl-dr-btn{flex:1;padding:8px 4px;} }
+.kl-dr-sep { font-size:12px; color:var(--kl-text-soft); text-transform:uppercase; letter-spacing:.05em; }
+.kl-dr-custom { display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.kl-dr-date { font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--kl-border);
+  border-radius:8px; background:var(--kl-surface); color:var(--kl-text); }
+.kl-dr-date:focus { outline:none; border-color:var(--kl-primary); }
+.kl-dr-arrow { color:var(--kl-text-soft); font-size:13px; }
+.kl-dr-apply { font:inherit; font-size:13px; font-weight:600; padding:7px 18px; border:none;
+  border-radius:8px; background:var(--kl-primary); color:#fff; cursor:pointer; transition:opacity .14s; }
+.kl-dr-apply:hover { opacity:.88; }
+@media(max-width:520px){ .kl-dr-custom{width:100%;} .kl-dr-date{flex:1;} }
 /* Report cards — clean white with a subtle left accent for status */
 .kl-rcard { background:var(--kl-surface); border:1px solid var(--kl-border);
   border-radius:var(--kl-radius); padding:20px; margin:0 0 14px 0; box-shadow:var(--kl-shadow); }
@@ -996,6 +1006,13 @@ a:hover { text-decoration: underline; }
         <button class="kl-dr-btn active" data-range="7" data-i18n="rt.d7btn">1 week</button>
         <button class="kl-dr-btn" data-range="30" data-i18n="rt.d30btn">1 month</button>
       </div>
+      <span class="kl-dr-sep" data-i18n="rt.or">or</span>
+      <div class="kl-dr-custom">
+        <input type="date" id="rtFrom" class="kl-dr-date" aria-label="From date">
+        <span class="kl-dr-arrow">→</span>
+        <input type="date" id="rtTo" class="kl-dr-date" aria-label="To date">
+        <button class="kl-dr-apply" id="rtApply" data-i18n="rt.filter">Filter</button>
+      </div>
     </div>
     <div id="reportsBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
   </div>
@@ -1156,6 +1173,7 @@ const I18N = {
     "rt.purchasing":"Purchasing", "rt.variance":"Variance — Loss Finder",
     "rt.activity":"Activity by Date", "rt.period":"Period:", "rt.d1":"Last 1 day", "rt.d7":"Last 1 week", "rt.d30":"Last 1 month", "rt.movements":"movements", "rt.received":"Received (value)", "rt.checkedout":"Checked out (value)", "rt.wasted":"Wasted (value)", "rt.noactivity":"No activity in this period.",
     "rt.d1btn":"1 day", "rt.d7btn":"1 week", "rt.d30btn":"1 month",
+    "rt.or":"or", "rt.filter":"Filter",
     "po.title":"Purchase Orders", "po.sub":"Order stock from suppliers. Build from reorder advisor in one tap.",
     "po.new":"+ New order", "po.fromAdvisor":"Build from reorder advisor", "po.edit":"Edit order",
     "po.supplier":"Supplier", "po.number":"PO number", "po.status":"Status", "po.expected":"Expected date",
@@ -1320,6 +1338,7 @@ const I18N = {
     "rt.purchasing":"ການສັ່ງຊື້", "rt.variance":"ສ່ວນຕ່າງ — ຫາຈຸດຮົ່ວ",
     "rt.activity":"ກິດຈະກຳຕາມວັນທີ", "rt.period":"ໄລຍະ:", "rt.d1":"1 ມື້ຜ່ານມາ", "rt.d7":"1 ອາທິດຜ່ານມາ", "rt.d30":"1 ເດືອນຜ່ານມາ", "rt.movements":"ການເຄື່ອນໄຫວ", "rt.received":"ຮັບເຂົ້າ (ມູນຄ່າ)", "rt.checkedout":"ເບີກອອກ (ມູນຄ່າ)", "rt.wasted":"ເສຍ (ມູນຄ່າ)", "rt.noactivity":"ບໍ່ມີກິດຈະກຳໃນໄລຍະນີ້.",
     "rt.d1btn":"1 ມື້", "rt.d7btn":"1 ອາທິດ", "rt.d30btn":"1 ເດືອນ",
+    "rt.or":"ຫຼື", "rt.filter":"ກັ່ນຕອງ",
     "po.title":"ໃບສັ່ງຊື້", "po.sub":"ສັ່ງສິນຄ້າຈາກຜູ້ສະໜອງ. ສ້າງຈາກຄຳແນະນຳສັ່ງຊື້ໃນແຕະດຽວ.",
     "po.new":"+ ໃບສັ່ງໃໝ່", "po.fromAdvisor":"ສ້າງຈາກຄຳແນະນຳສັ່ງຊື້", "po.edit":"ແກ້ໄຂໃບສັ່ງ",
     "po.supplier":"ຜູ້ສະໜອງ", "po.number":"ເລກໃບສັ່ງ", "po.status":"ສະຖານະ", "po.expected":"ວັນທີຄາດຮັບ",
@@ -1484,6 +1503,7 @@ const I18N = {
     "rt.purchasing":"การสั่งซื้อ", "rt.variance":"ส่วนต่าง — หาจุดรั่ว",
     "rt.activity":"กิจกรรมตามวันที่", "rt.period":"ช่วงเวลา:", "rt.d1":"1 วันที่ผ่านมา", "rt.d7":"1 สัปดาห์ที่ผ่านมา", "rt.d30":"1 เดือนที่ผ่านมา", "rt.movements":"การเคลื่อนไหว", "rt.received":"รับเข้า (มูลค่า)", "rt.checkedout":"เบิกออก (มูลค่า)", "rt.wasted":"ของเสีย (มูลค่า)", "rt.noactivity":"ไม่มีกิจกรรมในช่วงนี้",
     "rt.d1btn":"1 วัน", "rt.d7btn":"1 สัปดาห์", "rt.d30btn":"1 เดือน",
+    "rt.or":"หรือ", "rt.filter":"กรอง",
     "po.title":"ใบสั่งซื้อ", "po.sub":"สั่งสินค้าจากซัพพลายเออร์ สร้างจากคำแนะนำสั่งซื้อในแตะเดียว.",
     "po.new":"+ ใบสั่งใหม่", "po.fromAdvisor":"สร้างจากคำแนะนำสั่งซื้อ", "po.edit":"แก้ไขใบสั่ง",
     "po.supplier":"ซัพพลายเออร์", "po.number":"เลขใบสั่ง", "po.status":"สถานะ", "po.expected":"วันที่คาดรับ",
@@ -1646,6 +1666,7 @@ const I18N = {
     "rt.purchasing":"采购", "rt.variance":"差异 — 损失查找器",
     "rt.activity":"按日期活动", "rt.period":"时间段：", "rt.d1":"最近1天", "rt.d7":"最近1周", "rt.d30":"最近1个月", "rt.movements":"笔变动", "rt.received":"入库（金额）", "rt.checkedout":"出库（金额）", "rt.wasted":"损耗（金额）", "rt.noactivity":"此时间段无活动。",
     "rt.d1btn":"1天", "rt.d7btn":"1周", "rt.d30btn":"1个月",
+    "rt.or":"或", "rt.filter":"筛选",
     "po.title":"采购订单", "po.sub":"向供应商订货。一键从补货建议生成。",
     "po.new":"+ 新订单", "po.fromAdvisor":"从补货建议生成", "po.edit":"编辑订单",
     "po.supplier":"供应商", "po.number":"订单号", "po.status":"状态", "po.expected":"预计到货日",
@@ -1809,6 +1830,7 @@ const I18N = {
     "rt.purchasing":"구매", "rt.variance":"편차 — 손실 추적기",
     "rt.activity":"날짜별 활동", "rt.period":"기간:", "rt.d1":"최근 1일", "rt.d7":"최근 1주", "rt.d30":"최근 1개월", "rt.movements":"건 이동", "rt.received":"입고 (금액)", "rt.checkedout":"출고 (금액)", "rt.wasted":"폐기 (금액)", "rt.noactivity":"이 기간에 활동이 없습니다.",
     "rt.d1btn":"1일", "rt.d7btn":"1주", "rt.d30btn":"1개월",
+    "rt.or":"또는", "rt.filter":"필터",
     "po.title":"구매 주문", "po.sub":"공급업체에 재고 주문. 재주문 권고에서 한 번에 생성.",
     "po.new":"+ 새 주문", "po.fromAdvisor":"재주문 권고에서 생성", "po.edit":"주문 편집",
     "po.supplier":"공급업체", "po.number":"주문 번호", "po.status":"상태", "po.expected":"예상 입고일",
@@ -2720,7 +2742,22 @@ function money(n) {
 
 // v2.5 — REPORTS is now tabbed: Waste & Stock | Recipes (profit per dish)
 let REPORT_TAB = 'waste';
-let REPORT_RANGE_DAYS = 7;  // date filter for Activity report: 1 / 7 / 30
+let REPORT_RANGE_DAYS = 7;  // preset: 1 / 7 / 30 days
+let REPORT_CUSTOM_FROM = null;  // custom range from-date (YYYY-MM-DD) or null
+let REPORT_CUSTOM_TO   = null;  // custom range to-date (YYYY-MM-DD) or null
+
+// Tell the database which period to use for the report views.
+// If a custom from/to is set, use set_report_range; else the preset.
+async function applyReportPeriod() {
+  if (REPORT_CUSTOM_FROM || REPORT_CUSTOM_TO) {
+    await sb.rpc('set_report_range', {
+      p_from: REPORT_CUSTOM_FROM,
+      p_to:   REPORT_CUSTOM_TO
+    });
+  } else {
+    await applyReportPeriod();
+  }
+}
 async function initReportsPage() {
   const u = await klRequireLogin(); if (!u) return;
   document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
@@ -2758,11 +2795,26 @@ async function initReportsPage() {
   dateRange.querySelectorAll('.kl-dr-btn').forEach(btn=>{
     btn.onclick = () => {
       REPORT_RANGE_DAYS = parseInt(btn.getAttribute('data-range'), 10) || 7;
+      REPORT_CUSTOM_FROM = null; REPORT_CUSTOM_TO = null;  // clear custom
       dateRange.querySelectorAll('.kl-dr-btn').forEach(b=>b.classList.toggle('active', b===btn));
       // Re-render whichever report tab is currently open with the new period
       dispatch(REPORT_TAB);
     };
   });
+  // Custom from/to date range — applies to ALL report tabs on Filter click
+  const applyBtn = document.getElementById('rtApply');
+  if (applyBtn) {
+    applyBtn.onclick = () => {
+      const f = document.getElementById('rtFrom').value;
+      const t = document.getElementById('rtTo').value;
+      if (!f && !t) { return; }  // nothing chosen
+      REPORT_CUSTOM_FROM = f || null;
+      REPORT_CUSTOM_TO   = t || null;
+      // visually deselect the presets so it's clear custom is active
+      dateRange.querySelectorAll('.kl-dr-btn').forEach(b=>b.classList.remove('active'));
+      dispatch(REPORT_TAB);
+    };
+  }
   dispatch(REPORT_TAB);
 }
 
@@ -2823,7 +2875,7 @@ async function renderWasteReport(u) {
     monthStart.setDate(1); monthStart.setHours(0,0,0,0);
 
     // Pull the 3 profit views (RLS auto-scopes to this restaurant)
-    await sb.rpc('set_report_period', { p_days: REPORT_RANGE_DAYS });
+    await applyReportPeriod();
     const [waste, stock, reorder] = await Promise.all([
       sb.from('v_waste_period').select('*'),
       sb.from('v_stock_value').select('*'),
@@ -3317,7 +3369,7 @@ async function renderPurchasingReport(u) {
   const body = document.getElementById('reportsBody');
   body.innerHTML = '<p class="kl-muted">'+t('common.loading')+'</p>';
   try {
-    await sb.rpc('set_report_period', { p_days: REPORT_RANGE_DAYS });
+    await applyReportPeriod();
     const [poRes, alertRes] = await Promise.all([
       sb.from('purchase_orders')
         .select('po_id,po_number,status,expected_date,created_at,supplier_id,suppliers(name)')
@@ -3643,7 +3695,7 @@ async function renderVarianceReport(u) {
   const body = document.getElementById('reportsBody');
   body.innerHTML = '<p class="kl-muted">'+t('common.loading')+'</p>';
   try {
-    await sb.rpc('set_report_period', { p_days: REPORT_RANGE_DAYS });
+    await applyReportPeriod();
     const { data, error } = await sb.from('v_variance_period').select('*');
     if (error) throw error;
     const rows = (data || []);
