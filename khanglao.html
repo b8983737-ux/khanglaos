@@ -21,6 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=Inter:wght@400;500;600;700&family=Noto+Serif+Lao:wght@400;600;700;900&family=Noto+Sans+Lao:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+@keyframes klspin { to { transform: rotate(360deg); } }
 
 :root {
   /* Refined professional palette — MarketMan-level polish */
@@ -476,14 +477,31 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   width:100%; max-height:90vh; overflow-y:auto; box-shadow:var(--kl-shadow-lg); }
 .kl-modal h3 { margin:0 0 18px 0; font-size:18px; font-weight:700; letter-spacing:-0.3px; }
 /* Overview cockpit — clean cards with subtle status accent */
+/* Overview — top-system clean card design */
 .kl-ov-card { background:var(--kl-surface); border:1px solid var(--kl-border);
-  border-radius:var(--kl-radius); padding:22px 24px; margin:0 0 16px 0; box-shadow:var(--kl-shadow); }
-.kl-ov-head { font-size:15px; font-weight:600; margin:0 0 16px 0; display:flex;
-  align-items:center; gap:9px; color:var(--kl-text); }
-.kl-ov-card.bad  { background:var(--kl-danger-soft); border-color:#f0c8c4; }
-.kl-ov-card.bad  .kl-ov-head { color:var(--kl-danger); }
-.kl-ov-card.warn { background:var(--kl-warn-soft); border-color:#eed9b0; }
-.kl-ov-card.warn .kl-ov-head { color:var(--kl-warn); }
+  border-radius:14px; padding:0; margin:0 0 18px 0; box-shadow:0 1px 3px rgba(20,32,48,.04);
+  overflow:hidden; position:relative; }
+.kl-ov-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+  background:var(--kl-primary); }
+.kl-ov-card.bad::before  { background:#c0392b; }
+.kl-ov-card.warn::before { background:#caa24a; }
+.kl-ov-card.ok::before   { background:#15795f; }
+.kl-ov-head { font-size:15px; font-weight:700; margin:0; padding:18px 24px;
+  display:flex; align-items:center; gap:10px; color:var(--kl-text);
+  border-bottom:1px solid var(--kl-border); background:var(--kl-surface); }
+.kl-ov-head .kl-ov-count { margin-left:auto; font-size:13px; font-weight:700;
+  padding:3px 12px; border-radius:999px; background:var(--kl-surface-2); color:var(--kl-text-soft); }
+.kl-ov-card.bad  .kl-ov-head { color:#c0392b; }
+.kl-ov-card.bad  .kl-ov-count { background:#fdecea; color:#c0392b; }
+.kl-ov-card.warn .kl-ov-head { color:#b9791b; }
+.kl-ov-card.warn .kl-ov-count { background:#fdf3e3; color:#b9791b; }
+.kl-ov-card .kl-rsmall { padding:18px 24px; margin:0; color:var(--kl-text-soft); }
+.kl-ov-card .kl-table-wrap { padding:0; }
+.kl-ov-card .kl-table { width:100%; border-collapse:collapse; font-size:14px; }
+.kl-ov-card .kl-table th { text-align:left; padding:12px 24px; background:var(--kl-surface-2);
+  color:var(--kl-text-soft); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+.kl-ov-card .kl-table td { padding:14px 24px; border-top:1px solid var(--kl-border); }
+.kl-ov-card .kl-table tbody tr:hover td { background:var(--kl-surface-2); }
 .kl-gauge-row { padding:15px 0; border-bottom:1px solid var(--kl-border); }
 .kl-gauge-row:last-child { border-bottom:none; padding-bottom:2px; }
 .kl-gauge-row:first-child { padding-top:2px; }
@@ -546,6 +564,33 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
+<div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
+  <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
+  <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
+</div>
+<script>
+/* Anti-flash: if a Supabase session token already exists in
+   localStorage, the user is logged in and refreshing — show a neutral
+   splash IMMEDIATELY so the landing page never flashes before the app. */
+(function(){
+  try{
+    var hit=false;
+    for(var i=0;i<localStorage.length;i++){
+      var k=localStorage.key(i);
+      if(k && k.indexOf('sb-')===0 && k.indexOf('-auth-token')>-1){
+        var v=localStorage.getItem(k);
+        if(v && v.length>20){ hit=true; break; }
+      }
+    }
+    if(hit){
+      var lv=document.getElementById('landing-view');
+      var sp=document.getElementById('kl-boot-splash');
+      if(sp) sp.style.display='flex';
+      if(lv) lv.style.visibility='hidden';
+    }
+  }catch(e){}
+})();
+</script>
 <div id="landing-view">
 <nav>
   <div class="wrap nav-in">
@@ -2440,6 +2485,13 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           /* landing page is showing — leave the app dormant */
         }
+        // Decision made — reveal the correct screen and drop the splash.
+        try {
+          var _lv = document.getElementById('landing-view');
+          if (_lv) _lv.style.visibility = '';
+          var _sp = document.getElementById('kl-boot-splash');
+          if (_sp) _sp.style.display = 'none';
+        } catch(e) {}
       });
   })();
 });
@@ -2494,7 +2546,7 @@ async function initDashboardPage() {
 
     // Recent movements
     const moves = await sb.from('movements')
-      .select('movement_type, quantity, created_at, note, batches(items(name,unit)), users(full_name)')
+      .select('movement_type, quantity, created_at, note, batches(items(name,unit)), user_profiles(full_name)')
       .order('created_at', { ascending: false }).limit(10);
     renderMoves(moves.data || []);
   } catch (e) {
@@ -2555,7 +2607,7 @@ function renderMoves(rows) {
       <td><strong>${h(m.movement_type)}</strong></td>
       <td>${h(itemName)}</td>
       <td>${h(fmtQty(m.quantity))} ${h(unit)}</td>
-      <td>${h(m.users && m.users.full_name)}</td>
+      <td>${h(m.user_profiles && m.user_profiles.full_name)}</td>
       <td>${h(m.note)}</td>
     </tr>`;
   }
@@ -4330,9 +4382,9 @@ async function initOverviewPage() {
     const orderNow = rows.filter(r => r.needs_reorder)
       .sort((a,b)=> Number(b.used_per_day||0) - Number(a.used_per_day||0));
     let html = '';
-    html += '<div class="kl-ov-card '+(orderNow.length?'bad':'')+'">';
-    html += '<div class="kl-ov-head"><i class="ti ti-alert-triangle" aria-hidden="true"></i> '
-      + t('ov.orderToday') + ' ('+orderNow.length+')</div>';
+    html += '<div class="kl-ov-card '+(orderNow.length?'bad':'ok')+'">';
+    html += '<div class="kl-ov-head">⚠ '
+      + t('ov.orderToday') + '<span class="kl-ov-count">'+orderNow.length+'</span></div>';
     if (orderNow.length === 0) {
       html += '<p class="kl-rsmall">'+t('ov.nothingOrder')+'</p>';
     } else {
@@ -4362,9 +4414,9 @@ async function initOverviewPage() {
     const buildExpCard = (list, headKey, emptyKey, cls, txtCol) => {
       let val = 0;
       list.forEach(r=> val += Number(r.quantity_remaining||0)*Number(r.unit_cost||0));
-      let s = '<div class="kl-ov-card '+(list.length?cls:'')+'">';
-      s += '<div class="kl-ov-head"><i class="ti ti-clock" aria-hidden="true"></i> '
-        + t(headKey) + ' ('+money(val)+')</div>';
+      let s = '<div class="kl-ov-card '+(list.length?cls:'ok')+'">';
+      s += '<div class="kl-ov-head">⏱ '
+        + t(headKey) + '<span class="kl-ov-count">'+money(val)+'</span></div>';
       if (list.length === 0) {
         s += '<p class="kl-rsmall">'+t(emptyKey)+'</p>';
       } else {
