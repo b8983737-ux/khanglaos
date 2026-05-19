@@ -93,12 +93,15 @@ a:hover { text-decoration: underline; }
 }
 .kl-tools { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--kl-text-soft); }
 .kl-tools select {
-  background: var(--kl-surface); color: var(--kl-text);
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  background: var(--kl-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2369707d' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 11px center;
+  color: var(--kl-text);
   border: 1px solid var(--kl-border);
-  border-radius: var(--kl-radius-sm); padding: 6px 10px; font-size: 13px;
-  cursor: pointer;
+  border-radius: 9px; padding: 7px 30px 7px 12px; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: border-color .15s, box-shadow .15s;
 }
-.kl-tools select:hover { border-color: var(--kl-border-strong); }
+.kl-tools select:hover { border-color: var(--kl-primary); }
+.kl-tools select:focus { outline: none; border-color: var(--kl-primary); box-shadow: 0 0 0 3px rgba(21,121,95,.12); }
 .kl-tools a { color: var(--kl-text-soft); font-size: 13px; font-weight: 500; }
 .kl-tools a:hover { color: var(--kl-text); }
 /* Left sidebar — KHANGLAOS deep green, like MarketMan's dark rail */
@@ -189,6 +192,35 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 .kl-kpi.is-success .kl-kpi-value { color: var(--kl-success); }
 
 .kl-form-row { margin-bottom: 14px; }
+/* Stock page — table, pills, tools */
+.kl-stock-tools { display:flex; align-items:center; gap:12px; margin:18px 0; flex-wrap:wrap; }
+.kl-stock-search { flex:1; min-width:180px; max-width:340px; padding:9px 14px;
+  border:1px solid var(--kl-border-strong); border-radius:9px; font:inherit; font-size:14px;
+  background:#fff; color:var(--kl-text); }
+.kl-stock-search:focus { outline:none; border-color:var(--kl-primary); box-shadow:0 0 0 3px rgba(21,121,95,.12); }
+.kl-stock-tbl { width:100%; border-collapse:collapse; font-size:14px; }
+.kl-stock-tbl th { text-align:left; padding:13px 18px; background:var(--kl-surface-2);
+  color:var(--kl-text-soft); font-weight:600; font-size:12.5px; text-transform:uppercase; letter-spacing:.03em; }
+.kl-stock-tbl td { padding:14px 18px; border-top:1px solid var(--kl-border); }
+.kl-stock-tbl tr:hover td { background:var(--kl-surface-2); }
+.kl-pill { display:inline-block; padding:3px 10px; border-radius:999px; font-size:12px; font-weight:600; }
+.kl-pill-ok   { background:#e8f5ef; color:#15795f; }
+.kl-pill-warn { background:#fdf3e3; color:#b9791b; }
+.kl-pill-bad  { background:#fdecea; color:#c0392b; }
+/* Password show/hide eye + Remember me — professional login */
+.kl-pw-wrap { position: relative; }
+.kl-pw-wrap input { padding-right: 44px !important; }
+.kl-pw-eye {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  color: var(--kl-text-soft); padding: 7px; line-height: 0;
+  border-radius: 7px; transition: color .14s, background .14s;
+}
+.kl-pw-eye:hover { color: var(--kl-primary); background: var(--kl-surface-2); }
+.kl-login-opts { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 18px; }
+.kl-remember { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13.5px; color: var(--kl-text-soft); user-select: none; }
+.kl-remember input { width: 16px; height: 16px; accent-color: var(--kl-primary); cursor: pointer; margin: 0; }
+.kl-remember:hover { color: var(--kl-text); }
 .kl-form-row label {
   display: block; font-size: 13px; color: var(--kl-text-soft);
   margin-bottom: 6px; font-weight: 500;
@@ -798,7 +830,19 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
           </div>
           <div class="kl-form-row">
             <label data-i18n="login.password">Password</label>
-            <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••">
+            <div class="kl-pw-wrap">
+              <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••">
+              <button type="button" id="loginPwToggle" class="kl-pw-eye" aria-label="Show password" tabindex="-1">
+                <svg class="kl-eye-show" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="kl-eye-hide" style="display:none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c6.5 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.5 13.5 0 0 0 2 12s3.5 7 10 7a9.12 9.12 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="kl-login-opts">
+            <label class="kl-remember">
+              <input type="checkbox" id="loginRemember">
+              <span data-i18n="login.remember">Remember me</span>
+            </label>
           </div>
           <button type="submit" id="loginBtn" class="kl-btn kl-btn-primary kl-btn-lg kl-btn-block" data-i18n="login.button">Sign in</button>
         </form>
@@ -835,6 +879,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
     <a href="#/dashboard" data-nav="dashboard" data-i18n="nav.dashboard"><span class="kl-sb-ic">▦</span><span class="kl-sb-lbl">Dashboard</span></a>
     <a href="#/overview"  data-nav="overview"  data-i18n="nav.overview"><span class="kl-sb-ic">◷</span><span class="kl-sb-lbl">Overview</span></a>
     <a href="#/receive"   data-nav="receive"   data-i18n="nav.receive"><span class="kl-sb-ic">⬇</span><span class="kl-sb-lbl">Receive</span></a>
+    <a href="#/stock"     data-nav="stock"     data-i18n="nav.stock"><span class="kl-sb-ic">▥</span><span class="kl-sb-lbl">Stock</span></a>
     <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout"><span class="kl-sb-ic">⬆</span><span class="kl-sb-lbl">Check-Out</span></a>
     <a href="#/sales"     data-nav="sales"     data-i18n="nav.sales"><span class="kl-sb-ic">₭</span><span class="kl-sb-lbl">Sales</span></a>
     <a href="#/reports"   data-nav="reports"   data-i18n="nav.reports"><span class="kl-sb-ic">▤</span><span class="kl-sb-lbl">Reports</span></a>
@@ -912,12 +957,12 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
             <select id="recLocation" required></select>
           </div>
           <div class="kl-form-row">
-            <label><span data-i18n="receive.form.quantity">Quantity</span> <span id="recUnitHint" style="color:var(--kl-text-soft);text-transform:none"></span></label>
-            <input type="number" id="recQty" step="0.001" min="0.001" required inputmode="decimal">
+            <label><span data-i18n="receive.form.quantity">Quantity</span> <span id="recUnitHint" style="color:var(--kl-primary);text-transform:none;font-weight:600"></span></label>
+            <input type="text" id="recQty" inputmode="decimal" autocomplete="off" required placeholder="0">
           </div>
           <div class="kl-form-row">
             <label data-i18n="receive.form.unitcost">Unit cost</label>
-            <input type="number" id="recUnitCost" step="0.01" min="0" inputmode="decimal">
+            <input type="text" id="recUnitCost" inputmode="decimal" autocomplete="off" placeholder="0">
           </div>
           <div class="kl-form-row">
             <label data-i18n="receive.form.receivedDate">Received date</label>
@@ -964,6 +1009,23 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
         <svg id="stkBarcode"></svg>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- page -->
+<div id="page-stock" class="kl-page">
+  <div class="kl-container">
+    <h1 class="kl-page-title" data-i18n="stock.title">Stock on Hand</h1>
+    <p class="kl-page-sub" data-i18n="stock.sub">What you have now and when it expires.</p>
+    <div class="kl-stock-tools">
+      <input type="text" id="stockSearch" class="kl-stock-search" placeholder="Search item…" autocomplete="off">
+      <div class="kl-dr-group" id="stockFilter">
+        <button class="kl-dr-btn active" data-sf="all" data-i18n="stock.all">All</button>
+        <button class="kl-dr-btn" data-sf="low" data-i18n="stock.low">Low stock</button>
+        <button class="kl-dr-btn" data-sf="exp" data-i18n="stock.expiring">Expiring</button>
+      </div>
+    </div>
+    <div id="stockBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
   </div>
 </div>
 
@@ -1101,12 +1163,12 @@ const SUPABASE_ANON_KEY = 'sb_publishable_yrh-5VTEtaFBv7-djGPR3Q_8XIPu9ps';
 const I18N = {
   en: {
     "app.tag": "Warehouse Management",
-    "nav.dashboard":"Dashboard", "nav.receive":"Receive", "nav.checkout":"Check-Out", "nav.logout":"Logout",
+    "nav.stock":"Stock", "stock.title":"Stock on Hand", "stock.sub":"What you have now and when it expires.", "stock.items":"Total items", "stock.low":"Low stock", "stock.expiring":"Expiring ≤7d", "stock.all":"All", "stock.none":"No items match.", "stock.col.item":"Item", "stock.col.onhand":"On hand", "stock.col.expiry":"Earliest expiry", "stock.nodate":"No expiry", "stock.expired":"Expired", "stock.lowtag":"LOW", "nav.dashboard":"Dashboard", "nav.receive":"Receive", "nav.checkout":"Check-Out", "nav.logout":"Logout",
     "nav.reports":"Reports", "nav.manage":"Manage",
     "reports.title":"Reports — Money & Profit", "reports.sub":"What is making money, what is losing money. Red = problem.",
     "manage.title":"Manage", "manage.sub":"Add and edit items, suppliers, locations, staff. Tap to edit.",
     "manage.items":"Items", "manage.suppliers":"Suppliers", "manage.locations":"Locations", "manage.users":"Staff",
-    "login.email":"Email", "login.password":"Password", "login.button":"Sign in",
+    "login.remember":"Remember me", "login.email":"Email", "login.password":"Password", "login.button":"Sign in",
     "login.error":"Invalid username or password.", "login.locked":"Too many failed attempts. Try again in 15 minutes.",
     "login.connecting":"Connecting...", "login.expired":"Session expired. Please sign in again.",
     "dashboard.title":"Dashboard", "dashboard.welcome":"Welcome", "dashboard.today":"Today",
@@ -1264,12 +1326,12 @@ const I18N = {
   },
   lo: {
     "app.tag": "ລະບົບຈັດການສາງສິນຄ້າ",
-    "nav.dashboard":"ໜ້າຫລັກ", "nav.receive":"ຮັບສິນຄ້າ", "nav.checkout":"ເບີກສິນຄ້າ", "nav.logout":"ອອກຈາກລະບົບ",
+    "nav.stock":"ສະຕັອກ", "stock.title":"ສິນຄ້າຄົງເຫຼືອ", "stock.sub":"ມີຫຍັງຢູ່ ແລະ ໝົດອາຍຸເມື່ອໃດ.", "stock.items":"ລາຍການທັງໝົດ", "stock.low":"ສະຕັອກຕ່ຳ", "stock.expiring":"ໃກ້ໝົດອາຍຸ ≤7ມື້", "stock.all":"ທັງໝົດ", "stock.none":"ບໍ່ມີລາຍການ.", "stock.col.item":"ສິນຄ້າ", "stock.col.onhand":"ຄົງເຫຼືອ", "stock.col.expiry":"ໝົດອາຍຸໄວສຸດ", "stock.nodate":"ບໍ່ມີວັນໝົດ", "stock.expired":"ໝົດອາຍຸ", "stock.lowtag":"ຕ່ຳ", "nav.dashboard":"ໜ້າຫລັກ", "nav.receive":"ຮັບສິນຄ້າ", "nav.checkout":"ເບີກສິນຄ້າ", "nav.logout":"ອອກຈາກລະບົບ",
     "nav.reports":"ລາຍງານ", "nav.manage":"ຈັດການ",
     "reports.title":"ລາຍງານ — ເງິນ & ກຳໄລ", "reports.sub":"ອັນໃດໄດ້ກຳໄລ ອັນໃດເສຍເງິນ. ສີແດງ = ບັນຫາ.",
     "manage.title":"ຈັດການ", "manage.sub":"ເພີ່ມ ແລະ ແກ້ໄຂ ສິນຄ້າ, ຜູ້ສະໜອງ, ບ່ອນເກັບ, ພະນັກງານ.",
     "manage.items":"ສິນຄ້າ", "manage.suppliers":"ຜູ້ສະໜອງ", "manage.locations":"ບ່ອນເກັບ", "manage.users":"ພະນັກງານ",
-    "login.email":"ອີເມວ", "login.password":"ລະຫັດຜ່ານ", "login.button":"ເຂົ້າສູ່ລະບົບ",
+    "login.remember":"ຈື່ຂ້ອຍໄວ້", "login.email":"ອີເມວ", "login.password":"ລະຫັດຜ່ານ", "login.button":"ເຂົ້າສູ່ລະບົບ",
     "login.error":"ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ",
     "login.locked":"ພະຍາຍາມຫຼາຍຄັ້ງເກີນໄປ. ລອງໃໝ່ໃນ 15 ນາທີ",
     "login.connecting":"ກຳລັງເຊື່ອມຕໍ່...", "login.expired":"ໝົດອາຍຸແລ້ວ. ກະລຸນາເຂົ້າສູ່ລະບົບໃໝ່.",
@@ -1429,12 +1491,12 @@ const I18N = {
   },
   th: {
     "app.tag":"ระบบจัดการคลังสินค้า",
-    "nav.dashboard":"หน้าหลัก", "nav.receive":"รับสินค้า", "nav.checkout":"เบิกสินค้า", "nav.logout":"ออกจากระบบ",
+    "nav.stock":"สต็อก", "stock.title":"สินค้าคงเหลือ", "stock.sub":"มีอะไรอยู่ และหมดอายุเมื่อไหร่.", "stock.items":"รายการทั้งหมด", "stock.low":"สต็อกต่ำ", "stock.expiring":"ใกล้หมดอายุ ≤7วัน", "stock.all":"ทั้งหมด", "stock.none":"ไม่มีรายการ.", "stock.col.item":"สินค้า", "stock.col.onhand":"คงเหลือ", "stock.col.expiry":"หมดอายุเร็วสุด", "stock.nodate":"ไม่มีวันหมด", "stock.expired":"หมดอายุ", "stock.lowtag":"ต่ำ", "nav.dashboard":"หน้าหลัก", "nav.receive":"รับสินค้า", "nav.checkout":"เบิกสินค้า", "nav.logout":"ออกจากระบบ",
     "nav.reports":"รายงาน", "nav.manage":"จัดการ",
     "reports.title":"รายงาน — เงิน & กำไร", "reports.sub":"อะไรทำกำไร อะไรขาดทุน. แดง = ปัญหา.",
     "manage.title":"จัดการ", "manage.sub":"เพิ่มและแก้ไข สินค้า ผู้จัดส่ง สถานที่ พนักงาน.",
     "manage.items":"สินค้า", "manage.suppliers":"ผู้จัดส่ง", "manage.locations":"สถานที่", "manage.users":"พนักงาน",
-    "login.email":"อีเมล", "login.password":"รหัสผ่าน", "login.button":"เข้าสู่ระบบ",
+    "login.remember":"จดจำฉัน", "login.email":"อีเมล", "login.password":"รหัสผ่าน", "login.button":"เข้าสู่ระบบ",
     "login.error":"ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
     "login.locked":"ลองผิดหลายครั้งเกินไป รอ 15 นาที", "login.connecting":"กำลังเชื่อมต่อ...",
     "login.expired":"หมดอายุ กรุณาเข้าสู่ระบบใหม่",
@@ -1594,12 +1656,12 @@ const I18N = {
   },
   zh: {
     "app.tag":"仓库管理系统",
-    "nav.dashboard":"仪表盘", "nav.receive":"入库", "nav.checkout":"出库", "nav.logout":"退出",
+    "nav.stock":"库存", "stock.title":"现有库存", "stock.sub":"现在有什么，何时过期。", "stock.items":"项目总数", "stock.low":"库存低", "stock.expiring":"≤7天过期", "stock.all":"全部", "stock.none":"无匹配项目。", "stock.col.item":"项目", "stock.col.onhand":"现有", "stock.col.expiry":"最早过期", "stock.nodate":"无到期", "stock.expired":"已过期", "stock.lowtag":"低", "nav.dashboard":"仪表盘", "nav.receive":"入库", "nav.checkout":"出库", "nav.logout":"退出",
     "nav.reports":"报表", "nav.manage":"管理",
     "reports.title":"报表 — 金钱与利润", "reports.sub":"什么赚钱，什么亏钱。红色 = 问题。",
     "manage.title":"管理", "manage.sub":"添加和编辑物品、供应商、位置、员工。",
     "manage.items":"物品", "manage.suppliers":"供应商", "manage.locations":"位置", "manage.users":"员工",
-    "login.email":"邮箱", "login.password":"密码", "login.button":"登录",
+    "login.remember":"记住我", "login.email":"邮箱", "login.password":"密码", "login.button":"登录",
     "login.error":"用户名或密码错误", "login.locked":"失败次数过多,请15分钟后再试",
     "login.connecting":"连接中...", "login.expired":"会话已过期,请重新登录",
     "dashboard.title":"仪表盘", "dashboard.welcome":"欢迎", "dashboard.today":"今天",
@@ -1757,12 +1819,12 @@ const I18N = {
   },
   ko: {
     "app.tag":"창고 관리 시스템",
-    "nav.dashboard":"대시보드", "nav.receive":"입고", "nav.checkout":"출고", "nav.logout":"로그아웃",
+    "nav.stock":"재고", "stock.title":"현재 재고", "stock.sub":"무엇이 있고 언제 만료되는지.", "stock.items":"총 품목", "stock.low":"재고 부족", "stock.expiring":"≤7일 만료", "stock.all":"전체", "stock.none":"항목 없음.", "stock.col.item":"품목", "stock.col.onhand":"보유량", "stock.col.expiry":"최단 만료", "stock.nodate":"만료 없음", "stock.expired":"만료됨", "stock.lowtag":"부족", "nav.dashboard":"대시보드", "nav.receive":"입고", "nav.checkout":"출고", "nav.logout":"로그아웃",
     "nav.reports":"보고서", "nav.manage":"관리",
     "reports.title":"보고서 — 돈과 이익", "reports.sub":"무엇이 돈을 벌고, 무엇이 손해인지. 빨강 = 문제.",
     "manage.title":"관리", "manage.sub":"품목, 공급업체, 위치, 직원 추가 및 편집.",
     "manage.items":"품목", "manage.suppliers":"공급업체", "manage.locations":"위치", "manage.users":"직원",
-    "login.email":"이메일", "login.password":"비밀번호", "login.button":"로그인",
+    "login.remember":"로그인 정보 저장", "login.email":"이메일", "login.password":"비밀번호", "login.button":"로그인",
     "login.error":"사용자명 또는 비밀번호가 잘못되었습니다",
     "login.locked":"실패 횟수 초과. 15분 후 다시 시도하세요",
     "login.connecting":"연결 중...", "login.expired":"세션 만료. 다시 로그인하세요",
@@ -1947,6 +2009,7 @@ function setLang(lang) {
     else if (r === 'overview')  initOverviewPage();
     else if (r === 'dashboard') initDashboardPage();
     else if (r === 'receive')   initReceivePage();
+    else if (r === 'stock')     initStockPage();
     else if (r === 'checkout')  initCheckoutPage();
     else if (r === 'sales')     initSalesPage();
   } catch (e) { /* page not ready yet — applyI18n already handled static text */ }
@@ -2120,7 +2183,7 @@ function showMsg(elId, text, type) {
   if (type === 'ok') setTimeout(() => el.innerHTML = '', 4000);
 }
 
-const ROUTES = ['login','dashboard','overview','receive','checkout','sales','reports','manage'];
+const ROUTES = ['login','dashboard','overview','receive','stock','checkout','sales','reports','manage'];
 function currentRoute() {
   const h = (location.hash || '').replace(/^#\//, '');
   return ROUTES.includes(h) ? h : (klSession() ? 'dashboard' : 'login');
@@ -2169,6 +2232,7 @@ function showPage(name) {
   else if (name === 'dashboard') initDashboardPage();
   else if (name === 'overview')  initOverviewPage();
   else if (name === 'receive')   initReceivePage();
+  else if (name === 'stock')     initStockPage();
   else if (name === 'checkout')  initCheckoutPage();
   else if (name === 'sales')     initSalesPage();
   else if (name === 'reports')   initReportsPage();
@@ -2215,7 +2279,7 @@ window.addEventListener('hashchange', route);
 // hardening; the real security is the database RLS (anon = zero rows),
 // proven separately. Both layers together = MarketMan's model.
 // =====================================================================
-const GATED_PAGES = ['dashboard','overview','receive','checkout','sales','reports','manage'];
+const GATED_PAGES = ['dashboard','overview','receive','stock','checkout','sales','reports','manage'];
 const __pageStash = {};
 let __pagesGated = false;
 
@@ -2253,6 +2317,30 @@ function initLoginPage() {
   bar.querySelectorAll('button').forEach(b => {
     b.classList.toggle('active', b.dataset.lang === __lang);
   });
+  // Restore remembered email (if the user chose "Remember me" before)
+  try {
+    const saved = localStorage.getItem('kl_remember_email');
+    if (saved) {
+      document.getElementById('loginUsername').value = saved;
+      document.getElementById('loginRemember').checked = true;
+      // focus password since email is filled
+      const pw = document.getElementById('loginPassword');
+      if (pw) setTimeout(() => pw.focus(), 50);
+    }
+  } catch (e) {}
+  // Password show/hide eye toggle (bind once)
+  const eye = document.getElementById('loginPwToggle');
+  if (eye && eye.dataset.wired !== '1') {
+    eye.dataset.wired = '1';
+    eye.addEventListener('click', () => {
+      const inp = document.getElementById('loginPassword');
+      const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      eye.querySelector('.kl-eye-show').style.display = show ? 'none' : '';
+      eye.querySelector('.kl-eye-hide').style.display = show ? '' : 'none';
+      eye.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    });
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -2270,6 +2358,14 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const u = document.getElementById('loginUsername').value.trim();
     const p = document.getElementById('loginPassword').value;
+    // Remember me — save the email for next visit (never the password)
+    try {
+      if (document.getElementById('loginRemember').checked) {
+        localStorage.setItem('kl_remember_email', u);
+      } else {
+        localStorage.removeItem('kl_remember_email');
+      }
+    } catch (e) {}
     const btn = document.getElementById('loginBtn');
     btn.disabled = true;
     btn.textContent = t('login.connecting');
@@ -2462,6 +2558,100 @@ function renderMoves(rows) {
 
 let RECV_STATE = { items: [], locations: [], suppliers: [], restaurantCode: '' };
 
+async function initStockPage() {
+  const u = await klRequireLogin(); if (!u) return;
+  document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
+  const body = document.getElementById('stockBody');
+  body.innerHTML = '<p class="kl-muted">' + t('common.loading') + '</p>';
+  try {
+    // v_item_stock: name, name_lao, unit, on_hand, earliest_expiry,
+    // reorder_level, par_level. RLS auto-scopes to this restaurant.
+    const { data, error } = await sb.from('v_item_stock').select('*').order('name');
+    if (error) throw error;
+    let rows = (data || []);
+    window.__stockRows = rows;
+
+    const render = (filter, term) => {
+      const today = new Date();
+      const soon = new Date(); soon.setDate(soon.getDate() + 7);
+      let list = rows.slice();
+      if (term) {
+        const q = term.toLowerCase();
+        list = list.filter(r => (r.name || '').toLowerCase().includes(q) ||
+                                 (r.name_lao || '').toLowerCase().includes(q));
+      }
+      if (filter === 'low') {
+        list = list.filter(r => r.reorder_level != null && Number(r.on_hand) <= Number(r.reorder_level));
+      } else if (filter === 'exp') {
+        list = list.filter(r => r.earliest_expiry && new Date(r.earliest_expiry) <= soon);
+      }
+      // KPI strip
+      const totalItems = rows.length;
+      const lowCount = rows.filter(r => r.reorder_level != null && Number(r.on_hand) <= Number(r.reorder_level)).length;
+      const expCount = rows.filter(r => r.earliest_expiry && new Date(r.earliest_expiry) <= soon).length;
+      let html = '<div class="kl-rgrid">';
+      html += '<div class="kl-rcard"><p class="kl-rsmall">' + t('stock.items') + '</p><p class="kl-rbig">' + totalItems + '</p></div>';
+      html += '<div class="kl-rcard ' + (lowCount ? 'warn' : '') + '"><p class="kl-rsmall">' + t('stock.low') + '</p><p class="kl-rbig">' + lowCount + '</p></div>';
+      html += '<div class="kl-rcard ' + (expCount ? 'warn' : '') + '"><p class="kl-rsmall">' + t('stock.expiring') + '</p><p class="kl-rbig">' + expCount + '</p></div>';
+      html += '</div>';
+      // Table
+      if (!list.length) {
+        html += '<p class="kl-muted">' + t('stock.none') + '</p>';
+      } else {
+        html += '<div class="kl-rcard" style="padding:0;overflow:hidden">';
+        html += '<table class="kl-stock-tbl"><thead><tr>'
+              + '<th>' + t('stock.col.item') + '</th>'
+              + '<th style="text-align:right">' + t('stock.col.onhand') + '</th>'
+              + '<th>' + t('stock.col.expiry') + '</th></tr></thead><tbody>';
+        list.forEach(r => {
+          const oh = Number(r.on_hand) || 0;
+          const unit = r.unit ? ' ' + h(r.unit) : '';
+          const lowFlag = (r.reorder_level != null && oh <= Number(r.reorder_level));
+          let expCell = '<span class="kl-pill kl-pill-ok">' + t('stock.nodate') + '</span>';
+          if (r.earliest_expiry) {
+            const ed = new Date(r.earliest_expiry);
+            const days = Math.ceil((ed - today) / 86400000);
+            const ds = new Date(r.earliest_expiry).toISOString().slice(0, 10);
+            if (days < 0) expCell = '<span class="kl-pill kl-pill-bad">' + t('stock.expired') + ' · ' + ds + '</span>';
+            else if (days <= 7) expCell = '<span class="kl-pill kl-pill-warn">' + days + 'd · ' + ds + '</span>';
+            else expCell = '<span class="kl-pill kl-pill-ok">' + ds + '</span>';
+          }
+          html += '<tr>'
+                + '<td><strong>' + h(r.name || '') + '</strong>'
+                + (r.name_lao ? ' <span class="kl-rsmall">' + h(r.name_lao) + '</span>' : '') + '</td>'
+                + '<td style="text-align:right"><strong' + (lowFlag ? ' style="color:#c0392b"' : '') + '>'
+                + oh.toLocaleString() + '</strong>' + unit
+                + (lowFlag ? ' <span class="kl-pill kl-pill-warn">' + t('stock.lowtag') + '</span>' : '') + '</td>'
+                + '<td>' + expCell + '</td></tr>';
+        });
+        html += '</tbody></table></div>';
+      }
+      body.innerHTML = html;
+    };
+
+    let curFilter = 'all', curTerm = '';
+    render(curFilter, curTerm);
+    const fil = document.getElementById('stockFilter');
+    if (fil && fil.dataset.wired !== '1') {
+      fil.dataset.wired = '1';
+      fil.querySelectorAll('.kl-dr-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          curFilter = btn.getAttribute('data-sf');
+          fil.querySelectorAll('.kl-dr-btn').forEach(b => b.classList.toggle('active', b === btn));
+          render(curFilter, curTerm);
+        });
+      });
+    }
+    const srch = document.getElementById('stockSearch');
+    if (srch && srch.dataset.wired !== '1') {
+      srch.dataset.wired = '1';
+      srch.addEventListener('input', () => { curTerm = srch.value.trim(); render(curFilter, curTerm); });
+    }
+  } catch (e) {
+    body.innerHTML = '<div class="kl-rcard warn"><p class="kl-rsmall">' + h(String(e.message || e)) + '</p></div>';
+  }
+}
+
 async function initReceivePage() {
   const u = await klRequireLogin();
   if (!u) return;
@@ -2534,6 +2724,25 @@ function wireReceiveHandlers() {
   const recItem = document.getElementById('recItem');
   if (!recItem || recItem.dataset.wired === '1') return;
   recItem.dataset.wired = '1';
+
+  // Live thousand-separator formatting for Quantity and Unit cost.
+  // Shows 1,000,000 while typing; klRawNum() reads the real number.
+  function fmtNumInput(el) {
+    if (!el) return;
+    el.addEventListener('input', () => {
+      let v = el.value.replace(/,/g, '');
+      // keep only digits and one decimal point
+      v = v.replace(/[^0-9.]/g, '');
+      const parts = v.split('.');
+      let intp = parts[0] || '';
+      const dec = parts.length > 1 ? '.' + parts.slice(1).join('').slice(0, 3) : '';
+      intp = intp.replace(/^0+(?=\d)/, '');           // strip leading zeros
+      const grouped = intp.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // add commas
+      el.value = grouped + dec;
+    });
+  }
+  fmtNumInput(document.getElementById('recQty'));
+  fmtNumInput(document.getElementById('recUnitCost'));
   recItem.addEventListener('change', () => {
     const id = parseInt(document.getElementById('recItem').value);
     if (!id) return;
@@ -2549,7 +2758,15 @@ function wireReceiveHandlers() {
       expIn.value = addDays(recDate, item.default_shelf_life_days);
       document.getElementById('recExpHint').textContent = `(${item.default_shelf_life_days}d shelf life)`;
     }
-    document.getElementById('recUnitHint').textContent = item.unit ? `(${item.unit})` : '';
+    // Show the item's unit clearly (bottle, box, kg, etc.) so staff
+    // know what they are counting — e.g. "Quantity — in bottle".
+    const unit = item.unit ? String(item.unit).trim() : '';
+    const uh = document.getElementById('recUnitHint');
+    if (uh) uh.textContent = unit ? `— in ${unit}` : '';
+    const qtyIn = document.getElementById('recQty');
+    if (qtyIn) qtyIn.placeholder = unit ? `How many ${unit}?` : '0';
+    const ucIn = document.getElementById('recUnitCost');
+    if (ucIn) ucIn.placeholder = unit ? `Price per ${unit}` : '0';
   });
 
   const recForm = document.getElementById('receiveForm');
@@ -2573,8 +2790,8 @@ async function doReceive() {
     const supplier_raw = document.getElementById('recSupplier').value;
     const supplier_id = supplier_raw ? parseInt(supplier_raw) : null;
     const location_id = parseInt(document.getElementById('recLocation').value);
-    const quantity = parseFloat(document.getElementById('recQty').value);
-    const cost_raw = document.getElementById('recUnitCost').value;
+    const quantity = parseFloat(document.getElementById('recQty').value.replace(/,/g, ''));
+    const cost_raw = document.getElementById('recUnitCost').value.replace(/,/g, '').trim();
     const unit_cost = cost_raw === '' ? null : parseFloat(cost_raw);
     const received_date = document.getElementById('recReceivedDate').value;
     const expiry_date = document.getElementById('recExpiryDate').value || null;
@@ -4537,7 +4754,7 @@ document.addEventListener('DOMContentLoaded',function(){
 <script>
 /* ===== Landing i18n — robust DOM text-node walker (EN/LO/TH/ZH/KO) ===== */
 var KL_LI = {"Features": {"lo": "ຄຸນສົມບັດ", "th": "ฟีเจอร์", "zh": "功能", "ko": "기능"}, "How it works": {"lo": "ວິທີໃຊ້ງານ", "th": "วิธีใช้งาน", "zh": "如何运作", "ko": "작동 방식"}, "FAQ": {"lo": "ຄຳຖາມ", "th": "คำถามที่พบบ่อย", "zh": "常见问题", "ko": "자주 묻는 질문"}, "Get started →": {"lo": "ເລີ່ມຕົ້ນ →", "th": "เริ่มต้น →", "zh": "开始使用 →", "ko": "시작하기 →"}, "Built for Lao restaurants": {"lo": "ສ້າງມາເພື່ອຮ້ານອາຫານລາວ", "th": "สร้างมาเพื่อร้านอาหารลาว", "zh": "专为老挝餐厅打造", "ko": "라오스 레스토랑을 위해 제작"}, "Stop your kitchen from": {"lo": "ຢຸດການຮົ່ວໄຫຼເງິນ", "th": "หยุดครัวของคุณจาก", "zh": "别让你的厨房", "ko": "주방에서 새는"}, "leaking money": {"lo": "ໃນຄົວຂອງທ່ານ", "th": "การรั่วไหลของเงิน", "zh": "漏钱", "ko": "돈을 막으세요"}, "KHANGLAOS is a warehouse & food-cost system made for restaurants in Laos. Scan to receive, scan to use, and see exactly which dish — and which shelf — is costing you profit.": {"lo": "KHANGLAOS ແມ່ນລະບົບຄຸ້ມຄອງສາງ ແລະ ຕົ້ນທຶນອາຫານ ສ້າງມາສຳລັບຮ້ານອາຫານໃນລາວ. ສະແກນຮັບເຂົ້າ, ສະແກນຕອນໃຊ້, ແລະ ເຫັນຊັດເຈນວ່າເມນູໃດ — ແລະ ຊັ້ນວາງໃດ — ກຳລັງກິນກຳໄລຂອງທ່ານ.", "th": "KHANGLAOS คือระบบจัดการคลังและต้นทุนอาหารสำหรับร้านอาหารในลาว สแกนรับเข้า สแกนตอนใช้ และเห็นชัดเจนว่าเมนูใด — และชั้นวางใด — กำลังกินกำไรของคุณ", "zh": "KHANGLAOS 是专为老挝餐厅打造的仓库与食材成本系统。扫码入库、扫码使用，清楚看到哪道菜、哪个货架正在吞噬你的利润。", "ko": "KHANGLAOS는 라오스 레스토랑을 위한 창고 및 식자재 원가 시스템입니다. 입고 시 스캔, 사용 시 스캔하여 어떤 메뉴와 어떤 선반이 이익을 갉아먹는지 정확히 확인하세요."}, "Start free on your phone": {"lo": "ເລີ່ມຟຣີໃນໂທລະສັບ", "th": "เริ่มฟรีบนมือถือ", "zh": "在手机上免费开始", "ko": "휴대폰에서 무료로 시작"}, "See how it works": {"lo": "ເບິ່ງວິທີໃຊ້ງານ", "th": "ดูวิธีใช้งาน", "zh": "了解运作方式", "ko": "작동 방식 보기"}, "·  No hardware needed": {"lo": "·  ບໍ່ຕ້ອງໃຊ້ອຸປະກອນພິເສດ", "th": "·  ไม่ต้องใช้อุปกรณ์เพิ่ม", "zh": "·  无需任何硬件", "ko": "·  별도 장비 불필요"}, "Money leaking this month": {"lo": "ເງິນຮົ່ວໄຫຼເດືອນນີ້", "th": "เงินรั่วไหลเดือนนี้", "zh": "本月漏掉的钱", "ko": "이번 달 새는 돈"}, "found & flagged": {"lo": "ພົບ & ໝາຍໄວ້", "th": "พบ & ทำเครื่องหมาย", "zh": "已发现并标记", "ko": "발견 및 표시됨"}, "Used 35% more than recipes": {"lo": "ໃຊ້ຫຼາຍກວ່າສູດ 35%", "th": "ใช้มากกว่าสูตร 35%", "zh": "比配方多用 35%", "ko": "레시피보다 35% 더 사용"}, "Investigate": {"lo": "ກວດສອບ", "th": "ตรวจสอบ", "zh": "需调查", "ko": "조사 필요"}, "Expires in 2 days · 3 kg left": {"lo": "ໝົດອາຍຸໃນ 2 ມື້ · ເຫຼືອ 3 ກິໂລ", "th": "หมดอายุใน 2 วัน · เหลือ 3 กก.", "zh": "2天后过期 · 剩 3 公斤", "ko": "2일 후 만료 · 3kg 남음"}, "Use soon": {"lo": "ໃຊ້ດ່ວນ", "th": "ใช้ด่วน", "zh": "尽快使用", "ko": "곧 사용"}, "Below reorder level": {"lo": "ຕ່ຳກວ່າລະດັບສັ່ງຊື້", "th": "ต่ำกว่าระดับสั่งซื้อ", "zh": "低于补货线", "ko": "재주문 수준 이하"}, "Auto-ordered": {"lo": "ສັ່ງອັດຕະໂນມັດ", "th": "สั่งอัตโนมัติ", "zh": "已自动下单", "ko": "자동 주문됨"}, "Food cost 31% · healthy": {"lo": "ຕົ້ນທຶນ 31% · ດີ", "th": "ต้นทุน 31% · ดี", "zh": "食材成本 31% · 健康", "ko": "식자재 원가 31% · 양호"}, "Good": {"lo": "ດີ", "th": "ดี", "zh": "良好", "ko": "양호"}, "food cost, typical": {"lo": "ຕົ້ນທຶນອາຫານ, ໂດຍສະເລ່ຍ", "th": "ต้นทุนอาหารโดยเฉลี่ย", "zh": "食材成本（典型）", "ko": "식자재 원가, 평균"}, "hrs/mo saved": {"lo": "ຊມ./ເດືອນ ທີ່ປະຢັດ", "th": "ชม./เดือน ที่ประหยัด", "zh": "小时/月 节省", "ko": "시간/월 절약"}, "5 langs": {"lo": "5 ພາສາ", "th": "5 ภาษา", "zh": "5 种语言", "ko": "5개 언어"}, "Scan-first": {"lo": "ສະແກນກ່ອນ", "th": "สแกนก่อน", "zh": "扫码优先", "ko": "스캔 우선"}, "No typing for staff": {"lo": "ພະນັກງານບໍ່ຕ້ອງພິມ", "th": "พนักงานไม่ต้องพิมพ์", "zh": "员工无需打字", "ko": "직원 입력 불필요"}, "Real-time": {"lo": "ເວລາຈິງ", "th": "เรียลไทม์", "zh": "实时", "ko": "실시간"}, "Stock, waste & profit": {"lo": "ສະຕັອກ, ການເສຍ & ກຳໄລ", "th": "สต็อก ของเสีย & กำไร", "zh": "库存、损耗与利润", "ko": "재고, 폐기 및 이익"}, "Phone-ready": {"lo": "ພ້ອມໃຊ້ໃນໂທລະສັບ", "th": "พร้อมใช้บนมือถือ", "zh": "手机就绪", "ko": "휴대폰 지원"}, "Works on any device": {"lo": "ໃຊ້ໄດ້ທຸກອຸປະກອນ", "th": "ใช้ได้ทุกอุปกรณ์", "zh": "任何设备都能用", "ko": "모든 기기에서 작동"}, "Built for restaurants across Laos": {"lo": "ສ້າງມາເພື່ອຮ້ານອາຫານທົ່ວລາວ", "th": "สร้างมาเพื่อร้านอาหารทั่วลาว", "zh": "为老挝各地餐厅打造", "ko": "라오스 전역 레스토랑을 위해"}, "Your Restaurant": {"lo": "ຮ້ານຂອງທ່ານ", "th": "ร้านของคุณ", "zh": "您的餐厅", "ko": "당신의 레스토랑"}, "Your Café": {"lo": "ຄາເຟຂອງທ່ານ", "th": "คาเฟ่ของคุณ", "zh": "您的咖啡馆", "ko": "당신의 카페"}, "Your Kitchen": {"lo": "ຄົວຂອງທ່ານ", "th": "ครัวของคุณ", "zh": "您的厨房", "ko": "당신의 주방"}, "Your Group": {"lo": "ກຸ່ມຂອງທ່ານ", "th": "กลุ่มของคุณ", "zh": "您的集团", "ko": "당신의 그룹"}, "Your Brand": {"lo": "ແບຣນຂອງທ່ານ", "th": "แบรนด์ของคุณ", "zh": "您的品牌", "ko": "당신의 브랜드"}, "Your Bistro": {"lo": "ບິສໂຕຣຂອງທ່ານ", "th": "บิสโทรของคุณ", "zh": "您的小馆", "ko": "당신의 비스트로"}, "Your Diner": {"lo": "ຮ້ານອາຫານຂອງທ່ານ", "th": "ร้านอาหารของคุณ", "zh": "您的餐馆", "ko": "당신의 식당"}, "Your Tea Shop": {"lo": "ຮ້ານຊາຂອງທ່ານ", "th": "ร้านชาของคุณ", "zh": "您的茶店", "ko": "당신의 찻집"}, "Your restaurant's name & logo here — KHANGLAOS is built for Lao kitchens of every size.": {"lo": "ຊື່ ແລະ ໂລໂກ້ຮ້ານຂອງທ່ານທີ່ນີ້ — KHANGLAOS ສ້າງມາສຳລັບຄົວລາວທຸກຂະໜາດ.", "th": "ชื่อและโลโก้ร้านของคุณตรงนี้ — KHANGLAOS สร้างมาเพื่อครัวลาวทุกขนาด", "zh": "这里放您的餐厅名称与标志 — KHANGLAOS 适合各种规模的老挝厨房。", "ko": "여기에 귀하의 레스토랑 이름과 로고 — KHANGLAOS는 모든 규모의 라오스 주방을 위해 만들어졌습니다."}, "Core features": {"lo": "ຄຸນສົມບັດຫຼັກ", "th": "ฟีเจอร์หลัก", "zh": "核心功能", "ko": "핵심 기능"}, "Everything to control food cost — in one place": {"lo": "ທຸກຢ່າງເພື່ອຄຸມຕົ້ນທຶນອາຫານ — ໃນບ່ອນດຽວ", "th": "ทุกอย่างเพื่อคุมต้นทุนอาหาร — ในที่เดียว", "zh": "掌控食材成本所需的一切 — 集于一处", "ko": "식자재 원가 관리의 모든 것 — 한 곳에서"}, "Most Lao restaurants run on memory and notebooks. KHANGLAOS turns that into numbers you can act on, without changing how your kitchen works.": {"lo": "ຮ້ານອາຫານລາວສ່ວນຫຼາຍໃຊ້ຄວາມຈຳ ແລະ ປຶ້ມບັນທຶກ. KHANGLAOS ປ່ຽນສິ່ງນັ້ນເປັນຕົວເລກທີ່ທ່ານນຳໃຊ້ໄດ້ ໂດຍບໍ່ຕ້ອງປ່ຽນວິທີເຮັດວຽກຂອງຄົວ.", "th": "ร้านอาหารลาวส่วนใหญ่ใช้ความจำและสมุดจด KHANGLAOS เปลี่ยนสิ่งนั้นเป็นตัวเลขที่นำไปใช้ได้ โดยไม่ต้องเปลี่ยนวิธีทำงานของครัว", "zh": "大多数老挝餐厅靠记忆和笔记本运作。KHANGLAOS 把这些变成可行动的数字，无需改变厨房的工作方式。", "ko": "대부분의 라오스 레스토랑은 기억과 노트로 운영됩니다. KHANGLAOS는 주방 운영 방식을 바꾸지 않고 그것을 실행 가능한 숫자로 바꿉니다."}, "Scan to receive & use": {"lo": "ສະແກນເພື່ອຮັບ & ໃຊ້", "th": "สแกนเพื่อรับ & ใช้", "zh": "扫码入库与使用", "ko": "스캔으로 입고 및 사용"}, "Staff scan a barcode with the phone camera to receive deliveries or take stock out. No long forms, no typing — so they actually use it.": {"lo": "ພະນັກງານສະແກນບາໂຄດດ້ວຍກ້ອງໂທລະສັບເພື່ອຮັບສິນຄ້າ ຫຼື ເບີກສະຕັອກ. ບໍ່ມີແບບຟອມຍາວ, ບໍ່ຕ້ອງພິມ — ສະນັ້ນເຂົາເຈົ້າໃຊ້ມັນແທ້.", "th": "พนักงานสแกนบาร์โค้ดด้วยกล้องมือถือเพื่อรับสินค้าหรือเบิกสต็อก ไม่มีฟอร์มยาว ไม่ต้องพิมพ์ — พวกเขาจึงใช้จริง", "zh": "员工用手机摄像头扫码即可入库或出库。没有冗长表单，无需打字 — 他们才会真正使用。", "ko": "직원이 휴대폰 카메라로 바코드를 스캔해 입고하거나 출고합니다. 긴 양식도, 입력도 없어 실제로 사용합니다."}, "Profit per dish": {"lo": "ກຳໄລຕໍ່ເມນູ", "th": "กำไรต่อเมนู", "zh": "每道菜利润", "ko": "메뉴별 이익"}, "Build recipes once. KHANGLAOS calculates the true cost and profit of every dish from live ingredient prices, and flags the ones losing money.": {"lo": "ສ້າງສູດເທື່ອດຽວ. KHANGLAOS ຄຳນວນຕົ້ນທຶນ ແລະ ກຳໄລຈິງຂອງທຸກເມນູຈາກລາຄາວັດຖຸດິບປັດຈຸບັນ ແລະ ໝາຍເມນູທີ່ຂາດທຶນ.", "th": "สร้างสูตรครั้งเดียว KHANGLAOS คำนวณต้นทุนและกำไรจริงของทุกเมนูจากราคาวัตถุดิบปัจจุบัน และทำเครื่องหมายเมนูที่ขาดทุน", "zh": "配方只需建一次。KHANGLAOS 根据实时食材价格计算每道菜的真实成本与利润，并标记亏损的菜品。", "ko": "레시피는 한 번만 만들면 됩니다. KHANGLAOS는 실시간 재료 가격으로 모든 메뉴의 실제 원가와 이익을 계산하고 손해 보는 메뉴를 표시합니다."}, "Loss finder": {"lo": "ຄົ້ນຫາການສູນເສຍ", "th": "ค้นหาการสูญเสีย", "zh": "损失查找", "ko": "손실 추적"}, "you used versus what actually left stock. The gap is theft, over-portioning, or unrecorded waste — shown in money.": {"lo": "ທີ່ທ່ານໃຊ້ ທຽບກັບສິ່ງທີ່ອອກຈາກສະຕັອກຈິງ. ຊ່ອງຫວ່າງຄືການລັກ, ຕັກເກີນ, ຫຼື ການເສຍທີ່ບໍ່ໄດ້ບັນທຶກ — ສະແດງເປັນເງິນ.", "th": "ที่คุณใช้ เทียบกับที่ออกจากสต็อกจริง ช่องว่างคือการขโมย ตักเกิน หรือของเสียที่ไม่บันทึก — แสดงเป็นเงิน", "zh": "你所用的量与实际出库量的差距。差距就是偷窃、超量或未记录的损耗 — 以金额显示。", "ko": "사용한 양과 실제 출고량의 차이입니다. 그 차이는 도난, 과다 사용, 미기록 폐기 — 금액으로 표시됩니다."}, "Expiry & FEFO": {"lo": "ໝົດອາຍຸ & FEFO", "th": "หมดอายุ & FEFO", "zh": "过期与先到期先出", "ko": "유통기한 & FEFO"}, "The system always uses the oldest stock first and warns you before things expire — one tap to record waste with the cost attached.": {"lo": "ລະບົບໃຊ້ສະຕັອກເກົ່າສຸດກ່ອນສະເໝີ ແລະ ເຕືອນກ່ອນໝົດອາຍຸ — ແຕະຄັ້ງດຽວເພື່ອບັນທຶກການເສຍພ້ອມຕົ້ນທຶນ.", "th": "ระบบใช้สต็อกเก่าสุดก่อนเสมอ และเตือนก่อนหมดอายุ — แตะครั้งเดียวบันทึกของเสียพร้อมต้นทุน", "zh": "系统始终先用最旧库存，并在过期前提醒你 — 一键记录损耗并附带成本。", "ko": "시스템은 항상 가장 오래된 재고를 먼저 사용하고 만료 전에 알려줍니다 — 한 번 탭하면 원가와 함께 폐기 기록."}, "Auto purchase orders": {"lo": "ໃບສັ່ງຊື້ອັດຕະໂນມັດ", "th": "ใบสั่งซื้ออัตโนมัติ", "zh": "自动采购单", "ko": "자동 발주서"}, "When stock runs low, KHANGLAOS drafts the order with quantities and last prices filled in. You just review and send. No typing.": {"lo": "ເມື່ອສະຕັອກໜ້ອຍ, KHANGLAOS ຮ່າງໃບສັ່ງພ້ອມຈຳນວນ ແລະ ລາຄາຫຼ້າສຸດ. ທ່ານພຽງກວດ ແລະ ສົ່ງ. ບໍ່ຕ້ອງພິມ.", "th": "เมื่อสต็อกน้อย KHANGLAOS ร่างใบสั่งพร้อมจำนวนและราคาล่าสุด คุณแค่ตรวจและส่ง ไม่ต้องพิมพ์", "zh": "库存不足时，KHANGLAOS 自动起草采购单并填好数量和最近价格。你只需审核发送，无需打字。", "ko": "재고가 부족하면 KHANGLAOS가 수량과 최근 가격을 채워 발주서를 작성합니다. 검토 후 보내기만 하면 됩니다. 입력 불필요."}, "Manager vs staff": {"lo": "ຜູ້ຈັດການ ທຽບ ພະນັກງານ", "th": "ผู้จัดการ vs พนักงาน", "zh": "经理与员工", "ko": "관리자 vs 직원"}, "Owners and managers see all the money. Staff see only their work — never your margins, costs, or profit. Enforced, not just hidden.": {"lo": "ເຈົ້າຂອງ ແລະ ຜູ້ຈັດການເຫັນເງິນທັງໝົດ. ພະນັກງານເຫັນແຕ່ວຽກຂອງຕົນ — ບໍ່ເຫັນກຳໄລ, ຕົ້ນທຶນ. ບັງຄັບໃຊ້ຈິງ ບໍ່ແມ່ນພຽງເຊື່ອງ.", "th": "เจ้าของและผู้จัดการเห็นเงินทั้งหมด พนักงานเห็นแต่งานของตน — ไม่เห็นกำไร ต้นทุน บังคับใช้จริง ไม่ใช่แค่ซ่อน", "zh": "老板和经理看到所有金额。员工只看到自己的工作 — 永远看不到你的利润和成本。强制执行，不只是隐藏。", "ko": "사장과 관리자는 모든 금액을 봅니다. 직원은 자신의 업무만 봅니다 — 마진, 원가, 이익은 절대 안 보입니다. 숨김이 아닌 강제 적용."}, "Find the leak": {"lo": "ຄົ້ນຫາຈຸດຮົ່ວ", "th": "ค้นหาจุดรั่ว", "zh": "找出漏洞", "ko": "누수 찾기"}, "Know exactly where the money goes": {"lo": "ຮູ້ຊັດເຈນວ່າເງິນໄປໃສ", "th": "รู้ชัดเจนว่าเงินไปไหน", "zh": "清楚知道钱去了哪里", "ko": "돈이 어디로 가는지 정확히 파악"}, "Theoretical vs actual usage — catches theft & over-portioning": {"lo": "ການໃຊ້ຕາມທິດສະດີ ທຽບ ຕົວຈິງ — ຈັບການລັກ & ຕັກເກີນ", "th": "การใช้ตามทฤษฎี vs จริง — จับการขโมย & ตักเกิน", "zh": "理论用量 vs 实际用量 — 抓出偷窃与超量", "ko": "이론 사용량 vs 실제 — 도난 및 과다 사용 적발"}, "Supplier price-jump alerts the moment a delivery costs more": {"lo": "ແຈ້ງເຕືອນທັນທີເມື່ອລາຄາຜູ້ສະໜອງເພີ່ມ", "th": "แจ้งเตือนทันทีเมื่อราคาซัพพลายเออร์ขึ้น", "zh": "供应商涨价时立即提醒", "ko": "공급업체 가격 인상 즉시 알림"}, "Waste tracked with reason, photo, and money lost": {"lo": "ຕິດຕາມການເສຍພ້ອມເຫດຜົນ, ຮູບ, ແລະ ເງິນທີ່ເສຍ", "th": "ติดตามของเสียพร้อมเหตุผล รูป และเงินที่เสีย", "zh": "损耗追踪含原因、照片和损失金额", "ko": "폐기를 사유, 사진, 손실 금액과 함께 추적"}, "Plain colours: red = problem, green = good. No accounting degree needed.": {"lo": "ສີງ່າຍໆ: ແດງ = ບັນຫາ, ຂຽວ = ດີ. ບໍ່ຕ້ອງຮຽນບັນຊີ.", "th": "สีง่ายๆ: แดง = ปัญหา, เขียว = ดี ไม่ต้องเรียนบัญชี", "zh": "简单颜色：红 = 问题，绿 = 良好。无需会计学位。", "ko": "단순한 색상: 빨강 = 문제, 초록 = 양호. 회계 지식 불필요."}, "Variance — money leaking": {"lo": "ຄວາມແຕກຕ່າງ — ເງິນຮົ່ວ", "th": "ส่วนต่าง — เงินรั่ว", "zh": "差异 — 漏钱", "ko": "차이 — 돈 누수"}, "found this month across 3 items": {"lo": "ພົບເດືອນນີ້ໃນ 3 ລາຍການ", "th": "พบเดือนนี้ใน 3 รายการ", "zh": "本月在 3 个项目中发现", "ko": "이번 달 3개 항목에서 발견"}, "Beef — used vs recipes": {"lo": "ຊີ້ນງົວ — ໃຊ້ ທຽບ ສູດ", "th": "เนื้อวัว — ใช้ vs สูตร", "zh": "牛肉 — 用量 vs 配方", "ko": "소고기 — 사용 vs 레시피"}, "Shrimp — expired in freezer": {"lo": "ກຸ້ງ — ໝົດອາຍຸໃນຕູ້ແຊ່", "th": "กุ้ง — หมดอายุในช่องแช่แข็ง", "zh": "虾 — 在冷冻库过期", "ko": "새우 — 냉동고에서 만료"}, "Cooking oil — price up": {"lo": "ນ້ຳມັນ — ລາຄາຂຶ້ນ", "th": "น้ำมัน — ราคาขึ้น", "zh": "食用油 — 涨价", "ko": "식용유 — 가격 인상"}, "Action": {"lo": "ການກະທຳ", "th": "การดำเนินการ", "zh": "行动", "ko": "조치"}, "Reorder 2 items · check portions": {"lo": "ສັ່ງຄືນ 2 ລາຍການ · ກວດການຕັກ", "th": "สั่งซ้ำ 2 รายการ · ตรวจการตัก", "zh": "补订 2 项 · 检查份量", "ko": "2개 항목 재주문 · 분량 확인"}, "Less manual work": {"lo": "ວຽກດ້ວຍມືໜ້ອຍລົງ", "th": "งานมือน้อยลง", "zh": "减少手动操作", "ko": "수작업 감소"}, "Built so staff actually use it": {"lo": "ສ້າງມາໃຫ້ພະນັກງານໃຊ້ແທ້", "th": "สร้างมาให้พนักงานใช้จริง", "zh": "让员工真正会用", "ko": "직원이 실제로 사용하도록 제작"}, "Phone camera barcode scan for receive & check-out": {"lo": "ສະແກນບາໂຄດດ້ວຍກ້ອງເພື່ອຮັບ & ເບີກ", "th": "สแกนบาร์โค้ดด้วยกล้องเพื่อรับ & เบิก", "zh": "用手机摄像头扫码入库与出库", "ko": "카메라 바코드 스캔으로 입고 및 출고"}, "Expiry auto-filled from shelf life, location from item type": {"lo": "ໝົດອາຍຸເຕີມໃຫ້ອັດຕະໂນມັດຈາກອາຍຸສິນຄ້າ, ບ່ອນວາງຈາກປະເພດ", "th": "หมดอายุเติมอัตโนมัติจากอายุสินค้า ตำแหน่งจากประเภท", "zh": "保质期按货架寿命自动填写，位置按品类", "ko": "유통기한은 보관 수명에서, 위치는 품목 유형에서 자동 입력"}, "One-tap waste — quantity and money already calculated": {"lo": "ບັນທຶກການເສຍແຕະດຽວ — ຄຳນວນຈຳນວນ ແລະ ເງິນແລ້ວ", "th": "บันทึกของเสียแตะเดียว — คำนวณจำนวนและเงินแล้ว", "zh": "一键损耗 — 数量和金额已算好", "ko": "원터치 폐기 — 수량과 금액 자동 계산"}, "Purchase orders drafted automatically from low stock": {"lo": "ໃບສັ່ງຊື້ຮ່າງອັດຕະໂນມັດຈາກສະຕັອກໜ້ອຍ", "th": "ใบสั่งซื้อร่างอัตโนมัติจากสต็อกน้อย", "zh": "库存不足时自动起草采购单", "ko": "재고 부족 시 발주서 자동 작성"}, "Today — staff view": {"lo": "ມື້ນີ້ — ມຸມມອງພະນັກງານ", "th": "วันนี้ — มุมมองพนักงาน", "zh": "今天 — 员工视图", "ko": "오늘 — 직원 화면"}, "Scan & go": {"lo": "ສະແກນ & ໄປ", "th": "สแกน & ไป", "zh": "扫码即走", "ko": "스캔하고 끝"}, "No money shown to staff. Just the job.": {"lo": "ບໍ່ສະແດງເງິນໃຫ້ພະນັກງານ. ແຕ່ວຽກ.", "th": "ไม่แสดงเงินให้พนักงาน แค่งาน", "zh": "不向员工显示金额。只有任务。", "ko": "직원에게 금액 미표시. 업무만."}, "Received": {"lo": "ຮັບແລ້ວ", "th": "รับแล้ว", "zh": "已入库", "ko": "입고됨"}, "Checked out": {"lo": "ເບີກແລ້ວ", "th": "เบิกแล้ว", "zh": "已出库", "ko": "출고됨"}, "Expired — tap to waste": {"lo": "ໝົດອາຍຸ — ແຕະເພື່ອບັນທຶກ", "th": "หมดอายุ — แตะเพื่อบันทึก", "zh": "已过期 — 点击记损耗", "ko": "만료 — 탭하여 폐기"}, "Sold today": {"lo": "ຂາຍມື້ນີ້", "th": "ขายวันนี้", "zh": "今日已售", "ko": "오늘 판매"}, "Before, we guessed. Now we open the phone and see exactly which dish loses money and what to order — in Lao. The staff actually use it because they just scan.": {"lo": "ແຕ່ກ່ອນພວກເຮົາເດົາ. ດຽວນີ້ເປີດໂທລະສັບ ເຫັນຊັດເຈນວ່າເມນູໃດຂາດທຶນ ແລະ ຕ້ອງສັ່ງຫຍັງ — ເປັນພາສາລາວ. ພະນັກງານໃຊ້ແທ້ ເພາະພຽງສະແກນ.", "th": "เมื่อก่อนเราเดา ตอนนี้เปิดมือถือ เห็นชัดว่าเมนูใดขาดทุนและต้องสั่งอะไร — เป็นภาษาลาว พนักงานใช้จริงเพราะแค่สแกน", "zh": "以前我们靠猜。现在打开手机就清楚看到哪道菜亏钱、该订什么 — 用老挝语。员工真的会用，因为只需扫码。", "ko": "예전엔 추측했습니다. 이제 휴대폰을 열면 어떤 메뉴가 손해인지, 무엇을 주문할지 정확히 봅니다 — 라오스어로. 직원들은 스캔만 하면 되니 실제로 사용합니다."}, "Restaurant owner": {"lo": "ເຈົ້າຂອງຮ້ານ", "th": "เจ้าของร้าน", "zh": "餐厅老板", "ko": "레스토랑 사장"}, "— Vientiane  ·  early KHANGLAOS user": {"lo": "— ວຽງຈັນ  ·  ຜູ້ໃຊ້ KHANGLAOS ຍຸກທຳອິດ", "th": "— เวียงจันทน์  ·  ผู้ใช้ KHANGLAOS ยุคแรก", "zh": "— 万象  ·  KHANGLAOS 早期用户", "ko": "— 비엔티안  ·  초기 KHANGLAOS 사용자"}, "Questions": {"lo": "ຄຳຖາມ", "th": "คำถาม", "zh": "问题", "ko": "질문"}, "Frequently asked": {"lo": "ທີ່ຖາມເລື້ອຍໆ", "th": "ที่ถามบ่อย", "zh": "常见问题", "ko": "자주 묻는 질문"}, "Do I need to buy any hardware?": {"lo": "ຕ້ອງຊື້ອຸປະກອນພິເສດບໍ?", "th": "ต้องซื้ออุปกรณ์เพิ่มไหม?", "zh": "需要购买任何硬件吗？", "ko": "별도 장비를 사야 하나요?"}, "No. KHANGLAOS runs in any web browser on the phone, tablet or computer you already have. The phone camera is your barcode scanner — nothing to install or buy.": {"lo": "ບໍ່. KHANGLAOS ໃຊ້ໃນເວັບບຣາວເຊີໃດກໍໄດ້ ໃນໂທລະສັບ, ແທັບເລັດ ຫຼື ຄອມຯ ທີ່ມີຢູ່. ກ້ອງໂທລະສັບຄືເຄື່ອງສະແກນ — ບໍ່ຕ້ອງຕິດຕັ້ງ ຫຼື ຊື້.", "th": "ไม่ KHANGLAOS ใช้ในเว็บเบราว์เซอร์ใดก็ได้ บนมือถือ แท็บเล็ต หรือคอมที่มีอยู่ กล้องมือถือคือเครื่องสแกน — ไม่ต้องติดตั้งหรือซื้อ", "zh": "不需要。KHANGLAOS 可在你现有的手机、平板或电脑的任意浏览器中运行。手机摄像头就是条码扫描器 — 无需安装或购买。", "ko": "아니요. KHANGLAOS는 보유한 휴대폰, 태블릿, 컴퓨터의 모든 웹브라우저에서 실행됩니다. 휴대폰 카메라가 바코드 스캐너입니다 — 설치나 구매 불필요."}, "Does it work in Lao language?": {"lo": "ໃຊ້ເປັນພາສາລາວໄດ້ບໍ?", "th": "ใช้เป็นภาษาลาวได้ไหม?", "zh": "支持老挝语吗？", "ko": "라오스어로 작동하나요?"}, "Yes. The whole system is fully translated into Lao, Thai, English, Chinese and Korean. Staff can use the language they're comfortable with.": {"lo": "ໄດ້. ທັງລະບົບແປເປັນລາວ, ໄທ, ອັງກິດ, ຈີນ ແລະ ເກົາຫຼີຄົບ. ພະນັກງານໃຊ້ພາສາທີ່ຖະນັດໄດ້.", "th": "ได้ ทั้งระบบแปลเป็นลาว ไทย อังกฤษ จีน และเกาหลีครบ พนักงานใช้ภาษาที่ถนัดได้", "zh": "支持。整个系统已完整翻译为老挝语、泰语、英语、中文和韩语。员工可使用自己习惯的语言。", "ko": "네. 전체 시스템이 라오스어, 태국어, 영어, 중국어, 한국어로 완전히 번역되어 있습니다. 직원은 편한 언어를 사용할 수 있습니다."}, "Will my staff actually use it?": {"lo": "ພະນັກງານຈະໃຊ້ມັນແທ້ບໍ?", "th": "พนักงานจะใช้จริงไหม?", "zh": "员工真的会用吗？", "ko": "직원들이 실제로 사용할까요?"}, "It's designed around that exact problem. Staff scan and tap — they almost never type. Expiry and locations auto-fill. It feels faster than the notebook.": {"lo": "ອອກແບບມາແກ້ບັນຫານີ້ໂດຍສະເພາະ. ພະນັກງານສະແກນ ແລະ ແຕະ — ແທບບໍ່ພິມ. ໝົດອາຍຸ ແລະ ບ່ອນວາງເຕີມໃຫ້ເອງ. ໄວກວ່າຂຽນປຶ້ມ.", "th": "ออกแบบมาแก้ปัญหานี้โดยเฉพาะ พนักงานสแกนและแตะ — แทบไม่พิมพ์ หมดอายุและตำแหน่งเติมให้เอง เร็วกว่าจดสมุด", "zh": "正是针对这个问题设计的。员工扫码点击 — 几乎不打字。保质期和位置自动填好。比记本子还快。", "ko": "바로 그 문제를 위해 설계되었습니다. 직원은 스캔하고 탭만 합니다 — 거의 입력하지 않습니다. 유통기한과 위치는 자동 입력. 노트보다 빠릅니다."}, "Can staff see my profit and costs?": {"lo": "ພະນັກງານເຫັນກຳໄລ ແລະ ຕົ້ນທຶນຂອງຂ້ອຍບໍ?", "th": "พนักงานเห็นกำไรและต้นทุนของฉันไหม?", "zh": "员工能看到我的利润和成本吗？", "ko": "직원이 내 이익과 원가를 볼 수 있나요?"}, "No. Management (owner/manager) sees all the money. Staff see only stock and their tasks — costs, margins and profit are blocked at the database, not just hidden in the screen.": {"lo": "ບໍ່. ຝ່າຍບໍລິຫານ (ເຈົ້າຂອງ/ຜູ້ຈັດການ) ເຫັນເງິນທັງໝົດ. ພະນັກງານເຫັນແຕ່ສະຕັອກ ແລະ ໜ້າວຽກ — ຕົ້ນທຶນ, ກຳໄລຖືກບລັອກທີ່ຖານຂໍ້ມູນ ບໍ່ແມ່ນພຽງເຊື່ອງ.", "th": "ไม่ ฝ่ายบริหาร (เจ้าของ/ผู้จัดการ) เห็นเงินทั้งหมด พนักงานเห็นแต่สต็อกและงาน — ต้นทุน กำไรถูกบล็อกที่ฐานข้อมูล ไม่ใช่แค่ซ่อน", "zh": "不能。管理层（老板/经理）看到所有金额。员工只看到库存和任务 — 成本、利润在数据库层被阻止，不只是界面隐藏。", "ko": "아니요. 경영진(사장/관리자)은 모든 금액을 봅니다. 직원은 재고와 업무만 봅니다 — 원가, 마진, 이익은 화면이 아닌 데이터베이스에서 차단됩니다."}, "How is this different from a spreadsheet?": {"lo": "ນີ້ຕ່າງຈາກ spreadsheet ແນວໃດ?", "th": "ต่างจาก spreadsheet อย่างไร?", "zh": "这和电子表格有什么不同？", "ko": "스프레드시트와 어떻게 다른가요?"}, "A spreadsheet can't scan a barcode, can't warn you before food expires, can't tell you which dish loses money in real time, and staff won't keep it updated. KHANGLAOS does all of that automatically.": {"lo": "Spreadsheet ສະແກນບາໂຄດບໍ່ໄດ້, ເຕືອນກ່ອນອາຫານໝົດອາຍຸບໍ່ໄດ້, ບອກບໍ່ໄດ້ວ່າເມນູໃດຂາດທຶນແບບເວລາຈິງ, ແລະ ພະນັກງານຈະບໍ່ອັບເດດ. KHANGLAOS ເຮັດທັງໝົດອັດຕະໂນມັດ.", "th": "Spreadsheet สแกนบาร์โค้ดไม่ได้ เตือนก่อนอาหารหมดอายุไม่ได้ บอกไม่ได้ว่าเมนูใดขาดทุนแบบเรียลไทม์ และพนักงานจะไม่อัปเดต KHANGLAOS ทำทั้งหมดอัตโนมัติ", "zh": "电子表格不能扫码、不能在食材过期前提醒、不能实时告诉你哪道菜亏钱，员工也不会持续更新。KHANGLAOS 全部自动完成。", "ko": "스프레드시트는 바코드를 스캔할 수 없고, 식자재 만료 전 경고할 수 없으며, 어떤 메뉴가 손해인지 실시간으로 알 수 없고, 직원이 갱신하지 않습니다. KHANGLAOS는 이 모든 것을 자동으로 합니다."}, "How do I start?": {"lo": "ເລີ່ມຕົ້ນແນວໃດ?", "th": "เริ่มต้นอย่างไร?", "zh": "如何开始？", "ko": "어떻게 시작하나요?"}, "Open KHANGLAOS, create your restaurant, add a few items, and start scanning. You can be tracking real stock the same day — no long setup project.": {"lo": "ເປີດ KHANGLAOS, ສ້າງຮ້ານ, ເພີ່ມສິນຄ້າສອງສາມລາຍການ, ແລະ ເລີ່ມສະແກນ. ຕິດຕາມສະຕັອກຈິງໄດ້ມື້ດຽວກັນ — ບໍ່ມີໂຄງການຕັ້ງຄ່າຍາວ.", "th": "เปิด KHANGLAOS สร้างร้าน เพิ่มสินค้าสองสามรายการ และเริ่มสแกน ติดตามสต็อกจริงได้วันเดียวกัน — ไม่มีโปรเจกต์ตั้งค่ายาว", "zh": "打开 KHANGLAOS，创建餐厅，添加几个项目，开始扫码。当天就能追踪真实库存 — 无需漫长的设置项目。", "ko": "KHANGLAOS를 열고 레스토랑을 만들고 항목 몇 개를 추가한 후 스캔을 시작하세요. 같은 날 실제 재고를 추적할 수 있습니다 — 긴 설정 작업 없음."}, "Your kitchen is leaking money right now.": {"lo": "ຄົວຂອງທ່ານກຳລັງຮົ່ວເງິນຢູ່ຕອນນີ້.", "th": "ครัวของคุณกำลังรั่วเงินอยู่ตอนนี้", "zh": "你的厨房现在正在漏钱。", "ko": "지금 당신의 주방에서 돈이 새고 있습니다."}, "You just can't see it yet. KHANGLAOS shows you — today, on the phone in your pocket.": {"lo": "ທ່ານພຽງຍັງບໍ່ເຫັນ. KHANGLAOS ສະແດງໃຫ້ທ່ານ — ມື້ນີ້, ໃນໂທລະສັບໃນກະເປົາ.", "th": "คุณแค่ยังไม่เห็น KHANGLAOS แสดงให้คุณ — วันนี้ บนมือถือในกระเป๋า", "zh": "你只是还看不到。KHANGLAOS 让你看到 — 就在今天，就在你口袋的手机上。", "ko": "아직 보이지 않을 뿐입니다. KHANGLAOS가 보여드립니다 — 오늘, 주머니 속 휴대폰에서."}, "Open KHANGLAOS free": {"lo": "ເປີດ KHANGLAOS ຟຣີ", "th": "เปิด KHANGLAOS ฟรี", "zh": "免费打开 KHANGLAOS", "ko": "KHANGLAOS 무료로 열기"}, "See features again": {"lo": "ເບິ່ງຄຸນສົມບັດອີກ", "th": "ดูฟีเจอร์อีกครั้ง", "zh": "再看功能", "ko": "기능 다시 보기"}, "Warehouse & food-cost control built for restaurants in Laos. Scan, don't type. See where the money goes.": {"lo": "ການຄຸ້ມຄອງສາງ & ຕົ້ນທຶນອາຫານ ສ້າງມາສຳລັບຮ້ານອາຫານໃນລາວ. ສະແກນ, ບໍ່ພິມ. ເຫັນວ່າເງິນໄປໃສ.", "th": "การจัดการคลัง & ต้นทุนอาหารสำหรับร้านอาหารในลาว สแกน ไม่พิมพ์ เห็นว่าเงินไปไหน", "zh": "为老挝餐厅打造的仓库与食材成本控制。扫码，别打字。看清钱去了哪里。", "ko": "라오스 레스토랑을 위한 창고 및 식자재 원가 관리. 입력하지 말고 스캔하세요. 돈이 어디로 가는지 확인하세요."}, "Product": {"lo": "ຜະລິດຕະພັນ", "th": "ผลิตภัณฑ์", "zh": "产品", "ko": "제품"}, "Open KHANGLAOS": {"lo": "ເປີດ KHANGLAOS", "th": "เปิด KHANGLAOS", "zh": "打开 KHANGLAOS", "ko": "KHANGLAOS 열기"}, "Company": {"lo": "ບໍລິສັດ", "th": "บริษัท", "zh": "公司", "ko": "회사"}, "About": {"lo": "ກ່ຽວກັບ", "th": "เกี่ยวกับ", "zh": "关于", "ko": "소개"}, "Get started": {"lo": "ເລີ່ມຕົ້ນ", "th": "เริ่มต้น", "zh": "开始使用", "ko": "시작하기"}, "Create account": {"lo": "ສ້າງບັນຊີ", "th": "สร้างบัญชี", "zh": "创建账户", "ko": "계정 만들기"}, "Log in": {"lo": "ເຂົ້າສູ່ລະບົບ", "th": "เข้าสู่ระบบ", "zh": "登录", "ko": "로그인"}, "© 2026 KHANGLAOS · Made in Laos 🇱🇦": {"lo": "© 2026 KHANGLAOS · ຜະລິດໃນລາວ 🇱🇦", "th": "© 2026 KHANGLAOS · ผลิตในลาว 🇱🇦", "zh": "© 2026 KHANGLAOS · 老挝制造 🇱🇦", "ko": "© 2026 KHANGLAOS · 라오스에서 제작 🇱🇦"}};
-var KL_LANGS=[{c:'en',n:'English'},{c:'lo',n:'ລາວ'},{c:'th',n:'ໄທ'.replace('ໄທ','ไทย')},{c:'zh',n:'中文'},{c:'ko',n:'한국어'}];
+var KL_LANGS=[{c:'en',n:'English',flag:'🇬🇧'},{c:'lo',n:'ລາວ',flag:'🇱🇦'},{c:'th',n:'ไทย',flag:'🇹🇭'},{c:'zh',n:'中文',flag:'🇨🇳'},{c:'ko',n:'한국어',flag:'🇰🇷'}];
 /* Snapshot original English text nodes once, so switching is reversible */
 var KL_NODES=[];
 function klSnapshot(){
@@ -4565,9 +4782,8 @@ function klLandApply(lang){
     } else { o.node.nodeValue=o.en; }
   });
   try{localStorage.setItem('kl_land_lang',lang);}catch(e){}
-  document.querySelectorAll('#kl-land-langbtn button').forEach(function(x){
-    x.classList.toggle('on', x.getAttribute('data-l')===lang);
-  });
+  var _ls=document.querySelector('#kl-land-langbtn .kl-land-langsel');
+  if(_ls && _ls.value!==lang){ _ls.value=lang; }
   document.documentElement.setAttribute('data-land-lang',lang);
 }
 function klLandDetect(){
@@ -4584,13 +4800,16 @@ document.addEventListener('DOMContentLoaded',function(){
   var nav=document.querySelector('#landing-view nav .nav-in');
   if(nav&&!document.getElementById('kl-land-langbtn')){
     var wrap=document.createElement('div');
-    wrap.id='kl-land-langbtn'; wrap.className='kl-land-langbtn';
+    wrap.id='kl-land-langbtn'; wrap.className='kl-land-lang';
+    var sel=document.createElement('select');
+    sel.className='kl-land-langsel'; sel.setAttribute('aria-label','Language');
     KL_LANGS.forEach(function(L){
-      var btn=document.createElement('button');
-      btn.textContent=L.n; btn.setAttribute('data-l',L.c);
-      btn.onclick=function(){klLandApply(L.c);};
-      wrap.appendChild(btn);
+      var o=document.createElement('option');
+      o.value=L.c; o.textContent=L.flag ? (L.flag+'  '+L.n) : L.n;
+      sel.appendChild(o);
     });
+    sel.onchange=function(){ klLandApply(sel.value); };
+    wrap.appendChild(sel);
     var cta=nav.querySelector('.btn.btn-primary');
     if(cta){nav.insertBefore(wrap,cta);}else{nav.appendChild(wrap);}
   }
@@ -4599,11 +4818,18 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 </script>
 <style>
-#landing-view .kl-land-langbtn{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
-#landing-view .kl-land-langbtn button{background:transparent;border:1px solid var(--line);color:var(--soft);font:inherit;font-size:13px;padding:5px 10px;border-radius:7px;cursor:pointer;transition:all .14s}
-#landing-view .kl-land-langbtn button:hover{border-color:var(--green);color:var(--green)}
-#landing-view .kl-land-langbtn button.on{background:var(--green);color:#fff;border-color:var(--green);font-weight:600}
-@media(max-width:680px){#landing-view .kl-land-langbtn{order:3;width:100%;justify-content:center;margin-top:8px}#landing-view .nav-in{flex-wrap:wrap;height:auto;padding:12px 0}}
+#landing-view .kl-land-lang{display:inline-flex;align-items:center}
+#landing-view .kl-land-langsel{
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2369707d' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+  border:1px solid var(--line,#e3e6ea);color:var(--ink,#14201b);
+  font:inherit;font-size:13px;font-weight:600;
+  padding:8px 32px 8px 14px;border-radius:9px;cursor:pointer;
+  transition:border-color .15s,box-shadow .15s;
+}
+#landing-view .kl-land-langsel:hover{border-color:var(--green,#15795f)}
+#landing-view .kl-land-langsel:focus{outline:none;border-color:var(--green,#15795f);box-shadow:0 0 0 3px rgba(21,121,95,.12)}
+@media(max-width:680px){#landing-view .kl-land-lang{order:3;width:100%;margin-top:8px}#landing-view .kl-land-langsel{width:100%}#landing-view .nav-in{flex-wrap:wrap;height:auto;padding:12px 0}}
 </style>
 </body>
 </html>
