@@ -16,9 +16,6 @@ For access requests, contact the project owner.
 
 ## Tech stack
 
-- HTML + vanilla JS (single-file frontend)
-- PostgreSQL backend
-- GitHub Pages hosting
 
 ---
 
