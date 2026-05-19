@@ -2025,7 +2025,7 @@ let sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    storage: window.sessionStorage,  // gone when tab closes
+    storage: window.localStorage,  // persists across refresh & browser restart
   },
 });
 
@@ -2412,28 +2412,35 @@ document.addEventListener('DOMContentLoaded', () => {
   // Hide app page structure from the DOM until authenticated (MarketMan-style)
   gateAppPages();
   // COMBINED FILE: the landing (marketing) page must show FIRST on a
-  // normal visit. Only go straight into the app if the user already
-  // has an active login session (they were logged in and came back).
-  // A leftover '#/...' hash from a previous visit must NOT skip the
-  // landing page.
+  // normal visit. But if the user has a PERSISTED login session (they
+  // logged in before and just refreshed / came back), restore it and
+  // take them straight into the app — like Gmail. The session now lives
+  // in localStorage so it survives a refresh.
   (function(){
     var av = document.getElementById('app-view');
-    var hasSession = false;
-    try { hasSession = (typeof klSession === 'function') && !!klSession(); } catch(e) {}
-    if (hasSession && typeof enterApp === 'function') {
-      // Logged-in returning user → go straight to the app.
-      enterApp();
-    } else if (av && av.style.display !== 'none') {
-      // App view already explicitly shown (e.g. user clicked Get Started).
-      route();
-    } else {
-      // Fresh visitor → landing page. Clear any stale app hash so the
-      // boot guard doesn't think it's a deep link.
-      if (location.hash && location.hash.indexOf('#/') === 0) {
-        try { history.replaceState(null, '', location.pathname + location.search); } catch(e) { location.hash = ''; }
-      }
-      /* landing page is showing — leave the app dormant */
-    }
+    var appShown = av && av.style.display !== 'none';
+    // Try to restore a persisted Supabase session before deciding.
+    Promise.resolve()
+      .then(function(){ return (typeof loadProfile === 'function') ? loadProfile() : null; })
+      .catch(function(){ return null; })
+      .then(function(){
+        var hasSession = false;
+        try { hasSession = (typeof klSession === 'function') && !!klSession(); } catch(e) {}
+        if (hasSession && typeof enterApp === 'function') {
+          // Logged-in user (incl. after refresh) → go straight to app.
+          enterApp();
+        } else if (appShown) {
+          // App view already explicitly shown (clicked Get Started).
+          route();
+        } else {
+          // Fresh visitor with no session → landing page. Clear any
+          // stale app hash so it isn't mistaken for a deep link.
+          if (location.hash && location.hash.indexOf('#/') === 0) {
+            try { history.replaceState(null, '', location.pathname + location.search); } catch(e) { location.hash = ''; }
+          }
+          /* landing page is showing — leave the app dormant */
+        }
+      });
   })();
 });
 
@@ -4734,19 +4741,11 @@ function backToSite(){
   document.body.classList.remove('kl-app-active');
   window.scrollTo(0,0);
 }
-/* Landing page shows FIRST. Only go straight to the app if the user
-   already has an active login session (logged-in returning visitor).
-   A leftover '#/...' hash from a previous visit must NOT skip the
-   landing page — clear it and stay on the marketing site. */
+/* Session-based landing-vs-app routing is handled by the main boot
+   guard (which awaits the persisted Supabase session). This block is
+   intentionally minimal to avoid a race: it does nothing here. */
 document.addEventListener('DOMContentLoaded',function(){
-  var hasSession=false;
-  try{ hasSession=(typeof klSession==='function') && !!klSession(); }catch(e){}
-  if(hasSession){
-    enterApp();
-  } else if(location.hash && location.hash.indexOf('#/')===0){
-    try{ history.replaceState(null,'',location.pathname+location.search); }
-    catch(e){ location.hash=''; }
-  }
+  /* no-op: main boot guard (awaits loadProfile) decides landing vs app */
 });
 </script>
 
