@@ -7,10 +7,10 @@
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
   script-src  'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.supabase.co;
-  style-src   'self' 'unsafe-inline';
+  style-src   'self' 'unsafe-inline' https://fonts.googleapis.com;
   img-src     'self' data: blob:;
-  connect-src 'self' https://*.supabase.co wss://*.supabase.co;
-  font-src    'self' data:;
+  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com;
+  font-src    'self' data: https://fonts.gstatic.com;
   frame-src   'self';
 ">
 <title>KHANGLAOS</title>
@@ -2315,15 +2315,29 @@ document.addEventListener('DOMContentLoaded', () => {
   applyI18n();
   // Hide app page structure from the DOM until authenticated (MarketMan-style)
   gateAppPages();
-  // COMBINED FILE: do NOT boot the app over the landing page. Only run
-  // the router if the app view is active (user clicked Get Started) or
-  // the URL is a deep app link. Otherwise the landing page shows.
+  // COMBINED FILE: the landing (marketing) page must show FIRST on a
+  // normal visit. Only go straight into the app if the user already
+  // has an active login session (they were logged in and came back).
+  // A leftover '#/...' hash from a previous visit must NOT skip the
+  // landing page.
   (function(){
-    var av=document.getElementById('app-view');
-    var deep=location.hash && location.hash.indexOf('#/')===0 && location.hash!=='#/';
-    if(deep){ if(typeof enterApp==='function'){ enterApp(); } else { route(); } }
-    else if(av && av.style.display!=='none'){ route(); }
-    /* else: landing page is showing — leave the app dormant */
+    var av = document.getElementById('app-view');
+    var hasSession = false;
+    try { hasSession = (typeof klSession === 'function') && !!klSession(); } catch(e) {}
+    if (hasSession && typeof enterApp === 'function') {
+      // Logged-in returning user → go straight to the app.
+      enterApp();
+    } else if (av && av.style.display !== 'none') {
+      // App view already explicitly shown (e.g. user clicked Get Started).
+      route();
+    } else {
+      // Fresh visitor → landing page. Clear any stale app hash so the
+      // boot guard doesn't think it's a deep link.
+      if (location.hash && location.hash.indexOf('#/') === 0) {
+        try { history.replaceState(null, '', location.pathname + location.search); } catch(e) { location.hash = ''; }
+      }
+      /* landing page is showing — leave the app dormant */
+    }
   })();
 });
 
@@ -2462,6 +2476,7 @@ async function initReceivePage() {
   document.getElementById('receiveFormCard').style.display = 'block';
   document.getElementById('recReceivedDate').value = todayYMD();
   RECV_STATE.restaurantCode = u.user.restaurant_code;
+  wireReceiveHandlers();
 
   try {
     const [items, suppliers, locations] = await Promise.all([
@@ -2513,9 +2528,13 @@ async function initReceivePage() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Receive item-change auto-fills
-  document.getElementById('recItem').addEventListener('change', () => {
+function wireReceiveHandlers() {
+  // Wire the Receive form. Called by initReceivePage() each time the
+  // (gated) page loads. Guarded so handlers bind exactly once.
+  const recItem = document.getElementById('recItem');
+  if (!recItem || recItem.dataset.wired === '1') return;
+  recItem.dataset.wired = '1';
+  recItem.addEventListener('change', () => {
     const id = parseInt(document.getElementById('recItem').value);
     if (!id) return;
     const item = RECV_STATE.items.find(x => x.item_id === id);
@@ -2533,13 +2552,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('recUnitHint').textContent = item.unit ? `(${item.unit})` : '';
   });
 
-  document.getElementById('receiveForm').addEventListener('submit', async (e) => {
+  const recForm = document.getElementById('receiveForm');
+  if (recForm) recForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     await doReceive();
   });
-  document.getElementById('recPrintBtn').addEventListener('click', () => window.print());
-  document.getElementById('recAnotherBtn').addEventListener('click', () => initReceivePage());
-});
+  const recPrint = document.getElementById('recPrintBtn');
+  if (recPrint) recPrint.addEventListener('click', () => window.print());
+  const recAnother = document.getElementById('recAnotherBtn');
+  if (recAnother) recAnother.addEventListener('click', () => initReceivePage());
+}
 
 async function doReceive() {
   const u = await klRequireLogin(); if (!u) return;
@@ -2632,11 +2654,16 @@ async function initCheckoutPage() {
   document.getElementById('coBarcodeInput').value = '';
   CO_STATE.batch = null;
   await stopScanner();
+  wireCheckoutHandlers();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function wireCheckoutHandlers() {
+  // Wired by initCheckoutPage() each load. Guarded against double-bind.
+  const coLookup = document.getElementById('coLookupBtn');
+  if (!coLookup || coLookup.dataset.wired === '1') return;
+  coLookup.dataset.wired = '1';
   // Lookup button
-  document.getElementById('coLookupBtn').addEventListener('click', async () => {
+  coLookup.addEventListener('click', async () => {
     const bc = document.getElementById('coBarcodeInput').value.trim();
     if (!bc) return;
     await lookupBarcode(bc);
@@ -2657,7 +2684,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('coWasteReasonRow').style.display = (e.target.value === 'WASTE') ? 'block' : 'none';
   });
   document.getElementById('coConfirmBtn').addEventListener('click', doCheckout);
-});
+}
 
 async function lookupBarcode(bc) {
   if (!bc) return;
@@ -4490,11 +4517,18 @@ function backToSite(){
   document.body.classList.remove('kl-app-active');
   window.scrollTo(0,0);
 }
-/* If someone opens the site already at an app route (e.g. bookmarked
-   #/dashboard) or returning logged-in, go straight to the app. */
+/* Landing page shows FIRST. Only go straight to the app if the user
+   already has an active login session (logged-in returning visitor).
+   A leftover '#/...' hash from a previous visit must NOT skip the
+   landing page — clear it and stay on the marketing site. */
 document.addEventListener('DOMContentLoaded',function(){
-  if(location.hash && location.hash.indexOf('#/')===0 && location.hash!=='#/'){
+  var hasSession=false;
+  try{ hasSession=(typeof klSession==='function') && !!klSession(); }catch(e){}
+  if(hasSession){
     enterApp();
+  } else if(location.hash && location.hash.indexOf('#/')===0){
+    try{ history.replaceState(null,'',location.pathname+location.search); }
+    catch(e){ location.hash=''; }
   }
 });
 </script>
