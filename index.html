@@ -515,6 +515,18 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   color:#c0392b; text-align:right; }
 .kl-ov-slrow { padding:12px 0; border-bottom:1px solid var(--kl-border); }
 .kl-ov-slrow:last-child { border-bottom:none; }
+/* Compact horizontal stock level row (like Top Wasted) */
+.kl-ov-slrow2 { display:grid; grid-template-columns:180px 1fr 110px; gap:14px;
+  align-items:center; padding:10px 0; border-bottom:1px solid var(--kl-border); }
+.kl-ov-slrow2:last-child { border-bottom:none; }
+.kl-ov-slcol-name { display:flex; flex-direction:column; gap:2px; }
+.kl-ov-slcol-name strong { font-size:13.5px; font-weight:600; color:var(--kl-text); }
+.kl-ov-slcol-name .kl-rsmall { font-size:11.5px; color:var(--kl-text-soft); padding:0; }
+.kl-ov-slcol-bar .kl-ov-slbar { position:relative; height:10px;
+  background:var(--kl-surface-2); border-radius:5px; overflow:visible; }
+.kl-ov-slcol-status { font-size:12.5px; font-weight:700; text-align:right; }
+@media(max-width:560px){ .kl-ov-slrow2{grid-template-columns:1fr 70px; grid-template-rows:auto auto;}
+  .kl-ov-slcol-bar{grid-column:1/-1;} }
 .kl-ov-slname { font-size:14px; font-weight:600; color:var(--kl-text); margin-bottom:2px; }
 .kl-ov-slstatus { font-size:13px; margin-bottom:8px; }
 .kl-ov-slbar { position:relative; height:10px; background:var(--kl-surface-2);
@@ -616,8 +628,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.6-same-as-receiving-2026-05-19 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.6-cards</div>
+<!-- KHANGLAOS BUILD: v3.7-compact-stock-2026-05-19 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.7-compact</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -4618,7 +4630,7 @@ async function initOverviewPage() {
     const slRows = advRows.filter(r => r.par_level != null && Number(r.par_level)>0)
       .sort((a,b) => Number(a.on_hand||0)/Number(a.par_level||1)
                    - Number(b.on_hand||0)/Number(b.par_level||1))
-      .slice(0,8);
+      .slice(0,5);
     if (slRows.length) {
       html += '<div class="kl-ov-card"><div class="kl-ov-head">📊 '+t('ov.stockLevels')
             + '<span class="kl-ov-count">'+slRows.length+' '+t('ov.kItems')+'</span></div>';
@@ -4630,16 +4642,16 @@ async function initOverviewPage() {
         const pct = Math.min(100, Math.max(0, (oh/mx)*100));
         const minPct = Math.min(100, (mn/mx)*100);
         const isLow = oh <= mn;
-        const status = isLow
-          ? '<span style="color:#c0392b;font-weight:700">'+fmtQty(oh)+' '+h(r.unit||'')+' — '+t('ov.belowMin')+'</span>'
-          : '<span style="color:#15795f;font-weight:700">'+fmtQty(oh)+' '+h(r.unit||'')+' — '+t('ov.ok')+'</span>';
-        html += '<div class="kl-ov-slrow">'
-              + '<div class="kl-ov-slname">'+h(r.name)+'</div>'
-              + '<div class="kl-ov-slstatus">'+status+'</div>'
-              + '<div class="kl-ov-slbar"><div class="kl-ov-slfill '+(isLow?'bad':'good')
+        const statusTxt = isLow ? t('ov.belowMin') : t('ov.ok');
+        const statusColor = isLow ? '#c0392b' : '#15795f';
+        // Compact: name+qty on left | bar in middle | status pill on right
+        html += '<div class="kl-ov-slrow2">'
+              + '<div class="kl-ov-slcol-name"><strong>'+h(r.name)+'</strong>'
+              + '<span class="kl-rsmall">'+fmtQty(oh)+' / '+fmtQty(mx)+' '+h(r.unit||'')+'</span></div>'
+              + '<div class="kl-ov-slcol-bar"><div class="kl-ov-slbar"><div class="kl-ov-slfill '+(isLow?'bad':'good')
               + '" style="width:'+pct+'%"></div>'
-              + '<div class="kl-ov-slmark" style="left:'+minPct+'%"></div></div>'
-              + '<div class="kl-ov-slcaps"><span>'+t('ov.min')+' '+fmtQty(mn)+'</span><span>'+t('ov.max')+' '+fmtQty(mx)+'</span></div>'
+              + '<div class="kl-ov-slmark" style="left:'+minPct+'%"></div></div></div>'
+              + '<div class="kl-ov-slcol-status" style="color:'+statusColor+'">'+statusTxt+'</div>'
               + '</div>';
       });
       html += '</div></div>';
