@@ -515,6 +515,30 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   color:#c0392b; text-align:right; }
 .kl-ov-slrow { padding:12px 0; border-bottom:1px solid var(--kl-border); }
 .kl-ov-slrow:last-child { border-bottom:none; }
+/* Stock levels — number row + bar (min/now/max shown as numbers) */
+.kl-ov-slv { padding:10px 0; border-bottom:1px solid var(--kl-border); }
+.kl-ov-slv:last-child { border-bottom:none; }
+.kl-ov-slv-top { display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:6px; gap:8px; }
+.kl-ov-slv-name { font-size:13.5px; font-weight:600; color:var(--kl-text); }
+.kl-ov-slv-nums { display:flex; gap:12px; font-size:12px; color:var(--kl-text-soft); }
+.kl-ov-slv-n b { font-weight:600; color:var(--kl-text-soft); margin-right:3px; }
+/* Order Today — 4-column row (Max | Now | Min | Auto-order) */
+.kl-ov-otd-hd, .kl-ov-otd-row {
+  display:grid; grid-template-columns: 1.5fr 50px 50px 50px 90px; gap:10px;
+  align-items:center; padding:9px 0; }
+.kl-ov-otd-hd { border-bottom:1px solid var(--kl-border);
+  font-size:11px; color:var(--kl-text-soft); text-transform:uppercase;
+  letter-spacing:.03em; font-weight:600; padding-bottom:7px; padding-top:0; }
+.kl-ov-otd-row { border-bottom:1px solid var(--kl-border); font-size:13px; }
+.kl-ov-otd-row:last-child { border-bottom:none; }
+.kl-ov-otd-name { color:var(--kl-text); }
+.kl-ov-otd-col { text-align:right; color:var(--kl-text); }
+.kl-ov-otd-order { font-weight:700; }
+@media(max-width:560px){
+  .kl-ov-slv-nums { font-size:11px; gap:8px; }
+  .kl-ov-otd-hd, .kl-ov-otd-row { grid-template-columns: 1.2fr 40px 40px 40px 70px; gap:5px; font-size:11.5px; }
+}
 .kl-ov-slname { font-size:14px; font-weight:600; color:var(--kl-text); margin-bottom:2px; }
 .kl-ov-slstatus { font-size:13px; margin-bottom:8px; }
 .kl-ov-slbar { position:relative; height:10px; background:var(--kl-surface-2);
@@ -616,8 +640,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.8-orderly-tight-2026-05-19 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.8-orderly</div>
+<!-- KHANGLAOS BUILD: v3.9-grid-layout-2026-05-20 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.9-grid</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -1343,7 +1367,7 @@ const I18N = {
     "m.needCodeName":"Code and name required", "m.tempErr":"Min temperature cannot be higher than max",
     "nav.overview":"Overview",
     "ov.title":"Overview — Owner Cockpit", "ov.sub":"Everything in one screen. Order today and expiring on top.",
-    "ov.receiving":"Receiving", "ov.recToday":"Received today", "ov.recWeek":"This week", "ov.lastRec":"Last receive", "ov.topWaste":"Top wasted items (this month)", "ov.noWaste":"No waste this month. ✓", "ov.belowMin":"BELOW MIN — order now", "ov.ok":"OK", "ov.min":"min", "ov.max":"max", "ov.daysAgo":"days ago", "ov.haveUse":"Have / Use", "ov.orderQty":"Order Qty", "ov.qty":"Qty", "ov.expires":"Expires", "ov.today":"Today", "ov.tomorrow":"Tomorrow", "ov.days":"days", "ov.day":"day", "ov.kStockVal":"Stock Value", "ov.kItems":"items", "ov.kWasteMo":"Waste This Month", "ov.kVsPrev":"vs last month", "ov.kExpiring":"Expiring ≤7 days", "ov.kBatches":"batches", "ov.kReorder":"To Reorder", "ov.kItemsLow":"items below min", "ov.chWaste":"Waste — last 6 months", "ov.chStockCat":"Stock value by category", "ov.expSoon":"Expiring soon", "ov.noExp":"Nothing expiring soon. Good.", "ov.noData":"No data yet.", "ov.orderToday":"Order today — below minimum", "ov.nothingOrder":"Nothing needs ordering. Stock levels healthy.",
+    "ov.receiving":"Receiving", "ov.recToday":"Received today", "ov.recWeek":"This week", "ov.lastRec":"Last receive", "ov.topWaste":"Top wasted items (this month)", "ov.noWaste":"No waste this month. ✓", "ov.belowMin":"BELOW MIN — order now", "ov.ok":"OK", "ov.min":"min", "ov.max":"max", "ov.daysAgo":"days ago", "ov.haveUse":"Have / Use", "ov.orderQty":"Order Qty", "ov.qty":"Qty", "ov.expires":"Expires", "ov.today":"Today", "ov.tomorrow":"Tomorrow", "ov.days":"days", "ov.day":"day", "ov.now":"now", "ov.colItem":"Item", "ov.autoOrder":"Auto-order", "ov.kStockVal":"Stock Value", "ov.kItems":"items", "ov.kWasteMo":"Waste This Month", "ov.kVsPrev":"vs last month", "ov.kExpiring":"Expiring ≤7 days", "ov.kBatches":"batches", "ov.kReorder":"To Reorder", "ov.kItemsLow":"items below min", "ov.chWaste":"Waste — last 6 months", "ov.chStockCat":"Stock value by category", "ov.expSoon":"Expiring soon", "ov.noExp":"Nothing expiring soon. Good.", "ov.noData":"No data yet.", "ov.orderToday":"Order today — below minimum", "ov.nothingOrder":"Nothing needs ordering. Stock levels healthy.",
     "ov.haveUse":"Have / use per day", "ov.orderQty":"Order this much", "ov.day":"day",
     "ov.expiring3":"Expiring in 3 days — use NOW", "ov.nothing3":"Nothing expiring in 3 days. Good.",
     "ov.expiring7":"Expiring this week (4–7 days) — plan ahead", "ov.nothing7":"Nothing expiring this week.",
@@ -1508,7 +1532,7 @@ const I18N = {
     "m.needCodeName":"ຕ້ອງມີລະຫັດ ແລະ ຊື່", "m.tempErr":"ອຸນຫະພູມຕ່ຳ ສູງກວ່າ ສູງ ບໍ່ໄດ້",
     "nav.overview":"ພາບລວມ",
     "ov.title":"ພາບລວມ — ສຳລັບເຈົ້າຂອງ", "ov.sub":"ທຸກຢ່າງໃນໜ້າດຽວ. ສັ່ງຊື້ມື້ນີ້ ແລະ ໝົດອາຍຸ ຢູ່ເທິງ.",
-    "ov.receiving":"ການຮັບສິນຄ້າ", "ov.recToday":"ຮັບມື້ນີ້", "ov.recWeek":"ອາທິດນີ້", "ov.lastRec":"ຮັບຄັ້ງລ່າສຸດ", "ov.topWaste":"ສິນຄ້າເສຍຫຼາຍສຸດ (ເດືອນນີ້)", "ov.noWaste":"ບໍ່ມີຂີ້ເສຍເດືອນນີ້. ✓", "ov.belowMin":"ຕ່ຳກວ່າຂັ້ນຕ່ຳ — ສັ່ງດຽວນີ້", "ov.ok":"ປົກກະຕິ", "ov.min":"ຕ່ຳ", "ov.max":"ສູງ", "ov.daysAgo":"ມື້ກ່ອນ", "ov.haveUse":"ມີ / ໃຊ້", "ov.orderQty":"ສັ່ງຊື້", "ov.qty":"ຈຳນວນ", "ov.expires":"ໝົດອາຍຸ", "ov.today":"ມື້ນີ້", "ov.tomorrow":"ມື້ອື່ນ", "ov.days":"ມື້", "ov.day":"ມື້", "ov.kStockVal":"ມູນຄ່າສິນຄ້າ", "ov.kItems":"ລາຍການ", "ov.kWasteMo":"ຂີ້ເສຍເດືອນນີ້", "ov.kVsPrev":"ທຽບເດືອນກ່ອນ", "ov.kExpiring":"ໝົດອາຍຸ ≤7ມື້", "ov.kBatches":"ລັອດ", "ov.kReorder":"ຕ້ອງສັ່ງຊື້", "ov.kItemsLow":"ລາຍການຕ່ຳ", "ov.chWaste":"ຂີ້ເສຍ — 6 ເດືອນຜ່ານມາ", "ov.chStockCat":"ມູນຄ່າຕາມໝວດ", "ov.expSoon":"ໃກ້ໝົດອາຍຸ", "ov.noExp":"ບໍ່ມີຫຍັງໃກ້ໝົດອາຍຸ. ດີ.", "ov.noData":"ຍັງບໍ່ມີຂໍ້ມູນ.", "ov.orderToday":"ສັ່ງຊື້ມື້ນີ້ — ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "ov.nothingOrder":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຊື້. ສິນຄ້າພຽງພໍ.",
+    "ov.receiving":"ການຮັບສິນຄ້າ", "ov.recToday":"ຮັບມື້ນີ້", "ov.recWeek":"ອາທິດນີ້", "ov.lastRec":"ຮັບຄັ້ງລ່າສຸດ", "ov.topWaste":"ສິນຄ້າເສຍຫຼາຍສຸດ (ເດືອນນີ້)", "ov.noWaste":"ບໍ່ມີຂີ້ເສຍເດືອນນີ້. ✓", "ov.belowMin":"ຕ່ຳກວ່າຂັ້ນຕ່ຳ — ສັ່ງດຽວນີ້", "ov.ok":"ປົກກະຕິ", "ov.min":"ຕ່ຳ", "ov.max":"ສູງ", "ov.daysAgo":"ມື້ກ່ອນ", "ov.haveUse":"ມີ / ໃຊ້", "ov.orderQty":"ສັ່ງຊື້", "ov.qty":"ຈຳນວນ", "ov.expires":"ໝົດອາຍຸ", "ov.today":"ມື້ນີ້", "ov.tomorrow":"ມື້ອື່ນ", "ov.days":"ມື້", "ov.day":"ມື້", "ov.now":"ດຽວນີ້", "ov.colItem":"ສິນຄ້າ", "ov.autoOrder":"ສັ່ງອັດຕະໂນມັດ", "ov.kStockVal":"ມູນຄ່າສິນຄ້າ", "ov.kItems":"ລາຍການ", "ov.kWasteMo":"ຂີ້ເສຍເດືອນນີ້", "ov.kVsPrev":"ທຽບເດືອນກ່ອນ", "ov.kExpiring":"ໝົດອາຍຸ ≤7ມື້", "ov.kBatches":"ລັອດ", "ov.kReorder":"ຕ້ອງສັ່ງຊື້", "ov.kItemsLow":"ລາຍການຕ່ຳ", "ov.chWaste":"ຂີ້ເສຍ — 6 ເດືອນຜ່ານມາ", "ov.chStockCat":"ມູນຄ່າຕາມໝວດ", "ov.expSoon":"ໃກ້ໝົດອາຍຸ", "ov.noExp":"ບໍ່ມີຫຍັງໃກ້ໝົດອາຍຸ. ດີ.", "ov.noData":"ຍັງບໍ່ມີຂໍ້ມູນ.", "ov.orderToday":"ສັ່ງຊື້ມື້ນີ້ — ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "ov.nothingOrder":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຊື້. ສິນຄ້າພຽງພໍ.",
     "ov.haveUse":"ມີ / ໃຊ້ຕໍ່ມື້", "ov.orderQty":"ສັ່ງຊື້ຈຳນວນນີ້", "ov.day":"ມື້",
     "ov.expiring3":"ໝົດອາຍຸໃນ 3 ມື້ — ໃຊ້ດຽວນີ້", "ov.nothing3":"ບໍ່ມີຫຍັງໝົດອາຍຸໃນ 3 ມື້. ດີ.",
     "ov.expiring7":"ໝົດອາຍຸອາທິດນີ້ (4–7 ມື້) — ວາງແຜນລ່ວງໜ້າ", "ov.nothing7":"ບໍ່ມີຫຍັງໝົດອາຍຸອາທິດນີ້.",
@@ -1673,7 +1697,7 @@ const I18N = {
     "m.needCodeName":"ต้องมีรหัสและชื่อ", "m.tempErr":"อุณหภูมิต่ำสูงกว่าสูงไม่ได้",
     "nav.overview":"ภาพรวม",
     "ov.title":"ภาพรวม — สำหรับเจ้าของ", "ov.sub":"ทุกอย่างในหน้าเดียว. สั่งซื้อวันนี้และหมดอายุอยู่บน.",
-    "ov.receiving":"การรับสินค้า", "ov.recToday":"รับวันนี้", "ov.recWeek":"สัปดาห์นี้", "ov.lastRec":"รับครั้งล่าสุด", "ov.topWaste":"เสียมากสุด (เดือนนี้)", "ov.noWaste":"ไม่มีของเสียเดือนนี้. ✓", "ov.belowMin":"ต่ำกว่าขั้นต่ำ — สั่งเลย", "ov.ok":"ปกติ", "ov.min":"ต่ำ", "ov.max":"สูง", "ov.daysAgo":"วันก่อน", "ov.haveUse":"มี / ใช้", "ov.orderQty":"สั่งซื้อ", "ov.qty":"จำนวน", "ov.expires":"หมดอายุ", "ov.today":"วันนี้", "ov.tomorrow":"พรุ่งนี้", "ov.days":"วัน", "ov.day":"วัน", "ov.kStockVal":"มูลค่าสต็อก", "ov.kItems":"รายการ", "ov.kWasteMo":"ของเสียเดือนนี้", "ov.kVsPrev":"เทียบเดือนก่อน", "ov.kExpiring":"หมดอายุ ≤7วัน", "ov.kBatches":"ล็อต", "ov.kReorder":"ต้องสั่งซื้อ", "ov.kItemsLow":"รายการต่ำ", "ov.chWaste":"ของเสีย — 6 เดือนล่าสุด", "ov.chStockCat":"มูลค่าตามหมวด", "ov.expSoon":"ใกล้หมดอายุ", "ov.noExp":"ไม่มีอะไรใกล้หมดอายุ. ดี.", "ov.noData":"ยังไม่มีข้อมูล.", "ov.orderToday":"สั่งซื้อวันนี้ — ต่ำกว่าขั้นต่ำ", "ov.nothingOrder":"ไม่มีอะไรต้องสั่งซื้อ. สต็อกพอ.",
+    "ov.receiving":"การรับสินค้า", "ov.recToday":"รับวันนี้", "ov.recWeek":"สัปดาห์นี้", "ov.lastRec":"รับครั้งล่าสุด", "ov.topWaste":"เสียมากสุด (เดือนนี้)", "ov.noWaste":"ไม่มีของเสียเดือนนี้. ✓", "ov.belowMin":"ต่ำกว่าขั้นต่ำ — สั่งเลย", "ov.ok":"ปกติ", "ov.min":"ต่ำ", "ov.max":"สูง", "ov.daysAgo":"วันก่อน", "ov.haveUse":"มี / ใช้", "ov.orderQty":"สั่งซื้อ", "ov.qty":"จำนวน", "ov.expires":"หมดอายุ", "ov.today":"วันนี้", "ov.tomorrow":"พรุ่งนี้", "ov.days":"วัน", "ov.day":"วัน", "ov.now":"ตอนนี้", "ov.colItem":"สินค้า", "ov.autoOrder":"สั่งอัตโนมัติ", "ov.kStockVal":"มูลค่าสต็อก", "ov.kItems":"รายการ", "ov.kWasteMo":"ของเสียเดือนนี้", "ov.kVsPrev":"เทียบเดือนก่อน", "ov.kExpiring":"หมดอายุ ≤7วัน", "ov.kBatches":"ล็อต", "ov.kReorder":"ต้องสั่งซื้อ", "ov.kItemsLow":"รายการต่ำ", "ov.chWaste":"ของเสีย — 6 เดือนล่าสุด", "ov.chStockCat":"มูลค่าตามหมวด", "ov.expSoon":"ใกล้หมดอายุ", "ov.noExp":"ไม่มีอะไรใกล้หมดอายุ. ดี.", "ov.noData":"ยังไม่มีข้อมูล.", "ov.orderToday":"สั่งซื้อวันนี้ — ต่ำกว่าขั้นต่ำ", "ov.nothingOrder":"ไม่มีอะไรต้องสั่งซื้อ. สต็อกพอ.",
     "ov.haveUse":"มี / ใช้ต่อวัน", "ov.orderQty":"สั่งซื้อจำนวนนี้", "ov.day":"วัน",
     "ov.expiring3":"หมดอายุใน 3 วัน — ใช้เลยตอนนี้", "ov.nothing3":"ไม่มีอะไรหมดอายุใน 3 วัน. ดี.",
     "ov.expiring7":"หมดอายุสัปดาห์นี้ (4–7 วัน) — วางแผนล่วงหน้า", "ov.nothing7":"ไม่มีอะไรหมดอายุสัปดาห์นี้.",
@@ -1836,7 +1860,7 @@ const I18N = {
     "m.needCodeName":"需要代码和名称", "m.tempErr":"最低温度不能高于最高温度",
     "nav.overview":"总览",
     "ov.title":"总览 — 业主驾驶舱", "ov.sub":"一屏看全部。今日订购和即将过期在顶部。",
-    "ov.receiving":"入库", "ov.recToday":"今日入库", "ov.recWeek":"本周", "ov.lastRec":"上次入库", "ov.topWaste":"损耗最多 (本月)", "ov.noWaste":"本月无损耗. ✓", "ov.belowMin":"低于最低 — 立即订购", "ov.ok":"正常", "ov.min":"最低", "ov.max":"最高", "ov.daysAgo":"天前", "ov.haveUse":"现有 / 用量", "ov.orderQty":"订购量", "ov.qty":"数量", "ov.expires":"过期", "ov.today":"今天", "ov.tomorrow":"明天", "ov.days":"天", "ov.day":"天", "ov.kStockVal":"库存价值", "ov.kItems":"项", "ov.kWasteMo":"本月损耗", "ov.kVsPrev":"对比上月", "ov.kExpiring":"≤7天过期", "ov.kBatches":"批次", "ov.kReorder":"需补货", "ov.kItemsLow":"低于最低项", "ov.chWaste":"损耗 — 近6个月", "ov.chStockCat":"按类别库存价值", "ov.expSoon":"即将过期", "ov.noExp":"无即将过期。良好。", "ov.noData":"暂无数据。", "ov.orderToday":"今日订购 — 低于最低", "ov.nothingOrder":"无需订购。库存充足。",
+    "ov.receiving":"入库", "ov.recToday":"今日入库", "ov.recWeek":"本周", "ov.lastRec":"上次入库", "ov.topWaste":"损耗最多 (本月)", "ov.noWaste":"本月无损耗. ✓", "ov.belowMin":"低于最低 — 立即订购", "ov.ok":"正常", "ov.min":"最低", "ov.max":"最高", "ov.daysAgo":"天前", "ov.haveUse":"现有 / 用量", "ov.orderQty":"订购量", "ov.qty":"数量", "ov.expires":"过期", "ov.today":"今天", "ov.tomorrow":"明天", "ov.days":"天", "ov.day":"天", "ov.now":"现在", "ov.colItem":"项目", "ov.autoOrder":"自动订购", "ov.kStockVal":"库存价值", "ov.kItems":"项", "ov.kWasteMo":"本月损耗", "ov.kVsPrev":"对比上月", "ov.kExpiring":"≤7天过期", "ov.kBatches":"批次", "ov.kReorder":"需补货", "ov.kItemsLow":"低于最低项", "ov.chWaste":"损耗 — 近6个月", "ov.chStockCat":"按类别库存价值", "ov.expSoon":"即将过期", "ov.noExp":"无即将过期。良好。", "ov.noData":"暂无数据。", "ov.orderToday":"今日订购 — 低于最低", "ov.nothingOrder":"无需订购。库存充足。",
     "ov.haveUse":"现有 / 每日用量", "ov.orderQty":"订购此数量", "ov.day":"天",
     "ov.expiring3":"3天内过期 — 立即使用", "ov.nothing3":"3天内无过期。很好。",
     "ov.expiring7":"本周过期 (4–7天) — 提前计划", "ov.nothing7":"本周无过期。",
@@ -2000,7 +2024,7 @@ const I18N = {
     "m.needCodeName":"코드와 이름 필요", "m.tempErr":"최저 온도가 최고보다 높을 수 없음",
     "nav.overview":"개요",
     "ov.title":"개요 — 소유자 콕핏", "ov.sub":"한 화면에 전부. 오늘 주문과 만료가 상단에.",
-    "ov.receiving":"입고", "ov.recToday":"오늘 입고", "ov.recWeek":"이번 주", "ov.lastRec":"마지막 입고", "ov.topWaste":"최다 폐기 품목 (이달)", "ov.noWaste":"이달 폐기 없음. ✓", "ov.belowMin":"최소 이하 — 즉시 주문", "ov.ok":"정상", "ov.min":"최소", "ov.max":"최대", "ov.daysAgo":"일 전", "ov.haveUse":"보유 / 사용", "ov.orderQty":"주문량", "ov.qty":"수량", "ov.expires":"만료", "ov.today":"오늘", "ov.tomorrow":"내일", "ov.days":"일", "ov.day":"일", "ov.kStockVal":"재고 가치", "ov.kItems":"항목", "ov.kWasteMo":"이달 폐기", "ov.kVsPrev":"전월 대비", "ov.kExpiring":"≤7일 만료", "ov.kBatches":"배치", "ov.kReorder":"재주문 필요", "ov.kItemsLow":"최소 이하 항목", "ov.chWaste":"폐기 — 최근 6개월", "ov.chStockCat":"카테고리별 재고 가치", "ov.expSoon":"곧 만료", "ov.noExp":"곧 만료되는 항목 없음. 양호.", "ov.noData":"데이터 없음.", "ov.orderToday":"오늘 주문 — 최소 이하", "ov.nothingOrder":"주문할 것 없음. 재고 충분.",
+    "ov.receiving":"입고", "ov.recToday":"오늘 입고", "ov.recWeek":"이번 주", "ov.lastRec":"마지막 입고", "ov.topWaste":"최다 폐기 품목 (이달)", "ov.noWaste":"이달 폐기 없음. ✓", "ov.belowMin":"최소 이하 — 즉시 주문", "ov.ok":"정상", "ov.min":"최소", "ov.max":"최대", "ov.daysAgo":"일 전", "ov.haveUse":"보유 / 사용", "ov.orderQty":"주문량", "ov.qty":"수량", "ov.expires":"만료", "ov.today":"오늘", "ov.tomorrow":"내일", "ov.days":"일", "ov.day":"일", "ov.now":"현재", "ov.colItem":"품목", "ov.autoOrder":"자동 주문", "ov.kStockVal":"재고 가치", "ov.kItems":"항목", "ov.kWasteMo":"이달 폐기", "ov.kVsPrev":"전월 대비", "ov.kExpiring":"≤7일 만료", "ov.kBatches":"배치", "ov.kReorder":"재주문 필요", "ov.kItemsLow":"최소 이하 항목", "ov.chWaste":"폐기 — 최근 6개월", "ov.chStockCat":"카테고리별 재고 가치", "ov.expSoon":"곧 만료", "ov.noExp":"곧 만료되는 항목 없음. 양호.", "ov.noData":"데이터 없음.", "ov.orderToday":"오늘 주문 — 최소 이하", "ov.nothingOrder":"주문할 것 없음. 재고 충분.",
     "ov.haveUse":"보유 / 일일 사용", "ov.orderQty":"이만큼 주문", "ov.day":"일",
     "ov.expiring3":"3일 내 만료 — 지금 사용", "ov.nothing3":"3일 내 만료 없음. 좋음.",
     "ov.expiring7":"이번 주 만료 (4–7일) — 미리 계획", "ov.nothing7":"이번 주 만료 없음.",
@@ -4568,21 +4592,52 @@ async function initOverviewPage() {
           + '<p class="kl-kpi-sub">'+t('ov.kItemsLow')+'</p></div>';
     html += '</div>';
 
-    // ---- Charts row ----
+    // ---- ROW 1: Waste chart (left) + Stock Levels (right) ----
+    const slRows = advRows.filter(r => r.par_level != null && Number(r.par_level)>0)
+      .sort((a,b) => Number(a.on_hand||0)/Number(a.par_level||1)
+                   - Number(b.on_hand||0)/Number(b.par_level||1))
+      .slice(0,5);
+
     html += '<div class="kl-ov-2col">';
     // waste 6-month chart
     html += '<div class="kl-ov-card"><div class="kl-ov-head">'+t('ov.chWaste')
           + '<span class="kl-ov-count">'+trendBadge(trendDir,trendPct,true)+'</span></div>'
           + '<div class="kl-ov-chartwrap">'+barChart(buckets,'#caa24a')+'</div></div>';
-    // stock by category chart
-    const catArr = Object.keys(stockByCat).map(k=>({label:k.slice(0,6), val:stockByCat[k]}))
-                    .sort((a,b)=>b.val-a.val).slice(0,6);
-    html += '<div class="kl-ov-card"><div class="kl-ov-head">'+t('ov.chStockCat')+'</div>'
-          + '<div class="kl-ov-chartwrap">'+ (catArr.length? barChart(catArr,'#15795f')
-              : '<p class="kl-rsmall">'+t('ov.noData')+'</p>') +'</div></div>';
+    // Stock levels — compact rows
+    if (slRows.length) {
+      html += '<div class="kl-ov-card"><div class="kl-ov-head">📊 '+t('ov.stockLevels')
+            + '<span class="kl-ov-count">'+slRows.length+' '+t('ov.kItems')+'</span></div>';
+      html += '<div class="kl-ov-mini">';
+      slRows.forEach(r => {
+        const oh = Number(r.on_hand||0);
+        const mn = Number(r.reorder_level||0);
+        const mx = Number(r.par_level||mn*3||1);
+        const pct = Math.max(6, Math.min(100, (oh/mx)*100));
+        const isLow = oh <= mn;
+        const stCol = isLow ? '#c0392b' : '#15795f';
+        // Show: name + Min/Now/Max numbers · bar · status
+        html += '<div class="kl-ov-slv">'
+              + '<div class="kl-ov-slv-top">'
+              + '<span class="kl-ov-slv-name">'+h(r.name)+'</span>'
+              + '<span class="kl-ov-slv-nums">'
+              + '<span class="kl-ov-slv-n"><b>'+t('ov.min')+'</b> '+fmtQty(mn)+'</span>'
+              + '<span class="kl-ov-slv-n" style="color:'+stCol+';font-weight:700">'+t('ov.now')+' '+fmtQty(oh)+'</span>'
+              + '<span class="kl-ov-slv-n"><b>'+t('ov.max')+'</b> '+fmtQty(mx)+' '+h(r.unit||'')+'</span>'
+              + '</span></div>'
+              + '<div class="kl-ov-wbar-wrap"><div class="kl-ov-wbar" style="width:'+pct+'%;background:'+stCol+'"></div></div>'
+              + '</div>';
+      });
+      html += '</div></div>';
+    } else {
+      html += '<div class="kl-ov-card"><div class="kl-ov-head">📊 '+t('ov.stockLevels')+'</div>'
+            + '<p class="kl-rsmall">'+t('ov.noData')+'</p></div>';
+    }
     html += '</div>';
 
-    // ---- Receiving + Top Wasted Items row ----
+    // ---- ROW 2: Receiving (left) + Order Today with Max/Now/Min/Order columns (right) ----
+    const orderNow = advRows.filter(r => r.needs_reorder)
+      .sort((a,b)=> Number(b.used_per_day||0) - Number(a.used_per_day||0));
+
     html += '<div class="kl-ov-2col">';
     // Receiving panel
     html += '<div class="kl-ov-card"><div class="kl-ov-head">📦 '+t('ov.receiving')
@@ -4595,6 +4650,49 @@ async function initOverviewPage() {
     html += '<div class="kl-ov-mini-row"><span class="kl-ov-mini-lbl">'+t('ov.lastRec')
           + '</span><span class="kl-ov-mini-val">'+h(lastRecLabel)+'</span></div>';
     html += '</div></div>';
+
+    // Order Today — show columns Max | Now | Min | Auto-order
+    html += '<div class="kl-ov-card '+(orderNow.length?'bad':'ok')+'">';
+    html += '<div class="kl-ov-head">⚠ '+t('ov.orderToday')
+          + '<span class="kl-ov-count">'+orderNow.length+'</span></div>';
+    if (!orderNow.length) {
+      html += '<p class="kl-rsmall">'+t('ov.nothingOrder')+'</p>';
+    } else {
+      html += '<div class="kl-ov-mini">';
+      // header strip
+      html += '<div class="kl-ov-otd-hd">'
+            + '<span class="kl-ov-otd-name">'+t('ov.colItem')+'</span>'
+            + '<span class="kl-ov-otd-col">'+t('ov.max')+'</span>'
+            + '<span class="kl-ov-otd-col">'+t('ov.now')+'</span>'
+            + '<span class="kl-ov-otd-col">'+t('ov.min')+'</span>'
+            + '<span class="kl-ov-otd-col kl-ov-otd-order">'+t('ov.autoOrder')+'</span>'
+            + '</div>';
+      orderNow.slice(0,5).forEach(r=>{
+        const perDay = Number(r.used_per_day||0);
+        const onHand = Number(r.on_hand||0);
+        const mn = Number(r.reorder_level||0);
+        const mx = Number(r.par_level||0);
+        const suggest = Math.max(mx - onHand, Math.ceil(perDay*7), 1);
+        html += '<div class="kl-ov-otd-row">'
+              + '<span class="kl-ov-otd-name"><strong>'+h(r.name)+'</strong></span>'
+              + '<span class="kl-ov-otd-col">'+fmtQty(mx)+'</span>'
+              + '<span class="kl-ov-otd-col" style="color:#c0392b;font-weight:700">'+fmtQty(onHand)+'</span>'
+              + '<span class="kl-ov-otd-col">'+fmtQty(mn)+'</span>'
+              + '<span class="kl-ov-otd-col kl-ov-otd-order" style="color:#c0392b;font-weight:700">'+fmtQty(suggest)+' '+h(r.unit||'')+'</span>'
+              + '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    html += '</div>';
+
+    // ---- ROW 3: Stock-by-category chart (left) + Top wasted items (right) ----
+    const catArr = Object.keys(stockByCat).map(k=>({label:k.slice(0,6), val:stockByCat[k]}))
+                    .sort((a,b)=>b.val-a.val).slice(0,6);
+    html += '<div class="kl-ov-2col">';
+    html += '<div class="kl-ov-card"><div class="kl-ov-head">'+t('ov.chStockCat')+'</div>'
+          + '<div class="kl-ov-chartwrap">'+ (catArr.length? barChart(catArr,'#15795f')
+              : '<p class="kl-rsmall">'+t('ov.noData')+'</p>') +'</div></div>';
     // Top Wasted Items panel
     html += '<div class="kl-ov-card"><div class="kl-ov-head">🗑 '+t('ov.topWaste')
           + '<span class="kl-ov-count">'+money(wasteMonthVal)+'</span></div>';
@@ -4612,58 +4710,7 @@ async function initOverviewPage() {
       });
       html += '</div>';
     }
-    html += '</div></div>';
-
-    // ---- Stock Levels — compact rows, same style as Top Wasted ----
-    const slRows = advRows.filter(r => r.par_level != null && Number(r.par_level)>0)
-      .sort((a,b) => Number(a.on_hand||0)/Number(a.par_level||1)
-                   - Number(b.on_hand||0)/Number(b.par_level||1))
-      .slice(0,5);
-    if (slRows.length) {
-      html += '<div class="kl-ov-card"><div class="kl-ov-head">📊 '+t('ov.stockLevels')
-            + '<span class="kl-ov-count">'+slRows.length+' '+t('ov.kItems')+'</span></div>';
-      html += '<div class="kl-ov-mini">';
-      const maxOh = Math.max(...slRows.map(r => Number(r.par_level||r.reorder_level||1)));
-      slRows.forEach(r => {
-        const oh = Number(r.on_hand||0);
-        const mn = Number(r.reorder_level||0);
-        const mx = Number(r.par_level||mn*3||1);
-        const pct = Math.max(6, Math.min(100, (oh/mx)*100));
-        const isLow = oh <= mn;
-        const stTxt = isLow ? t('ov.belowMin') : t('ov.ok');
-        const stCol = isLow ? '#c0392b' : '#15795f';
-        const barCol = isLow ? '#c0392b' : '#15795f';
-        // Same 3-column pattern as Top Wasted: name | bar | value
-        html += '<div class="kl-ov-wrow">'
-              + '<div class="kl-ov-wname">'+h(r.name)+' <span class="kl-rsmall">('+fmtQty(oh)+' '+h(r.unit||'')+')</span></div>'
-              + '<div class="kl-ov-wbar-wrap"><div class="kl-ov-wbar" style="width:'+pct+'%;background:'+barCol+'"></div></div>'
-              + '<div class="kl-ov-wval" style="color:'+stCol+'">'+stTxt+'</div></div>';
-      });
-      html += '</div></div>';
-    }
-
-    // ---- Order Today table ----
-    const orderNow = advRows.filter(r => r.needs_reorder)
-      .sort((a,b)=> Number(b.used_per_day||0) - Number(a.used_per_day||0));
-    html += '<div class="kl-ov-card '+(orderNow.length?'bad':'ok')+'">';
-    html += '<div class="kl-ov-head">⚠ '+t('ov.orderToday')
-          + '<span class="kl-ov-count">'+orderNow.length+'</span></div>';
-    if (!orderNow.length) {
-      html += '<p class="kl-rsmall">'+t('ov.nothingOrder')+'</p>';
-    } else {
-      html += '<div class="kl-ov-mini">';
-      orderNow.forEach(r=>{
-        const perDay = Number(r.used_per_day||0);
-        const onHand = Number(r.on_hand||0);
-        const suggest = Math.max(Number(r.par_level||0) - onHand, Math.ceil(perDay*7), 1);
-        // Same pattern as Receiving mini-rows: label on left, value on right
-        html += '<div class="kl-ov-mini-row">'
-              + '<span class="kl-ov-mini-lbl"><strong>'+h(r.name)+'</strong> <span class="kl-rsmall">('+fmtQty(onHand)+' '+h(r.unit||'')+')</span></span>'
-              + '<span class="kl-ov-mini-val" style="color:#c0392b">'+fmtQty(suggest)+' '+h(r.unit||'')+'</span>'
-              + '</div>';
-      });
-      html += '</div>';
-    }
+    html += '</div>';
     html += '</div>';
 
     // ---- Expiring soon table ----
