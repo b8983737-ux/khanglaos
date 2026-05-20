@@ -477,6 +477,56 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   width:100%; max-height:90vh; overflow-y:auto; box-shadow:var(--kl-shadow-lg); }
 .kl-modal h3 { margin:0 0 18px 0; font-size:18px; font-weight:700; letter-spacing:-0.3px; }
 /* Overview cockpit — clean cards with subtle status accent */
+/* Overview — MarketMan-style KPI grid + charts */
+.kl-kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:0 0 18px 0; }
+.kl-kpi { background:var(--kl-surface); border:1px solid var(--kl-border); border-radius:14px;
+  padding:20px 22px; box-shadow:0 1px 3px rgba(20,32,48,.04); position:relative; overflow:hidden; }
+.kl-kpi::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:#15795f; }
+.kl-kpi.kpi-warn::before { background:#caa24a; }
+.kl-kpi.kpi-bad::before  { background:#c0392b; }
+.kl-kpi-label { font-size:12.5px; font-weight:600; color:var(--kl-text-soft);
+  text-transform:uppercase; letter-spacing:.04em; margin:0 0 10px 0; }
+.kl-kpi-num { font-family:var(--kl-font-display); font-size:30px; font-weight:700;
+  color:var(--kl-text); margin:0; line-height:1.1; letter-spacing:-0.5px; }
+.kl-kpi-sub { font-size:12.5px; color:var(--kl-text-soft); margin:8px 0 0 0; }
+.kl-kpi-trend { font-weight:700; padding:1px 8px; border-radius:999px; font-size:11.5px; }
+.kl-kpi-trend.good { background:#e8f5ef; color:#15795f; }
+.kl-kpi-trend.bad  { background:#fdecea; color:#c0392b; }
+.kl-kpi-trend.flat { background:var(--kl-surface-2); color:var(--kl-text-soft); }
+.kl-ov-2col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:0 0 18px 0; }
+.kl-ov-chartwrap { padding:22px 24px; }
+.kl-ov-chart { width:100%; height:160px; display:block; }
+@media(max-width:980px){ .kl-kpi-grid{grid-template-columns:repeat(2,1fr);} .kl-ov-2col{grid-template-columns:1fr;} }
+@media(max-width:560px){ .kl-kpi-grid{grid-template-columns:1fr;} }
+/* Mini panels — receiving rows, top wasted items, stock-level bars */
+.kl-ov-mini { padding:18px 24px; }
+.kl-ov-mini-row { display:flex; justify-content:space-between; align-items:center;
+  padding:11px 0; border-bottom:1px solid var(--kl-border); }
+.kl-ov-mini-row:last-child { border-bottom:none; }
+.kl-ov-mini-lbl { font-size:13.5px; color:var(--kl-text-soft); }
+.kl-ov-mini-val { font-family:var(--kl-font-display); font-size:16px; font-weight:700; color:var(--kl-text); }
+.kl-ov-wrow { display:grid; grid-template-columns:140px 1fr 100px; gap:12px; align-items:center;
+  padding:9px 0; border-bottom:1px solid var(--kl-border); }
+.kl-ov-wrow:last-child { border-bottom:none; }
+.kl-ov-wname { font-size:13.5px; font-weight:600; color:var(--kl-text); }
+.kl-ov-wbar-wrap { background:var(--kl-surface-2); height:8px; border-radius:4px; overflow:hidden; }
+.kl-ov-wbar { background:#c0392b; height:100%; border-radius:4px; }
+.kl-ov-wval { font-family:var(--kl-font-display); font-weight:700; font-size:14px;
+  color:#c0392b; text-align:right; }
+.kl-ov-slrow { padding:12px 0; border-bottom:1px solid var(--kl-border); }
+.kl-ov-slrow:last-child { border-bottom:none; }
+.kl-ov-slname { font-size:14px; font-weight:600; color:var(--kl-text); margin-bottom:2px; }
+.kl-ov-slstatus { font-size:13px; margin-bottom:8px; }
+.kl-ov-slbar { position:relative; height:10px; background:var(--kl-surface-2);
+  border-radius:5px; overflow:visible; }
+.kl-ov-slfill { height:100%; border-radius:5px; }
+.kl-ov-slfill.good { background:#15795f; }
+.kl-ov-slfill.bad  { background:#c0392b; }
+.kl-ov-slmark { position:absolute; top:-3px; bottom:-3px; width:2px; background:#69707d; }
+.kl-ov-slcaps { display:flex; justify-content:space-between; font-size:11.5px;
+  color:var(--kl-text-soft); margin-top:5px; }
+@media(max-width:560px){ .kl-ov-wrow{grid-template-columns:1fr 80px; grid-template-rows:auto auto;}
+  .kl-ov-wbar-wrap{grid-column:1/-1;} }
 /* Overview — top-system clean card design */
 .kl-ov-card { background:var(--kl-surface); border:1px solid var(--kl-border);
   border-radius:14px; padding:0; margin:0 0 18px 0; box-shadow:0 1px 3px rgba(20,32,48,.04);
@@ -1289,7 +1339,7 @@ const I18N = {
     "m.needCodeName":"Code and name required", "m.tempErr":"Min temperature cannot be higher than max",
     "nav.overview":"Overview",
     "ov.title":"Overview — Owner Cockpit", "ov.sub":"Everything in one screen. Order today and expiring on top.",
-    "ov.orderToday":"Order today — below minimum", "ov.nothingOrder":"Nothing needs ordering. Stock levels healthy.",
+    "ov.receiving":"Receiving", "ov.recToday":"Received today", "ov.recWeek":"This week", "ov.lastRec":"Last receive", "ov.topWaste":"Top wasted items (this month)", "ov.noWaste":"No waste this month. ✓", "ov.belowMin":"BELOW MIN — order now", "ov.ok":"OK", "ov.min":"min", "ov.max":"max", "ov.daysAgo":"days ago", "ov.haveUse":"Have / Use", "ov.orderQty":"Order Qty", "ov.qty":"Qty", "ov.expires":"Expires", "ov.today":"Today", "ov.tomorrow":"Tomorrow", "ov.days":"days", "ov.day":"day", "ov.kStockVal":"Stock Value", "ov.kItems":"items", "ov.kWasteMo":"Waste This Month", "ov.kVsPrev":"vs last month", "ov.kExpiring":"Expiring ≤7 days", "ov.kBatches":"batches", "ov.kReorder":"To Reorder", "ov.kItemsLow":"items below min", "ov.chWaste":"Waste — last 6 months", "ov.chStockCat":"Stock value by category", "ov.expSoon":"Expiring soon", "ov.noExp":"Nothing expiring soon. Good.", "ov.noData":"No data yet.", "ov.orderToday":"Order today — below minimum", "ov.nothingOrder":"Nothing needs ordering. Stock levels healthy.",
     "ov.haveUse":"Have / use per day", "ov.orderQty":"Order this much", "ov.day":"day",
     "ov.expiring3":"Expiring in 3 days — use NOW", "ov.nothing3":"Nothing expiring in 3 days. Good.",
     "ov.expiring7":"Expiring this week (4–7 days) — plan ahead", "ov.nothing7":"Nothing expiring this week.",
@@ -1454,7 +1504,7 @@ const I18N = {
     "m.needCodeName":"ຕ້ອງມີລະຫັດ ແລະ ຊື່", "m.tempErr":"ອຸນຫະພູມຕ່ຳ ສູງກວ່າ ສູງ ບໍ່ໄດ້",
     "nav.overview":"ພາບລວມ",
     "ov.title":"ພາບລວມ — ສຳລັບເຈົ້າຂອງ", "ov.sub":"ທຸກຢ່າງໃນໜ້າດຽວ. ສັ່ງຊື້ມື້ນີ້ ແລະ ໝົດອາຍຸ ຢູ່ເທິງ.",
-    "ov.orderToday":"ສັ່ງຊື້ມື້ນີ້ — ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "ov.nothingOrder":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຊື້. ສິນຄ້າພຽງພໍ.",
+    "ov.receiving":"ການຮັບສິນຄ້າ", "ov.recToday":"ຮັບມື້ນີ້", "ov.recWeek":"ອາທິດນີ້", "ov.lastRec":"ຮັບຄັ້ງລ່າສຸດ", "ov.topWaste":"ສິນຄ້າເສຍຫຼາຍສຸດ (ເດືອນນີ້)", "ov.noWaste":"ບໍ່ມີຂີ້ເສຍເດືອນນີ້. ✓", "ov.belowMin":"ຕ່ຳກວ່າຂັ້ນຕ່ຳ — ສັ່ງດຽວນີ້", "ov.ok":"ປົກກະຕິ", "ov.min":"ຕ່ຳ", "ov.max":"ສູງ", "ov.daysAgo":"ມື້ກ່ອນ", "ov.haveUse":"ມີ / ໃຊ້", "ov.orderQty":"ສັ່ງຊື້", "ov.qty":"ຈຳນວນ", "ov.expires":"ໝົດອາຍຸ", "ov.today":"ມື້ນີ້", "ov.tomorrow":"ມື້ອື່ນ", "ov.days":"ມື້", "ov.day":"ມື້", "ov.kStockVal":"ມູນຄ່າສິນຄ້າ", "ov.kItems":"ລາຍການ", "ov.kWasteMo":"ຂີ້ເສຍເດືອນນີ້", "ov.kVsPrev":"ທຽບເດືອນກ່ອນ", "ov.kExpiring":"ໝົດອາຍຸ ≤7ມື້", "ov.kBatches":"ລັອດ", "ov.kReorder":"ຕ້ອງສັ່ງຊື້", "ov.kItemsLow":"ລາຍການຕ່ຳ", "ov.chWaste":"ຂີ້ເສຍ — 6 ເດືອນຜ່ານມາ", "ov.chStockCat":"ມູນຄ່າຕາມໝວດ", "ov.expSoon":"ໃກ້ໝົດອາຍຸ", "ov.noExp":"ບໍ່ມີຫຍັງໃກ້ໝົດອາຍຸ. ດີ.", "ov.noData":"ຍັງບໍ່ມີຂໍ້ມູນ.", "ov.orderToday":"ສັ່ງຊື້ມື້ນີ້ — ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "ov.nothingOrder":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຊື້. ສິນຄ້າພຽງພໍ.",
     "ov.haveUse":"ມີ / ໃຊ້ຕໍ່ມື້", "ov.orderQty":"ສັ່ງຊື້ຈຳນວນນີ້", "ov.day":"ມື້",
     "ov.expiring3":"ໝົດອາຍຸໃນ 3 ມື້ — ໃຊ້ດຽວນີ້", "ov.nothing3":"ບໍ່ມີຫຍັງໝົດອາຍຸໃນ 3 ມື້. ດີ.",
     "ov.expiring7":"ໝົດອາຍຸອາທິດນີ້ (4–7 ມື້) — ວາງແຜນລ່ວງໜ້າ", "ov.nothing7":"ບໍ່ມີຫຍັງໝົດອາຍຸອາທິດນີ້.",
@@ -1619,7 +1669,7 @@ const I18N = {
     "m.needCodeName":"ต้องมีรหัสและชื่อ", "m.tempErr":"อุณหภูมิต่ำสูงกว่าสูงไม่ได้",
     "nav.overview":"ภาพรวม",
     "ov.title":"ภาพรวม — สำหรับเจ้าของ", "ov.sub":"ทุกอย่างในหน้าเดียว. สั่งซื้อวันนี้และหมดอายุอยู่บน.",
-    "ov.orderToday":"สั่งซื้อวันนี้ — ต่ำกว่าขั้นต่ำ", "ov.nothingOrder":"ไม่มีอะไรต้องสั่งซื้อ. สต็อกพอ.",
+    "ov.receiving":"การรับสินค้า", "ov.recToday":"รับวันนี้", "ov.recWeek":"สัปดาห์นี้", "ov.lastRec":"รับครั้งล่าสุด", "ov.topWaste":"เสียมากสุด (เดือนนี้)", "ov.noWaste":"ไม่มีของเสียเดือนนี้. ✓", "ov.belowMin":"ต่ำกว่าขั้นต่ำ — สั่งเลย", "ov.ok":"ปกติ", "ov.min":"ต่ำ", "ov.max":"สูง", "ov.daysAgo":"วันก่อน", "ov.haveUse":"มี / ใช้", "ov.orderQty":"สั่งซื้อ", "ov.qty":"จำนวน", "ov.expires":"หมดอายุ", "ov.today":"วันนี้", "ov.tomorrow":"พรุ่งนี้", "ov.days":"วัน", "ov.day":"วัน", "ov.kStockVal":"มูลค่าสต็อก", "ov.kItems":"รายการ", "ov.kWasteMo":"ของเสียเดือนนี้", "ov.kVsPrev":"เทียบเดือนก่อน", "ov.kExpiring":"หมดอายุ ≤7วัน", "ov.kBatches":"ล็อต", "ov.kReorder":"ต้องสั่งซื้อ", "ov.kItemsLow":"รายการต่ำ", "ov.chWaste":"ของเสีย — 6 เดือนล่าสุด", "ov.chStockCat":"มูลค่าตามหมวด", "ov.expSoon":"ใกล้หมดอายุ", "ov.noExp":"ไม่มีอะไรใกล้หมดอายุ. ดี.", "ov.noData":"ยังไม่มีข้อมูล.", "ov.orderToday":"สั่งซื้อวันนี้ — ต่ำกว่าขั้นต่ำ", "ov.nothingOrder":"ไม่มีอะไรต้องสั่งซื้อ. สต็อกพอ.",
     "ov.haveUse":"มี / ใช้ต่อวัน", "ov.orderQty":"สั่งซื้อจำนวนนี้", "ov.day":"วัน",
     "ov.expiring3":"หมดอายุใน 3 วัน — ใช้เลยตอนนี้", "ov.nothing3":"ไม่มีอะไรหมดอายุใน 3 วัน. ดี.",
     "ov.expiring7":"หมดอายุสัปดาห์นี้ (4–7 วัน) — วางแผนล่วงหน้า", "ov.nothing7":"ไม่มีอะไรหมดอายุสัปดาห์นี้.",
@@ -1782,7 +1832,7 @@ const I18N = {
     "m.needCodeName":"需要代码和名称", "m.tempErr":"最低温度不能高于最高温度",
     "nav.overview":"总览",
     "ov.title":"总览 — 业主驾驶舱", "ov.sub":"一屏看全部。今日订购和即将过期在顶部。",
-    "ov.orderToday":"今日订购 — 低于最低", "ov.nothingOrder":"无需订购。库存充足。",
+    "ov.receiving":"入库", "ov.recToday":"今日入库", "ov.recWeek":"本周", "ov.lastRec":"上次入库", "ov.topWaste":"损耗最多 (本月)", "ov.noWaste":"本月无损耗. ✓", "ov.belowMin":"低于最低 — 立即订购", "ov.ok":"正常", "ov.min":"最低", "ov.max":"最高", "ov.daysAgo":"天前", "ov.haveUse":"现有 / 用量", "ov.orderQty":"订购量", "ov.qty":"数量", "ov.expires":"过期", "ov.today":"今天", "ov.tomorrow":"明天", "ov.days":"天", "ov.day":"天", "ov.kStockVal":"库存价值", "ov.kItems":"项", "ov.kWasteMo":"本月损耗", "ov.kVsPrev":"对比上月", "ov.kExpiring":"≤7天过期", "ov.kBatches":"批次", "ov.kReorder":"需补货", "ov.kItemsLow":"低于最低项", "ov.chWaste":"损耗 — 近6个月", "ov.chStockCat":"按类别库存价值", "ov.expSoon":"即将过期", "ov.noExp":"无即将过期。良好。", "ov.noData":"暂无数据。", "ov.orderToday":"今日订购 — 低于最低", "ov.nothingOrder":"无需订购。库存充足。",
     "ov.haveUse":"现有 / 每日用量", "ov.orderQty":"订购此数量", "ov.day":"天",
     "ov.expiring3":"3天内过期 — 立即使用", "ov.nothing3":"3天内无过期。很好。",
     "ov.expiring7":"本周过期 (4–7天) — 提前计划", "ov.nothing7":"本周无过期。",
@@ -1946,7 +1996,7 @@ const I18N = {
     "m.needCodeName":"코드와 이름 필요", "m.tempErr":"최저 온도가 최고보다 높을 수 없음",
     "nav.overview":"개요",
     "ov.title":"개요 — 소유자 콕핏", "ov.sub":"한 화면에 전부. 오늘 주문과 만료가 상단에.",
-    "ov.orderToday":"오늘 주문 — 최소 이하", "ov.nothingOrder":"주문할 것 없음. 재고 충분.",
+    "ov.receiving":"입고", "ov.recToday":"오늘 입고", "ov.recWeek":"이번 주", "ov.lastRec":"마지막 입고", "ov.topWaste":"최다 폐기 품목 (이달)", "ov.noWaste":"이달 폐기 없음. ✓", "ov.belowMin":"최소 이하 — 즉시 주문", "ov.ok":"정상", "ov.min":"최소", "ov.max":"최대", "ov.daysAgo":"일 전", "ov.haveUse":"보유 / 사용", "ov.orderQty":"주문량", "ov.qty":"수량", "ov.expires":"만료", "ov.today":"오늘", "ov.tomorrow":"내일", "ov.days":"일", "ov.day":"일", "ov.kStockVal":"재고 가치", "ov.kItems":"항목", "ov.kWasteMo":"이달 폐기", "ov.kVsPrev":"전월 대비", "ov.kExpiring":"≤7일 만료", "ov.kBatches":"배치", "ov.kReorder":"재주문 필요", "ov.kItemsLow":"최소 이하 항목", "ov.chWaste":"폐기 — 최근 6개월", "ov.chStockCat":"카테고리별 재고 가치", "ov.expSoon":"곧 만료", "ov.noExp":"곧 만료되는 항목 없음. 양호.", "ov.noData":"데이터 없음.", "ov.orderToday":"오늘 주문 — 최소 이하", "ov.nothingOrder":"주문할 것 없음. 재고 충분.",
     "ov.haveUse":"보유 / 일일 사용", "ov.orderQty":"이만큼 주문", "ov.day":"일",
     "ov.expiring3":"3일 내 만료 — 지금 사용", "ov.nothing3":"3일 내 만료 없음. 좋음.",
     "ov.expiring7":"이번 주 만료 (4–7일) — 미리 계획", "ov.nothing7":"이번 주 만료 없음.",
@@ -4366,117 +4416,278 @@ async function initOverviewPage() {
     const in7 = new Date(); in7.setDate(in7.getDate()+7);
     const in7s = in7.toISOString().slice(0,10);
 
-    // Pull reorder advisor (has on_hand, used_per_day, reorder/par, supplier)
-    // and expiring batches within 7 days. RLS auto-scopes to this restaurant.
-    const [adv, exp] = await Promise.all([
+    // ---- Pull everything in parallel. RLS auto-scopes to restaurant ----
+    const sixMonAgo = new Date(); sixMonAgo.setMonth(sixMonAgo.getMonth()-6);
+    const [stockVal, adv, expB, wasteMonth, wasteHist, receivingWk, wasteItems] = await Promise.all([
+      sb.from('v_stock_value').select('*'),
       sb.from('v_reorder_advisor').select('*').order('name'),
       sb.from('batches')
-        .select('quantity_remaining, unit_cost, expiry_date, status, item_id, items(name,name_lao,unit)')
+        .select('quantity_remaining, unit_cost, expiry_date, status, items(name,name_lao,unit)')
         .eq('status','active').not('expiry_date','is',null)
         .lte('expiry_date', in7s).order('expiry_date'),
+      // waste this calendar month via movements
+      sb.from('movements')
+        .select('quantity, created_at, movement_type, batches(unit_cost)')
+        .eq('movement_type','WASTE')
+        .gte('created_at', new Date(today.getFullYear(), today.getMonth(), 1).toISOString()),
+      // waste last 6 months for the chart
+      sb.from('movements')
+        .select('quantity, created_at, movement_type, batches(unit_cost)')
+        .eq('movement_type','WASTE')
+        .gte('created_at', sixMonAgo.toISOString()),
+      // receiving this week (IN movements + their value)
+      sb.from('movements')
+        .select('quantity, created_at, movement_type, batches(unit_cost)')
+        .eq('movement_type','IN')
+        .gte('created_at', new Date(today.getTime() - 7*86400000).toISOString())
+        .order('created_at', { ascending: false }),
+      // top wasted items this month — pull with item names for the list
+      sb.from('movements')
+        .select('quantity, movement_type, batches(unit_cost, items(name,name_lao,unit))')
+        .eq('movement_type','WASTE')
+        .gte('created_at', new Date(today.getFullYear(), today.getMonth(), 1).toISOString()),
     ]);
-    const rows = (adv.data || []);
-    const expAll = (exp.data || []);
 
-    // ---- SECTION 1: ORDER TODAY (below min / reorder level) ----
-    const orderNow = rows.filter(r => r.needs_reorder)
+    // ---- Compute KPIs ----
+    const svRows = (stockVal.data || []);
+    let stockValue = 0, stockByCat = {};
+    svRows.forEach(r => {
+      const v = Number(r.stock_value != null ? r.stock_value
+                : (Number(r.on_hand||0) * Number(r.unit_cost||r.last_cost||0))) || 0;
+      stockValue += v;
+      const c = r.category || r.cat || 'Other';
+      stockByCat[c] = (stockByCat[c]||0) + v;
+    });
+
+    const advRows = (adv.data || []);
+    const reorderCount = advRows.filter(r => r.needs_reorder).length;
+
+    const expRows = (expB.data || []);
+    let expiringValue = 0;
+    expRows.forEach(r => expiringValue += Number(r.quantity_remaining||0)*Number(r.unit_cost||0));
+
+    let wasteMonthVal = 0;
+    (wasteMonth.data || []).forEach(r => {
+      const uc = (r.batches && Number(r.batches.unit_cost)) || 0;
+      wasteMonthVal += Number(r.quantity||0) * uc;
+    });
+
+    // waste history -> last 6 month buckets
+    const monthKey = d => { const x=new Date(d); return x.getFullYear()+'-'+(x.getMonth()+1); };
+    const monthLbl = d => { const x=new Date(d);
+      return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][x.getMonth()]; };
+    const buckets = [];
+    for (let i=5;i>=0;i--){ const d=new Date(); d.setMonth(d.getMonth()-i);
+      buckets.push({ key:d.getFullYear()+'-'+(d.getMonth()+1), label:monthLbl(d), val:0 }); }
+    (wasteHist.data || []).forEach(r => {
+      const k = monthKey(r.created_at);
+      const b = buckets.find(x=>x.key===k);
+      if (b) b.val += Number(r.quantity||0) * ((r.batches && Number(r.batches.unit_cost))||0);
+    });
+
+    // trend: this month vs previous month waste
+    const prevVal = buckets.length>=2 ? buckets[buckets.length-2].val : 0;
+    const curVal  = buckets.length>=1 ? buckets[buckets.length-1].val : 0;
+    let trendPct = 0, trendDir = 'flat';
+    if (prevVal > 0) { trendPct = Math.round(((curVal-prevVal)/prevVal)*100);
+      trendDir = curVal < prevVal ? 'down' : (curVal > prevVal ? 'up' : 'flat'); }
+
+    // Receiving stats — this week
+    const recRows = (receivingWk.data || []);
+    let receivingVal = 0;
+    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+    let receivedToday = 0;
+    recRows.forEach(r => {
+      const uc = (r.batches && Number(r.batches.unit_cost)) || 0;
+      const v = Number(r.quantity||0) * uc;
+      receivingVal += v;
+      if (new Date(r.created_at).getTime() >= startOfDay) receivedToday += v;
+    });
+    const lastRecAt = recRows.length ? new Date(recRows[0].created_at) : null;
+    const lastRecLabel = !lastRecAt ? '—'
+      : (lastRecAt.getTime() >= startOfDay ? t('ov.today')
+        : (Math.ceil((today - lastRecAt)/86400000) + ' ' + t('ov.daysAgo')));
+
+    // Top wasted items this month — by money lost
+    const wMap = {};
+    (wasteItems.data || []).forEach(r => {
+      const it = r.batches && r.batches.items;
+      if (!it) return;
+      const nm = (__lang==='lo' && it.name_lao) ? it.name_lao : it.name;
+      const uc = (r.batches && Number(r.batches.unit_cost)) || 0;
+      const v = Number(r.quantity||0) * uc;
+      if (!wMap[nm]) wMap[nm] = { name: nm, unit: it.unit||'', qty: 0, val: 0 };
+      wMap[nm].qty += Number(r.quantity||0);
+      wMap[nm].val += v;
+    });
+    const topWaste = Object.values(wMap).sort((a,b)=>b.val-a.val).slice(0,5);
+
+    // ---- helper: small SVG bar chart (fixed viewBox so text stays crisp) ----
+    const barChart = (data, color) => {
+      const W = 320, H = 150, padB = 24, padT = 18;
+      const max = Math.max(1, ...data.map(d=>d.val));
+      const slot = W / data.length;
+      let bars = '';
+      data.forEach((d,i) => {
+        const bh = Math.max(3, (d.val/max) * (H - padB - padT));
+        const x = i*slot + slot*0.22;
+        const w = slot*0.56;
+        const y = H - padB - bh;
+        bars += '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+bh.toFixed(1)+'" rx="3" fill="'+color+'"></rect>';
+        bars += '<text x="'+(i*slot+slot/2).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" font-size="11" fill="#8a93a0">'+h(d.label)+'</text>';
+        const vtxt = d.val>=1000 ? Math.round(d.val/1000)+'k' : Math.round(d.val);
+        bars += '<text x="'+(i*slot+slot/2).toFixed(1)+'" y="'+(y-6).toFixed(1)+'" text-anchor="middle" font-size="11" font-weight="700" fill="#69707d">'+vtxt+'</text>';
+      });
+      return '<svg viewBox="0 0 '+W+' '+H+'" class="kl-ov-chart" preserveAspectRatio="xMidYMid meet">'+bars+'</svg>';
+    };
+
+    // ---- KPI cards ----
+    const trendBadge = (dir,pct,goodWhenDown) => {
+      if (dir==='flat' || !pct) return '<span class="kl-kpi-trend flat">—</span>';
+      const good = goodWhenDown ? dir==='down' : dir==='up';
+      const arrow = dir==='down' ? '↓' : '↑';
+      return '<span class="kl-kpi-trend '+(good?'good':'bad')+'">'+arrow+' '+Math.abs(pct)+'%</span>';
+    };
+
+    let html = '<div class="kl-kpi-grid">';
+    html += '<div class="kl-kpi"><p class="kl-kpi-label">'+t('ov.kStockVal')+'</p>'
+          + '<p class="kl-kpi-num">'+money(stockValue)+'</p>'
+          + '<p class="kl-kpi-sub">'+svRows.length+' '+t('ov.kItems')+'</p></div>';
+    html += '<div class="kl-kpi"><p class="kl-kpi-label">'+t('ov.kWasteMo')+'</p>'
+          + '<p class="kl-kpi-num">'+money(wasteMonthVal)+'</p>'
+          + '<p class="kl-kpi-sub">'+trendBadge(trendDir,trendPct,true)+' '+t('ov.kVsPrev')+'</p></div>';
+    html += '<div class="kl-kpi '+(expiringValue>0?'kpi-warn':'')+'"><p class="kl-kpi-label">'+t('ov.kExpiring')+'</p>'
+          + '<p class="kl-kpi-num">'+money(expiringValue)+'</p>'
+          + '<p class="kl-kpi-sub">'+expRows.length+' '+t('ov.kBatches')+'</p></div>';
+    html += '<div class="kl-kpi '+(reorderCount>0?'kpi-bad':'')+'"><p class="kl-kpi-label">'+t('ov.kReorder')+'</p>'
+          + '<p class="kl-kpi-num">'+reorderCount+'</p>'
+          + '<p class="kl-kpi-sub">'+t('ov.kItemsLow')+'</p></div>';
+    html += '</div>';
+
+    // ---- Charts row ----
+    html += '<div class="kl-ov-2col">';
+    // waste 6-month chart
+    html += '<div class="kl-ov-card"><div class="kl-ov-head">'+t('ov.chWaste')
+          + '<span class="kl-ov-count">'+trendBadge(trendDir,trendPct,true)+'</span></div>'
+          + '<div class="kl-ov-chartwrap">'+barChart(buckets,'#caa24a')+'</div></div>';
+    // stock by category chart
+    const catArr = Object.keys(stockByCat).map(k=>({label:k.slice(0,6), val:stockByCat[k]}))
+                    .sort((a,b)=>b.val-a.val).slice(0,6);
+    html += '<div class="kl-ov-card"><div class="kl-ov-head">'+t('ov.chStockCat')+'</div>'
+          + '<div class="kl-ov-chartwrap">'+ (catArr.length? barChart(catArr,'#15795f')
+              : '<p class="kl-rsmall">'+t('ov.noData')+'</p>') +'</div></div>';
+    html += '</div>';
+
+    // ---- Receiving + Top Wasted Items row ----
+    html += '<div class="kl-ov-2col">';
+    // Receiving panel
+    html += '<div class="kl-ov-card"><div class="kl-ov-head">📦 '+t('ov.receiving')
+          + '<span class="kl-ov-count">'+recRows.length+' '+t('ov.kBatches')+'</span></div>';
+    html += '<div class="kl-ov-mini">';
+    html += '<div class="kl-ov-mini-row"><span class="kl-ov-mini-lbl">'+t('ov.recToday')
+          + '</span><span class="kl-ov-mini-val">'+money(receivedToday)+'</span></div>';
+    html += '<div class="kl-ov-mini-row"><span class="kl-ov-mini-lbl">'+t('ov.recWeek')
+          + '</span><span class="kl-ov-mini-val">'+money(receivingVal)+'</span></div>';
+    html += '<div class="kl-ov-mini-row"><span class="kl-ov-mini-lbl">'+t('ov.lastRec')
+          + '</span><span class="kl-ov-mini-val">'+h(lastRecLabel)+'</span></div>';
+    html += '</div></div>';
+    // Top Wasted Items panel
+    html += '<div class="kl-ov-card"><div class="kl-ov-head">🗑 '+t('ov.topWaste')
+          + '<span class="kl-ov-count">'+money(wasteMonthVal)+'</span></div>';
+    if (!topWaste.length) {
+      html += '<p class="kl-rsmall">'+t('ov.noWaste')+'</p>';
+    } else {
+      html += '<div class="kl-ov-mini">';
+      const maxW = topWaste[0].val || 1;
+      topWaste.forEach(w => {
+        const pct = Math.max(6, (w.val/maxW)*100);
+        html += '<div class="kl-ov-wrow">'
+              + '<div class="kl-ov-wname">'+h(w.name)+' <span class="kl-rsmall">('+fmtQty(w.qty)+' '+h(w.unit)+')</span></div>'
+              + '<div class="kl-ov-wbar-wrap"><div class="kl-ov-wbar" style="width:'+pct+'%"></div></div>'
+              + '<div class="kl-ov-wval">'+money(w.val)+'</div></div>';
+      });
+      html += '</div>';
+    }
+    html += '</div></div>';
+
+    // ---- Stock Levels (min/now/max bars) ----
+    const slRows = advRows.filter(r => r.par_level != null && Number(r.par_level)>0)
+      .sort((a,b) => Number(a.on_hand||0)/Number(a.par_level||1)
+                   - Number(b.on_hand||0)/Number(b.par_level||1))
+      .slice(0,8);
+    if (slRows.length) {
+      html += '<div class="kl-ov-card"><div class="kl-ov-head">📊 '+t('ov.stockLevels')
+            + '<span class="kl-ov-count">'+slRows.length+' '+t('ov.kItems')+'</span></div>';
+      html += '<div class="kl-ov-mini">';
+      slRows.forEach(r => {
+        const oh = Number(r.on_hand||0);
+        const mn = Number(r.reorder_level||0);
+        const mx = Number(r.par_level||mn*3||1);
+        const pct = Math.min(100, Math.max(0, (oh/mx)*100));
+        const minPct = Math.min(100, (mn/mx)*100);
+        const isLow = oh <= mn;
+        const status = isLow
+          ? '<span style="color:#c0392b;font-weight:700">'+fmtQty(oh)+' '+h(r.unit||'')+' — '+t('ov.belowMin')+'</span>'
+          : '<span style="color:#15795f;font-weight:700">'+fmtQty(oh)+' '+h(r.unit||'')+' — '+t('ov.ok')+'</span>';
+        html += '<div class="kl-ov-slrow">'
+              + '<div class="kl-ov-slname">'+h(r.name)+'</div>'
+              + '<div class="kl-ov-slstatus">'+status+'</div>'
+              + '<div class="kl-ov-slbar"><div class="kl-ov-slfill '+(isLow?'bad':'good')
+              + '" style="width:'+pct+'%"></div>'
+              + '<div class="kl-ov-slmark" style="left:'+minPct+'%"></div></div>'
+              + '<div class="kl-ov-slcaps"><span>'+t('ov.min')+' '+fmtQty(mn)+'</span><span>'+t('ov.max')+' '+fmtQty(mx)+'</span></div>'
+              + '</div>';
+      });
+      html += '</div></div>';
+    }
+
+    // ---- Order Today table ----
+    const orderNow = advRows.filter(r => r.needs_reorder)
       .sort((a,b)=> Number(b.used_per_day||0) - Number(a.used_per_day||0));
-    let html = '';
     html += '<div class="kl-ov-card '+(orderNow.length?'bad':'ok')+'">';
-    html += '<div class="kl-ov-head">⚠ '
-      + t('ov.orderToday') + '<span class="kl-ov-count">'+orderNow.length+'</span></div>';
-    if (orderNow.length === 0) {
+    html += '<div class="kl-ov-head">⚠ '+t('ov.orderToday')
+          + '<span class="kl-ov-count">'+orderNow.length+'</span></div>';
+    if (!orderNow.length) {
       html += '<p class="kl-rsmall">'+t('ov.nothingOrder')+'</p>';
     } else {
       html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
-        + '<th>'+t('r.colItem')+'</th><th>'+t('ov.haveUse')+'</th><th>'+t('ov.orderQty')+'</th><th>'+t('r.colSupplier')+'</th>'
-        + '</tr></thead><tbody>';
+            + '<th>'+t('r.colItem')+'</th><th>'+t('ov.haveUse')+'</th><th>'+t('ov.orderQty')+'</th><th>'+t('r.colSupplier')+'</th>'
+            + '</tr></thead><tbody>';
       orderNow.forEach(r=>{
         const perDay = Number(r.used_per_day||0);
         const onHand = Number(r.on_hand||0);
         const suggest = Math.max(Number(r.par_level||0) - onHand, Math.ceil(perDay*7), 1);
         html += '<tr><td><strong>'+h(r.name)+'</strong></td>'
           + '<td>'+fmtQty(onHand)+' '+h(r.unit||'')+' · '+fmtQty(perDay)+'/'+t('ov.day')+'</td>'
-          + '<td style="font-weight:700;color:var(--kl-danger)">'+fmtQty(suggest)+' '+h(r.unit||'')+'</td>'
+          + '<td style="font-weight:700;color:#c0392b">'+fmtQty(suggest)+' '+h(r.unit||'')+'</td>'
           + '<td>'+h(r.usual_supplier||'—')+'</td></tr>';
       });
       html += '</tbody></table></div>';
     }
     html += '</div>';
 
-    // ---- SECTION 2: EXPIRING — split into 3-day urgent + 7-day this week ----
+    // ---- Expiring soon table ----
     const dDays = (d) => Math.round((new Date(d) - today) / 86400000);
     const whenLabel = (days) => days <= 0 ? t('ov.today')
       : days === 1 ? t('ov.tomorrow') : days + ' ' + t('ov.days');
-    const exp3 = expAll.filter(r => dDays(r.expiry_date) <= 3);
-    const exp7 = expAll.filter(r => { const d = dDays(r.expiry_date); return d > 3 && d <= 7; });
-
-    const buildExpCard = (list, headKey, emptyKey, cls, txtCol) => {
-      let val = 0;
-      list.forEach(r=> val += Number(r.quantity_remaining||0)*Number(r.unit_cost||0));
-      let s = '<div class="kl-ov-card '+(list.length?cls:'ok')+'">';
-      s += '<div class="kl-ov-head">⏱ '
-        + t(headKey) + '<span class="kl-ov-count">'+money(val)+'</span></div>';
-      if (list.length === 0) {
-        s += '<p class="kl-rsmall">'+t(emptyKey)+'</p>';
-      } else {
-        s += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
-          + '<th>'+t('r.colItem')+'</th><th>'+t('ov.qty')+'</th><th>'+t('ov.expires')+'</th>'
-          + '</tr></thead><tbody>';
-        list.forEach(r=>{
-          const nm = (r.items && (__lang==='lo' && r.items.name_lao ? r.items.name_lao : r.items.name)) || '?';
-          const un = (r.items && r.items.unit) || '';
-          s += '<tr><td>'+h(nm)+'</td><td>'+fmtQty(r.quantity_remaining)+' '+h(un)+'</td>'
-            + '<td style="color:'+txtCol+';font-weight:600">'+whenLabel(dDays(r.expiry_date))+'</td></tr>';
-        });
-        s += '</tbody></table></div>';
-      }
-      s += '</div>';
-      return s;
-    };
-
-    // Urgent first (3 days, red), then this-week (4-7 days, yellow)
-    html += buildExpCard(exp3, 'ov.expiring3', 'ov.nothing3', 'bad',  'var(--kl-danger)');
-    html += buildExpCard(exp7, 'ov.expiring7', 'ov.nothing7', 'warn', 'var(--kl-warn)');
-
-    // ---- SECTION 3: STOCK GAUGES (red/yellow/green zones) ----
-    html += '<div class="kl-ov-card"><div class="kl-ov-head">'
-      + '<i class="ti ti-chart-bar" aria-hidden="true"></i> '+t('ov.stockLevels')+'</div>';
-    const gauged = rows.filter(r => r.reorder_level != null || r.par_level != null);
-    if (gauged.length === 0) {
-      html += '<p class="kl-rsmall">'+t('ov.setLevels')+'</p>';
+    html += '<div class="kl-ov-card '+(expRows.length?'warn':'ok')+'">';
+    html += '<div class="kl-ov-head">⏱ '+t('ov.expSoon')
+          + '<span class="kl-ov-count">'+money(expiringValue)+'</span></div>';
+    if (!expRows.length) {
+      html += '<p class="kl-rsmall">'+t('ov.noExp')+'</p>';
     } else {
-      // Sort worst first (lowest fill ratio)
-      gauged.sort((a,b)=>{
-        const fa = Number(a.on_hand||0) / Math.max(Number(a.par_level||a.reorder_level||1),1);
-        const fb = Number(b.on_hand||0) / Math.max(Number(b.par_level||b.reorder_level||1),1);
-        return fa - fb;
+      html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+            + '<th>'+t('r.colItem')+'</th><th>'+t('ov.qty')+'</th><th>'+t('ov.expires')+'</th>'
+            + '</tr></thead><tbody>';
+      expRows.forEach(r=>{
+        const nm = (r.items && (__lang==='lo' && r.items.name_lao ? r.items.name_lao : r.items.name)) || '?';
+        const un = (r.items && r.items.unit) || '';
+        const dd = dDays(r.expiry_date);
+        const cls = dd<=1 ? 'kl-pill-bad' : (dd<=3 ? 'kl-pill-warn' : 'kl-pill-ok');
+        html += '<tr><td>'+h(nm)+'</td><td>'+fmtQty(r.quantity_remaining)+' '+h(un)+'</td>'
+          + '<td><span class="kl-pill '+cls+'">'+whenLabel(dd)+'</span></td></tr>';
       });
-      gauged.forEach(r=>{
-        const onHand = Number(r.on_hand||0);
-        const minL = Number(r.reorder_level||0);
-        const maxL = Number(r.par_level||0) || (minL*4) || 1;
-        const scaleMax = Math.max(maxL, onHand, 1);
-        const pct = Math.min(100, Math.round(onHand/scaleMax*100));
-        const minPct = Math.min(100, Math.round(minL/scaleMax*100));
-        const maxPct = Math.min(100, Math.round(maxL/scaleMax*100));
-        // zone: red below min, yellow below ~60% of max, green above
-        let zone='z-green', label=t('ov.ok'), labCol='var(--kl-success)';
-        if (onHand <= minL)        { zone='z-red';    label=t('ov.belowMin'); labCol='var(--kl-danger)'; }
-        else if (onHand < maxL*0.6){ zone='z-yellow'; label=t('ov.low');      labCol='var(--kl-warn)'; }
-        html += '<div class="kl-gauge-row">'
-          + '<div class="kl-gauge-top"><span class="kl-gauge-name">'+h(r.name)+'</span>'
-          + '<span class="kl-gauge-status" style="color:'+labCol+'">'+fmtQty(onHand)+' '+h(r.unit||'')+' — '+label+'</span></div>'
-          + '<div class="kl-gauge-bar">'
-          + '<div class="kl-gauge-fill '+zone+'" style="width:'+pct+'%"></div>'
-          + '<div class="kl-gauge-mark" style="left:'+minPct+'%"></div>'
-          + '<div class="kl-gauge-mark" style="left:'+maxPct+'%"></div>'
-          + '</div>'
-          + '<div class="kl-gauge-scale"><span>'+t('ov.min')+' '+fmtQty(minL)+'</span>'
-          + '<span>'+t('ov.max')+' '+fmtQty(maxL)+' '+h(r.unit||'')+'</span></div>'
-          + '</div>';
-      });
-      html += '<p class="kl-ov-legend">'+t('ov.legend')+'</p>';
+      html += '</tbody></table></div>';
     }
     html += '</div>';
 
@@ -4486,6 +4697,7 @@ async function initOverviewPage() {
       + '<p class="kl-rsmall">'+h(e.message||String(e))+'</p></div>';
   }
 }
+
 
 // =====================================================================
 // v2.4 — MANAGE PAGE (items / suppliers / locations / users)
