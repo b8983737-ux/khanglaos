@@ -616,8 +616,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.5-inline-cards-2026-05-19 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.5-cards</div>
+<!-- KHANGLAOS BUILD: v3.6-same-as-receiving-2026-05-19 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.6-cards</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -4620,9 +4620,9 @@ async function initOverviewPage() {
                    - Number(b.on_hand||0)/Number(b.par_level||1))
       .slice(0,8);
     if (slRows.length) {
-      html += '<div class="kl-ov-card" style="background:#fff;border:1px solid #eceef1;border-radius:14px;margin:0 0 18px 0;overflow:hidden;position:relative;box-shadow:0 1px 3px rgba(20,32,48,.04)"><div class="kl-ov-head" style="padding:18px 24px;border-bottom:1px solid #eceef1;font-weight:700;display:flex;align-items:center;gap:10px">📊 '+t('ov.stockLevels')
-            + '<span class="kl-ov-count" style="margin-left:auto;font-size:13px;padding:3px 12px;border-radius:999px;background:#f4f6f8;color:#69707d">'+slRows.length+' '+t('ov.kItems')+'</span></div>';
-      html += '<div class="kl-ov-mini" style="padding:18px 24px">';
+      html += '<div class="kl-ov-card"><div class="kl-ov-head">📊 '+t('ov.stockLevels')
+            + '<span class="kl-ov-count">'+slRows.length+' '+t('ov.kItems')+'</span></div>';
+      html += '<div class="kl-ov-mini">';
       slRows.forEach(r => {
         const oh = Number(r.on_hand||0);
         const mn = Number(r.reorder_level||0);
@@ -4648,9 +4648,9 @@ async function initOverviewPage() {
     // ---- Order Today table ----
     const orderNow = advRows.filter(r => r.needs_reorder)
       .sort((a,b)=> Number(b.used_per_day||0) - Number(a.used_per_day||0));
-    html += '<div class="kl-ov-card '+(orderNow.length?'bad':'ok')+'" style="background:#fff;border:1px solid #eceef1;border-left:4px solid '+(orderNow.length?'#c0392b':'#15795f')+';border-radius:14px;margin:0 0 18px 0;overflow:hidden;position:relative;box-shadow:0 1px 3px rgba(20,32,48,.04)">';
-    html += '<div class="kl-ov-head" style="padding:18px 24px;border-bottom:1px solid #eceef1;font-weight:700;display:flex;align-items:center;gap:10px;color:'+(orderNow.length?'#c0392b':'#14201b')+'">⚠ '+t('ov.orderToday')
-          + '<span class="kl-ov-count" style="margin-left:auto;font-size:13px;padding:3px 12px;border-radius:999px;background:'+(orderNow.length?'#fdecea':'#f4f6f8')+';color:'+(orderNow.length?'#c0392b':'#69707d')+'">'+orderNow.length+'</span></div>';
+    html += '<div class="kl-ov-card '+(orderNow.length?'bad':'ok')+'">';
+    html += '<div class="kl-ov-head">⚠ '+t('ov.orderToday')
+          + '<span class="kl-ov-count">'+orderNow.length+'</span></div>';
     if (!orderNow.length) {
       html += '<p class="kl-rsmall">'+t('ov.nothingOrder')+'</p>';
     } else {
@@ -4674,9 +4674,9 @@ async function initOverviewPage() {
     const dDays = (d) => Math.round((new Date(d) - today) / 86400000);
     const whenLabel = (days) => days <= 0 ? t('ov.today')
       : days === 1 ? t('ov.tomorrow') : days + ' ' + t('ov.days');
-    html += '<div class="kl-ov-card '+(expRows.length?'warn':'ok')+'" style="background:#fff;border:1px solid #eceef1;border-left:4px solid '+(expRows.length?'#caa24a':'#15795f')+';border-radius:14px;margin:0 0 18px 0;overflow:hidden;position:relative;box-shadow:0 1px 3px rgba(20,32,48,.04)">';
-    html += '<div class="kl-ov-head" style="padding:18px 24px;border-bottom:1px solid #eceef1;font-weight:700;display:flex;align-items:center;gap:10px;color:'+(expRows.length?'#b9791b':'#14201b')+'">⏱ '+t('ov.expSoon')
-          + '<span class="kl-ov-count" style="margin-left:auto;font-size:13px;padding:3px 12px;border-radius:999px;background:'+(expRows.length?'#fdf3e3':'#f4f6f8')+';color:'+(expRows.length?'#b9791b':'#69707d')+'">'+money(expiringValue)+'</span></div>';
+    html += '<div class="kl-ov-card '+(expRows.length?'warn':'ok')+'">';
+    html += '<div class="kl-ov-head">⏱ '+t('ov.expSoon')
+          + '<span class="kl-ov-count">'+money(expiringValue)+'</span></div>';
     if (!expRows.length) {
       html += '<p class="kl-rsmall">'+t('ov.noExp')+'</p>';
     } else {
