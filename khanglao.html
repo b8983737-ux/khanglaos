@@ -528,8 +528,10 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 @media(max-width:560px){ .kl-ov-wrow{grid-template-columns:1fr 80px; grid-template-rows:auto auto;}
   .kl-ov-wbar-wrap{grid-column:1/-1;} }
 /* Overview — top-system clean card design */
-.kl-ov-card { background:var(--kl-surface); border:1px solid var(--kl-border);
-  border-radius:14px; padding:0; margin:0 0 18px 0; box-shadow:0 1px 3px rgba(20,32,48,.04);
+.kl-ov-card { background:#ffffff; background:var(--kl-surface,#ffffff);
+  border:1px solid #eceef1; border:1px solid var(--kl-border,#eceef1);
+  border-radius:14px; padding:0; margin:0 0 18px 0;
+  box-shadow:0 1px 3px rgba(20,32,48,.04);
   overflow:hidden; position:relative; }
 .kl-ov-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
   background:var(--kl-primary); }
@@ -614,6 +616,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
+<!-- KHANGLAOS BUILD: v3.4-overview-cards-2026-05-19 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.4-cards</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
