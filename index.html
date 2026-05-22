@@ -477,6 +477,14 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   width:100%; max-height:90vh; overflow-y:auto; box-shadow:var(--kl-shadow-lg); }
 .kl-modal h3 { margin:0 0 18px 0; font-size:18px; font-weight:700; letter-spacing:-0.3px; }
 /* Overview cockpit — clean cards with subtle status accent */
+/* Overview header — title left, date filter right */
+.kl-ov-header { display:flex; justify-content:space-between; align-items:flex-start;
+  gap:24px; margin-bottom:18px; flex-wrap:wrap; }
+.kl-ov-header-text { flex:1; min-width:240px; }
+.kl-ov-header-text .kl-page-title { margin:0; }
+.kl-ov-header-text .kl-page-sub { margin:4px 0 0 0; }
+.kl-ov-daterange { margin:0; flex-wrap:wrap; }
+@media(max-width:880px){ .kl-ov-header{flex-direction:column;} .kl-ov-daterange{width:100%;} }
 /* Overview — MarketMan-style KPI grid + charts */
 .kl-kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:0 0 18px 0; }
 .kl-kpi { background:var(--kl-surface); border:1px solid var(--kl-border); border-radius:14px;
@@ -496,6 +504,15 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 .kl-ov-2col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:0 0 18px 0; }
 .kl-ov-chartwrap { padding:22px 24px; }
 .kl-ov-chart { width:100%; height:160px; display:block; }
+/* Category list under stock-by-category chart - shows full kip amounts */
+.kl-ov-catlist { padding:0 24px 18px 24px; }
+.kl-ov-catrow { display:flex; align-items:center; gap:10px;
+  padding:7px 0; border-top:1px solid var(--kl-border); font-size:13px; }
+.kl-ov-catrow:first-child { border-top:none; }
+.kl-ov-catdot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.kl-ov-catname { color:var(--kl-text); flex:1; font-weight:600; }
+.kl-ov-catval { font-family:var(--kl-font-display); font-weight:700;
+  color:var(--kl-text); }
 @media(max-width:980px){ .kl-kpi-grid{grid-template-columns:repeat(2,1fr);} .kl-ov-2col{grid-template-columns:1fr;} }
 @media(max-width:560px){ .kl-kpi-grid{grid-template-columns:1fr;} }
 /* Mini panels — receiving rows, top wasted items, stock-level bars */
@@ -640,8 +657,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.9-grid-layout-2026-05-20 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.9-grid</div>
+<!-- KHANGLAOS BUILD: v3.12-ov-daterange-2026-05-22 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.12-daterange</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -1218,8 +1235,24 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 
 <div id="page-overview" class="kl-page">
   <div class="kl-wrap">
-    <h1 class="kl-page-title" data-i18n="ov.title">Overview — Owner Cockpit</h1>
-    <p class="kl-page-sub" data-i18n="ov.sub">Everything in one screen. Order today and expiring on top.</p>
+    <div class="kl-ov-header">
+      <div class="kl-ov-header-text">
+        <h1 class="kl-page-title" data-i18n="ov.title">Overview — Owner Cockpit</h1>
+        <p class="kl-page-sub" data-i18n="ov.sub">Everything in one screen. Order today and expiring on top.</p>
+      </div>
+      <div class="kl-daterange kl-ov-daterange" id="ovDateRange">
+        <div class="kl-dr-group">
+          <button class="kl-dr-btn" data-ovrange="7" data-i18n="rt.d7btn">1 week</button>
+          <button class="kl-dr-btn active" data-ovrange="30" data-i18n="rt.d30btn">1 month</button>
+          <button class="kl-dr-btn" data-ovrange="90" data-i18n="ov.d90btn">3 months</button>
+        </div>
+        <span class="kl-dr-sep" data-i18n="rt.or">or</span>
+        <input type="date" id="ovFrom" class="kl-dr-date" aria-label="From date">
+        <span class="kl-dr-arrow">→</span>
+        <input type="date" id="ovTo" class="kl-dr-date" aria-label="To date">
+        <button class="kl-dr-apply" id="ovApply" data-i18n="rt.filter">Filter</button>
+      </div>
+    </div>
     <div id="overviewBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
   </div>
 </div>
@@ -1367,7 +1400,7 @@ const I18N = {
     "m.needCodeName":"Code and name required", "m.tempErr":"Min temperature cannot be higher than max",
     "nav.overview":"Overview",
     "ov.title":"Overview — Owner Cockpit", "ov.sub":"Everything in one screen. Order today and expiring on top.",
-    "ov.receiving":"Receiving", "ov.recToday":"Received today", "ov.recWeek":"This week", "ov.lastRec":"Last receive", "ov.topWaste":"Top wasted items (this month)", "ov.noWaste":"No waste this month. ✓", "ov.belowMin":"BELOW MIN — order now", "ov.ok":"OK", "ov.min":"min", "ov.max":"max", "ov.daysAgo":"days ago", "ov.haveUse":"Have / Use", "ov.orderQty":"Order Qty", "ov.qty":"Qty", "ov.expires":"Expires", "ov.today":"Today", "ov.tomorrow":"Tomorrow", "ov.days":"days", "ov.day":"day", "ov.now":"now", "ov.colItem":"Item", "ov.autoOrder":"Auto-order", "ov.kStockVal":"Stock Value", "ov.kItems":"items", "ov.kWasteMo":"Waste This Month", "ov.kVsPrev":"vs last month", "ov.kExpiring":"Expiring ≤7 days", "ov.kBatches":"batches", "ov.kReorder":"To Reorder", "ov.kItemsLow":"items below min", "ov.chWaste":"Waste — last 6 months", "ov.chStockCat":"Stock value by category", "ov.expSoon":"Expiring soon", "ov.noExp":"Nothing expiring soon. Good.", "ov.noData":"No data yet.", "ov.orderToday":"Order today — below minimum", "ov.nothingOrder":"Nothing needs ordering. Stock levels healthy.",
+    "ov.receiving":"Receiving", "ov.recToday":"Received today", "ov.recWeek":"This week", "ov.lastRec":"Last receive", "ov.topWaste":"Top wasted items (this month)", "ov.noWaste":"No waste this month. ✓", "ov.belowMin":"BELOW MIN — order now", "ov.ok":"OK", "ov.min":"min", "ov.max":"max", "ov.daysAgo":"days ago", "ov.haveUse":"Have / Use", "ov.orderQty":"Order Qty", "ov.qty":"Qty", "ov.expires":"Expires", "ov.today":"Today", "ov.tomorrow":"Tomorrow", "ov.days":"days", "ov.day":"day", "ov.now":"now", "ov.colItem":"Item", "ov.autoOrder":"Auto-order", "idle.warnMsg":"⏱ Signing out in 10 min — tap to stay", "idle.outMsg":"You have been signed out after 8 hours.", "ov.d90btn":"3 months", "ov.kStockVal":"Stock Value", "ov.kItems":"items", "ov.kWasteMo":"Waste This Month", "ov.kVsPrev":"vs last month", "ov.kExpiring":"Expiring ≤7 days", "ov.kBatches":"batches", "ov.kReorder":"To Reorder", "ov.kItemsLow":"items below min", "ov.chWaste":"Waste — last 6 months", "ov.chStockCat":"Stock value by category", "ov.expSoon":"Expiring soon", "ov.noExp":"Nothing expiring soon. Good.", "ov.noData":"No data yet.", "ov.orderToday":"Order today — below minimum", "ov.nothingOrder":"Nothing needs ordering. Stock levels healthy.",
     "ov.haveUse":"Have / use per day", "ov.orderQty":"Order this much", "ov.day":"day",
     "ov.expiring3":"Expiring in 3 days — use NOW", "ov.nothing3":"Nothing expiring in 3 days. Good.",
     "ov.expiring7":"Expiring this week (4–7 days) — plan ahead", "ov.nothing7":"Nothing expiring this week.",
@@ -1532,7 +1565,7 @@ const I18N = {
     "m.needCodeName":"ຕ້ອງມີລະຫັດ ແລະ ຊື່", "m.tempErr":"ອຸນຫະພູມຕ່ຳ ສູງກວ່າ ສູງ ບໍ່ໄດ້",
     "nav.overview":"ພາບລວມ",
     "ov.title":"ພາບລວມ — ສຳລັບເຈົ້າຂອງ", "ov.sub":"ທຸກຢ່າງໃນໜ້າດຽວ. ສັ່ງຊື້ມື້ນີ້ ແລະ ໝົດອາຍຸ ຢູ່ເທິງ.",
-    "ov.receiving":"ການຮັບສິນຄ້າ", "ov.recToday":"ຮັບມື້ນີ້", "ov.recWeek":"ອາທິດນີ້", "ov.lastRec":"ຮັບຄັ້ງລ່າສຸດ", "ov.topWaste":"ສິນຄ້າເສຍຫຼາຍສຸດ (ເດືອນນີ້)", "ov.noWaste":"ບໍ່ມີຂີ້ເສຍເດືອນນີ້. ✓", "ov.belowMin":"ຕ່ຳກວ່າຂັ້ນຕ່ຳ — ສັ່ງດຽວນີ້", "ov.ok":"ປົກກະຕິ", "ov.min":"ຕ່ຳ", "ov.max":"ສູງ", "ov.daysAgo":"ມື້ກ່ອນ", "ov.haveUse":"ມີ / ໃຊ້", "ov.orderQty":"ສັ່ງຊື້", "ov.qty":"ຈຳນວນ", "ov.expires":"ໝົດອາຍຸ", "ov.today":"ມື້ນີ້", "ov.tomorrow":"ມື້ອື່ນ", "ov.days":"ມື້", "ov.day":"ມື້", "ov.now":"ດຽວນີ້", "ov.colItem":"ສິນຄ້າ", "ov.autoOrder":"ສັ່ງອັດຕະໂນມັດ", "ov.kStockVal":"ມູນຄ່າສິນຄ້າ", "ov.kItems":"ລາຍການ", "ov.kWasteMo":"ຂີ້ເສຍເດືອນນີ້", "ov.kVsPrev":"ທຽບເດືອນກ່ອນ", "ov.kExpiring":"ໝົດອາຍຸ ≤7ມື້", "ov.kBatches":"ລັອດ", "ov.kReorder":"ຕ້ອງສັ່ງຊື້", "ov.kItemsLow":"ລາຍການຕ່ຳ", "ov.chWaste":"ຂີ້ເສຍ — 6 ເດືອນຜ່ານມາ", "ov.chStockCat":"ມູນຄ່າຕາມໝວດ", "ov.expSoon":"ໃກ້ໝົດອາຍຸ", "ov.noExp":"ບໍ່ມີຫຍັງໃກ້ໝົດອາຍຸ. ດີ.", "ov.noData":"ຍັງບໍ່ມີຂໍ້ມູນ.", "ov.orderToday":"ສັ່ງຊື້ມື້ນີ້ — ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "ov.nothingOrder":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຊື້. ສິນຄ້າພຽງພໍ.",
+    "ov.receiving":"ການຮັບສິນຄ້າ", "ov.recToday":"ຮັບມື້ນີ້", "ov.recWeek":"ອາທິດນີ້", "ov.lastRec":"ຮັບຄັ້ງລ່າສຸດ", "ov.topWaste":"ສິນຄ້າເສຍຫຼາຍສຸດ (ເດືອນນີ້)", "ov.noWaste":"ບໍ່ມີຂີ້ເສຍເດືອນນີ້. ✓", "ov.belowMin":"ຕ່ຳກວ່າຂັ້ນຕ່ຳ — ສັ່ງດຽວນີ້", "ov.ok":"ປົກກະຕິ", "ov.min":"ຕ່ຳ", "ov.max":"ສູງ", "ov.daysAgo":"ມື້ກ່ອນ", "ov.haveUse":"ມີ / ໃຊ້", "ov.orderQty":"ສັ່ງຊື້", "ov.qty":"ຈຳນວນ", "ov.expires":"ໝົດອາຍຸ", "ov.today":"ມື້ນີ້", "ov.tomorrow":"ມື້ອື່ນ", "ov.days":"ມື້", "ov.day":"ມື້", "ov.now":"ດຽວນີ້", "ov.colItem":"ສິນຄ້າ", "ov.autoOrder":"ສັ່ງອັດຕະໂນມັດ", "idle.warnMsg":"⏱ ຈະອອກຈາກລະບົບໃນ 10 ນາທີ — ແຕະເພື່ອຢູ່ຕໍ່", "idle.outMsg":"ທ່ານອອກຈາກລະບົບແລ້ວ ຫຼັງຈາກ 8 ຊົ່ວໂມງ.", "ov.d90btn":"3 ເດືອນ", "ov.kStockVal":"ມູນຄ່າສິນຄ້າ", "ov.kItems":"ລາຍການ", "ov.kWasteMo":"ຂີ້ເສຍເດືອນນີ້", "ov.kVsPrev":"ທຽບເດືອນກ່ອນ", "ov.kExpiring":"ໝົດອາຍຸ ≤7ມື້", "ov.kBatches":"ລັອດ", "ov.kReorder":"ຕ້ອງສັ່ງຊື້", "ov.kItemsLow":"ລາຍການຕ່ຳ", "ov.chWaste":"ຂີ້ເສຍ — 6 ເດືອນຜ່ານມາ", "ov.chStockCat":"ມູນຄ່າຕາມໝວດ", "ov.expSoon":"ໃກ້ໝົດອາຍຸ", "ov.noExp":"ບໍ່ມີຫຍັງໃກ້ໝົດອາຍຸ. ດີ.", "ov.noData":"ຍັງບໍ່ມີຂໍ້ມູນ.", "ov.orderToday":"ສັ່ງຊື້ມື້ນີ້ — ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "ov.nothingOrder":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຊື້. ສິນຄ້າພຽງພໍ.",
     "ov.haveUse":"ມີ / ໃຊ້ຕໍ່ມື້", "ov.orderQty":"ສັ່ງຊື້ຈຳນວນນີ້", "ov.day":"ມື້",
     "ov.expiring3":"ໝົດອາຍຸໃນ 3 ມື້ — ໃຊ້ດຽວນີ້", "ov.nothing3":"ບໍ່ມີຫຍັງໝົດອາຍຸໃນ 3 ມື້. ດີ.",
     "ov.expiring7":"ໝົດອາຍຸອາທິດນີ້ (4–7 ມື້) — ວາງແຜນລ່ວງໜ້າ", "ov.nothing7":"ບໍ່ມີຫຍັງໝົດອາຍຸອາທິດນີ້.",
@@ -1697,7 +1730,7 @@ const I18N = {
     "m.needCodeName":"ต้องมีรหัสและชื่อ", "m.tempErr":"อุณหภูมิต่ำสูงกว่าสูงไม่ได้",
     "nav.overview":"ภาพรวม",
     "ov.title":"ภาพรวม — สำหรับเจ้าของ", "ov.sub":"ทุกอย่างในหน้าเดียว. สั่งซื้อวันนี้และหมดอายุอยู่บน.",
-    "ov.receiving":"การรับสินค้า", "ov.recToday":"รับวันนี้", "ov.recWeek":"สัปดาห์นี้", "ov.lastRec":"รับครั้งล่าสุด", "ov.topWaste":"เสียมากสุด (เดือนนี้)", "ov.noWaste":"ไม่มีของเสียเดือนนี้. ✓", "ov.belowMin":"ต่ำกว่าขั้นต่ำ — สั่งเลย", "ov.ok":"ปกติ", "ov.min":"ต่ำ", "ov.max":"สูง", "ov.daysAgo":"วันก่อน", "ov.haveUse":"มี / ใช้", "ov.orderQty":"สั่งซื้อ", "ov.qty":"จำนวน", "ov.expires":"หมดอายุ", "ov.today":"วันนี้", "ov.tomorrow":"พรุ่งนี้", "ov.days":"วัน", "ov.day":"วัน", "ov.now":"ตอนนี้", "ov.colItem":"สินค้า", "ov.autoOrder":"สั่งอัตโนมัติ", "ov.kStockVal":"มูลค่าสต็อก", "ov.kItems":"รายการ", "ov.kWasteMo":"ของเสียเดือนนี้", "ov.kVsPrev":"เทียบเดือนก่อน", "ov.kExpiring":"หมดอายุ ≤7วัน", "ov.kBatches":"ล็อต", "ov.kReorder":"ต้องสั่งซื้อ", "ov.kItemsLow":"รายการต่ำ", "ov.chWaste":"ของเสีย — 6 เดือนล่าสุด", "ov.chStockCat":"มูลค่าตามหมวด", "ov.expSoon":"ใกล้หมดอายุ", "ov.noExp":"ไม่มีอะไรใกล้หมดอายุ. ดี.", "ov.noData":"ยังไม่มีข้อมูล.", "ov.orderToday":"สั่งซื้อวันนี้ — ต่ำกว่าขั้นต่ำ", "ov.nothingOrder":"ไม่มีอะไรต้องสั่งซื้อ. สต็อกพอ.",
+    "ov.receiving":"การรับสินค้า", "ov.recToday":"รับวันนี้", "ov.recWeek":"สัปดาห์นี้", "ov.lastRec":"รับครั้งล่าสุด", "ov.topWaste":"เสียมากสุด (เดือนนี้)", "ov.noWaste":"ไม่มีของเสียเดือนนี้. ✓", "ov.belowMin":"ต่ำกว่าขั้นต่ำ — สั่งเลย", "ov.ok":"ปกติ", "ov.min":"ต่ำ", "ov.max":"สูง", "ov.daysAgo":"วันก่อน", "ov.haveUse":"มี / ใช้", "ov.orderQty":"สั่งซื้อ", "ov.qty":"จำนวน", "ov.expires":"หมดอายุ", "ov.today":"วันนี้", "ov.tomorrow":"พรุ่งนี้", "ov.days":"วัน", "ov.day":"วัน", "ov.now":"ตอนนี้", "ov.colItem":"สินค้า", "ov.autoOrder":"สั่งอัตโนมัติ", "idle.warnMsg":"⏱ จะออกจากระบบใน 10 นาที — แตะเพื่ออยู่ต่อ", "idle.outMsg":"คุณถูกออกจากระบบหลังผ่าน 8 ชั่วโมง.", "ov.d90btn":"3 เดือน", "ov.kStockVal":"มูลค่าสต็อก", "ov.kItems":"รายการ", "ov.kWasteMo":"ของเสียเดือนนี้", "ov.kVsPrev":"เทียบเดือนก่อน", "ov.kExpiring":"หมดอายุ ≤7วัน", "ov.kBatches":"ล็อต", "ov.kReorder":"ต้องสั่งซื้อ", "ov.kItemsLow":"รายการต่ำ", "ov.chWaste":"ของเสีย — 6 เดือนล่าสุด", "ov.chStockCat":"มูลค่าตามหมวด", "ov.expSoon":"ใกล้หมดอายุ", "ov.noExp":"ไม่มีอะไรใกล้หมดอายุ. ดี.", "ov.noData":"ยังไม่มีข้อมูล.", "ov.orderToday":"สั่งซื้อวันนี้ — ต่ำกว่าขั้นต่ำ", "ov.nothingOrder":"ไม่มีอะไรต้องสั่งซื้อ. สต็อกพอ.",
     "ov.haveUse":"มี / ใช้ต่อวัน", "ov.orderQty":"สั่งซื้อจำนวนนี้", "ov.day":"วัน",
     "ov.expiring3":"หมดอายุใน 3 วัน — ใช้เลยตอนนี้", "ov.nothing3":"ไม่มีอะไรหมดอายุใน 3 วัน. ดี.",
     "ov.expiring7":"หมดอายุสัปดาห์นี้ (4–7 วัน) — วางแผนล่วงหน้า", "ov.nothing7":"ไม่มีอะไรหมดอายุสัปดาห์นี้.",
@@ -1860,7 +1893,7 @@ const I18N = {
     "m.needCodeName":"需要代码和名称", "m.tempErr":"最低温度不能高于最高温度",
     "nav.overview":"总览",
     "ov.title":"总览 — 业主驾驶舱", "ov.sub":"一屏看全部。今日订购和即将过期在顶部。",
-    "ov.receiving":"入库", "ov.recToday":"今日入库", "ov.recWeek":"本周", "ov.lastRec":"上次入库", "ov.topWaste":"损耗最多 (本月)", "ov.noWaste":"本月无损耗. ✓", "ov.belowMin":"低于最低 — 立即订购", "ov.ok":"正常", "ov.min":"最低", "ov.max":"最高", "ov.daysAgo":"天前", "ov.haveUse":"现有 / 用量", "ov.orderQty":"订购量", "ov.qty":"数量", "ov.expires":"过期", "ov.today":"今天", "ov.tomorrow":"明天", "ov.days":"天", "ov.day":"天", "ov.now":"现在", "ov.colItem":"项目", "ov.autoOrder":"自动订购", "ov.kStockVal":"库存价值", "ov.kItems":"项", "ov.kWasteMo":"本月损耗", "ov.kVsPrev":"对比上月", "ov.kExpiring":"≤7天过期", "ov.kBatches":"批次", "ov.kReorder":"需补货", "ov.kItemsLow":"低于最低项", "ov.chWaste":"损耗 — 近6个月", "ov.chStockCat":"按类别库存价值", "ov.expSoon":"即将过期", "ov.noExp":"无即将过期。良好。", "ov.noData":"暂无数据。", "ov.orderToday":"今日订购 — 低于最低", "ov.nothingOrder":"无需订购。库存充足。",
+    "ov.receiving":"入库", "ov.recToday":"今日入库", "ov.recWeek":"本周", "ov.lastRec":"上次入库", "ov.topWaste":"损耗最多 (本月)", "ov.noWaste":"本月无损耗. ✓", "ov.belowMin":"低于最低 — 立即订购", "ov.ok":"正常", "ov.min":"最低", "ov.max":"最高", "ov.daysAgo":"天前", "ov.haveUse":"现有 / 用量", "ov.orderQty":"订购量", "ov.qty":"数量", "ov.expires":"过期", "ov.today":"今天", "ov.tomorrow":"明天", "ov.days":"天", "ov.day":"天", "ov.now":"现在", "ov.colItem":"项目", "ov.autoOrder":"自动订购", "idle.warnMsg":"⏱ 将在10分钟内退出 — 点击保持登录", "idle.outMsg":"已闲置8小时，已自动退出。", "ov.d90btn":"3个月", "ov.kStockVal":"库存价值", "ov.kItems":"项", "ov.kWasteMo":"本月损耗", "ov.kVsPrev":"对比上月", "ov.kExpiring":"≤7天过期", "ov.kBatches":"批次", "ov.kReorder":"需补货", "ov.kItemsLow":"低于最低项", "ov.chWaste":"损耗 — 近6个月", "ov.chStockCat":"按类别库存价值", "ov.expSoon":"即将过期", "ov.noExp":"无即将过期。良好。", "ov.noData":"暂无数据。", "ov.orderToday":"今日订购 — 低于最低", "ov.nothingOrder":"无需订购。库存充足。",
     "ov.haveUse":"现有 / 每日用量", "ov.orderQty":"订购此数量", "ov.day":"天",
     "ov.expiring3":"3天内过期 — 立即使用", "ov.nothing3":"3天内无过期。很好。",
     "ov.expiring7":"本周过期 (4–7天) — 提前计划", "ov.nothing7":"本周无过期。",
@@ -2024,7 +2057,7 @@ const I18N = {
     "m.needCodeName":"코드와 이름 필요", "m.tempErr":"최저 온도가 최고보다 높을 수 없음",
     "nav.overview":"개요",
     "ov.title":"개요 — 소유자 콕핏", "ov.sub":"한 화면에 전부. 오늘 주문과 만료가 상단에.",
-    "ov.receiving":"입고", "ov.recToday":"오늘 입고", "ov.recWeek":"이번 주", "ov.lastRec":"마지막 입고", "ov.topWaste":"최다 폐기 품목 (이달)", "ov.noWaste":"이달 폐기 없음. ✓", "ov.belowMin":"최소 이하 — 즉시 주문", "ov.ok":"정상", "ov.min":"최소", "ov.max":"최대", "ov.daysAgo":"일 전", "ov.haveUse":"보유 / 사용", "ov.orderQty":"주문량", "ov.qty":"수량", "ov.expires":"만료", "ov.today":"오늘", "ov.tomorrow":"내일", "ov.days":"일", "ov.day":"일", "ov.now":"현재", "ov.colItem":"품목", "ov.autoOrder":"자동 주문", "ov.kStockVal":"재고 가치", "ov.kItems":"항목", "ov.kWasteMo":"이달 폐기", "ov.kVsPrev":"전월 대비", "ov.kExpiring":"≤7일 만료", "ov.kBatches":"배치", "ov.kReorder":"재주문 필요", "ov.kItemsLow":"최소 이하 항목", "ov.chWaste":"폐기 — 최근 6개월", "ov.chStockCat":"카테고리별 재고 가치", "ov.expSoon":"곧 만료", "ov.noExp":"곧 만료되는 항목 없음. 양호.", "ov.noData":"데이터 없음.", "ov.orderToday":"오늘 주문 — 최소 이하", "ov.nothingOrder":"주문할 것 없음. 재고 충분.",
+    "ov.receiving":"입고", "ov.recToday":"오늘 입고", "ov.recWeek":"이번 주", "ov.lastRec":"마지막 입고", "ov.topWaste":"최다 폐기 품목 (이달)", "ov.noWaste":"이달 폐기 없음. ✓", "ov.belowMin":"최소 이하 — 즉시 주문", "ov.ok":"정상", "ov.min":"최소", "ov.max":"최대", "ov.daysAgo":"일 전", "ov.haveUse":"보유 / 사용", "ov.orderQty":"주문량", "ov.qty":"수량", "ov.expires":"만료", "ov.today":"오늘", "ov.tomorrow":"내일", "ov.days":"일", "ov.day":"일", "ov.now":"현재", "ov.colItem":"품목", "ov.autoOrder":"자동 주문", "idle.warnMsg":"⏱ 10분 후 로그아웃 — 유지하려면 탭하세요", "idle.outMsg":"8시간 후 자동 로그아웃되었습니다.", "ov.d90btn":"3개월", "ov.kStockVal":"재고 가치", "ov.kItems":"항목", "ov.kWasteMo":"이달 폐기", "ov.kVsPrev":"전월 대비", "ov.kExpiring":"≤7일 만료", "ov.kBatches":"배치", "ov.kReorder":"재주문 필요", "ov.kItemsLow":"최소 이하 항목", "ov.chWaste":"폐기 — 최근 6개월", "ov.chStockCat":"카테고리별 재고 가치", "ov.expSoon":"곧 만료", "ov.noExp":"곧 만료되는 항목 없음. 양호.", "ov.noData":"데이터 없음.", "ov.orderToday":"오늘 주문 — 최소 이하", "ov.nothingOrder":"주문할 것 없음. 재고 충분.",
     "ov.haveUse":"보유 / 일일 사용", "ov.orderQty":"이만큼 주문", "ov.day":"일",
     "ov.expiring3":"3일 내 만료 — 지금 사용", "ov.nothing3":"3일 내 만료 없음. 좋음.",
     "ov.expiring7":"이번 주 만료 (4–7일) — 미리 계획", "ov.nothing7":"이번 주 만료 없음.",
@@ -2205,6 +2238,8 @@ async function klLogin(email, password) {
     await sb.auth.signOut();
     return { ok: false, error: 'profile_missing' };
   }
+  // Start the 8-hour inactivity auto-logout countdown.
+  klResetIdleTimer();
   return { ok: true };
 }
 
@@ -2219,11 +2254,77 @@ async function klLogout() {
   window.__pos = null; window.__poLines = null;
   window.__poSups = null; window.__poItems = null;
   window.__salesDishes = null; window.__ewRows = null;
+  // Stop the auto-logout timers on logout so they don't fire on the next user.
+  klStopIdleWatcher();
   // Re-hide app page structure from the DOM (next person on a shared
   // tablet sees only the login screen, like a fresh load).
   regateAppPages();
   location.hash = '#/login';
 }
+
+// ============================================================
+// Auto-logout — 8-hour inactivity timer (security: kitchen tablets
+// often stay open after staff walks away). Warns 10 min before
+// logging out so user can stay if still working.
+// ============================================================
+const KL_IDLE_LIMIT_MS = 8 * 60 * 60 * 1000;        // 8 hours
+const KL_IDLE_WARN_MS  = (8 * 60 - 10) * 60 * 1000; // warn at 7h 50min
+let __idleTimer = null, __warnTimer = null, __warnBox = null;
+
+function klResetIdleTimer() {
+  if (!__profile) return; // only runs when logged in
+  if (__idleTimer) clearTimeout(__idleTimer);
+  if (__warnTimer) clearTimeout(__warnTimer);
+  // Hide any existing warning when the user becomes active again.
+  if (__warnBox) { __warnBox.remove(); __warnBox = null; }
+  __warnTimer = setTimeout(klShowIdleWarning, KL_IDLE_WARN_MS);
+  __idleTimer = setTimeout(() => {
+    // Time's up — sign out and tell the user gently why.
+    klLogout().then(() => {
+      try { alert(t('idle.outMsg') || 'You have been signed out after 8 hours.'); } catch(e){}
+    });
+  }, KL_IDLE_LIMIT_MS);
+}
+
+function klShowIdleWarning() {
+  // Toast at top-right: "10 min left — tap to stay signed in".
+  if (__warnBox) __warnBox.remove();
+  __warnBox = document.createElement('div');
+  __warnBox.id = 'kl-idle-warn';
+  __warnBox.style.cssText = 'position:fixed;top:18px;right:18px;z-index:9998;'
+    + 'background:#fdf3e3;border:1px solid #caa24a;color:#b9791b;'
+    + 'padding:14px 18px;border-radius:10px;font-size:14px;font-weight:600;'
+    + 'box-shadow:0 4px 18px rgba(20,32,48,.12);cursor:pointer;max-width:320px';
+  __warnBox.textContent = (t('idle.warnMsg') || '⏱ Signing out in 10 min — tap to stay');
+  __warnBox.addEventListener('click', klResetIdleTimer);
+  document.body.appendChild(__warnBox);
+}
+
+function klStopIdleWatcher() {
+  if (__idleTimer) clearTimeout(__idleTimer); __idleTimer = null;
+  if (__warnTimer) clearTimeout(__warnTimer); __warnTimer = null;
+  if (__warnBox) { __warnBox.remove(); __warnBox = null; }
+}
+
+// Bind activity events ONCE on first load — any click/keypress/touch
+// counts as user activity and resets the 8-hour countdown.
+(function(){
+  const reset = () => klResetIdleTimer();
+  ['click','keydown','touchstart','mousemove','scroll'].forEach(ev => {
+    document.addEventListener(ev, reset, { passive: true });
+  });
+  // Cross-tab: if user is active in another tab of the same app,
+  // reset the timer here too (so logging out one tab doesn't kill all).
+  window.addEventListener('storage', e => {
+    if (e.key === 'kl_last_activity') reset();
+  });
+  // Whenever activity happens, record the timestamp for cross-tab sync.
+  ['click','keydown','touchstart'].forEach(ev => {
+    document.addEventListener(ev, () => {
+      try { localStorage.setItem('kl_last_activity', String(Date.now())); } catch(e){}
+    }, { passive: true });
+  });
+})();
 
 async function klRequireLogin() {
   if (!__profile) {
@@ -2552,6 +2653,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasSession && typeof enterApp === 'function') {
           // Logged-in user (incl. after refresh) → go straight to app.
           enterApp();
+          // Start the 8-hour inactivity countdown for the restored session.
+          if (typeof klResetIdleTimer === 'function') klResetIdleTimer();
         } else if (appShown) {
           // App view already explicitly shown (clicked Get Started).
           route();
@@ -4427,6 +4530,25 @@ window.expWasteConfirm = async function(batchId) {
 // =====================================================================
 // v2.4 — OVERVIEW PAGE (owner cockpit: gauges + order-today + expiring)
 // =====================================================================
+// Default Overview date range: last 30 days. Changeable via the
+// date-range filter at the top of the Overview page.
+let __ovRange = { days: 30, from: null, to: null };
+
+function klOvGetRange() {
+  // Returns { fromDate, toDate, days } - inclusive 'to' end-of-day.
+  const to = __ovRange.to ? new Date(__ovRange.to+'T23:59:59') : new Date();
+  let from;
+  if (__ovRange.from) {
+    from = new Date(__ovRange.from+'T00:00:00');
+  } else {
+    const days = __ovRange.days || 30;
+    from = new Date(to.getTime() - days*86400000);
+    from.setHours(0,0,0,0);
+  }
+  const days = Math.max(1, Math.round((to - from) / 86400000));
+  return { from, to, days };
+}
+
 async function initOverviewPage() {
   const u = await klRequireLogin(); if (!u) return;
   document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
@@ -4444,8 +4566,18 @@ async function initOverviewPage() {
     const in7 = new Date(); in7.setDate(in7.getDate()+7);
     const in7s = in7.toISOString().slice(0,10);
 
+    // Active date range from the picker (defaults to last 30 days).
+    const range = klOvGetRange();
+    const rangeFromISO = range.from.toISOString();
+    const rangeToISO = range.to.toISOString();
+    // History for the bar chart - always span enough to show a trend.
+    // Use 6 months OR 2x the selected range, whichever is longer.
+    const histStart = new Date(Math.min(
+      range.from.getTime(),
+      Date.now() - Math.max(180, range.days*2) * 86400000
+    ));
+
     // ---- Pull everything in parallel. RLS auto-scopes to restaurant ----
-    const sixMonAgo = new Date(); sixMonAgo.setMonth(sixMonAgo.getMonth()-6);
     const [stockVal, adv, expB, wasteMonth, wasteHist, receivingWk, wasteItems] = await Promise.all([
       sb.from('v_stock_value').select('*'),
       sb.from('v_reorder_advisor').select('*').order('name'),
@@ -4453,27 +4585,30 @@ async function initOverviewPage() {
         .select('quantity_remaining, unit_cost, expiry_date, status, items(name,name_lao,unit)')
         .eq('status','active').not('expiry_date','is',null)
         .lte('expiry_date', in7s).order('expiry_date'),
-      // waste this calendar month via movements
+      // Waste in the SELECTED period
       sb.from('movements')
         .select('quantity, created_at, movement_type, batches(unit_cost)')
         .eq('movement_type','WASTE')
-        .gte('created_at', new Date(today.getFullYear(), today.getMonth(), 1).toISOString()),
-      // waste last 6 months for the chart
+        .gte('created_at', rangeFromISO)
+        .lte('created_at', rangeToISO),
+      // Waste history for the 6-month bar chart trend
       sb.from('movements')
         .select('quantity, created_at, movement_type, batches(unit_cost)')
         .eq('movement_type','WASTE')
-        .gte('created_at', sixMonAgo.toISOString()),
-      // receiving this week (IN movements + their value)
+        .gte('created_at', histStart.toISOString()),
+      // Receiving in the SELECTED period
       sb.from('movements')
         .select('quantity, created_at, movement_type, batches(unit_cost)')
         .eq('movement_type','IN')
-        .gte('created_at', new Date(today.getTime() - 7*86400000).toISOString())
+        .gte('created_at', rangeFromISO)
+        .lte('created_at', rangeToISO)
         .order('created_at', { ascending: false }),
-      // top wasted items this month — pull with item names for the list
+      // Top wasted items in the SELECTED period
       sb.from('movements')
         .select('quantity, movement_type, batches(unit_cost, items(name,name_lao,unit))')
         .eq('movement_type','WASTE')
-        .gte('created_at', new Date(today.getFullYear(), today.getMonth(), 1).toISOString()),
+        .gte('created_at', rangeFromISO)
+        .lte('created_at', rangeToISO),
     ]);
 
     // ---- Compute KPIs ----
@@ -4552,9 +4687,18 @@ async function initOverviewPage() {
 
     // ---- helper: small SVG bar chart (fixed viewBox so text stays crisp) ----
     const barChart = (data, color) => {
-      const W = 320, H = 150, padB = 24, padT = 18;
+      const W = 320, H = 150, padB = 24, padT = 22;
       const max = Math.max(1, ...data.map(d=>d.val));
       const slot = W / data.length;
+      // Format big kip values readably:
+      // ≥ 1 billion → "1.4B"   ≥ 1 million → "28M"   ≥ 1k → "560k"   else: 123
+      const fmtBar = (v) => {
+        v = Number(v||0);
+        if (v >= 1e9)   return (v/1e9).toFixed(v>=1e10?0:1).replace(/\.0$/,'') + 'B';
+        if (v >= 1e6)   return (v/1e6).toFixed(v>=1e7?0:1).replace(/\.0$/,'') + 'M';
+        if (v >= 1000)  return Math.round(v/1000) + 'k';
+        return String(Math.round(v));
+      };
       let bars = '';
       data.forEach((d,i) => {
         const bh = Math.max(3, (d.val/max) * (H - padB - padT));
@@ -4563,7 +4707,7 @@ async function initOverviewPage() {
         const y = H - padB - bh;
         bars += '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+bh.toFixed(1)+'" rx="3" fill="'+color+'"></rect>';
         bars += '<text x="'+(i*slot+slot/2).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" font-size="11" fill="#8a93a0">'+h(d.label)+'</text>';
-        const vtxt = d.val>=1000 ? Math.round(d.val/1000)+'k' : Math.round(d.val);
+        const vtxt = fmtBar(d.val);
         bars += '<text x="'+(i*slot+slot/2).toFixed(1)+'" y="'+(y-6).toFixed(1)+'" text-anchor="middle" font-size="11" font-weight="700" fill="#69707d">'+vtxt+'</text>';
       });
       return '<svg viewBox="0 0 '+W+' '+H+'" class="kl-ov-chart" preserveAspectRatio="xMidYMid meet">'+bars+'</svg>';
@@ -4690,9 +4834,24 @@ async function initOverviewPage() {
     const catArr = Object.keys(stockByCat).map(k=>({label:k.slice(0,6), val:stockByCat[k]}))
                     .sort((a,b)=>b.val-a.val).slice(0,6);
     html += '<div class="kl-ov-2col">';
-    html += '<div class="kl-ov-card"><div class="kl-ov-head">'+t('ov.chStockCat')+'</div>'
-          + '<div class="kl-ov-chartwrap">'+ (catArr.length? barChart(catArr,'#15795f')
-              : '<p class="kl-rsmall">'+t('ov.noData')+'</p>') +'</div></div>';
+    html += '<div class="kl-ov-card"><div class="kl-ov-head">'+t('ov.chStockCat')
+          + '<span class="kl-ov-count">'+money(stockValue)+'</span></div>';
+    if (catArr.length) {
+      html += '<div class="kl-ov-chartwrap">'+barChart(catArr,'#15795f')+'</div>';
+      // Full kip amounts list below the chart
+      html += '<div class="kl-ov-catlist">';
+      catArr.forEach(c => {
+        html += '<div class="kl-ov-catrow">'
+              + '<span class="kl-ov-catdot" style="background:#15795f"></span>'
+              + '<span class="kl-ov-catname">'+h(c.label)+'</span>'
+              + '<span class="kl-ov-catval">'+money(c.val)+'</span>'
+              + '</div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<p class="kl-rsmall">'+t('ov.noData')+'</p>';
+    }
+    html += '</div>';
     // Top Wasted Items panel
     html += '<div class="kl-ov-card"><div class="kl-ov-head">🗑 '+t('ov.topWaste')
           + '<span class="kl-ov-count">'+money(wasteMonthVal)+'</span></div>';
@@ -4739,6 +4898,35 @@ async function initOverviewPage() {
     html += '</div>';
 
     body.innerHTML = html;
+
+    // Wire the date-range filter (once - guarded with dataset.wired).
+    const ovDR = document.getElementById('ovDateRange');
+    if (ovDR && ovDR.dataset.wired !== '1') {
+      ovDR.dataset.wired = '1';
+      // Preset buttons - 1 week / 1 month / 3 months
+      ovDR.querySelectorAll('[data-ovrange]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          ovDR.querySelectorAll('[data-ovrange]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          __ovRange = { days: parseInt(btn.getAttribute('data-ovrange'),10), from: null, to: null };
+          document.getElementById('ovFrom').value = '';
+          document.getElementById('ovTo').value = '';
+          initOverviewPage();
+        });
+      });
+      // Custom From/To Filter button
+      const apply = document.getElementById('ovApply');
+      if (apply) {
+        apply.addEventListener('click', () => {
+          const f = document.getElementById('ovFrom').value;
+          const t2 = document.getElementById('ovTo').value;
+          if (!f || !t2) { try { alert(t('rt.pickBoth') || 'Pick both From and To dates.'); } catch(e){} return; }
+          ovDR.querySelectorAll('[data-ovrange]').forEach(b => b.classList.remove('active'));
+          __ovRange = { days: null, from: f, to: t2 };
+          initOverviewPage();
+        });
+      }
+    }
   } catch (e) {
     body.innerHTML = '<div class="kl-ov-card bad"><div class="kl-ov-head">'+t('r.loadFail')+'</div>'
       + '<p class="kl-rsmall">'+h(e.message||String(e))+'</p></div>';
