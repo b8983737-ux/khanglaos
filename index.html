@@ -661,8 +661,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.13-clear-filter-2026-05-22 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.13-filter</div>
+<!-- KHANGLAOS BUILD: v3.14-warehouse-only-2026-05-23 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.14-wh</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -1025,7 +1025,6 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
     <a href="#/receive"   data-nav="receive"   data-i18n="nav.receive"><span class="kl-sb-ic">⬇</span><span class="kl-sb-lbl">Receive</span></a>
     <a href="#/stock"     data-nav="stock"     data-i18n="nav.stock"><span class="kl-sb-ic">▥</span><span class="kl-sb-lbl">Stock</span></a>
     <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout"><span class="kl-sb-ic">⬆</span><span class="kl-sb-lbl">Check-Out</span></a>
-    <a href="#/sales"     data-nav="sales"     data-i18n="nav.sales"><span class="kl-sb-ic">₭</span><span class="kl-sb-lbl">Sales</span></a>
     <a href="#/reports"   data-nav="reports"   data-i18n="nav.reports"><span class="kl-sb-ic">▤</span><span class="kl-sb-lbl">Reports</span></a>
     <a href="#/manage"    data-nav="manage"    data-i18n="nav.manage"><span class="kl-sb-ic">⚙</span><span class="kl-sb-lbl">Manage</span></a>
   </nav>
@@ -1268,9 +1267,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
     <p class="kl-page-sub" data-i18n="reports.sub">What is making money, what is losing money. Red = problem.</p>
     <div class="kl-tabs" id="reportsTabs">
       <button class="kl-tab active" data-rtab="waste"    data-i18n="rt.waste">Waste &amp; Stock</button>
-      <button class="kl-tab"        data-rtab="recipes"  data-i18n="rt.recipes">Recipes — Profit per Dish</button>
       <button class="kl-tab"        data-rtab="purchasing" data-i18n="rt.purchasing">Purchasing</button>
-      <button class="kl-tab"        data-rtab="variance" data-i18n="rt.variance">Variance — Loss Finder</button>
       <button class="kl-tab"        data-rtab="activity" data-i18n="rt.activity">Activity by Date</button>
     </div>
     <div class="kl-daterange" id="reportsDateRange" style="display:none">
@@ -1286,14 +1283,6 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
       <button class="kl-dr-apply" id="rtApply" data-i18n="rt.filter">Filter</button>
     </div>
     <div id="reportsBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
-  </div>
-</div>
-
-<div id="page-sales" class="kl-page">
-  <div class="kl-wrap">
-    <h1 class="kl-page-title" data-i18n="sales.title">Sales — log dishes sold</h1>
-    <p class="kl-page-sub" data-i18n="sales.sub">Tap a dish, set how many sold, confirm. Ingredients auto-deduct from stock (FEFO). Makes the Variance report work.</p>
-    <div id="salesBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
   </div>
 </div>
 
@@ -2172,7 +2161,6 @@ function setLang(lang) {
     else if (r === 'receive')   initReceivePage();
     else if (r === 'stock')     initStockPage();
     else if (r === 'checkout')  initCheckoutPage();
-    else if (r === 'sales')     initSalesPage();
   } catch (e) { /* page not ready yet — applyI18n already handled static text */ }
 }
 function applyI18n() {
@@ -2412,7 +2400,7 @@ function showMsg(elId, text, type) {
   if (type === 'ok') setTimeout(() => el.innerHTML = '', 4000);
 }
 
-const ROUTES = ['login','dashboard','overview','receive','stock','checkout','sales','reports','manage'];
+const ROUTES = ['login','dashboard','overview','receive','stock','checkout','reports','manage'];
 function currentRoute() {
   const h = (location.hash || '').replace(/^#\//, '');
   return ROUTES.includes(h) ? h : (klSession() ? 'dashboard' : 'login');
@@ -2463,7 +2451,6 @@ function showPage(name) {
   else if (name === 'receive')   initReceivePage();
   else if (name === 'stock')     initStockPage();
   else if (name === 'checkout')  initCheckoutPage();
-  else if (name === 'sales')     initSalesPage();
   else if (name === 'reports')   initReportsPage();
   else if (name === 'manage')    initManagePage();
 }
@@ -2508,7 +2495,7 @@ window.addEventListener('hashchange', route);
 // hardening; the real security is the database RLS (anon = zero rows),
 // proven separately. Both layers together = MarketMan's model.
 // =====================================================================
-const GATED_PAGES = ['dashboard','overview','receive','stock','checkout','sales','reports','manage'];
+const GATED_PAGES = ['dashboard','overview','receive','stock','checkout','reports','manage'];
 const __pageStash = {};
 let __pagesGated = false;
 
@@ -3337,13 +3324,10 @@ async function initReportsPage() {
   tabs.style.display = '';
   const dateRange = document.getElementById('reportsDateRange');
   const dispatch = (tab) => {
-    // Recipes is a current cost/price snapshot — no time dimension,
-    // so no date filter there. It shows on all the other report tabs.
-    const DATE_FILTERABLE = ['waste', 'variance', 'purchasing', 'activity'];
+    // No restaurant-only tabs (recipes/variance) — KHANGLAOS is warehouse.
+    const DATE_FILTERABLE = ['waste', 'purchasing', 'activity'];
     dateRange.style.display = DATE_FILTERABLE.includes(tab) ? 'flex' : 'none';
-    if (tab === 'recipes')         renderRecipesReport(u);
-    else if (tab === 'purchasing') renderPurchasingReport(u);
-    else if (tab === 'variance')   renderVarianceReport(u);
+    if (tab === 'purchasing') renderPurchasingReport(u);
     else if (tab === 'activity')   renderActivityReport(u);
     else                           renderWasteReport(u);
   };
