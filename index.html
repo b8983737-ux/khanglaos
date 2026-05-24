@@ -124,6 +124,19 @@ a:hover { text-decoration: underline; }
 .kl-sb-name { font-family: var(--kl-font-display); font-weight: 700; font-size: 17px; color: #fff; letter-spacing: -0.2px; }
 .kl-sb-name small { display:block; color: #8fb9ad; font-weight: 500; font-size: 11px; margin-top: 1px; }
 .kl-sb-nav { display: flex; flex-direction: column; padding: 12px 0; gap: 1px; }
+/* Section group labels - subtle uppercase headers between nav groups */
+.kl-sb-section {
+  padding: 14px 22px 6px 22px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.38);
+  user-select: none;
+  pointer-events: none;
+}
+/* First section needs less top padding (already has nav padding above) */
+.kl-sb-section:first-child { padding-top: 6px; }
 .kl-sb-nav a {
   display: flex; align-items: center; gap: 13px;
   padding: 12px 22px; color: #b8d3ca;
@@ -486,6 +499,147 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   width:100%; max-height:90vh; overflow-y:auto; box-shadow:var(--kl-shadow-lg); }
 .kl-modal h3 { margin:0 0 18px 0; font-size:18px; font-weight:700; letter-spacing:-0.3px; }
 /* Overview cockpit — clean cards with subtle status accent */
+/* ============================================================
+   REUSABLE MULTI-SELECT FILTER (used on Stock Levels, Stock page,
+   Map drawer items). Pattern: small "Filter" pill button shows
+   active count badge. Tap opens a popup panel with grouped tick
+   boxes — one box per dimension (Status / Category / Zone /
+   Supplier / Unit). Tick = include, untick = exclude.
+   AND across dimensions, OR within each dimension.
+   ============================================================ */
+.kl-mf-bar { display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  margin-bottom:10px; }
+.kl-mf-btn { display:inline-flex; align-items:center; gap:6px;
+  background:#fff; border:1px solid var(--kl-border,#eceef1);
+  border-radius:8px; padding:6px 12px; font-size:13px; font-weight:600;
+  color:var(--kl-text,#14201b); cursor:pointer; }
+.kl-mf-btn:hover { background:var(--kl-surface-2,#f4f6f8); }
+.kl-mf-btn.has-active { border-color:var(--kl-primary,#15795f);
+  color:var(--kl-primary,#15795f); background:#e8f3ef; }
+.kl-mf-count { background:var(--kl-primary,#15795f); color:#fff;
+  font-size:11px; font-weight:700; padding:1px 7px; border-radius:999px;
+  min-width:18px; text-align:center; }
+.kl-mf-clear { background:transparent; border:1px solid transparent;
+  color:var(--kl-text-soft,#69707d); padding:5px 9px; font-size:12px;
+  font-weight:600; cursor:pointer; border-radius:6px; }
+.kl-mf-clear:hover { background:var(--kl-surface-2,#f4f6f8);
+  color:var(--kl-text,#14201b); }
+.kl-mf-chips { display:flex; flex-wrap:wrap; gap:5px; align-items:center; }
+.kl-mf-chip { font-size:11.5px; padding:3px 9px; border-radius:999px;
+  background:#e8f3ef; color:var(--kl-primary,#15795f); font-weight:600;
+  display:inline-flex; align-items:center; gap:5px; }
+.kl-mf-chip-x { background:none; border:none; color:inherit; cursor:pointer;
+  font-size:14px; line-height:1; padding:0; }
+
+/* Popup panel anchored under the filter button */
+.kl-mf-panel { position:absolute; z-index:9500;
+  background:#fff; border:1px solid var(--kl-border,#eceef1);
+  border-radius:12px; box-shadow:0 8px 28px rgba(20,32,48,.14);
+  padding:14px 16px; min-width:280px; max-width:340px;
+  max-height:480px; overflow-y:auto;
+  display:none; }
+.kl-mf-panel.open { display:block; }
+.kl-mf-panel-head { display:flex; justify-content:space-between;
+  align-items:center; margin-bottom:10px; }
+.kl-mf-panel-title { font-size:13px; font-weight:700;
+  color:var(--kl-text,#14201b); }
+.kl-mf-panel-close { background:transparent; border:none; cursor:pointer;
+  font-size:18px; color:var(--kl-text-soft,#69707d); padding:0 4px;
+  line-height:1; border-radius:6px; }
+.kl-mf-panel-close:hover { color:var(--kl-text,#14201b);
+  background:var(--kl-surface-2,#f4f6f8); }
+.kl-mf-group { margin-bottom:14px; }
+.kl-mf-group:last-child { margin-bottom:0; }
+.kl-mf-group-lbl { font-size:10.5px; font-weight:700; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--kl-text-soft,#69707d);
+  margin-bottom:6px; }
+.kl-mf-opt { display:flex; align-items:center; gap:8px;
+  padding:5px 0; font-size:13px; color:var(--kl-text,#14201b);
+  cursor:pointer; user-select:none; }
+.kl-mf-opt input[type=checkbox] { margin:0; cursor:pointer;
+  width:14px; height:14px; accent-color:var(--kl-primary,#15795f); }
+.kl-mf-opt span { flex:1; }
+.kl-mf-opt-empty { color:var(--kl-text-soft,#69707d); font-size:12px;
+  font-style:italic; padding:5px 0; }
+.kl-mf-panel-actions { display:flex; gap:8px; margin-top:12px;
+  padding-top:10px; border-top:1px solid var(--kl-border,#eceef1); }
+.kl-mf-panel-actions button { flex:1; padding:7px 12px; font-size:13px;
+  font-weight:600; border-radius:6px; cursor:pointer;
+  border:1px solid var(--kl-border,#eceef1); background:#fff;
+  color:var(--kl-text,#14201b); }
+.kl-mf-panel-actions .kl-mf-apply { background:var(--kl-primary,#15795f);
+  border-color:var(--kl-primary,#15795f); color:#fff; }
+.kl-mf-panel-actions .kl-mf-apply:hover { filter:brightness(1.08); }
+
+/* ============================================================
+   EXPORT DIALOG — date-range picker + Excel download
+   Professional WMS-style modal: From/To dates, quick presets,
+   live preview of row count, Export button.
+   ============================================================ */
+.kl-exp-overlay { position:fixed; inset:0; background:rgba(20,32,48,.5);
+  z-index:9700; display:none; align-items:center; justify-content:center;
+  padding:20px; }
+.kl-exp-overlay.open { display:flex; }
+.kl-exp-dialog { background:#fff; border-radius:14px; max-width:520px;
+  width:100%; box-shadow:0 20px 60px rgba(20,32,48,.25);
+  display:flex; flex-direction:column; max-height:90vh; }
+.kl-exp-head { padding:18px 22px; border-bottom:1px solid var(--kl-border,#eceef1);
+  display:flex; align-items:flex-start; gap:12px; }
+.kl-exp-head h2 { margin:0; font-size:18px; font-weight:700;
+  color:var(--kl-text,#14201b); flex:1; }
+.kl-exp-head .kl-exp-sub { font-size:12px; color:var(--kl-text-soft,#69707d);
+  margin:4px 0 0 0; }
+.kl-exp-close { background:transparent; border:none; cursor:pointer;
+  font-size:22px; color:var(--kl-text-soft,#69707d); padding:0 4px;
+  line-height:1; border-radius:6px; }
+.kl-exp-close:hover { background:var(--kl-surface-2,#f4f6f8);
+  color:var(--kl-text,#14201b); }
+.kl-exp-body { padding:18px 22px; overflow-y:auto; flex:1; }
+.kl-exp-presets { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+.kl-exp-preset { background:#fff; border:1px solid var(--kl-border,#eceef1);
+  border-radius:8px; padding:6px 12px; font-size:13px; font-weight:600;
+  cursor:pointer; color:var(--kl-text,#14201b); }
+.kl-exp-preset:hover { background:var(--kl-surface-2,#f4f6f8); }
+.kl-exp-preset.active { background:var(--kl-primary,#15795f); color:#fff;
+  border-color:var(--kl-primary,#15795f); }
+.kl-exp-dates { display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;
+  margin-bottom:14px; }
+.kl-exp-date-field { flex:1; min-width:130px; }
+.kl-exp-date-field label { display:block; font-size:11px; font-weight:700;
+  letter-spacing:.05em; text-transform:uppercase;
+  color:var(--kl-text-soft,#69707d); margin-bottom:5px; }
+.kl-exp-date-field input { width:100%; padding:8px 10px;
+  border:1px solid var(--kl-border,#eceef1); border-radius:8px; font-size:14px;
+  box-sizing:border-box; }
+.kl-exp-arrow { padding-bottom:9px; color:var(--kl-text-soft,#69707d);
+  font-size:18px; }
+.kl-exp-summary { background:var(--kl-surface-2,#f4f6f8);
+  border-radius:10px; padding:12px 14px; margin-bottom:14px; font-size:13px; }
+.kl-exp-summary-row { display:flex; justify-content:space-between;
+  padding:3px 0; }
+.kl-exp-summary-lbl { color:var(--kl-text-soft,#69707d); }
+.kl-exp-summary-val { color:var(--kl-text,#14201b); font-weight:700; }
+.kl-exp-actions { padding:14px 22px; border-top:1px solid var(--kl-border,#eceef1);
+  display:flex; gap:10px; justify-content:flex-end; }
+.kl-exp-actions button { padding:9px 18px; font-size:14px; font-weight:600;
+  border-radius:8px; cursor:pointer; border:1px solid var(--kl-border,#eceef1);
+  background:#fff; color:var(--kl-text,#14201b); }
+.kl-exp-actions .kl-exp-go { background:var(--kl-primary,#15795f);
+  border-color:var(--kl-primary,#15795f); color:#fff; }
+.kl-exp-actions .kl-exp-go:hover { filter:brightness(1.08); }
+.kl-exp-actions .kl-exp-go:disabled { opacity:.5; cursor:not-allowed; }
+.kl-exp-spinner { display:inline-block; width:14px; height:14px;
+  border:2px solid rgba(255,255,255,.4); border-top-color:#fff;
+  border-radius:50%; animation:klExpSpin .8s linear infinite; vertical-align:-2px;
+  margin-right:6px; }
+@keyframes klExpSpin { to { transform:rotate(360deg); } }
+.kl-exp-error { background:#fdecea; color:#c0392b; padding:10px 12px;
+  border-radius:8px; font-size:13px; margin-bottom:14px; }
+@media(max-width:560px) {
+  .kl-exp-dates { flex-direction:column; align-items:stretch; }
+  .kl-exp-arrow { display:none; }
+}
+
 /* Overview header — title left, date filter right */
 .kl-ov-header { display:flex; justify-content:space-between; align-items:flex-start;
   gap:24px; margin-bottom:18px; flex-wrap:wrap; }
@@ -785,8 +939,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.17-warehouse-map-2026-05-23 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.17-map</div>
+<!-- KHANGLAOS BUILD: v3.21-excel-export-2026-05-24 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.21-export</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -1144,13 +1298,22 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
     <span class="kl-sb-name">KHANGLAOS <small>ຄັງລາວ</small></span>
   </div>
   <nav class="kl-sb-nav">
+    <div class="kl-sb-section" data-i18n="navg.overview">OVERVIEW</div>
     <a href="#/dashboard" data-nav="dashboard" data-i18n="nav.dashboard"><span class="kl-sb-ic">▦</span><span class="kl-sb-lbl">Dashboard</span></a>
     <a href="#/overview"  data-nav="overview"  data-i18n="nav.overview"><span class="kl-sb-ic">◷</span><span class="kl-sb-lbl">Overview</span></a>
+
+    <div class="kl-sb-section" data-i18n="navg.operations">OPERATIONS</div>
     <a href="#/receive"   data-nav="receive"   data-i18n="nav.receive"><span class="kl-sb-ic">⬇</span><span class="kl-sb-lbl">Receive</span></a>
+    <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout"><span class="kl-sb-ic">⬆</span><span class="kl-sb-lbl">Check-Out</span></a>
+
+    <div class="kl-sb-section" data-i18n="navg.inventory">INVENTORY</div>
     <a href="#/stock"     data-nav="stock"     data-i18n="nav.stock"><span class="kl-sb-ic">▥</span><span class="kl-sb-lbl">Stock</span></a>
     <a href="#/map"       data-nav="map"       data-i18n="nav.map"><span class="kl-sb-ic">⌖</span><span class="kl-sb-lbl">Map</span></a>
-    <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout"><span class="kl-sb-ic">⬆</span><span class="kl-sb-lbl">Check-Out</span></a>
+
+    <div class="kl-sb-section" data-i18n="navg.insights">INSIGHTS</div>
     <a href="#/reports"   data-nav="reports"   data-i18n="nav.reports"><span class="kl-sb-ic">▤</span><span class="kl-sb-lbl">Reports</span></a>
+
+    <div class="kl-sb-section" data-i18n="navg.settings">SETTINGS</div>
     <a href="#/manage"    data-nav="manage"    data-i18n="nav.manage"><span class="kl-sb-ic">⚙</span><span class="kl-sb-lbl">Manage</span></a>
   </nav>
 </aside>
@@ -1298,8 +1461,61 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
         <button class="kl-dr-btn" data-sf="low" data-i18n="stock.low">Low stock</button>
         <button class="kl-dr-btn" data-sf="exp" data-i18n="stock.expiring">Expiring</button>
       </div>
+      <button id="stockExportBtn" class="kl-btn kl-btn-primary" data-i18n="exp.button">📊 Export Movement Report</button>
     </div>
     <div id="stockBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
+  </div>
+</div>
+
+<!-- Movement Report export dialog -->
+<div id="klExpOverlay" class="kl-exp-overlay" onclick="if(event.target===this)klExpClose()">
+  <div class="kl-exp-dialog">
+    <div class="kl-exp-head">
+      <div style="flex:1">
+        <h2 data-i18n="exp.title">Export Movement Report</h2>
+        <p class="kl-exp-sub" data-i18n="exp.sub">Pick a date range. Excel file shows Opening / IN / OUT / WASTE / Closing per item.</p>
+      </div>
+      <button class="kl-exp-close" onclick="klExpClose()" aria-label="Close">×</button>
+    </div>
+    <div class="kl-exp-body">
+      <div class="kl-exp-presets" id="klExpPresets">
+        <button class="kl-exp-preset" data-preset="today"     data-i18n="exp.pToday">Today</button>
+        <button class="kl-exp-preset" data-preset="week"      data-i18n="exp.pWeek">Last 7 days</button>
+        <button class="kl-exp-preset active" data-preset="thismonth" data-i18n="exp.pThisMonth">This month</button>
+        <button class="kl-exp-preset" data-preset="lastmonth" data-i18n="exp.pLastMonth">Last month</button>
+        <button class="kl-exp-preset" data-preset="quarter"   data-i18n="exp.pQuarter">Last 90 days</button>
+      </div>
+      <div class="kl-exp-dates">
+        <div class="kl-exp-date-field">
+          <label data-i18n="exp.from">From</label>
+          <input type="date" id="klExpFrom">
+        </div>
+        <span class="kl-exp-arrow">→</span>
+        <div class="kl-exp-date-field">
+          <label data-i18n="exp.to">To</label>
+          <input type="date" id="klExpTo">
+        </div>
+      </div>
+      <div class="kl-exp-summary" id="klExpSummary">
+        <div class="kl-exp-summary-row">
+          <span class="kl-exp-summary-lbl" data-i18n="exp.range">Range</span>
+          <span class="kl-exp-summary-val" id="klExpRangeLbl">—</span>
+        </div>
+        <div class="kl-exp-summary-row">
+          <span class="kl-exp-summary-lbl" data-i18n="exp.items">Items in report</span>
+          <span class="kl-exp-summary-val" id="klExpItemCount">—</span>
+        </div>
+        <div class="kl-exp-summary-row">
+          <span class="kl-exp-summary-lbl" data-i18n="exp.format">Format</span>
+          <span class="kl-exp-summary-val">Excel (.xlsx)</span>
+        </div>
+      </div>
+      <div id="klExpError" class="kl-exp-error" style="display:none"></div>
+    </div>
+    <div class="kl-exp-actions">
+      <button onclick="klExpClose()" data-i18n="common.cancel">Cancel</button>
+      <button id="klExpGoBtn" class="kl-exp-go" onclick="klExpRun()" data-i18n="exp.download">📥 Download Excel</button>
+    </div>
   </div>
 </div>
 
@@ -1543,7 +1759,7 @@ const I18N = {
     "m.needCodeName":"Code and name required", "m.tempErr":"Min temperature cannot be higher than max",
     "nav.overview":"Overview",
     "ov.title":"Overview — Owner Cockpit", "ov.sub":"Everything in one screen. Order today and expiring on top.",
-    "ov.receiving":"Receiving", "ov.recToday":"Received today", "ov.recWeek":"This week", "ov.lastRec":"Last receive", "ov.topWaste":"Top wasted items (this month)", "ov.noWaste":"No waste this month. ✓", "ov.belowMin":"BELOW MIN — order now", "ov.ok":"OK", "ov.min":"min", "ov.max":"max", "ov.daysAgo":"days ago", "ov.haveUse":"Have / Use", "ov.orderQty":"Order Qty", "ov.qty":"Qty", "ov.expires":"Expires", "ov.today":"Today", "ov.tomorrow":"Tomorrow", "ov.days":"days", "ov.day":"day", "ov.now":"now", "ov.colItem":"Item", "ov.autoOrder":"Auto-order", "idle.warnMsg":"⏱ Signing out in 10 min — tap to stay", "idle.outMsg":"You have been signed out after 8 hours.", "ov.d90btn":"3 months", "ov.kWaste":"Waste", "ov.kVsPrevRange":"vs previous period", "ov.lblWeek":"last 7 days", "ov.lblMonth":"last 30 days", "ov.lbl3Months":"last 90 days", "ov.topWasteShort":"Top wasted items", "ov.recPeriod":"This period", "ov.clearFilter":"✕", "common.in":"in", "common.howMany":"How many", "common.pricePer":"Price per", "common.unit":"unit", "nav.map":"Map", "map.title":"Warehouse Map", "map.sub":"Live view of every zone. Color shows temperature, capacity, and expiry status.", "map.legOk":"OK", "map.legWarn":"Warning", "map.legBad":"Critical", "map.legUnknown":"No data", "map.emptyTitle":"No zones configured yet", "map.emptyMsg":"Add storage zones in Manage → Locations to see your warehouse map.", "map.gotoManage":"Go to Manage", "map.row":"Row", "map.unassigned":"Unassigned zones", "map.temp":"Temp", "map.capacity":"Capacity", "map.batches":"batches", "map.tempBad":"TEMP CRITICAL", "map.tempWarn":"Temp drift", "map.capBad":"FULL", "map.capWarn":"Near full", "map.expiringSoon":"expiring", "map.detSummary":"Summary", "map.detItems":"Items in zone", "map.noItems":"No active stock in this zone.", "map.zoneType":"Zone type", "map.tempNow":"Current temp", "map.tempRange":"Target range", "map.stockValue":"Stock value", "map.notes":"Notes", "map.zt.freezer":"Freezer", "map.zt.chiller":"Chiller", "map.zt.cool_dry":"Cool dry", "map.zt.ambient":"Ambient", "map.zt.hazmat":"Hazmat", "map.zt.bonded":"Bonded", "map.zt.office":"Office", "map.zt.dry":"Dry storage", "map.zt.bar":"Bar", "m.currentTemp":"Current temperature", "m.capacity":"Capacity (units)", "m.gridRow":"Grid row", "m.gridCol":"Grid column", "m.notes":"Notes", "ov.kStockVal":"Stock Value", "ov.kItems":"items", "ov.kWasteMo":"Waste This Month", "ov.kVsPrev":"vs last month", "ov.kExpiring":"Expiring ≤7 days", "ov.kBatches":"batches", "ov.kReorder":"To Reorder", "ov.kItemsLow":"items below min", "ov.chWaste":"Waste — last 6 months", "ov.chStockCat":"Stock value by category", "ov.expSoon":"Expiring soon", "ov.noExp":"Nothing expiring soon. Good.", "ov.noData":"No data yet.", "ov.orderToday":"Order today — below minimum", "ov.nothingOrder":"Nothing needs ordering. Stock levels healthy.",
+    "ov.receiving":"Receiving", "ov.recToday":"Received today", "ov.recWeek":"This week", "ov.lastRec":"Last receive", "ov.topWaste":"Top wasted items (this month)", "ov.noWaste":"No waste this month. ✓", "ov.belowMin":"BELOW MIN — order now", "ov.ok":"OK", "ov.min":"min", "ov.max":"max", "ov.daysAgo":"days ago", "ov.haveUse":"Have / Use", "ov.orderQty":"Order Qty", "ov.qty":"Qty", "ov.expires":"Expires", "ov.today":"Today", "ov.tomorrow":"Tomorrow", "ov.days":"days", "ov.day":"day", "ov.now":"now", "ov.colItem":"Item", "ov.autoOrder":"Auto-order", "idle.warnMsg":"⏱ Signing out in 10 min — tap to stay", "idle.outMsg":"You have been signed out after 8 hours.", "ov.d90btn":"3 months", "ov.kWaste":"Waste", "ov.kVsPrevRange":"vs previous period", "ov.lblWeek":"last 7 days", "ov.lblMonth":"last 30 days", "ov.lbl3Months":"last 90 days", "ov.topWasteShort":"Top wasted items", "ov.recPeriod":"This period", "ov.clearFilter":"✕", "common.in":"in", "common.howMany":"How many", "common.pricePer":"Price per", "common.unit":"unit", "nav.map":"Map", "map.title":"Warehouse Map", "map.sub":"Live view of every zone. Color shows temperature, capacity, and expiry status.", "map.legOk":"OK", "map.legWarn":"Warning", "map.legBad":"Critical", "map.legUnknown":"No data", "map.emptyTitle":"No zones configured yet", "map.emptyMsg":"Add storage zones in Manage → Locations to see your warehouse map.", "map.gotoManage":"Go to Manage", "map.row":"Row", "map.unassigned":"Unassigned zones", "map.temp":"Temp", "map.capacity":"Capacity", "map.batches":"batches", "map.tempBad":"TEMP CRITICAL", "map.tempWarn":"Temp drift", "map.capBad":"FULL", "map.capWarn":"Near full", "map.expiringSoon":"expiring", "map.detSummary":"Summary", "map.detItems":"Items in zone", "map.noItems":"No active stock in this zone.", "map.zoneType":"Zone type", "map.tempNow":"Current temp", "map.tempRange":"Target range", "map.stockValue":"Stock value", "map.notes":"Notes", "map.zt.freezer":"Freezer", "map.zt.chiller":"Chiller", "map.zt.cool_dry":"Cool dry", "map.zt.ambient":"Ambient", "map.zt.hazmat":"Hazmat", "map.zt.bonded":"Bonded", "map.zt.office":"Office", "map.zt.dry":"Dry storage", "map.zt.bar":"Bar", "m.currentTemp":"Current temperature", "m.capacity":"Capacity (units)", "m.gridRow":"Grid row", "m.gridCol":"Grid column", "m.notes":"Notes", "navg.overview":"OVERVIEW", "navg.operations":"OPERATIONS", "navg.inventory":"INVENTORY", "navg.insights":"INSIGHTS", "navg.settings":"SETTINGS", "flt.filter":"Filter", "flt.clearAll":"Clear all", "flt.done":"Done", "flt.status":"Status", "flt.category":"Category", "flt.zone":"Zone", "flt.supplier":"Supplier", "flt.unit":"Unit", "flt.noOptions":"(none)", "flt.s.below_min":"Below min", "flt.s.low":"Low", "flt.s.ok":"OK", "flt.s.over_max":"Over max", "flt.noMatches":"No items match the active filters.", "m.email":"Email", "m.address":"Address", "m.emailBad":"That email address looks invalid.", "m.editStaff":"Edit staff member", "m.noStaff":"No staff yet.", "m.staffMgrOnly":"Only owner/manager can view staff.", "m.staffAddInfo":"To add a new staff login: create them in Supabase → Authentication → Users, then they appear here for editing.", "m.staffAuthNote":"Email and password are managed in Supabase Authentication, not here.", "exp.button":"📊 Export Movement Report", "exp.title":"Export Movement Report", "exp.sub":"Pick a date range. Excel file shows Opening / IN / OUT / WASTE / Closing per item.", "exp.pToday":"Today", "exp.pWeek":"Last 7 days", "exp.pThisMonth":"This month", "exp.pLastMonth":"Last month", "exp.pQuarter":"Last 90 days", "exp.from":"From", "exp.to":"To", "exp.range":"Date range", "exp.items":"Items in report", "exp.format":"Format", "exp.itemsUnit":"items", "exp.download":"📥 Download Excel", "exp.working":"Working…", "exp.errPickDates":"Please pick both From and To dates.", "exp.errBadOrder":"From date must be on or before To date.", "exp.errFail":"Export failed", "exp.cover.title":"Stock Movement Report", "exp.cover.range":"Date range", "exp.cover.generated":"Generated", "exp.cover.items":"Items", "exp.cover.totals":"Totals during period", "exp.cover.closingVal":"Closing stock value (₭)", "exp.cover.note":"Note: Excel headers are in the UI language selected at export time.", "exp.sheet.cover":"Cover", "exp.sheet.report":"Movement Report", "exp.col.sku":"SKU", "exp.col.item":"Item", "exp.col.itemLao":"Name (Lao)", "exp.col.category":"Category", "exp.col.zone":"Zone", "exp.col.unit":"Unit", "exp.col.opening":"Opening", "exp.col.in":"IN", "exp.col.out":"OUT", "exp.col.waste":"WASTE", "exp.col.closing":"Closing", "exp.col.net":"Net change", "exp.col.status":"Status", "exp.col.minLvl":"Min", "exp.col.maxLvl":"Max", "exp.col.cost":"Unit cost (₭)", "exp.col.closeVal":"Closing value (₭)", "exp.col.expiry":"Earliest expiry", "exp.col.value":"Value (₭)", "exp.col.totals":"TOTALS", "ov.kStockVal":"Stock Value", "ov.kItems":"items", "ov.kWasteMo":"Waste This Month", "ov.kVsPrev":"vs last month", "ov.kExpiring":"Expiring ≤7 days", "ov.kBatches":"batches", "ov.kReorder":"To Reorder", "ov.kItemsLow":"items below min", "ov.chWaste":"Waste — last 6 months", "ov.chStockCat":"Stock value by category", "ov.expSoon":"Expiring soon", "ov.noExp":"Nothing expiring soon. Good.", "ov.noData":"No data yet.", "ov.orderToday":"Order today — below minimum", "ov.nothingOrder":"Nothing needs ordering. Stock levels healthy.",
     "ov.haveUse":"Have / use per day", "ov.orderQty":"Order this much", "ov.day":"day",
     "ov.expiring3":"Expiring in 3 days — use NOW", "ov.nothing3":"Nothing expiring in 3 days. Good.",
     "ov.expiring7":"Expiring this week (4–7 days) — plan ahead", "ov.nothing7":"Nothing expiring this week.",
@@ -1708,7 +1924,7 @@ const I18N = {
     "m.needCodeName":"ຕ້ອງມີລະຫັດ ແລະ ຊື່", "m.tempErr":"ອຸນຫະພູມຕ່ຳ ສູງກວ່າ ສູງ ບໍ່ໄດ້",
     "nav.overview":"ພາບລວມ",
     "ov.title":"ພາບລວມ — ສຳລັບເຈົ້າຂອງ", "ov.sub":"ທຸກຢ່າງໃນໜ້າດຽວ. ສັ່ງຊື້ມື້ນີ້ ແລະ ໝົດອາຍຸ ຢູ່ເທິງ.",
-    "ov.receiving":"ການຮັບສິນຄ້າ", "ov.recToday":"ຮັບມື້ນີ້", "ov.recWeek":"ອາທິດນີ້", "ov.lastRec":"ຮັບຄັ້ງລ່າສຸດ", "ov.topWaste":"ສິນຄ້າເສຍຫຼາຍສຸດ (ເດືອນນີ້)", "ov.noWaste":"ບໍ່ມີຂີ້ເສຍເດືອນນີ້. ✓", "ov.belowMin":"ຕ່ຳກວ່າຂັ້ນຕ່ຳ — ສັ່ງດຽວນີ້", "ov.ok":"ປົກກະຕິ", "ov.min":"ຕ່ຳ", "ov.max":"ສູງ", "ov.daysAgo":"ມື້ກ່ອນ", "ov.haveUse":"ມີ / ໃຊ້", "ov.orderQty":"ສັ່ງຊື້", "ov.qty":"ຈຳນວນ", "ov.expires":"ໝົດອາຍຸ", "ov.today":"ມື້ນີ້", "ov.tomorrow":"ມື້ອື່ນ", "ov.days":"ມື້", "ov.day":"ມື້", "ov.now":"ດຽວນີ້", "ov.colItem":"ສິນຄ້າ", "ov.autoOrder":"ສັ່ງອັດຕະໂນມັດ", "idle.warnMsg":"⏱ ຈະອອກຈາກລະບົບໃນ 10 ນາທີ — ແຕະເພື່ອຢູ່ຕໍ່", "idle.outMsg":"ທ່ານອອກຈາກລະບົບແລ້ວ ຫຼັງຈາກ 8 ຊົ່ວໂມງ.", "ov.d90btn":"3 ເດືອນ", "ov.kWaste":"ຂີ້ເສຍ", "ov.kVsPrevRange":"ທຽບກັບໄລຍະກ່ອນ", "ov.lblWeek":"7 ມື້ຜ່ານມາ", "ov.lblMonth":"30 ມື້ຜ່ານມາ", "ov.lbl3Months":"90 ມື້ຜ່ານມາ", "ov.topWasteShort":"ສິນຄ້າເສຍຫຼາຍສຸດ", "ov.recPeriod":"ໄລຍະນີ້", "ov.clearFilter":"✕", "common.in":"ໃນ", "common.howMany":"ຈຳນວນເທົ່າໃດ", "common.pricePer":"ລາຄາຕໍ່", "common.unit":"ໜ່ວຍ", "nav.map":"ແຜນທີ່", "map.title":"ແຜນທີ່ສາງ", "map.sub":"ມຸມມອງສົດໆຂອງທຸກໂຊນ. ສີສະແດງສະຖານະອຸນຫະພູມ, ຄວາມຈຸ, ແລະວັນໝົດອາຍຸ.", "map.legOk":"ປົກກະຕິ", "map.legWarn":"ເຕືອນ", "map.legBad":"ວິກິດ", "map.legUnknown":"ບໍ່ມີຂໍ້ມູນ", "map.emptyTitle":"ຍັງບໍ່ໄດ້ຕັ້ງຄ່າໂຊນ", "map.emptyMsg":"ເພີ່ມໂຊນເກັບສິນຄ້າໃນ ຈັດການ → ສະຖານທີ່ ເພື່ອເບິ່ງແຜນທີ່ສາງ.", "map.gotoManage":"ໄປຫາ ຈັດການ", "map.row":"ແຖວ", "map.unassigned":"ໂຊນທີ່ບໍ່ໄດ້ກຳນົດ", "map.temp":"ອຸນຫະພູມ", "map.capacity":"ຄວາມຈຸ", "map.batches":"ລັອດ", "map.tempBad":"ອຸນຫະພູມວິກິດ", "map.tempWarn":"ອຸນຫະພູມຄາດເຄື່ອນ", "map.capBad":"ເຕັມ", "map.capWarn":"ໃກ້ເຕັມ", "map.expiringSoon":"ໃກ້ໝົດອາຍຸ", "map.detSummary":"ສະຫຼຸບ", "map.detItems":"ສິນຄ້າໃນໂຊນ", "map.noItems":"ບໍ່ມີສິນຄ້າຢູ່ໃນໂຊນນີ້.", "map.zoneType":"ປະເພດໂຊນ", "map.tempNow":"ອຸນຫະພູມປັດຈຸບັນ", "map.tempRange":"ຊ່ວງເປົ້າໝາຍ", "map.stockValue":"ມູນຄ່າສິນຄ້າ", "map.notes":"ໝາຍເຫດ", "map.zt.freezer":"ຕູ້ແຊ່ແຂງ", "map.zt.chiller":"ຕູ້ເຢັນ", "map.zt.cool_dry":"ແຫ້ງເຢັນ", "map.zt.ambient":"ອຸນຫະພູມຫ້ອງ", "map.zt.hazmat":"ສານອັນຕະລາຍ", "map.zt.bonded":"ກັກພາສີ", "map.zt.office":"ຫ້ອງການ", "map.zt.dry":"ສາງແຫ້ງ", "map.zt.bar":"ບາ", "m.currentTemp":"ອຸນຫະພູມປັດຈຸບັນ", "m.capacity":"ຄວາມຈຸ (ໜ່ວຍ)", "m.gridRow":"ແຖວຕາຕະລາງ", "m.gridCol":"ຄໍລຳຕາຕະລາງ", "m.notes":"ໝາຍເຫດ", "ov.kStockVal":"ມູນຄ່າສິນຄ້າ", "ov.kItems":"ລາຍການ", "ov.kWasteMo":"ຂີ້ເສຍເດືອນນີ້", "ov.kVsPrev":"ທຽບເດືອນກ່ອນ", "ov.kExpiring":"ໝົດອາຍຸ ≤7ມື້", "ov.kBatches":"ລັອດ", "ov.kReorder":"ຕ້ອງສັ່ງຊື້", "ov.kItemsLow":"ລາຍການຕ່ຳ", "ov.chWaste":"ຂີ້ເສຍ — 6 ເດືອນຜ່ານມາ", "ov.chStockCat":"ມູນຄ່າຕາມໝວດ", "ov.expSoon":"ໃກ້ໝົດອາຍຸ", "ov.noExp":"ບໍ່ມີຫຍັງໃກ້ໝົດອາຍຸ. ດີ.", "ov.noData":"ຍັງບໍ່ມີຂໍ້ມູນ.", "ov.orderToday":"ສັ່ງຊື້ມື້ນີ້ — ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "ov.nothingOrder":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຊື້. ສິນຄ້າພຽງພໍ.",
+    "ov.receiving":"ການຮັບສິນຄ້າ", "ov.recToday":"ຮັບມື້ນີ້", "ov.recWeek":"ອາທິດນີ້", "ov.lastRec":"ຮັບຄັ້ງລ່າສຸດ", "ov.topWaste":"ສິນຄ້າເສຍຫຼາຍສຸດ (ເດືອນນີ້)", "ov.noWaste":"ບໍ່ມີຂີ້ເສຍເດືອນນີ້. ✓", "ov.belowMin":"ຕ່ຳກວ່າຂັ້ນຕ່ຳ — ສັ່ງດຽວນີ້", "ov.ok":"ປົກກະຕິ", "ov.min":"ຕ່ຳ", "ov.max":"ສູງ", "ov.daysAgo":"ມື້ກ່ອນ", "ov.haveUse":"ມີ / ໃຊ້", "ov.orderQty":"ສັ່ງຊື້", "ov.qty":"ຈຳນວນ", "ov.expires":"ໝົດອາຍຸ", "ov.today":"ມື້ນີ້", "ov.tomorrow":"ມື້ອື່ນ", "ov.days":"ມື້", "ov.day":"ມື້", "ov.now":"ດຽວນີ້", "ov.colItem":"ສິນຄ້າ", "ov.autoOrder":"ສັ່ງອັດຕະໂນມັດ", "idle.warnMsg":"⏱ ຈະອອກຈາກລະບົບໃນ 10 ນາທີ — ແຕະເພື່ອຢູ່ຕໍ່", "idle.outMsg":"ທ່ານອອກຈາກລະບົບແລ້ວ ຫຼັງຈາກ 8 ຊົ່ວໂມງ.", "ov.d90btn":"3 ເດືອນ", "ov.kWaste":"ຂີ້ເສຍ", "ov.kVsPrevRange":"ທຽບກັບໄລຍະກ່ອນ", "ov.lblWeek":"7 ມື້ຜ່ານມາ", "ov.lblMonth":"30 ມື້ຜ່ານມາ", "ov.lbl3Months":"90 ມື້ຜ່ານມາ", "ov.topWasteShort":"ສິນຄ້າເສຍຫຼາຍສຸດ", "ov.recPeriod":"ໄລຍະນີ້", "ov.clearFilter":"✕", "common.in":"ໃນ", "common.howMany":"ຈຳນວນເທົ່າໃດ", "common.pricePer":"ລາຄາຕໍ່", "common.unit":"ໜ່ວຍ", "nav.map":"ແຜນທີ່", "map.title":"ແຜນທີ່ສາງ", "map.sub":"ມຸມມອງສົດໆຂອງທຸກໂຊນ. ສີສະແດງສະຖານະອຸນຫະພູມ, ຄວາມຈຸ, ແລະວັນໝົດອາຍຸ.", "map.legOk":"ປົກກະຕິ", "map.legWarn":"ເຕືອນ", "map.legBad":"ວິກິດ", "map.legUnknown":"ບໍ່ມີຂໍ້ມູນ", "map.emptyTitle":"ຍັງບໍ່ໄດ້ຕັ້ງຄ່າໂຊນ", "map.emptyMsg":"ເພີ່ມໂຊນເກັບສິນຄ້າໃນ ຈັດການ → ສະຖານທີ່ ເພື່ອເບິ່ງແຜນທີ່ສາງ.", "map.gotoManage":"ໄປຫາ ຈັດການ", "map.row":"ແຖວ", "map.unassigned":"ໂຊນທີ່ບໍ່ໄດ້ກຳນົດ", "map.temp":"ອຸນຫະພູມ", "map.capacity":"ຄວາມຈຸ", "map.batches":"ລັອດ", "map.tempBad":"ອຸນຫະພູມວິກິດ", "map.tempWarn":"ອຸນຫະພູມຄາດເຄື່ອນ", "map.capBad":"ເຕັມ", "map.capWarn":"ໃກ້ເຕັມ", "map.expiringSoon":"ໃກ້ໝົດອາຍຸ", "map.detSummary":"ສະຫຼຸບ", "map.detItems":"ສິນຄ້າໃນໂຊນ", "map.noItems":"ບໍ່ມີສິນຄ້າຢູ່ໃນໂຊນນີ້.", "map.zoneType":"ປະເພດໂຊນ", "map.tempNow":"ອຸນຫະພູມປັດຈຸບັນ", "map.tempRange":"ຊ່ວງເປົ້າໝາຍ", "map.stockValue":"ມູນຄ່າສິນຄ້າ", "map.notes":"ໝາຍເຫດ", "map.zt.freezer":"ຕູ້ແຊ່ແຂງ", "map.zt.chiller":"ຕູ້ເຢັນ", "map.zt.cool_dry":"ແຫ້ງເຢັນ", "map.zt.ambient":"ອຸນຫະພູມຫ້ອງ", "map.zt.hazmat":"ສານອັນຕະລາຍ", "map.zt.bonded":"ກັກພາສີ", "map.zt.office":"ຫ້ອງການ", "map.zt.dry":"ສາງແຫ້ງ", "map.zt.bar":"ບາ", "m.currentTemp":"ອຸນຫະພູມປັດຈຸບັນ", "m.capacity":"ຄວາມຈຸ (ໜ່ວຍ)", "m.gridRow":"ແຖວຕາຕະລາງ", "m.gridCol":"ຄໍລຳຕາຕະລາງ", "m.notes":"ໝາຍເຫດ", "navg.overview":"ພາບລວມ", "navg.operations":"ການເຮັດວຽກ", "navg.inventory":"ສິນຄ້າຄົງເຫຼືອ", "navg.insights":"ການວິເຄາະ", "navg.settings":"ການຕັ້ງຄ່າ", "flt.filter":"ກັ່ນຕອງ", "flt.clearAll":"ລ້າງທັງໝົດ", "flt.done":"ສຳເລັດ", "flt.status":"ສະຖານະ", "flt.category":"ໝວດ", "flt.zone":"ໂຊນ", "flt.supplier":"ຜູ້ສະໜອງ", "flt.unit":"ໜ່ວຍ", "flt.noOptions":"(ບໍ່ມີ)", "flt.s.below_min":"ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "flt.s.low":"ຕ່ຳ", "flt.s.ok":"ປົກກະຕິ", "flt.s.over_max":"ສູງກວ່າສູງສຸດ", "flt.noMatches":"ບໍ່ມີສິນຄ້າຕົງກັບການກັ່ນຕອງ.", "m.email":"ອີເມວ", "m.address":"ທີ່ຢູ່", "m.emailBad":"ອີເມວນີ້ບໍ່ຖືກຕ້ອງ.", "m.editStaff":"ແກ້ໄຂພະນັກງານ", "m.noStaff":"ຍັງບໍ່ມີພະນັກງານ.", "m.staffMgrOnly":"ສະເພາະເຈົ້າຂອງ/ຜູ້ຈັດການເທົ່ານັ້ນທີ່ເບິ່ງໄດ້.", "m.staffAddInfo":"ເພື່ອເພີ່ມພະນັກງານໃໝ່: ສ້າງໃນ Supabase → Authentication → Users ແລ້ວຈະປາກົດທີ່ນີ້ສຳລັບການແກ້ໄຂ.", "m.staffAuthNote":"ອີເມວແລະລະຫັດຜ່ານຖືກຈັດການໃນ Supabase Authentication, ບໍ່ແມ່ນທີ່ນີ້.", "exp.button":"📊 ສົ່ງອອກລາຍງານ", "exp.title":"ສົ່ງອອກລາຍງານການເຄື່ອນໄຫວ", "exp.sub":"ເລືອກໄລຍະວັນທີ. ໄຟລ໌ Excel ສະແດງ ເປີດ / ເຂົ້າ / ອອກ / ເສຍ / ປິດ ຕໍ່ສິນຄ້າ.", "exp.pToday":"ມື້ນີ້", "exp.pWeek":"7 ມື້ຜ່ານມາ", "exp.pThisMonth":"ເດືອນນີ້", "exp.pLastMonth":"ເດືອນກ່ອນ", "exp.pQuarter":"90 ມື້ຜ່ານມາ", "exp.from":"ຈາກ", "exp.to":"ຫາ", "exp.range":"ໄລຍະວັນທີ", "exp.items":"ສິນຄ້າໃນລາຍງານ", "exp.format":"ຮູບແບບ", "exp.itemsUnit":"ລາຍການ", "exp.download":"📥 ດາວໂຫລດ Excel", "exp.working":"ກຳລັງດຳເນີນການ…", "exp.errPickDates":"ກະລຸນາເລືອກວັນທີຈາກ ແລະ ຫາ.", "exp.errBadOrder":"ວັນທີຈາກຕ້ອງມາກ່ອນວັນທີຫາ.", "exp.errFail":"ການສົ່ງອອກລົ້ມເຫລວ", "exp.cover.title":"ລາຍງານການເຄື່ອນໄຫວສິນຄ້າ", "exp.cover.range":"ໄລຍະວັນທີ", "exp.cover.generated":"ສ້າງເມື່ອ", "exp.cover.items":"ສິນຄ້າ", "exp.cover.totals":"ລວມໃນໄລຍະ", "exp.cover.closingVal":"ມູນຄ່າສິນຄ້າຄົງເຫຼືອ (₭)", "exp.cover.note":"ໝາຍເຫດ: ຫົວຄໍລຳ Excel ໃຊ້ພາສາ UI ໃນເວລາສົ່ງອອກ.", "exp.sheet.cover":"ໜ້າປົກ", "exp.sheet.report":"ລາຍງານການເຄື່ອນໄຫວ", "exp.col.sku":"ລະຫັດ", "exp.col.item":"ສິນຄ້າ", "exp.col.itemLao":"ຊື່ (ລາວ)", "exp.col.category":"ໝວດ", "exp.col.zone":"ໂຊນ", "exp.col.unit":"ໜ່ວຍ", "exp.col.opening":"ເປີດ", "exp.col.in":"ເຂົ້າ", "exp.col.out":"ອອກ", "exp.col.waste":"ເສຍ", "exp.col.closing":"ປິດ", "exp.col.net":"ປ່ຽນແປງ", "exp.col.status":"ສະຖານະ", "exp.col.minLvl":"ຕ່ຳສຸດ", "exp.col.maxLvl":"ສູງສຸດ", "exp.col.cost":"ຕົ້ນທຶນ (₭)", "exp.col.closeVal":"ມູນຄ່າປິດ (₭)", "exp.col.expiry":"ໝົດອາຍຸໄວສຸດ", "exp.col.value":"ມູນຄ່າ (₭)", "exp.col.totals":"ລວມທັງໝົດ", "ov.kStockVal":"ມູນຄ່າສິນຄ້າ", "ov.kItems":"ລາຍການ", "ov.kWasteMo":"ຂີ້ເສຍເດືອນນີ້", "ov.kVsPrev":"ທຽບເດືອນກ່ອນ", "ov.kExpiring":"ໝົດອາຍຸ ≤7ມື້", "ov.kBatches":"ລັອດ", "ov.kReorder":"ຕ້ອງສັ່ງຊື້", "ov.kItemsLow":"ລາຍການຕ່ຳ", "ov.chWaste":"ຂີ້ເສຍ — 6 ເດືອນຜ່ານມາ", "ov.chStockCat":"ມູນຄ່າຕາມໝວດ", "ov.expSoon":"ໃກ້ໝົດອາຍຸ", "ov.noExp":"ບໍ່ມີຫຍັງໃກ້ໝົດອາຍຸ. ດີ.", "ov.noData":"ຍັງບໍ່ມີຂໍ້ມູນ.", "ov.orderToday":"ສັ່ງຊື້ມື້ນີ້ — ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "ov.nothingOrder":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຊື້. ສິນຄ້າພຽງພໍ.",
     "ov.haveUse":"ມີ / ໃຊ້ຕໍ່ມື້", "ov.orderQty":"ສັ່ງຊື້ຈຳນວນນີ້", "ov.day":"ມື້",
     "ov.expiring3":"ໝົດອາຍຸໃນ 3 ມື້ — ໃຊ້ດຽວນີ້", "ov.nothing3":"ບໍ່ມີຫຍັງໝົດອາຍຸໃນ 3 ມື້. ດີ.",
     "ov.expiring7":"ໝົດອາຍຸອາທິດນີ້ (4–7 ມື້) — ວາງແຜນລ່ວງໜ້າ", "ov.nothing7":"ບໍ່ມີຫຍັງໝົດອາຍຸອາທິດນີ້.",
@@ -1873,7 +2089,7 @@ const I18N = {
     "m.needCodeName":"ต้องมีรหัสและชื่อ", "m.tempErr":"อุณหภูมิต่ำสูงกว่าสูงไม่ได้",
     "nav.overview":"ภาพรวม",
     "ov.title":"ภาพรวม — สำหรับเจ้าของ", "ov.sub":"ทุกอย่างในหน้าเดียว. สั่งซื้อวันนี้และหมดอายุอยู่บน.",
-    "ov.receiving":"การรับสินค้า", "ov.recToday":"รับวันนี้", "ov.recWeek":"สัปดาห์นี้", "ov.lastRec":"รับครั้งล่าสุด", "ov.topWaste":"เสียมากสุด (เดือนนี้)", "ov.noWaste":"ไม่มีของเสียเดือนนี้. ✓", "ov.belowMin":"ต่ำกว่าขั้นต่ำ — สั่งเลย", "ov.ok":"ปกติ", "ov.min":"ต่ำ", "ov.max":"สูง", "ov.daysAgo":"วันก่อน", "ov.haveUse":"มี / ใช้", "ov.orderQty":"สั่งซื้อ", "ov.qty":"จำนวน", "ov.expires":"หมดอายุ", "ov.today":"วันนี้", "ov.tomorrow":"พรุ่งนี้", "ov.days":"วัน", "ov.day":"วัน", "ov.now":"ตอนนี้", "ov.colItem":"สินค้า", "ov.autoOrder":"สั่งอัตโนมัติ", "idle.warnMsg":"⏱ จะออกจากระบบใน 10 นาที — แตะเพื่ออยู่ต่อ", "idle.outMsg":"คุณถูกออกจากระบบหลังผ่าน 8 ชั่วโมง.", "ov.d90btn":"3 เดือน", "ov.kWaste":"ของเสีย", "ov.kVsPrevRange":"เทียบช่วงก่อน", "ov.lblWeek":"7 วันที่ผ่านมา", "ov.lblMonth":"30 วันที่ผ่านมา", "ov.lbl3Months":"90 วันที่ผ่านมา", "ov.topWasteShort":"เสียมากสุด", "ov.recPeriod":"ช่วงนี้", "ov.clearFilter":"✕", "common.in":"ใน", "common.howMany":"จำนวนเท่าใด", "common.pricePer":"ราคาต่อ", "common.unit":"หน่วย", "nav.map":"แผนผัง", "map.title":"แผนผังคลังสินค้า", "map.sub":"มุมมองสดของทุกโซน สีแสดงอุณหภูมิ ความจุ และวันหมดอายุ", "map.legOk":"ปกติ", "map.legWarn":"เตือน", "map.legBad":"วิกฤต", "map.legUnknown":"ไม่มีข้อมูล", "map.emptyTitle":"ยังไม่ได้ตั้งค่าโซน", "map.emptyMsg":"เพิ่มโซนเก็บสินค้าใน จัดการ → สถานที่ เพื่อดูแผนผังคลัง", "map.gotoManage":"ไปที่ จัดการ", "map.row":"แถว", "map.unassigned":"โซนที่ยังไม่ระบุ", "map.temp":"อุณหภูมิ", "map.capacity":"ความจุ", "map.batches":"ล็อต", "map.tempBad":"อุณหภูมิวิกฤต", "map.tempWarn":"อุณหภูมิเบี่ยงเบน", "map.capBad":"เต็ม", "map.capWarn":"ใกล้เต็ม", "map.expiringSoon":"ใกล้หมดอายุ", "map.detSummary":"สรุป", "map.detItems":"สินค้าในโซน", "map.noItems":"ไม่มีสินค้าในโซนนี้", "map.zoneType":"ประเภทโซน", "map.tempNow":"อุณหภูมิปัจจุบัน", "map.tempRange":"ช่วงเป้าหมาย", "map.stockValue":"มูลค่าสต็อก", "map.notes":"หมายเหตุ", "map.zt.freezer":"ห้องแช่แข็ง", "map.zt.chiller":"ห้องเย็น", "map.zt.cool_dry":"แห้งเย็น", "map.zt.ambient":"อุณหภูมิห้อง", "map.zt.hazmat":"วัตถุอันตราย", "map.zt.bonded":"เขตศุลกากร", "map.zt.office":"สำนักงาน", "map.zt.dry":"คลังแห้ง", "map.zt.bar":"บาร์", "m.currentTemp":"อุณหภูมิปัจจุบัน", "m.capacity":"ความจุ (หน่วย)", "m.gridRow":"แถวกริด", "m.gridCol":"คอลัมน์กริด", "m.notes":"หมายเหตุ", "ov.kStockVal":"มูลค่าสต็อก", "ov.kItems":"รายการ", "ov.kWasteMo":"ของเสียเดือนนี้", "ov.kVsPrev":"เทียบเดือนก่อน", "ov.kExpiring":"หมดอายุ ≤7วัน", "ov.kBatches":"ล็อต", "ov.kReorder":"ต้องสั่งซื้อ", "ov.kItemsLow":"รายการต่ำ", "ov.chWaste":"ของเสีย — 6 เดือนล่าสุด", "ov.chStockCat":"มูลค่าตามหมวด", "ov.expSoon":"ใกล้หมดอายุ", "ov.noExp":"ไม่มีอะไรใกล้หมดอายุ. ดี.", "ov.noData":"ยังไม่มีข้อมูล.", "ov.orderToday":"สั่งซื้อวันนี้ — ต่ำกว่าขั้นต่ำ", "ov.nothingOrder":"ไม่มีอะไรต้องสั่งซื้อ. สต็อกพอ.",
+    "ov.receiving":"การรับสินค้า", "ov.recToday":"รับวันนี้", "ov.recWeek":"สัปดาห์นี้", "ov.lastRec":"รับครั้งล่าสุด", "ov.topWaste":"เสียมากสุด (เดือนนี้)", "ov.noWaste":"ไม่มีของเสียเดือนนี้. ✓", "ov.belowMin":"ต่ำกว่าขั้นต่ำ — สั่งเลย", "ov.ok":"ปกติ", "ov.min":"ต่ำ", "ov.max":"สูง", "ov.daysAgo":"วันก่อน", "ov.haveUse":"มี / ใช้", "ov.orderQty":"สั่งซื้อ", "ov.qty":"จำนวน", "ov.expires":"หมดอายุ", "ov.today":"วันนี้", "ov.tomorrow":"พรุ่งนี้", "ov.days":"วัน", "ov.day":"วัน", "ov.now":"ตอนนี้", "ov.colItem":"สินค้า", "ov.autoOrder":"สั่งอัตโนมัติ", "idle.warnMsg":"⏱ จะออกจากระบบใน 10 นาที — แตะเพื่ออยู่ต่อ", "idle.outMsg":"คุณถูกออกจากระบบหลังผ่าน 8 ชั่วโมง.", "ov.d90btn":"3 เดือน", "ov.kWaste":"ของเสีย", "ov.kVsPrevRange":"เทียบช่วงก่อน", "ov.lblWeek":"7 วันที่ผ่านมา", "ov.lblMonth":"30 วันที่ผ่านมา", "ov.lbl3Months":"90 วันที่ผ่านมา", "ov.topWasteShort":"เสียมากสุด", "ov.recPeriod":"ช่วงนี้", "ov.clearFilter":"✕", "common.in":"ใน", "common.howMany":"จำนวนเท่าใด", "common.pricePer":"ราคาต่อ", "common.unit":"หน่วย", "nav.map":"แผนผัง", "map.title":"แผนผังคลังสินค้า", "map.sub":"มุมมองสดของทุกโซน สีแสดงอุณหภูมิ ความจุ และวันหมดอายุ", "map.legOk":"ปกติ", "map.legWarn":"เตือน", "map.legBad":"วิกฤต", "map.legUnknown":"ไม่มีข้อมูล", "map.emptyTitle":"ยังไม่ได้ตั้งค่าโซน", "map.emptyMsg":"เพิ่มโซนเก็บสินค้าใน จัดการ → สถานที่ เพื่อดูแผนผังคลัง", "map.gotoManage":"ไปที่ จัดการ", "map.row":"แถว", "map.unassigned":"โซนที่ยังไม่ระบุ", "map.temp":"อุณหภูมิ", "map.capacity":"ความจุ", "map.batches":"ล็อต", "map.tempBad":"อุณหภูมิวิกฤต", "map.tempWarn":"อุณหภูมิเบี่ยงเบน", "map.capBad":"เต็ม", "map.capWarn":"ใกล้เต็ม", "map.expiringSoon":"ใกล้หมดอายุ", "map.detSummary":"สรุป", "map.detItems":"สินค้าในโซน", "map.noItems":"ไม่มีสินค้าในโซนนี้", "map.zoneType":"ประเภทโซน", "map.tempNow":"อุณหภูมิปัจจุบัน", "map.tempRange":"ช่วงเป้าหมาย", "map.stockValue":"มูลค่าสต็อก", "map.notes":"หมายเหตุ", "map.zt.freezer":"ห้องแช่แข็ง", "map.zt.chiller":"ห้องเย็น", "map.zt.cool_dry":"แห้งเย็น", "map.zt.ambient":"อุณหภูมิห้อง", "map.zt.hazmat":"วัตถุอันตราย", "map.zt.bonded":"เขตศุลกากร", "map.zt.office":"สำนักงาน", "map.zt.dry":"คลังแห้ง", "map.zt.bar":"บาร์", "m.currentTemp":"อุณหภูมิปัจจุบัน", "m.capacity":"ความจุ (หน่วย)", "m.gridRow":"แถวกริด", "m.gridCol":"คอลัมน์กริด", "m.notes":"หมายเหตุ", "navg.overview":"ภาพรวม", "navg.operations":"การปฏิบัติงาน", "navg.inventory":"สินค้าคงคลัง", "navg.insights":"การวิเคราะห์", "navg.settings":"การตั้งค่า", "flt.filter":"กรอง", "flt.clearAll":"ล้างทั้งหมด", "flt.done":"เสร็จสิ้น", "flt.status":"สถานะ", "flt.category":"หมวด", "flt.zone":"โซน", "flt.supplier":"ผู้จัดส่ง", "flt.unit":"หน่วย", "flt.noOptions":"(ไม่มี)", "flt.s.below_min":"ต่ำกว่าขั้นต่ำ", "flt.s.low":"ต่ำ", "flt.s.ok":"ปกติ", "flt.s.over_max":"เกินสูงสุด", "flt.noMatches":"ไม่มีสินค้าตรงกับตัวกรอง.", "m.email":"อีเมล", "m.address":"ที่อยู่", "m.emailBad":"อีเมลนี้ดูไม่ถูกต้อง.", "m.editStaff":"แก้ไขพนักงาน", "m.noStaff":"ยังไม่มีพนักงาน.", "m.staffMgrOnly":"เฉพาะเจ้าของ/ผู้จัดการเท่านั้นที่ดูได้.", "m.staffAddInfo":"เพิ่มพนักงานใหม่: สร้างใน Supabase → Authentication → Users แล้วจะปรากฏที่นี่สำหรับการแก้ไข.", "m.staffAuthNote":"อีเมลและรหัสผ่านจัดการใน Supabase Authentication ไม่ใช่ที่นี่.", "exp.button":"📊 ส่งออกรายงานการเคลื่อนไหว", "exp.title":"ส่งออกรายงานการเคลื่อนไหว", "exp.sub":"เลือกช่วงวันที่ ไฟล์ Excel แสดง เปิด / รับ / จ่าย / เสีย / ปิด ต่อสินค้า", "exp.pToday":"วันนี้", "exp.pWeek":"7 วันที่ผ่านมา", "exp.pThisMonth":"เดือนนี้", "exp.pLastMonth":"เดือนก่อน", "exp.pQuarter":"90 วันที่ผ่านมา", "exp.from":"จาก", "exp.to":"ถึง", "exp.range":"ช่วงวันที่", "exp.items":"สินค้าในรายงาน", "exp.format":"รูปแบบ", "exp.itemsUnit":"รายการ", "exp.download":"📥 ดาวน์โหลด Excel", "exp.working":"กำลังดำเนินการ…", "exp.errPickDates":"กรุณาเลือกวันที่ จาก และ ถึง.", "exp.errBadOrder":"วันที่ จาก ต้องมาก่อน ถึง.", "exp.errFail":"ส่งออกล้มเหลว", "exp.cover.title":"รายงานการเคลื่อนไหวสินค้า", "exp.cover.range":"ช่วงวันที่", "exp.cover.generated":"สร้างเมื่อ", "exp.cover.items":"สินค้า", "exp.cover.totals":"รวมในช่วง", "exp.cover.closingVal":"มูลค่าสต็อกปิด (₭)", "exp.cover.note":"หมายเหตุ: หัวคอลัมน์ Excel ใช้ภาษา UI ขณะส่งออก", "exp.sheet.cover":"หน้าปก", "exp.sheet.report":"รายงานการเคลื่อนไหว", "exp.col.sku":"รหัส", "exp.col.item":"สินค้า", "exp.col.itemLao":"ชื่อ (ลาว)", "exp.col.category":"หมวด", "exp.col.zone":"โซน", "exp.col.unit":"หน่วย", "exp.col.opening":"เปิด", "exp.col.in":"รับ", "exp.col.out":"จ่าย", "exp.col.waste":"เสีย", "exp.col.closing":"ปิด", "exp.col.net":"เปลี่ยนแปลง", "exp.col.status":"สถานะ", "exp.col.minLvl":"ต่ำสุด", "exp.col.maxLvl":"สูงสุด", "exp.col.cost":"ต้นทุน (₭)", "exp.col.closeVal":"มูลค่าปิด (₭)", "exp.col.expiry":"หมดอายุเร็วสุด", "exp.col.value":"มูลค่า (₭)", "exp.col.totals":"รวมทั้งหมด", "ov.kStockVal":"มูลค่าสต็อก", "ov.kItems":"รายการ", "ov.kWasteMo":"ของเสียเดือนนี้", "ov.kVsPrev":"เทียบเดือนก่อน", "ov.kExpiring":"หมดอายุ ≤7วัน", "ov.kBatches":"ล็อต", "ov.kReorder":"ต้องสั่งซื้อ", "ov.kItemsLow":"รายการต่ำ", "ov.chWaste":"ของเสีย — 6 เดือนล่าสุด", "ov.chStockCat":"มูลค่าตามหมวด", "ov.expSoon":"ใกล้หมดอายุ", "ov.noExp":"ไม่มีอะไรใกล้หมดอายุ. ดี.", "ov.noData":"ยังไม่มีข้อมูล.", "ov.orderToday":"สั่งซื้อวันนี้ — ต่ำกว่าขั้นต่ำ", "ov.nothingOrder":"ไม่มีอะไรต้องสั่งซื้อ. สต็อกพอ.",
     "ov.haveUse":"มี / ใช้ต่อวัน", "ov.orderQty":"สั่งซื้อจำนวนนี้", "ov.day":"วัน",
     "ov.expiring3":"หมดอายุใน 3 วัน — ใช้เลยตอนนี้", "ov.nothing3":"ไม่มีอะไรหมดอายุใน 3 วัน. ดี.",
     "ov.expiring7":"หมดอายุสัปดาห์นี้ (4–7 วัน) — วางแผนล่วงหน้า", "ov.nothing7":"ไม่มีอะไรหมดอายุสัปดาห์นี้.",
@@ -2036,7 +2252,7 @@ const I18N = {
     "m.needCodeName":"需要代码和名称", "m.tempErr":"最低温度不能高于最高温度",
     "nav.overview":"总览",
     "ov.title":"总览 — 业主驾驶舱", "ov.sub":"一屏看全部。今日订购和即将过期在顶部。",
-    "ov.receiving":"入库", "ov.recToday":"今日入库", "ov.recWeek":"本周", "ov.lastRec":"上次入库", "ov.topWaste":"损耗最多 (本月)", "ov.noWaste":"本月无损耗. ✓", "ov.belowMin":"低于最低 — 立即订购", "ov.ok":"正常", "ov.min":"最低", "ov.max":"最高", "ov.daysAgo":"天前", "ov.haveUse":"现有 / 用量", "ov.orderQty":"订购量", "ov.qty":"数量", "ov.expires":"过期", "ov.today":"今天", "ov.tomorrow":"明天", "ov.days":"天", "ov.day":"天", "ov.now":"现在", "ov.colItem":"项目", "ov.autoOrder":"自动订购", "idle.warnMsg":"⏱ 将在10分钟内退出 — 点击保持登录", "idle.outMsg":"已闲置8小时，已自动退出。", "ov.d90btn":"3个月", "ov.kWaste":"损耗", "ov.kVsPrevRange":"对比上一周期", "ov.lblWeek":"近7天", "ov.lblMonth":"近30天", "ov.lbl3Months":"近90天", "ov.topWasteShort":"损耗最多", "ov.recPeriod":"本周期", "ov.clearFilter":"✕", "common.in":"以", "common.howMany":"多少", "common.pricePer":"单价", "common.unit":"单位", "nav.map":"地图", "map.title":"仓库地图", "map.sub":"每个区域的实时视图。颜色显示温度、容量和到期状态。", "map.legOk":"正常", "map.legWarn":"警告", "map.legBad":"危急", "map.legUnknown":"无数据", "map.emptyTitle":"尚未配置区域", "map.emptyMsg":"在 管理 → 位置 中添加存储区域以查看仓库地图。", "map.gotoManage":"前往 管理", "map.row":"行", "map.unassigned":"未分配区域", "map.temp":"温度", "map.capacity":"容量", "map.batches":"批次", "map.tempBad":"温度危急", "map.tempWarn":"温度偏离", "map.capBad":"已满", "map.capWarn":"接近满", "map.expiringSoon":"即将过期", "map.detSummary":"摘要", "map.detItems":"区域内物品", "map.noItems":"此区域没有活动库存。", "map.zoneType":"区域类型", "map.tempNow":"当前温度", "map.tempRange":"目标范围", "map.stockValue":"库存价值", "map.notes":"备注", "map.zt.freezer":"冷冻库", "map.zt.chiller":"冷藏库", "map.zt.cool_dry":"阴凉干燥", "map.zt.ambient":"常温", "map.zt.hazmat":"危险品", "map.zt.bonded":"保税", "map.zt.office":"办公室", "map.zt.dry":"干仓", "map.zt.bar":"吧台", "m.currentTemp":"当前温度", "m.capacity":"容量（单位）", "m.gridRow":"网格行", "m.gridCol":"网格列", "m.notes":"备注", "ov.kStockVal":"库存价值", "ov.kItems":"项", "ov.kWasteMo":"本月损耗", "ov.kVsPrev":"对比上月", "ov.kExpiring":"≤7天过期", "ov.kBatches":"批次", "ov.kReorder":"需补货", "ov.kItemsLow":"低于最低项", "ov.chWaste":"损耗 — 近6个月", "ov.chStockCat":"按类别库存价值", "ov.expSoon":"即将过期", "ov.noExp":"无即将过期。良好。", "ov.noData":"暂无数据。", "ov.orderToday":"今日订购 — 低于最低", "ov.nothingOrder":"无需订购。库存充足。",
+    "ov.receiving":"入库", "ov.recToday":"今日入库", "ov.recWeek":"本周", "ov.lastRec":"上次入库", "ov.topWaste":"损耗最多 (本月)", "ov.noWaste":"本月无损耗. ✓", "ov.belowMin":"低于最低 — 立即订购", "ov.ok":"正常", "ov.min":"最低", "ov.max":"最高", "ov.daysAgo":"天前", "ov.haveUse":"现有 / 用量", "ov.orderQty":"订购量", "ov.qty":"数量", "ov.expires":"过期", "ov.today":"今天", "ov.tomorrow":"明天", "ov.days":"天", "ov.day":"天", "ov.now":"现在", "ov.colItem":"项目", "ov.autoOrder":"自动订购", "idle.warnMsg":"⏱ 将在10分钟内退出 — 点击保持登录", "idle.outMsg":"已闲置8小时，已自动退出。", "ov.d90btn":"3个月", "ov.kWaste":"损耗", "ov.kVsPrevRange":"对比上一周期", "ov.lblWeek":"近7天", "ov.lblMonth":"近30天", "ov.lbl3Months":"近90天", "ov.topWasteShort":"损耗最多", "ov.recPeriod":"本周期", "ov.clearFilter":"✕", "common.in":"以", "common.howMany":"多少", "common.pricePer":"单价", "common.unit":"单位", "nav.map":"地图", "map.title":"仓库地图", "map.sub":"每个区域的实时视图。颜色显示温度、容量和到期状态。", "map.legOk":"正常", "map.legWarn":"警告", "map.legBad":"危急", "map.legUnknown":"无数据", "map.emptyTitle":"尚未配置区域", "map.emptyMsg":"在 管理 → 位置 中添加存储区域以查看仓库地图。", "map.gotoManage":"前往 管理", "map.row":"行", "map.unassigned":"未分配区域", "map.temp":"温度", "map.capacity":"容量", "map.batches":"批次", "map.tempBad":"温度危急", "map.tempWarn":"温度偏离", "map.capBad":"已满", "map.capWarn":"接近满", "map.expiringSoon":"即将过期", "map.detSummary":"摘要", "map.detItems":"区域内物品", "map.noItems":"此区域没有活动库存。", "map.zoneType":"区域类型", "map.tempNow":"当前温度", "map.tempRange":"目标范围", "map.stockValue":"库存价值", "map.notes":"备注", "map.zt.freezer":"冷冻库", "map.zt.chiller":"冷藏库", "map.zt.cool_dry":"阴凉干燥", "map.zt.ambient":"常温", "map.zt.hazmat":"危险品", "map.zt.bonded":"保税", "map.zt.office":"办公室", "map.zt.dry":"干仓", "map.zt.bar":"吧台", "m.currentTemp":"当前温度", "m.capacity":"容量（单位）", "m.gridRow":"网格行", "m.gridCol":"网格列", "m.notes":"备注", "navg.overview":"概览", "navg.operations":"操作", "navg.inventory":"库存", "navg.insights":"洞察", "navg.settings":"设置", "flt.filter":"筛选", "flt.clearAll":"全部清除", "flt.done":"完成", "flt.status":"状态", "flt.category":"类别", "flt.zone":"区域", "flt.supplier":"供应商", "flt.unit":"单位", "flt.noOptions":"（无）", "flt.s.below_min":"低于最低", "flt.s.low":"偏低", "flt.s.ok":"正常", "flt.s.over_max":"超过最高", "flt.noMatches":"没有商品符合筛选条件。", "m.email":"邮箱", "m.address":"地址", "m.emailBad":"该邮箱地址无效。", "m.editStaff":"编辑员工", "m.noStaff":"暂无员工。", "m.staffMgrOnly":"仅店主/经理可查看员工。", "m.staffAddInfo":"添加新员工：在 Supabase → Authentication → Users 中创建，然后会显示在此处供编辑。", "m.staffAuthNote":"邮箱和密码在 Supabase Authentication 中管理，不在此处。", "exp.button":"📊 导出移动报告", "exp.title":"导出移动报告", "exp.sub":"选择日期范围。Excel 文件按物品显示 期初 / 入库 / 出库 / 损耗 / 期末。", "exp.pToday":"今天", "exp.pWeek":"近7天", "exp.pThisMonth":"本月", "exp.pLastMonth":"上月", "exp.pQuarter":"近90天", "exp.from":"从", "exp.to":"至", "exp.range":"日期范围", "exp.items":"报告中的物品", "exp.format":"格式", "exp.itemsUnit":"项", "exp.download":"📥 下载 Excel", "exp.working":"处理中…", "exp.errPickDates":"请选择起止日期。", "exp.errBadOrder":"起始日期必须早于结束日期。", "exp.errFail":"导出失败", "exp.cover.title":"库存移动报告", "exp.cover.range":"日期范围", "exp.cover.generated":"生成时间", "exp.cover.items":"物品", "exp.cover.totals":"期间合计", "exp.cover.closingVal":"期末库存价值 (₭)", "exp.cover.note":"注：Excel 列标题使用导出时所选的界面语言。", "exp.sheet.cover":"封面", "exp.sheet.report":"移动报告", "exp.col.sku":"编号", "exp.col.item":"物品", "exp.col.itemLao":"名称（老挝）", "exp.col.category":"类别", "exp.col.zone":"区域", "exp.col.unit":"单位", "exp.col.opening":"期初", "exp.col.in":"入库", "exp.col.out":"出库", "exp.col.waste":"损耗", "exp.col.closing":"期末", "exp.col.net":"净变化", "exp.col.status":"状态", "exp.col.minLvl":"最低", "exp.col.maxLvl":"最高", "exp.col.cost":"单位成本 (₭)", "exp.col.closeVal":"期末价值 (₭)", "exp.col.expiry":"最早过期", "exp.col.value":"价值 (₭)", "exp.col.totals":"总计", "ov.kStockVal":"库存价值", "ov.kItems":"项", "ov.kWasteMo":"本月损耗", "ov.kVsPrev":"对比上月", "ov.kExpiring":"≤7天过期", "ov.kBatches":"批次", "ov.kReorder":"需补货", "ov.kItemsLow":"低于最低项", "ov.chWaste":"损耗 — 近6个月", "ov.chStockCat":"按类别库存价值", "ov.expSoon":"即将过期", "ov.noExp":"无即将过期。良好。", "ov.noData":"暂无数据。", "ov.orderToday":"今日订购 — 低于最低", "ov.nothingOrder":"无需订购。库存充足。",
     "ov.haveUse":"现有 / 每日用量", "ov.orderQty":"订购此数量", "ov.day":"天",
     "ov.expiring3":"3天内过期 — 立即使用", "ov.nothing3":"3天内无过期。很好。",
     "ov.expiring7":"本周过期 (4–7天) — 提前计划", "ov.nothing7":"本周无过期。",
@@ -2200,7 +2416,7 @@ const I18N = {
     "m.needCodeName":"코드와 이름 필요", "m.tempErr":"최저 온도가 최고보다 높을 수 없음",
     "nav.overview":"개요",
     "ov.title":"개요 — 소유자 콕핏", "ov.sub":"한 화면에 전부. 오늘 주문과 만료가 상단에.",
-    "ov.receiving":"입고", "ov.recToday":"오늘 입고", "ov.recWeek":"이번 주", "ov.lastRec":"마지막 입고", "ov.topWaste":"최다 폐기 품목 (이달)", "ov.noWaste":"이달 폐기 없음. ✓", "ov.belowMin":"최소 이하 — 즉시 주문", "ov.ok":"정상", "ov.min":"최소", "ov.max":"최대", "ov.daysAgo":"일 전", "ov.haveUse":"보유 / 사용", "ov.orderQty":"주문량", "ov.qty":"수량", "ov.expires":"만료", "ov.today":"오늘", "ov.tomorrow":"내일", "ov.days":"일", "ov.day":"일", "ov.now":"현재", "ov.colItem":"품목", "ov.autoOrder":"자동 주문", "idle.warnMsg":"⏱ 10분 후 로그아웃 — 유지하려면 탭하세요", "idle.outMsg":"8시간 후 자동 로그아웃되었습니다.", "ov.d90btn":"3개월", "ov.kWaste":"폐기", "ov.kVsPrevRange":"이전 기간 대비", "ov.lblWeek":"최근 7일", "ov.lblMonth":"최근 30일", "ov.lbl3Months":"최근 90일", "ov.topWasteShort":"최다 폐기", "ov.recPeriod":"이 기간", "ov.clearFilter":"✕", "common.in":"단위", "common.howMany":"몇 개", "common.pricePer":"단가", "common.unit":"단위", "nav.map":"지도", "map.title":"창고 지도", "map.sub":"모든 구역의 실시간 보기. 색상은 온도, 용량, 만료 상태를 표시합니다.", "map.legOk":"정상", "map.legWarn":"경고", "map.legBad":"위급", "map.legUnknown":"데이터 없음", "map.emptyTitle":"아직 구역이 구성되지 않음", "map.emptyMsg":"창고 지도를 보려면 관리 → 위치에서 보관 구역을 추가하세요.", "map.gotoManage":"관리로 이동", "map.row":"행", "map.unassigned":"미할당 구역", "map.temp":"온도", "map.capacity":"용량", "map.batches":"배치", "map.tempBad":"온도 위급", "map.tempWarn":"온도 편차", "map.capBad":"가득 참", "map.capWarn":"거의 가득", "map.expiringSoon":"만료 임박", "map.detSummary":"요약", "map.detItems":"구역 내 품목", "map.noItems":"이 구역에 활성 재고가 없습니다.", "map.zoneType":"구역 유형", "map.tempNow":"현재 온도", "map.tempRange":"목표 범위", "map.stockValue":"재고 가치", "map.notes":"비고", "map.zt.freezer":"냉동고", "map.zt.chiller":"냉장고", "map.zt.cool_dry":"건랭", "map.zt.ambient":"상온", "map.zt.hazmat":"위험물", "map.zt.bonded":"보세", "map.zt.office":"사무실", "map.zt.dry":"건조 보관", "map.zt.bar":"바", "m.currentTemp":"현재 온도", "m.capacity":"용량 (단위)", "m.gridRow":"그리드 행", "m.gridCol":"그리드 열", "m.notes":"비고", "ov.kStockVal":"재고 가치", "ov.kItems":"항목", "ov.kWasteMo":"이달 폐기", "ov.kVsPrev":"전월 대비", "ov.kExpiring":"≤7일 만료", "ov.kBatches":"배치", "ov.kReorder":"재주문 필요", "ov.kItemsLow":"최소 이하 항목", "ov.chWaste":"폐기 — 최근 6개월", "ov.chStockCat":"카테고리별 재고 가치", "ov.expSoon":"곧 만료", "ov.noExp":"곧 만료되는 항목 없음. 양호.", "ov.noData":"데이터 없음.", "ov.orderToday":"오늘 주문 — 최소 이하", "ov.nothingOrder":"주문할 것 없음. 재고 충분.",
+    "ov.receiving":"입고", "ov.recToday":"오늘 입고", "ov.recWeek":"이번 주", "ov.lastRec":"마지막 입고", "ov.topWaste":"최다 폐기 품목 (이달)", "ov.noWaste":"이달 폐기 없음. ✓", "ov.belowMin":"최소 이하 — 즉시 주문", "ov.ok":"정상", "ov.min":"최소", "ov.max":"최대", "ov.daysAgo":"일 전", "ov.haveUse":"보유 / 사용", "ov.orderQty":"주문량", "ov.qty":"수량", "ov.expires":"만료", "ov.today":"오늘", "ov.tomorrow":"내일", "ov.days":"일", "ov.day":"일", "ov.now":"현재", "ov.colItem":"품목", "ov.autoOrder":"자동 주문", "idle.warnMsg":"⏱ 10분 후 로그아웃 — 유지하려면 탭하세요", "idle.outMsg":"8시간 후 자동 로그아웃되었습니다.", "ov.d90btn":"3개월", "ov.kWaste":"폐기", "ov.kVsPrevRange":"이전 기간 대비", "ov.lblWeek":"최근 7일", "ov.lblMonth":"최근 30일", "ov.lbl3Months":"최근 90일", "ov.topWasteShort":"최다 폐기", "ov.recPeriod":"이 기간", "ov.clearFilter":"✕", "common.in":"단위", "common.howMany":"몇 개", "common.pricePer":"단가", "common.unit":"단위", "nav.map":"지도", "map.title":"창고 지도", "map.sub":"모든 구역의 실시간 보기. 색상은 온도, 용량, 만료 상태를 표시합니다.", "map.legOk":"정상", "map.legWarn":"경고", "map.legBad":"위급", "map.legUnknown":"데이터 없음", "map.emptyTitle":"아직 구역이 구성되지 않음", "map.emptyMsg":"창고 지도를 보려면 관리 → 위치에서 보관 구역을 추가하세요.", "map.gotoManage":"관리로 이동", "map.row":"행", "map.unassigned":"미할당 구역", "map.temp":"온도", "map.capacity":"용량", "map.batches":"배치", "map.tempBad":"온도 위급", "map.tempWarn":"온도 편차", "map.capBad":"가득 참", "map.capWarn":"거의 가득", "map.expiringSoon":"만료 임박", "map.detSummary":"요약", "map.detItems":"구역 내 품목", "map.noItems":"이 구역에 활성 재고가 없습니다.", "map.zoneType":"구역 유형", "map.tempNow":"현재 온도", "map.tempRange":"목표 범위", "map.stockValue":"재고 가치", "map.notes":"비고", "map.zt.freezer":"냉동고", "map.zt.chiller":"냉장고", "map.zt.cool_dry":"건랭", "map.zt.ambient":"상온", "map.zt.hazmat":"위험물", "map.zt.bonded":"보세", "map.zt.office":"사무실", "map.zt.dry":"건조 보관", "map.zt.bar":"바", "m.currentTemp":"현재 온도", "m.capacity":"용량 (단위)", "m.gridRow":"그리드 행", "m.gridCol":"그리드 열", "m.notes":"비고", "navg.overview":"개요", "navg.operations":"운영", "navg.inventory":"재고", "navg.insights":"분석", "navg.settings":"설정", "flt.filter":"필터", "flt.clearAll":"모두 지우기", "flt.done":"완료", "flt.status":"상태", "flt.category":"카테고리", "flt.zone":"구역", "flt.supplier":"공급업체", "flt.unit":"단위", "flt.noOptions":"(없음)", "flt.s.below_min":"최저 미만", "flt.s.low":"낮음", "flt.s.ok":"정상", "flt.s.over_max":"최대 초과", "flt.noMatches":"필터에 일치하는 항목이 없습니다.", "m.email":"이메일", "m.address":"주소", "m.emailBad":"이 이메일 주소가 잘못된 것 같습니다.", "m.editStaff":"직원 편집", "m.noStaff":"아직 직원이 없습니다.", "m.staffMgrOnly":"소유자/관리자만 직원을 볼 수 있습니다.", "m.staffAddInfo":"새 직원 추가: Supabase → Authentication → Users에서 생성하면 여기에 편집용으로 표시됩니다.", "m.staffAuthNote":"이메일과 비밀번호는 Supabase Authentication에서 관리됩니다.", "exp.button":"📊 이동 보고서 내보내기", "exp.title":"이동 보고서 내보내기", "exp.sub":"날짜 범위를 선택하세요. Excel 파일은 품목별 기초 / 입고 / 출고 / 폐기 / 기말을 표시합니다.", "exp.pToday":"오늘", "exp.pWeek":"최근 7일", "exp.pThisMonth":"이번 달", "exp.pLastMonth":"지난 달", "exp.pQuarter":"최근 90일", "exp.from":"부터", "exp.to":"까지", "exp.range":"날짜 범위", "exp.items":"보고서 품목", "exp.format":"형식", "exp.itemsUnit":"항목", "exp.download":"📥 Excel 다운로드", "exp.working":"처리 중…", "exp.errPickDates":"시작 및 종료 날짜를 모두 선택하세요.", "exp.errBadOrder":"시작 날짜는 종료 날짜 이전이어야 합니다.", "exp.errFail":"내보내기 실패", "exp.cover.title":"재고 이동 보고서", "exp.cover.range":"날짜 범위", "exp.cover.generated":"생성됨", "exp.cover.items":"품목", "exp.cover.totals":"기간 합계", "exp.cover.closingVal":"기말 재고 가치 (₭)", "exp.cover.note":"참고: Excel 열 머리글은 내보낼 때 선택한 UI 언어로 표시됩니다.", "exp.sheet.cover":"표지", "exp.sheet.report":"이동 보고서", "exp.col.sku":"SKU", "exp.col.item":"품목", "exp.col.itemLao":"이름 (라오)", "exp.col.category":"카테고리", "exp.col.zone":"구역", "exp.col.unit":"단위", "exp.col.opening":"기초", "exp.col.in":"입고", "exp.col.out":"출고", "exp.col.waste":"폐기", "exp.col.closing":"기말", "exp.col.net":"순 변화", "exp.col.status":"상태", "exp.col.minLvl":"최소", "exp.col.maxLvl":"최대", "exp.col.cost":"단가 (₭)", "exp.col.closeVal":"기말 가치 (₭)", "exp.col.expiry":"가장 빠른 만료", "exp.col.value":"가치 (₭)", "exp.col.totals":"합계", "ov.kStockVal":"재고 가치", "ov.kItems":"항목", "ov.kWasteMo":"이달 폐기", "ov.kVsPrev":"전월 대비", "ov.kExpiring":"≤7일 만료", "ov.kBatches":"배치", "ov.kReorder":"재주문 필요", "ov.kItemsLow":"최소 이하 항목", "ov.chWaste":"폐기 — 최근 6개월", "ov.chStockCat":"카테고리별 재고 가치", "ov.expSoon":"곧 만료", "ov.noExp":"곧 만료되는 항목 없음. 양호.", "ov.noData":"데이터 없음.", "ov.orderToday":"오늘 주문 — 최소 이하", "ov.nothingOrder":"주문할 것 없음. 재고 충분.",
     "ov.haveUse":"보유 / 일일 사용", "ov.orderQty":"이만큼 주문", "ov.day":"일",
     "ov.expiring3":"3일 내 만료 — 지금 사용", "ov.nothing3":"3일 내 만료 없음. 좋음.",
     "ov.expiring7":"이번 주 만료 (4–7일) — 미리 계획", "ov.nothing7":"이번 주 만료 없음.",
@@ -2341,6 +2557,637 @@ function klUnitT(unit) {
   const hit = map[u.toLowerCase()];
   return hit || u;
 }
+
+// ============================================================
+// MULTI-SELECT FILTER (reusable across Stock Levels, Stock page, Map)
+// ============================================================
+// State: window.__klFilters[scope] = { status:[], category:[], zone:[],
+//   supplier:[], unit:[] }. Empty array = no filter on that dimension.
+// AND across dimensions, OR within each dimension.
+window.__klFilters = window.__klFilters || {};
+
+function klFilterState(scope) {
+  if (!window.__klFilters[scope]) {
+    window.__klFilters[scope] = { status:[], category:[], zone:[], supplier:[], unit:[] };
+  }
+  return window.__klFilters[scope];
+}
+
+function klFilterActiveCount(scope) {
+  const s = klFilterState(scope);
+  return (s.status.length + s.category.length + s.zone.length
+       + s.supplier.length + s.unit.length);
+}
+
+// Compute "status" of an item row given on_hand/reorder_level/par_level.
+function klItemStatus(r) {
+  const on = Number(r.on_hand||0);
+  const mn = Number(r.reorder_level||0);
+  const mx = Number(r.par_level||0);
+  if (on <= mn) return 'below_min';
+  if (mx > 0 && on > mx) return 'over_max';
+  if (mx > 0 && on < mx * 0.5) return 'low';
+  return 'ok';
+}
+
+// Apply current filters to an array of items. The item shape is the
+// v_reorder_advisor row but with optional extra fields (category,
+// storage_type) merged from the items table.
+function klFilterApply(scope, rows) {
+  const s = klFilterState(scope);
+  return rows.filter(r => {
+    if (s.status.length   && !s.status.includes(klItemStatus(r))) return false;
+    if (s.category.length && !s.category.includes((r.category||'').toLowerCase())) return false;
+    if (s.zone.length     && !s.zone.includes((r.storage_type||r.temp_zone||'').toLowerCase())) return false;
+    if (s.supplier.length && !s.supplier.includes((r.usual_supplier||'').toLowerCase())) return false;
+    if (s.unit.length     && !s.unit.includes((r.unit||'').toLowerCase())) return false;
+    return true;
+  });
+}
+
+// Compute the available filter options from a set of rows, so the
+// dropdown only shows values that actually exist in the data.
+function klFilterOptions(rows) {
+  const cats = new Set(), zones = new Set(), sups = new Set(), units = new Set();
+  rows.forEach(r => {
+    if (r.category)      cats.add(String(r.category).toLowerCase());
+    const z = r.storage_type || r.temp_zone;
+    if (z)               zones.add(String(z).toLowerCase());
+    if (r.usual_supplier)sups.add(String(r.usual_supplier).toLowerCase());
+    if (r.unit)          units.add(String(r.unit).toLowerCase());
+  });
+  return {
+    status: ['below_min','low','ok','over_max'],
+    category: Array.from(cats).sort(),
+    zone:     Array.from(zones).sort(),
+    supplier: Array.from(sups).sort(),
+    unit:     Array.from(units).sort()
+  };
+}
+
+// Render the filter bar HTML. onChange is called after every filter
+// change so the caller can re-render their item list.
+window.klFilterBar = function(scope, rows, onChange) {
+  const s = klFilterState(scope);
+  const opts = klFilterOptions(rows);
+  const active = klFilterActiveCount(scope);
+
+  // The bar: Filter button + active chips + Clear all
+  let bar = '<div class="kl-mf-bar">';
+  bar += '<button class="kl-mf-btn'+(active?' has-active':'')+'" onclick="klFilterToggle(\''+scope+'\', event)">'
+       + '☰ '+t('flt.filter')
+       + (active ? ' <span class="kl-mf-count">'+active+'</span>' : '')
+       + '</button>';
+
+  // Active chips (per filter value, with X to remove)
+  bar += '<div class="kl-mf-chips">';
+  const labelFor = (dim, val) => {
+    if (dim === 'status')   return t('flt.s.'+val) || val;
+    if (dim === 'zone')     return klMapZoneTypeLabel(val);
+    if (dim === 'unit')     return klUnitT(val);
+    return val; // category, supplier - use raw value
+  };
+  ['status','category','zone','supplier','unit'].forEach(dim => {
+    s[dim].forEach(val => {
+      bar += '<span class="kl-mf-chip">'+h(labelFor(dim,val))
+           + '<button class="kl-mf-chip-x" onclick="klFilterRemove(\''+scope+'\',\''+dim+'\',\''+val.replace(/'/g,"\\'")+'\')" aria-label="Remove">×</button>'
+           + '</span>';
+    });
+  });
+  bar += '</div>';
+
+  if (active) {
+    bar += '<button class="kl-mf-clear" onclick="klFilterClear(\''+scope+'\')">'+t('flt.clearAll')+'</button>';
+  }
+  bar += '</div>';
+
+  // Hidden popup panel
+  bar += '<div class="kl-mf-panel" id="klFilterPanel_'+scope+'">'
+       + '<div class="kl-mf-panel-head">'
+       +   '<span class="kl-mf-panel-title">'+t('flt.filter')+'</span>'
+       +   '<button class="kl-mf-panel-close" onclick="klFilterTogglePanel(\''+scope+'\',false)" aria-label="Close">×</button>'
+       + '</div>';
+
+  // 5 groups
+  const groups = [
+    {dim:'status',   lbl:t('flt.status'),   values:opts.status,   isStatus:true},
+    {dim:'category', lbl:t('flt.category'), values:opts.category},
+    {dim:'zone',     lbl:t('flt.zone'),     values:opts.zone,     isZone:true},
+    {dim:'supplier', lbl:t('flt.supplier'), values:opts.supplier},
+    {dim:'unit',     lbl:t('flt.unit'),     values:opts.unit,     isUnit:true}
+  ];
+  groups.forEach(g => {
+    bar += '<div class="kl-mf-group">';
+    bar += '<div class="kl-mf-group-lbl">'+h(g.lbl)+'</div>';
+    if (!g.values.length) {
+      bar += '<div class="kl-mf-opt-empty">'+t('flt.noOptions')+'</div>';
+    } else {
+      g.values.forEach(val => {
+        const checked = s[g.dim].includes(val) ? 'checked' : '';
+        const lbl = g.isStatus ? t('flt.s.'+val) :
+                    g.isZone   ? klMapZoneTypeLabel(val) :
+                    g.isUnit   ? klUnitT(val) : val;
+        bar += '<label class="kl-mf-opt">'
+             + '<input type="checkbox" '+checked+' onchange="klFilterToggleVal(\''+scope+'\',\''+g.dim+'\',\''+val.replace(/'/g,"\\'")+'\', this.checked)">'
+             + '<span>'+h(lbl)+'</span></label>';
+      });
+    }
+    bar += '</div>';
+  });
+  bar += '<div class="kl-mf-panel-actions">'
+       +   '<button onclick="klFilterClear(\''+scope+'\')">'+t('flt.clearAll')+'</button>'
+       +   '<button class="kl-mf-apply" onclick="klFilterTogglePanel(\''+scope+'\',false)">'+t('flt.done')+'</button>'
+       + '</div>';
+  bar += '</div>';
+
+  // Stash the onChange handler so toggle/remove/clear can re-render.
+  window.__klFilterCallbacks = window.__klFilterCallbacks || {};
+  window.__klFilterCallbacks[scope] = onChange || function(){};
+  return bar;
+};
+
+window.klFilterToggle = function(scope, event) {
+  if (event) event.stopPropagation();
+  const panel = document.getElementById('klFilterPanel_'+scope);
+  if (!panel) return;
+  // Position panel just below the button (relative to the bar)
+  const btn = event && event.currentTarget;
+  if (btn && !panel.classList.contains('open')) {
+    const r = btn.getBoundingClientRect();
+    panel.style.top  = (window.scrollY + r.bottom + 6) + 'px';
+    panel.style.left = (window.scrollX + r.left) + 'px';
+  }
+  klFilterTogglePanel(scope, !panel.classList.contains('open'));
+};
+
+window.klFilterTogglePanel = function(scope, open) {
+  const panel = document.getElementById('klFilterPanel_'+scope);
+  if (!panel) return;
+  panel.classList.toggle('open', !!open);
+  // Click-outside to close
+  if (open) {
+    setTimeout(() => {
+      const handler = (e) => {
+        if (!panel.contains(e.target)) {
+          klFilterTogglePanel(scope, false);
+          document.removeEventListener('click', handler);
+        }
+      };
+      document.addEventListener('click', handler);
+    }, 30);
+  }
+};
+
+window.klFilterToggleVal = function(scope, dim, val, checked) {
+  const s = klFilterState(scope);
+  const arr = s[dim];
+  const i = arr.indexOf(val);
+  if (checked && i === -1) arr.push(val);
+  else if (!checked && i !== -1) arr.splice(i, 1);
+  const cb = window.__klFilterCallbacks && window.__klFilterCallbacks[scope];
+  if (cb) cb();
+};
+
+window.klFilterRemove = function(scope, dim, val) {
+  klFilterToggleVal(scope, dim, val, false);
+};
+
+window.klFilterClear = function(scope) {
+  window.__klFilters[scope] = { status:[], category:[], zone:[], supplier:[], unit:[] };
+  const cb = window.__klFilterCallbacks && window.__klFilterCallbacks[scope];
+  if (cb) cb();
+};
+
+// Render the Stock Levels body (filter bar + rows). Called initially
+// and again every time the filter changes. The base list is stashed
+// on window.__klSlBase by initOverviewPage.
+window.klRenderStockLevels = function(baseRows) {
+  const base = baseRows || window.__klSlBase || [];
+  const filtered = klFilterApply('ovStockLvl', base).slice(0, 8);
+  let out = klFilterBar('ovStockLvl', base, () => {
+    // re-render in place
+    const body = document.getElementById('ovSlBody');
+    if (body) body.innerHTML = klRenderStockLevels(window.__klSlBase);
+    // update count badge
+    const fcount = klFilterApply('ovStockLvl', window.__klSlBase || []).length;
+    const cnt = document.getElementById('ovSlCount');
+    if (cnt) cnt.textContent = fcount + ' ' + t('ov.kItems');
+  });
+  if (!filtered.length) {
+    out += '<p class="kl-rsmall kl-muted" style="padding:8px 0">'+t('flt.noMatches')+'</p>';
+    return out;
+  }
+  filtered.forEach(r => {
+    const oh = Number(r.on_hand||0);
+    const mn = Number(r.reorder_level||0);
+    const mx = Number(r.par_level||mn*3||1);
+    const pct = Math.max(6, Math.min(100, (oh/mx)*100));
+    const isLow = oh <= mn;
+    const stCol = isLow ? '#c0392b' : '#15795f';
+    out += '<div class="kl-ov-slv">'
+         + '<div class="kl-ov-slv-top">'
+         + '<span class="kl-ov-slv-name">'+h(r.name)+'</span>'
+         + '<span class="kl-ov-slv-nums">'
+         + '<span class="kl-ov-slv-n"><b>'+t('ov.min')+'</b> '+fmtQty(mn)+'</span>'
+         + '<span class="kl-ov-slv-n" style="color:'+stCol+';font-weight:700">'+t('ov.now')+' '+fmtQty(oh)+'</span>'
+         + '<span class="kl-ov-slv-n"><b>'+t('ov.max')+'</b> '+fmtQty(mx)+' '+klUnitT(r.unit||'')+'</span>'
+         + '</span></div>'
+         + '<div class="kl-ov-wbar-wrap"><div class="kl-ov-wbar" style="width:'+pct+'%;background:'+stCol+'"></div></div>'
+         + '</div>';
+  });
+  return out;
+};
+
+// ============================================================
+// MOVEMENT REPORT EXPORT — professional .xlsx with date range
+// ============================================================
+// Computes per-item: Opening / IN / OUT / WASTE / Closing / Net
+// during a chosen date range, plus money totals. Generates a
+// multi-section Excel workbook with SheetJS, lazy-loaded once.
+//
+// Math (per item):
+//   Closing  = current on_hand
+//   inSum    = SUM movements WHERE type=IN  AND created_at in [from, to]
+//   outSum   = SUM movements WHERE type=OUT AND created_at in [from, to]
+//   wasteSum = SUM movements WHERE type=WASTE AND created_at in [from, to]
+//   afterTo  = SUM movements AFTER to (signed: IN +, OUT/WASTE -)
+//   Opening  = Closing - inSum + outSum + wasteSum - afterTo... wait, simpler:
+//   Opening  = Closing - (movements in range, signed)
+//            = Closing - inSum + outSum + wasteSum  (when range ends at "now")
+//   For a historical range we walk back from current:
+//   Opening_at(from) = current_on_hand - sum(IN since from) + sum(OUT since from) + sum(WASTE since from)
+//   Closing_at(to)   = current_on_hand - sum(IN since to+1)  + sum(OUT since to+1) + sum(WASTE since to+1)
+//   But realistically users want the chosen range. We compute relative to "now":
+//   - movementsInRange = movements where created_at in [from, to]
+//   - movementsAfterTo = movements where created_at > to (so closing reflects to-date)
+// ============================================================
+
+const KL_SHEETJS_CDN = 'https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js';
+let __xlsxLoading = null;
+
+// Lazy-load SheetJS once. Returns a Promise that resolves when XLSX is ready.
+function klLoadXlsx() {
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  if (__xlsxLoading) return __xlsxLoading;
+  __xlsxLoading = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = KL_SHEETJS_CDN;
+    s.onload = () => { if (window.XLSX) resolve(window.XLSX); else reject(new Error('XLSX failed to load')); };
+    s.onerror = () => reject(new Error('Could not load Excel library — check internet connection'));
+    document.head.appendChild(s);
+  });
+  return __xlsxLoading;
+}
+
+// Format YYYY-MM-DD safely without timezone surprises.
+function klFmtDateISO(d) {
+  if (!(d instanceof Date)) d = new Date(d);
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+dd;
+}
+
+// Open the export dialog. Defaults to "This month" preset.
+window.klExpOpen = function() {
+  const ov = document.getElementById('klExpOverlay');
+  if (!ov) return;
+  klExpApplyPreset('thismonth');
+  document.getElementById('klExpError').style.display = 'none';
+  ov.classList.add('open');
+  klExpUpdateSummary();
+};
+
+window.klExpClose = function() {
+  const ov = document.getElementById('klExpOverlay');
+  if (ov) ov.classList.remove('open');
+};
+
+// Apply a date preset to the From/To inputs.
+window.klExpApplyPreset = function(name) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  let from = new Date(today), to = new Date(today);
+  if (name === 'today') {
+    // already today
+  } else if (name === 'week') {
+    from.setDate(today.getDate() - 6);
+  } else if (name === 'thismonth') {
+    from = new Date(today.getFullYear(), today.getMonth(), 1);
+  } else if (name === 'lastmonth') {
+    from = new Date(today.getFullYear(), today.getMonth()-1, 1);
+    to   = new Date(today.getFullYear(), today.getMonth(), 0); // last day of last month
+  } else if (name === 'quarter') {
+    from.setDate(today.getDate() - 89);
+  }
+  document.getElementById('klExpFrom').value = klFmtDateISO(from);
+  document.getElementById('klExpTo').value   = klFmtDateISO(to);
+  // Mark active preset
+  document.querySelectorAll('#klExpPresets .kl-exp-preset').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-preset') === name);
+  });
+  klExpUpdateSummary();
+};
+
+// Live-update summary card under the date inputs.
+function klExpUpdateSummary() {
+  const from = document.getElementById('klExpFrom').value;
+  const to   = document.getElementById('klExpTo').value;
+  const lbl  = document.getElementById('klExpRangeLbl');
+  const cnt  = document.getElementById('klExpItemCount');
+  if (lbl) lbl.textContent = (from && to) ? (from + ' → ' + to) : '—';
+  // Count = current rows on Stock page (the user sees what they'll get).
+  const rows = (window.__stockRows || []);
+  if (cnt) cnt.textContent = rows.length + ' ' + (t('exp.itemsUnit') || 'items');
+}
+
+// Wire preset buttons + date inputs (set up once, after dialog exists).
+function klExpWire() {
+  const wrap = document.getElementById('klExpPresets');
+  if (!wrap || wrap.dataset.wired === '1') return;
+  wrap.dataset.wired = '1';
+  wrap.querySelectorAll('.kl-exp-preset').forEach(b => {
+    b.addEventListener('click', () => klExpApplyPreset(b.getAttribute('data-preset')));
+  });
+  ['klExpFrom','klExpTo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', () => {
+      // Picking custom dates clears the preset highlight
+      wrap.querySelectorAll('.kl-exp-preset').forEach(b => b.classList.remove('active'));
+      klExpUpdateSummary();
+    });
+  });
+}
+
+// Main runner: fetch data, compute, build xlsx, trigger download.
+window.klExpRun = async function() {
+  const btn = document.getElementById('klExpGoBtn');
+  const errBox = document.getElementById('klExpError');
+  const from = document.getElementById('klExpFrom').value;
+  const to   = document.getElementById('klExpTo').value;
+  errBox.style.display = 'none';
+  if (!from || !to) {
+    errBox.textContent = t('exp.errPickDates') || 'Please pick both From and To dates.';
+    errBox.style.display = 'block';
+    return;
+  }
+  if (from > to) {
+    errBox.textContent = t('exp.errBadOrder') || 'From date must be on or before To date.';
+    errBox.style.display = 'block';
+    return;
+  }
+  const origLabel = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="kl-exp-spinner"></span>' + (t('exp.working') || 'Working…');
+
+  try {
+    // 1. Load SheetJS library (only once, cached after first call).
+    const XLSX = await klLoadXlsx();
+
+    // 2. Fetch current stock baseline + items metadata.
+    //    v_item_stock gives item_id, name, name_lao, unit, on_hand,
+    //    earliest_expiry, reorder_level, par_level. We merge category +
+    //    storage_type from items, and unit_cost from a recent batch for
+    //    the money columns.
+    const [stockRes, itemsRes, batchesRes] = await Promise.all([
+      sb.from('v_item_stock').select('*').order('name'),
+      sb.from('items').select('item_id, sku, category, storage_type, standard_cost'),
+      // Latest unit_cost per item (used for valuing IN/OUT/WASTE money totals)
+      sb.from('batches').select('item_id, unit_cost, created_at').order('created_at', { ascending:false }).limit(2000)
+    ]);
+    if (stockRes.error) throw stockRes.error;
+    if (itemsRes.error) throw itemsRes.error;
+
+    const itemMeta = {};
+    (itemsRes.data || []).forEach(it => { itemMeta[it.item_id] = it; });
+
+    // Latest unit_cost per item (first occurrence wins since rows are desc).
+    const lastCost = {};
+    (batchesRes.data || []).forEach(b => {
+      if (b.item_id != null && lastCost[b.item_id] == null && b.unit_cost != null) {
+        lastCost[b.item_id] = Number(b.unit_cost);
+      }
+    });
+
+    // 3. Fetch movements in range AND after the To date (needed to
+    //    compute closing balance "as of To"). We page through them so
+    //    huge warehouses still work; PostgREST caps at 1000 per request.
+    const fromIso = from + 'T00:00:00';
+    const toEndIso = to + 'T23:59:59';
+    const movInRange = await klExpFetchMovements(fromIso, toEndIso, null);
+    const movAfterTo = await klExpFetchMovements(toEndIso, null, null);
+
+    // 4. Aggregate per item. Maps: item_id -> { in, out, waste }
+    function newAgg() { return { inQ:0, outQ:0, wasteQ:0, inV:0, outV:0, wasteV:0 }; }
+    const inRange = {};
+    const afterTo = {};
+    function bucket(m, mapTo) {
+      if (!m.batches || !m.batches.item_id) return;
+      const id = m.batches.item_id;
+      const q = Number(m.quantity || 0);
+      const uc = Number(m.batches.unit_cost || 0);
+      if (!mapTo[id]) mapTo[id] = newAgg();
+      const a = mapTo[id];
+      if (m.movement_type === 'IN')         { a.inQ    += q; a.inV    += q*uc; }
+      else if (m.movement_type === 'OUT')   { a.outQ   += q; a.outV   += q*uc; }
+      else if (m.movement_type === 'WASTE') { a.wasteQ += q; a.wasteV += q*uc; }
+    }
+    movInRange.forEach(m => bucket(m, inRange));
+    movAfterTo.forEach(m => bucket(m, afterTo));
+
+    // 5. Build the per-item report rows.
+    // closing(t=to) = on_hand_now - afterTo.in + afterTo.out + afterTo.waste
+    // opening(t=from) = closing(t=to) - inRange.in + inRange.out + inRange.waste
+    const stock = stockRes.data || [];
+    const reportRows = stock.map(s => {
+      const id = s.item_id;
+      const meta = itemMeta[id] || {};
+      const inR  = inRange[id] || newAgg();
+      const aft  = afterTo[id] || newAgg();
+      const now  = Number(s.on_hand || 0);
+      const closing = now - aft.inQ + aft.outQ + aft.wasteQ;
+      const opening = closing - inR.inQ + inR.outQ + inR.wasteQ;
+      const net     = closing - opening;
+      // Status badge (Below min / Low / OK / Over max)
+      const status = klItemStatus({
+        on_hand: closing, reorder_level: s.reorder_level, par_level: s.par_level
+      });
+      const statusLbl = t('flt.s.'+status) || status;
+      const uc = lastCost[id] != null ? lastCost[id] : Number(meta.standard_cost || 0);
+      return {
+        sku: meta.sku || '',
+        name: s.name || '',
+        name_lao: s.name_lao || '',
+        category: meta.category || '',
+        zone: meta.storage_type || '',
+        unit: s.unit || '',
+        opening: opening,
+        in_qty: inR.inQ,
+        out_qty: inR.outQ,
+        waste_qty: inR.wasteQ,
+        closing: closing,
+        net: net,
+        in_val: inR.inV,
+        out_val: inR.outV,
+        waste_val: inR.wasteV,
+        closing_val: closing * uc,
+        unit_cost: uc,
+        reorder_level: s.reorder_level,
+        par_level: s.par_level,
+        earliest_expiry: s.earliest_expiry,
+        status: statusLbl
+      };
+    });
+
+    // 6. Compute totals for the cover sheet.
+    const tot = { in_qty:0, out_qty:0, waste_qty:0, in_val:0, out_val:0, waste_val:0, closing_val:0 };
+    reportRows.forEach(r => {
+      tot.in_qty    += r.in_qty;
+      tot.out_qty   += r.out_qty;
+      tot.waste_qty += r.waste_qty;
+      tot.in_val    += r.in_val;
+      tot.out_val   += r.out_val;
+      tot.waste_val += r.waste_val;
+      tot.closing_val += r.closing_val;
+    });
+
+    // 7. Build the workbook.
+    const wb = XLSX.utils.book_new();
+
+    // ---- Sheet 1: COVER ----
+    const lang = __lang || 'en';
+    const restaurantName = (__profile && __profile.restaurants && __profile.restaurants.name) || 'KHANGLAOS';
+    const generatedAt = new Date().toISOString().replace('T',' ').slice(0,16);
+    const coverAOA = [
+      [restaurantName],
+      [t('exp.cover.title') || 'Stock Movement Report'],
+      [],
+      [t('exp.cover.range') || 'Date range', from + '  to  ' + to],
+      [t('exp.cover.generated') || 'Generated', generatedAt + ' (' + lang + ')'],
+      [t('exp.cover.items')     || 'Items',     reportRows.length],
+      [],
+      [t('exp.cover.totals') || 'Totals during period'],
+      [t('exp.col.in')    || 'Received',   tot.in_qty,    null, t('exp.col.value') || 'Value (₭)', tot.in_val],
+      [t('exp.col.out')   || 'Checked out',tot.out_qty,   null, t('exp.col.value') || 'Value (₭)', tot.out_val],
+      [t('exp.col.waste') || 'Wasted',     tot.waste_qty, null, t('exp.col.value') || 'Value (₭)', tot.waste_val],
+      [],
+      [t('exp.cover.closingVal') || 'Closing stock value (₭)', tot.closing_val],
+      [],
+      [t('exp.cover.note') || 'Note: Excel headers are in the UI language selected at export time. Quantities are summed across units shown in the Unit column.']
+    ];
+    const wsCover = XLSX.utils.aoa_to_sheet(coverAOA);
+    wsCover['!cols'] = [{wch:34},{wch:18},{wch:6},{wch:18},{wch:18}];
+    // Money formatting on cover totals
+    ['B9','B10','B11','B13','E9','E10','E11'].forEach(addr => {
+      if (wsCover[addr] && typeof wsCover[addr].v === 'number') {
+        wsCover[addr].t = 'n';
+        wsCover[addr].z = '#,##0';
+      }
+    });
+    XLSX.utils.book_append_sheet(wb, wsCover, t('exp.sheet.cover') || 'Cover');
+
+    // ---- Sheet 2: MOVEMENT REPORT (main table) ----
+    const headers = [
+      t('exp.col.sku')      || 'SKU',
+      t('exp.col.item')     || 'Item',
+      t('exp.col.itemLao')  || 'Name (Lao)',
+      t('exp.col.category') || 'Category',
+      t('exp.col.zone')     || 'Zone',
+      t('exp.col.unit')     || 'Unit',
+      t('exp.col.opening')  || 'Opening',
+      t('exp.col.in')       || 'IN',
+      t('exp.col.out')      || 'OUT',
+      t('exp.col.waste')    || 'WASTE',
+      t('exp.col.closing')  || 'Closing',
+      t('exp.col.net')      || 'Net change',
+      t('exp.col.status')   || 'Status',
+      t('exp.col.minLvl')   || 'Min',
+      t('exp.col.maxLvl')   || 'Max',
+      t('exp.col.cost')     || 'Unit cost (₭)',
+      t('exp.col.closeVal') || 'Closing value (₭)',
+      t('exp.col.expiry')   || 'Earliest expiry'
+    ];
+    const dataAOA = [headers];
+    reportRows.forEach(r => {
+      dataAOA.push([
+        r.sku, r.name, r.name_lao, r.category, klMapZoneTypeLabel(r.zone) || r.zone,
+        klUnitT(r.unit) || r.unit,
+        r.opening, r.in_qty, r.out_qty, r.waste_qty, r.closing, r.net, r.status,
+        r.reorder_level, r.par_level, r.unit_cost, r.closing_val, r.earliest_expiry || ''
+      ]);
+    });
+    // Totals footer row (bold + thick line in Excel UI — best we can do via aoa)
+    dataAOA.push([
+      '', (t('exp.col.totals') || 'TOTALS'), '', '', '', '',
+      '', tot.in_qty, tot.out_qty, tot.waste_qty, '', '', '',
+      '', '', '', tot.closing_val, ''
+    ]);
+    const wsData = XLSX.utils.aoa_to_sheet(dataAOA);
+    // Column widths tuned per column purpose
+    wsData['!cols'] = [
+      {wch:14},{wch:28},{wch:24},{wch:14},{wch:12},{wch:8},
+      {wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:12},{wch:12},
+      {wch:8},{wch:8},{wch:12},{wch:16},{wch:14}
+    ];
+    // Freeze header row
+    wsData['!freeze'] = { xSplit:0, ySplit:1 };
+    // Format quantity & money columns as numbers with thousands separators.
+    // SheetJS cell addresses: column letters A..R for 18 columns.
+    const nRows = dataAOA.length;
+    const numCols = ['G','H','I','J','K','L','N','O','P','Q']; // qty + money
+    for (let r = 2; r <= nRows; r++) {
+      numCols.forEach(col => {
+        const addr = col + r;
+        if (wsData[addr] && typeof wsData[addr].v === 'number') {
+          wsData[addr].t = 'n';
+          // Money columns (P=unit cost, Q=closing value) get plain integer kip;
+          // qty columns get the same since we don't know decimal precision.
+          wsData[addr].z = '#,##0';
+        }
+      });
+    }
+    XLSX.utils.book_append_sheet(wb, wsData, t('exp.sheet.report') || 'Movement Report');
+
+    // 8. Trigger download. Filename: khanglaos-movements-FROM_to_TO.xlsx
+    const fname = 'khanglaos-movements-' + from + '_to_' + to + '.xlsx';
+    XLSX.writeFile(wb, fname);
+
+    // Success — close the dialog
+    klExpClose();
+  } catch (e) {
+    console.error('Export failed:', e);
+    errBox.textContent = (t('exp.errFail') || 'Export failed') + ': ' + (e.message || String(e));
+    errBox.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origLabel;
+  }
+};
+
+// Paginated movement fetch — handles large warehouses without truncation.
+// Returns array of { movement_type, quantity, created_at, batches:{item_id, unit_cost} }
+async function klExpFetchMovements(fromIso, toIso, _ignored) {
+  const all = [];
+  const PAGE = 1000;
+  let offset = 0;
+  while (true) {
+    let q = sb.from('movements')
+      .select('movement_type, quantity, created_at, batches(item_id, unit_cost)')
+      .order('created_at', { ascending:true })
+      .range(offset, offset + PAGE - 1);
+    if (fromIso) q = q.gte('created_at', fromIso);
+    if (toIso)   q = q.lte('created_at', toIso);
+    const { data, error } = await q;
+    if (error) throw error;
+    const batch = data || [];
+    all.push(...batch);
+    if (batch.length < PAGE) break;
+    offset += PAGE;
+    // Safety stop at 100k rows to avoid runaway loops
+    if (offset > 100000) break;
+  }
+  return all;
+}
+
 function setLang(lang) {
   if (!I18N[lang]) return;
   __lang = lang;
@@ -3005,26 +3852,44 @@ async function initStockPage() {
   try {
     // v_item_stock: name, name_lao, unit, on_hand, earliest_expiry,
     // reorder_level, par_level. RLS auto-scopes to this restaurant.
-    const { data, error } = await sb.from('v_item_stock').select('*').order('name');
-    if (error) throw error;
-    let rows = (data || []);
+    // We also pull items meta (category, storage_type) and reorder advisor
+    // (usual_supplier) so the multi-filter has all 5 dimensions.
+    const [stockRes, itemsMetaRes, advRes] = await Promise.all([
+      sb.from('v_item_stock').select('*').order('name'),
+      sb.from('items').select('item_id, category, storage_type'),
+      sb.from('v_reorder_advisor').select('item_id, usual_supplier')
+    ]);
+    if (stockRes.error) throw stockRes.error;
+
+    // Merge meta + usual_supplier into stock rows so filters can access them.
+    const metaById = {};
+    (itemsMetaRes.data || []).forEach(it => { metaById[it.item_id] = it; });
+    const supById = {};
+    (advRes.data || []).forEach(r => { supById[r.item_id] = r.usual_supplier; });
+    let rows = (stockRes.data || []).map(r => {
+      const m = metaById[r.item_id] || {};
+      return Object.assign({}, r, {
+        category: m.category,
+        storage_type: m.storage_type,
+        usual_supplier: supById[r.item_id]
+      });
+    });
     window.__stockRows = rows;
 
-    const render = (filter, term) => {
+    const render = (term) => {
       const today = new Date();
       const soon = new Date(); soon.setDate(soon.getDate() + 7);
       let list = rows.slice();
+      // Search by name
       if (term) {
         const q = term.toLowerCase();
         list = list.filter(r => (r.name || '').toLowerCase().includes(q) ||
                                  (r.name_lao || '').toLowerCase().includes(q));
       }
-      if (filter === 'low') {
-        list = list.filter(r => r.reorder_level != null && Number(r.on_hand) <= Number(r.reorder_level));
-      } else if (filter === 'exp') {
-        list = list.filter(r => r.earliest_expiry && new Date(r.earliest_expiry) <= soon);
-      }
-      // KPI strip
+      // Multi-filter (Status / Category / Zone / Supplier / Unit)
+      list = klFilterApply('stockPage', list);
+
+      // KPI strip - based on full rows (not filtered) so user sees totals
       const totalItems = rows.length;
       const lowCount = rows.filter(r => r.reorder_level != null && Number(r.on_hand) <= Number(r.reorder_level)).length;
       const expCount = rows.filter(r => r.earliest_expiry && new Date(r.earliest_expiry) <= soon).length;
@@ -3033,9 +3898,14 @@ async function initStockPage() {
       html += '<div class="kl-rcard ' + (lowCount ? 'warn' : '') + '"><p class="kl-rsmall">' + t('stock.low') + '</p><p class="kl-rbig">' + lowCount + '</p></div>';
       html += '<div class="kl-rcard ' + (expCount ? 'warn' : '') + '"><p class="kl-rsmall">' + t('stock.expiring') + '</p><p class="kl-rbig">' + expCount + '</p></div>';
       html += '</div>';
+
+      // Filter bar (renders the multi-select pill + active chips + clear)
+      html += klFilterBar('stockPage', rows, () => render(curTerm));
+
       // Table
       if (!list.length) {
-        html += '<p class="kl-muted">' + t('stock.none') + '</p>';
+        const noMatchMsg = klFilterActiveCount('stockPage') > 0 ? t('flt.noMatches') : t('stock.none');
+        html += '<p class="kl-muted">' + noMatchMsg + '</p>';
       } else {
         html += '<div class="kl-rcard" style="padding:0;overflow:hidden">';
         html += '<table class="kl-stock-tbl"><thead><tr>'
@@ -3068,23 +3938,23 @@ async function initStockPage() {
       body.innerHTML = html;
     };
 
-    let curFilter = 'all', curTerm = '';
-    render(curFilter, curTerm);
-    const fil = document.getElementById('stockFilter');
-    if (fil && fil.dataset.wired !== '1') {
-      fil.dataset.wired = '1';
-      fil.querySelectorAll('.kl-dr-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          curFilter = btn.getAttribute('data-sf');
-          fil.querySelectorAll('.kl-dr-btn').forEach(b => b.classList.toggle('active', b === btn));
-          render(curFilter, curTerm);
-        });
-      });
-    }
+    let curTerm = '';
+    render(curTerm);
+
+    // Hide the OLD simple filter group (replaced by multi-filter inside body).
+    const oldFil = document.getElementById('stockFilter');
+    if (oldFil) oldFil.style.display = 'none';
+
     const srch = document.getElementById('stockSearch');
     if (srch && srch.dataset.wired !== '1') {
       srch.dataset.wired = '1';
-      srch.addEventListener('input', () => { curTerm = srch.value.trim(); render(curFilter, curTerm); });
+      srch.addEventListener('input', () => { curTerm = srch.value.trim(); render(curTerm); });
+    }
+    // Export button — opens the Movement Report dialog
+    const expBtn = document.getElementById('stockExportBtn');
+    if (expBtn && expBtn.dataset.wired !== '1') {
+      expBtn.dataset.wired = '1';
+      expBtn.addEventListener('click', () => { klExpWire(); klExpOpen(); });
     }
   } catch (e) {
     body.innerHTML = '<div class="kl-rcard warn"><p class="kl-rsmall">' + h(String(e.message || e)) + '</p></div>';
@@ -5056,7 +5926,7 @@ async function initOverviewPage() {
     ));
 
     // ---- Pull everything in parallel. RLS auto-scopes to restaurant ----
-    const [stockVal, adv, expB, wasteMonth, wasteHist, receivingWk, wasteItems] = await Promise.all([
+    const [stockVal, adv, expB, wasteMonth, wasteHist, receivingWk, wasteItems, itemsMeta] = await Promise.all([
       sb.from('v_stock_value').select('*'),
       sb.from('v_reorder_advisor').select('*').order('name'),
       sb.from('batches')
@@ -5087,6 +5957,8 @@ async function initOverviewPage() {
         .eq('movement_type','WASTE')
         .gte('created_at', rangeFromISO)
         .lte('created_at', rangeToISO),
+      // Items metadata so we can filter Stock Levels by category/storage_type
+      sb.from('items').select('item_id, category, storage_type')
     ]);
 
     // ---- Compute KPIs ----
@@ -5100,7 +5972,14 @@ async function initOverviewPage() {
       stockByCat[c] = (stockByCat[c]||0) + v;
     });
 
-    const advRows = (adv.data || []);
+    // Merge category & storage_type from items into the advisor rows so
+    // the filter has all 5 dimensions available.
+    const metaById = {};
+    (itemsMeta.data || []).forEach(it => { metaById[it.item_id] = it; });
+    const advRows = (adv.data || []).map(r => {
+      const m = metaById[r.item_id] || {};
+      return Object.assign({}, r, { category: m.category, storage_type: m.storage_type });
+    });
     const reorderCount = advRows.filter(r => r.needs_reorder).length;
 
     const expRows = (expB.data || []);
@@ -5225,41 +6104,23 @@ async function initOverviewPage() {
     html += '</div>';
 
     // ---- ROW 1: Waste chart (left) + Stock Levels (right) ----
-    const slRows = advRows.filter(r => r.par_level != null && Number(r.par_level)>0)
+    // Stash all filterable items globally so the filter callback can re-render.
+    const slBase = advRows.filter(r => r.par_level != null && Number(r.par_level)>0)
       .sort((a,b) => Number(a.on_hand||0)/Number(a.par_level||1)
-                   - Number(b.on_hand||0)/Number(b.par_level||1))
-      .slice(0,5);
+                   - Number(b.on_hand||0)/Number(b.par_level||1));
+    window.__klSlBase = slBase;
 
     html += '<div class="kl-ov-2col">';
     // waste 6-month chart
     html += '<div class="kl-ov-card"><div class="kl-ov-head">'+t('ov.chWaste')
           + '<span class="kl-ov-count">'+trendBadge(trendDir,trendPct,true)+'</span></div>'
           + '<div class="kl-ov-chartwrap">'+barChart(buckets,'#caa24a')+'</div></div>';
-    // Stock levels — compact rows
-    if (slRows.length) {
+    // Stock levels — compact rows + multi-select filter
+    if (slBase.length) {
       html += '<div class="kl-ov-card"><div class="kl-ov-head">📊 '+t('ov.stockLevels')
-            + '<span class="kl-ov-count">'+slRows.length+' '+t('ov.kItems')+'</span></div>';
-      html += '<div class="kl-ov-mini">';
-      slRows.forEach(r => {
-        const oh = Number(r.on_hand||0);
-        const mn = Number(r.reorder_level||0);
-        const mx = Number(r.par_level||mn*3||1);
-        const pct = Math.max(6, Math.min(100, (oh/mx)*100));
-        const isLow = oh <= mn;
-        const stCol = isLow ? '#c0392b' : '#15795f';
-        // Show: name + Min/Now/Max numbers · bar · status
-        html += '<div class="kl-ov-slv">'
-              + '<div class="kl-ov-slv-top">'
-              + '<span class="kl-ov-slv-name">'+h(r.name)+'</span>'
-              + '<span class="kl-ov-slv-nums">'
-              + '<span class="kl-ov-slv-n"><b>'+t('ov.min')+'</b> '+fmtQty(mn)+'</span>'
-              + '<span class="kl-ov-slv-n" style="color:'+stCol+';font-weight:700">'+t('ov.now')+' '+fmtQty(oh)+'</span>'
-              + '<span class="kl-ov-slv-n"><b>'+t('ov.max')+'</b> '+fmtQty(mx)+' '+klUnitT(r.unit||'')+'</span>'
-              + '</span></div>'
-              + '<div class="kl-ov-wbar-wrap"><div class="kl-ov-wbar" style="width:'+pct+'%;background:'+stCol+'"></div></div>'
-              + '</div>';
-      });
-      html += '</div></div>';
+            + '<span class="kl-ov-count" id="ovSlCount">'+slBase.length+' '+t('ov.kItems')+'</span></div>';
+      html += '<div class="kl-ov-mini"><div id="ovSlBody">'
+            + klRenderStockLevels(slBase) + '</div></div></div>';
     } else {
       html += '<div class="kl-ov-card"><div class="kl-ov-head">📊 '+t('ov.stockLevels')+'</div>'
             + '<p class="kl-rsmall">'+t('ov.noData')+'</p></div>';
@@ -5599,16 +6460,33 @@ window.saveItem = async function(id) {
 
 // ---- SUPPLIERS ----
 async function renderSuppliers(u, body) {
-  const { data, error } = await sb.from('suppliers')
-    .select('supplier_id,name,contact_person,phone,whatsapp,payment_terms,is_active').order('name');
-  if (error) throw error;
+  // Fetch all columns we now expose in supForm. Falls back gracefully if
+  // any column is missing on a fresh DB - PostgREST throws on unknown
+  // columns, so try the wide select and fall back to the narrow one.
+  let data, error;
+  try {
+    const res = await sb.from('suppliers')
+      .select('supplier_id,name,contact_person,phone,whatsapp,email,address,payment_terms,notes,is_active')
+      .order('name');
+    data = res.data; error = res.error;
+    if (error) throw error;
+  } catch (e) {
+    // Older schema without email/address/notes - retry with classic columns.
+    const res = await sb.from('suppliers')
+      .select('supplier_id,name,contact_person,phone,whatsapp,payment_terms,is_active')
+      .order('name');
+    data = res.data; error = res.error;
+    if (error) throw error;
+  }
   let html = '<button class="kl-btn kl-btn-primary" onclick="supForm()">'+t('m.addSup')+'</button>';
   html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
-    + '<th>'+t('m.name')+'</th><th>'+t('m.contact')+'</th><th>'+t('m.phone')+'</th><th>'+t('m.terms')+'</th></tr></thead><tbody>';
+    + '<th>'+t('m.name')+'</th><th>'+t('m.contact')+'</th><th>'+t('m.phone')+'</th>'
+    + '<th>'+t('m.terms')+'</th><th>'+t('m.active')+'</th></tr></thead><tbody>';
   (data||[]).forEach(s=>{
     html += '<tr class="kl-iedit" onclick=\'supForm('+s.supplier_id+')\'>'
       + '<td>'+h(s.name)+'</td><td>'+h(s.contact_person||'-')+'</td>'
-      + '<td>'+h(s.phone||'-')+'</td><td>'+h(s.payment_terms||'-')+'</td></tr>';
+      + '<td>'+h(s.phone||'-')+'</td><td>'+h(s.payment_terms||'-')+'</td>'
+      + '<td>'+(s.is_active===false?'✗':'✓')+'</td></tr>';
   });
   html += '</tbody></table></div>';
   if (!(data||[]).length) html += '<p class="kl-muted">'+t('m.noSup')+'</p>';
@@ -5618,12 +6496,18 @@ async function renderSuppliers(u, body) {
 window.supForm = function(id) {
   const s = id ? (window.__sups||[]).find(x=>x.supplier_id===id) : {};
   const v=(k,d='')=>(s&&s[k]!=null)?s[k]:d;
+  // Only flip default to "active" on a NEW supplier. Edit keeps the saved value.
+  const activeChecked = id ? (v('is_active')!==false?'checked':'') : 'checked';
   modal(id?t('m.editSup'):t('m.addSup').replace('+ ',''),
-     '<div class="kl-form-row"><label>'+t('m.name')+' *</label><input id="sf_name" value="'+h(v('name'))+'"></div>'
-    +'<div class="kl-form-row"><label>'+t('m.contact')+'</label><input id="sf_cp" value="'+h(v('contact_person'))+'"></div>'
-    +'<div class="kl-form-row"><label>'+t('m.phone')+'</label><input id="sf_ph" value="'+h(v('phone'))+'"></div>'
-    +'<div class="kl-form-row"><label>WhatsApp</label><input id="sf_wa" value="'+h(v('whatsapp'))+'"></div>'
-    +'<div class="kl-form-row"><label>'+t('m.terms')+'</label><input id="sf_pt" value="'+h(v('payment_terms'))+'"></div>'
+     '<div class="kl-form-row"><label>'+t('m.name')+' *</label><input id="sf_name" value="'+h(v('name'))+'" maxlength="150"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.contact')+'</label><input id="sf_cp" value="'+h(v('contact_person'))+'" maxlength="100"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.phone')+'</label><input id="sf_ph" value="'+h(v('phone'))+'" maxlength="40"></div>'
+    +'<div class="kl-form-row"><label>WhatsApp</label><input id="sf_wa" value="'+h(v('whatsapp'))+'" maxlength="40"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.email')+'</label><input id="sf_em" type="email" value="'+h(v('email'))+'" maxlength="120"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.address')+'</label><input id="sf_ad" value="'+h(v('address'))+'" maxlength="200"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.terms')+'</label><input id="sf_pt" value="'+h(v('payment_terms'))+'" maxlength="80"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.notes')+'</label><input id="sf_nt" value="'+h(v('notes'))+'" maxlength="500"></div>'
+    +'<div class="kl-form-row"><label><input type="checkbox" id="sf_act" '+activeChecked+'> '+t('m.active')+'</label></div>'
     +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveSup('+(id||'null')+')">'+t('m.save')+'</button> '
     +'<button class="kl-btn" onclick="closeModal()">'+t('m.cancel')+'</button>');
 };
@@ -5631,9 +6515,17 @@ window.saveSup = async function(id){
   const g=(x)=>document.getElementById(x);
   const rec={ name:g('sf_name').value.trim(), contact_person:g('sf_cp').value.trim()||null,
     phone:g('sf_ph').value.trim()||null, whatsapp:g('sf_wa').value.trim()||null,
-    payment_terms:g('sf_pt').value.trim()||null };
+    email: g('sf_em').value.trim()||null,
+    address: g('sf_ad').value.trim()||null,
+    payment_terms:g('sf_pt').value.trim()||null,
+    notes: g('sf_nt').value.trim()||null,
+    is_active: g('sf_act').checked };
   if(!rec.name){ alert(t('m.needName')); return; }
   if(rec.name.length>150){ alert('Name max 150 chars'); return; }
+  // Light email validation - only if user provided one.
+  if (rec.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rec.email)) {
+    alert(t('m.emailBad')); return;
+  }
   try{
     let res;
     if(id) res=await sb.from('suppliers').update(rec).eq('supplier_id',id);
@@ -5720,26 +6612,83 @@ window.saveLoc = async function(id){
   }catch(e){ alert('Save failed: '+(e.message||e)); }
 };
 
-// ---- USERS (owner/sa only — read + role view) ----
+// ---- USERS / STAFF (owner/sa/manager: read + edit profile fields) ----
+// Email & password are not editable here - those live in Supabase Auth and
+// require admin API. Editable: full_name, role, phone, is_active.
 async function renderUsers(u, body) {
   const role = u.user.role;
   if (!['sa','owner','manager'].includes(role)) {
-    body.innerHTML = '<div class="kl-rcard warn"><p class="kl-rsmall">Only owner/manager can view staff.</p></div>';
+    body.innerHTML = '<div class="kl-rcard warn"><p class="kl-rsmall">'+t('m.staffMgrOnly')+'</p></div>';
     return;
   }
   const { data, error } = await sb.from('user_profiles')
-    .select('full_name,role,phone,is_active').order('full_name');
+    .select('user_id,full_name,role,phone,is_active').order('full_name');
   if (error) throw error;
-  let html = '<div class="kl-rcard info"><p class="kl-rsmall">To add a new staff login: create them in Supabase → Authentication → Users, then link via user_profiles. (Self-service staff signup is a future feature.)</p></div>';
+  let html = '<div class="kl-rcard info"><p class="kl-rsmall">'+t('m.staffAddInfo')+'</p></div>';
   html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
     + '<th>'+t('m.name')+'</th><th>'+t('m.role')+'</th><th>'+t('m.phone')+'</th><th>'+t('m.active')+'</th></tr></thead><tbody>';
   (data||[]).forEach(p=>{
-    html += '<tr><td>'+h(p.full_name)+'</td><td>'+h(p.role)+'</td>'
-      + '<td>'+h(p.phone||'-')+'</td><td>'+(p.is_active?'✓':'✗')+'</td></tr>';
+    html += '<tr class="kl-iedit" onclick=\'userForm("'+p.user_id+'")\'>'
+      + '<td>'+h(p.full_name||'-')+'</td><td>'+h(p.role||'-')+'</td>'
+      + '<td>'+h(p.phone||'-')+'</td><td>'+(p.is_active===false?'✗':'✓')+'</td></tr>';
   });
   html += '</tbody></table></div>';
+  if (!(data||[]).length) html += '<p class="kl-muted">'+t('m.noStaff')+'</p>';
   body.innerHTML = html;
+  window.__users = data || [];
 }
+
+window.userForm = function(userId) {
+  // Edit-only form (we don't create users from here - that's Supabase Auth).
+  const p = (window.__users||[]).find(x => String(x.user_id) === String(userId));
+  if (!p) { alert('User not found'); return; }
+  const v = (k,d='') => (p[k]!=null ? p[k] : d);
+  const activeChecked = v('is_active')!==false ? 'checked' : '';
+  // Allowed roles - SA can assign any; owner can assign anything except 'sa'.
+  const currentRole = (klSession() && klSession().user && klSession().user.role) || 'staff';
+  const ALL_ROLES = ['sa','owner','manager','receiver','staff'];
+  const assignable = currentRole === 'sa'
+    ? ALL_ROLES
+    : ALL_ROLES.filter(r => r !== 'sa');
+  // If the user's current role isn't in the assignable list (e.g. owner
+  // viewing an sa profile), still include it so it doesn't silently change.
+  if (!assignable.includes(v('role')) && v('role')) assignable.unshift(v('role'));
+
+  modal(t('m.editStaff'),
+     '<div class="kl-form-row"><label>'+t('m.name')+' *</label><input id="uf_name" value="'+h(v('full_name'))+'" maxlength="100"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.role')+'</label><select id="uf_role">'
+      + assignable.map(r=>'<option value="'+r+'" '+(v('role')===r?'selected':'')+'>'+r+'</option>').join('')
+    +'</select></div>'
+    +'<div class="kl-form-row"><label>'+t('m.phone')+'</label><input id="uf_phone" value="'+h(v('phone'))+'" maxlength="40"></div>'
+    +'<div class="kl-form-row"><label><input type="checkbox" id="uf_act" '+activeChecked+'> '+t('m.active')+'</label></div>'
+    +'<div class="kl-rcard info" style="margin-top:14px"><p class="kl-rsmall">'+t('m.staffAuthNote')+'</p></div>'
+    +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick=\'saveUser("'+userId+'")\'>'+t('m.save')+'</button> '
+    +'<button class="kl-btn" onclick="closeModal()">'+t('m.cancel')+'</button>');
+};
+
+window.saveUser = async function(userId) {
+  const g = (x)=>document.getElementById(x);
+  const rec = {
+    full_name: g('uf_name').value.trim(),
+    role: g('uf_role').value,
+    phone: g('uf_phone').value.trim() || null,
+    is_active: g('uf_act').checked
+  };
+  if (!rec.full_name) { alert(t('m.needName')); return; }
+  // Safety: don't let a non-SA elevate someone to SA via DevTools.
+  const me = klSession() && klSession().user;
+  if (rec.role === 'sa' && me && me.role !== 'sa') {
+    alert('Only SA can assign SA role.'); return;
+  }
+  try {
+    const res = await sb.from('user_profiles').update(rec).eq('user_id', userId);
+    if (res.error) throw res.error;
+    closeModal();
+    renderManageTab(klSession());
+  } catch(e) {
+    alert(t('m.saveFail')+': '+(e.message||e));
+  }
+};
 
 </script>
 </div><!--/app-view-->
