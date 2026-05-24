@@ -193,6 +193,15 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 .kl-kpi.is-success .kl-kpi-value { color: var(--kl-success); }
 
 .kl-form-row { margin-bottom: 14px; }
+/* Input with unit suffix badge inside on the right (e.g. "55 bottle") */
+.kl-input-with-suffix { position:relative; display:block; }
+.kl-input-with-suffix input { padding-right:90px; width:100%; box-sizing:border-box; }
+.kl-input-suffix { position:absolute; top:50%; right:1px; transform:translateY(-50%);
+  display:flex; align-items:center; height:calc(100% - 6px); padding:0 12px;
+  background:var(--kl-surface-2,#f4f6f8); color:var(--kl-text-soft,#69707d);
+  font-size:13px; font-weight:600; border-radius:0 8px 8px 0;
+  border-left:1px solid var(--kl-border,#eceef1); pointer-events:none;
+  text-transform:none; white-space:nowrap; min-width:60px; justify-content:center; }
 /* Stock page — table, pills, tools */
 .kl-stock-tools { display:flex; align-items:center; gap:12px; margin:18px 0; flex-wrap:wrap; }
 .kl-stock-search { flex:1; min-width:180px; max-width:340px; padding:9px 14px;
@@ -480,6 +489,121 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 /* Overview header — title left, date filter right */
 .kl-ov-header { display:flex; justify-content:space-between; align-items:flex-start;
   gap:24px; margin-bottom:18px; flex-wrap:wrap; }
+
+/* ============================================================
+   WAREHOUSE MAP — professional 3PL floor plan view
+   Color codes follow HACCP / GDP food safety standards:
+     ok      = green  (#15795f) — all healthy
+     warn    = gold   (#caa24a) — needs attention soon
+     bad     = red    (#c0392b) — critical, act now
+     unknown = grey   (#9aa6b0) — no data yet
+   ============================================================ */
+.kl-map-legend { display:flex; gap:14px; flex-wrap:wrap; align-items:center;
+  font-size:12px; color:var(--kl-text-soft,#69707d); }
+.kl-map-leg-item { display:inline-flex; align-items:center; gap:6px; }
+.kl-map-leg-dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+.kl-map-leg-dot.ok      { background:#15795f; }
+.kl-map-leg-dot.warn    { background:#caa24a; }
+.kl-map-leg-dot.bad     { background:#c0392b; }
+.kl-map-leg-dot.unknown { background:#9aa6b0; }
+
+.kl-map-floor { background:#fff; border:1px solid var(--kl-border,#eceef1);
+  border-radius:14px; padding:24px; box-shadow:0 1px 3px rgba(20,32,48,.04);
+  margin-bottom:18px; overflow:auto; }
+.kl-map-floor-title { font-size:12px; color:var(--kl-text-soft,#69707d);
+  text-transform:uppercase; letter-spacing:.06em; font-weight:700; margin:0 0 14px 0; }
+/* Grid - up to 20 columns, auto-fit minimum 200px per zone */
+.kl-map-grid { display:grid; gap:14px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+@media(min-width:1100px){ .kl-map-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
+
+/* Individual zone card */
+.kl-map-zone { position:relative; background:#fff;
+  border:1px solid var(--kl-border,#eceef1); border-radius:12px;
+  padding:14px 14px 12px 18px; cursor:pointer; transition:transform .1s, box-shadow .1s;
+  min-height:140px; display:flex; flex-direction:column; }
+.kl-map-zone:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(20,32,48,.08); }
+.kl-map-zone::before { content:''; position:absolute; left:0; top:0; bottom:0;
+  width:5px; border-radius:12px 0 0 12px; background:#9aa6b0; }
+.kl-map-zone.status-ok::before      { background:#15795f; }
+.kl-map-zone.status-warn::before    { background:#caa24a; }
+.kl-map-zone.status-bad::before     { background:#c0392b; }
+.kl-map-zone.status-unknown::before { background:#9aa6b0; }
+.kl-map-zone-top { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.kl-map-zone-icon { font-size:18px; line-height:1; }
+.kl-map-zone-name { font-size:14px; font-weight:700; color:var(--kl-text,#14201b);
+  flex:1; line-height:1.2; }
+.kl-map-zone-code { font-size:10.5px; color:var(--kl-text-soft,#69707d);
+  background:var(--kl-surface-2,#f4f6f8); padding:2px 6px; border-radius:4px;
+  font-family:var(--kl-font-mono,monospace); font-weight:600; }
+.kl-map-zone-warns { display:flex; gap:5px; margin-bottom:10px; flex-wrap:wrap;
+  min-height:22px; }
+.kl-map-zone-warn-pill { font-size:10.5px; padding:2px 7px; border-radius:999px;
+  font-weight:700; display:inline-flex; align-items:center; gap:3px; }
+.kl-map-zone-warn-pill.bad  { background:#fdecea; color:#c0392b; }
+.kl-map-zone-warn-pill.warn { background:#fdf3e3; color:#b9791b; }
+.kl-map-zone-stats { display:grid; grid-template-columns:1fr 1fr; gap:8px;
+  font-size:12px; margin-top:auto; }
+.kl-map-zone-stat-lbl { color:var(--kl-text-soft,#69707d); font-size:10.5px;
+  text-transform:uppercase; letter-spacing:.04em; font-weight:600; margin-bottom:2px; }
+.kl-map-zone-stat-val { color:var(--kl-text,#14201b); font-weight:700;
+  font-family:var(--kl-font-display,inherit); font-size:13.5px; line-height:1.2; }
+.kl-map-zone-stat-val.bad  { color:#c0392b; }
+.kl-map-zone-stat-val.warn { color:#b9791b; }
+.kl-map-zone-cap-bar { grid-column:1/-1; height:5px; background:var(--kl-surface-2,#f4f6f8);
+  border-radius:3px; overflow:hidden; margin-top:4px; }
+.kl-map-zone-cap-fill { height:100%; background:#15795f; transition:width .3s; }
+.kl-map-zone-cap-fill.warn { background:#caa24a; }
+.kl-map-zone-cap-fill.bad  { background:#c0392b; }
+
+/* Empty state */
+.kl-map-empty { background:#fff; border:1px dashed var(--kl-border,#eceef1);
+  border-radius:14px; padding:48px 24px; text-align:center;
+  color:var(--kl-text-soft,#69707d); }
+.kl-map-empty h3 { margin:0 0 8px 0; color:var(--kl-text,#14201b);
+  font-size:18px; font-weight:700; }
+.kl-map-empty p { margin:0 0 16px 0; font-size:14px; }
+
+/* Zone detail drawer (when you click a zone) */
+.kl-map-drawer-backdrop { position:fixed; inset:0; background:rgba(20,32,48,.45);
+  z-index:9000; display:none; }
+.kl-map-drawer-backdrop.open { display:block; }
+.kl-map-drawer { position:fixed; top:0; right:0; bottom:0; width:min(480px,100vw);
+  background:#fff; z-index:9001; box-shadow:-4px 0 24px rgba(20,32,48,.16);
+  transform:translateX(100%); transition:transform .25s ease;
+  overflow-y:auto; display:flex; flex-direction:column; }
+.kl-map-drawer.open { transform:translateX(0); }
+.kl-map-drawer-head { padding:18px 20px; border-bottom:1px solid var(--kl-border,#eceef1);
+  display:flex; align-items:flex-start; gap:12px; }
+.kl-map-drawer-head h2 { margin:0; font-size:18px; font-weight:700;
+  color:var(--kl-text,#14201b); flex:1; line-height:1.3; }
+.kl-map-drawer-close { background:transparent; border:none; cursor:pointer;
+  font-size:22px; color:var(--kl-text-soft,#69707d); padding:0 4px;
+  line-height:1; border-radius:6px; }
+.kl-map-drawer-close:hover { background:var(--kl-surface-2,#f4f6f8); color:var(--kl-text,#14201b); }
+.kl-map-drawer-body { padding:18px 20px; flex:1; }
+.kl-map-drawer-section { margin-bottom:20px; }
+.kl-map-drawer-section h3 { font-size:11px; color:var(--kl-text-soft,#69707d);
+  text-transform:uppercase; letter-spacing:.06em; font-weight:700;
+  margin:0 0 10px 0; }
+.kl-map-drawer-row { display:flex; justify-content:space-between;
+  padding:8px 0; border-bottom:1px solid var(--kl-border,#eceef1); font-size:13.5px; }
+.kl-map-drawer-row:last-child { border-bottom:none; }
+.kl-map-drawer-lbl { color:var(--kl-text-soft,#69707d); }
+.kl-map-drawer-val { color:var(--kl-text,#14201b); font-weight:600; }
+.kl-map-drawer-val.bad  { color:#c0392b; }
+.kl-map-drawer-val.warn { color:#b9791b; }
+.kl-map-drawer-val.ok   { color:#15795f; }
+.kl-map-drawer-item { padding:10px 0; border-bottom:1px solid var(--kl-border,#eceef1);
+  font-size:13px; }
+.kl-map-drawer-item:last-child { border-bottom:none; }
+.kl-map-drawer-item-name { font-weight:600; color:var(--kl-text,#14201b); margin-bottom:2px; }
+.kl-map-drawer-item-meta { font-size:11.5px; color:var(--kl-text-soft,#69707d); }
+@media(max-width:560px){ .kl-map-drawer { width:100vw; } }
+
+/* Re-anchor for the original Overview header */
+.kl-ov-header { display:flex; justify-content:space-between; align-items:flex-start;
+  gap:24px; margin-bottom:18px; flex-wrap:wrap; }
 .kl-ov-header-text { flex:1; min-width:240px; }
 .kl-ov-header-text .kl-page-title { margin:0; }
 .kl-ov-header-text .kl-page-sub { margin:4px 0 0 0; }
@@ -661,8 +785,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.14-warehouse-only-2026-05-23 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.14-wh</div>
+<!-- KHANGLAOS BUILD: v3.17-warehouse-map-2026-05-23 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.17-map</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -1024,6 +1148,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
     <a href="#/overview"  data-nav="overview"  data-i18n="nav.overview"><span class="kl-sb-ic">◷</span><span class="kl-sb-lbl">Overview</span></a>
     <a href="#/receive"   data-nav="receive"   data-i18n="nav.receive"><span class="kl-sb-ic">⬇</span><span class="kl-sb-lbl">Receive</span></a>
     <a href="#/stock"     data-nav="stock"     data-i18n="nav.stock"><span class="kl-sb-ic">▥</span><span class="kl-sb-lbl">Stock</span></a>
+    <a href="#/map"       data-nav="map"       data-i18n="nav.map"><span class="kl-sb-ic">⌖</span><span class="kl-sb-lbl">Map</span></a>
     <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout"><span class="kl-sb-ic">⬆</span><span class="kl-sb-lbl">Check-Out</span></a>
     <a href="#/reports"   data-nav="reports"   data-i18n="nav.reports"><span class="kl-sb-ic">▤</span><span class="kl-sb-lbl">Reports</span></a>
     <a href="#/manage"    data-nav="manage"    data-i18n="nav.manage"><span class="kl-sb-ic">⚙</span><span class="kl-sb-lbl">Manage</span></a>
@@ -1101,11 +1226,17 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
           </div>
           <div class="kl-form-row">
             <label><span data-i18n="receive.form.quantity">Quantity</span> <span id="recUnitHint" style="color:var(--kl-primary);text-transform:none;font-weight:600"></span></label>
-            <input type="text" id="recQty" inputmode="decimal" autocomplete="off" required placeholder="0">
+            <div class="kl-input-with-suffix">
+              <input type="text" id="recQty" inputmode="decimal" autocomplete="off" required placeholder="0">
+              <span class="kl-input-suffix" id="recQtySuffix">unit</span>
+            </div>
           </div>
           <div class="kl-form-row">
             <label data-i18n="receive.form.unitcost">Unit cost</label>
-            <input type="text" id="recUnitCost" inputmode="decimal" autocomplete="off" placeholder="0">
+            <div class="kl-input-with-suffix">
+              <input type="text" id="recUnitCost" inputmode="decimal" autocomplete="off" placeholder="0">
+              <span class="kl-input-suffix" id="recCostSuffix">₭ / unit</span>
+            </div>
           </div>
           <div class="kl-form-row">
             <label data-i18n="receive.form.receivedDate">Received date</label>
@@ -1233,6 +1364,24 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
       <button id="coConfirmBtn" class="kl-btn kl-btn-primary kl-btn-lg" data-i18n="checkout.confirm">✓ Confirm check-out</button>
       <button id="coCancelBtn" class="kl-btn" data-i18n="common.cancel">Cancel</button>
     </div>
+  </div>
+</div>
+
+<div id="page-map" class="kl-page">
+  <div class="kl-wrap">
+    <div class="kl-ov-header">
+      <div class="kl-ov-header-text">
+        <h1 class="kl-page-title" data-i18n="map.title">Warehouse Map</h1>
+        <p class="kl-page-sub" data-i18n="map.sub">Live view of every zone. Color shows temperature, capacity, and expiry status.</p>
+      </div>
+      <div class="kl-map-legend">
+        <span class="kl-map-leg-item"><span class="kl-map-leg-dot ok"></span><span data-i18n="map.legOk">OK</span></span>
+        <span class="kl-map-leg-item"><span class="kl-map-leg-dot warn"></span><span data-i18n="map.legWarn">Warning</span></span>
+        <span class="kl-map-leg-item"><span class="kl-map-leg-dot bad"></span><span data-i18n="map.legBad">Critical</span></span>
+        <span class="kl-map-leg-item"><span class="kl-map-leg-dot unknown"></span><span data-i18n="map.legUnknown">No data</span></span>
+      </div>
+    </div>
+    <div id="mapBody"><p class="kl-muted" data-i18n="common.loading">Loading…</p></div>
   </div>
 </div>
 
@@ -1394,7 +1543,7 @@ const I18N = {
     "m.needCodeName":"Code and name required", "m.tempErr":"Min temperature cannot be higher than max",
     "nav.overview":"Overview",
     "ov.title":"Overview — Owner Cockpit", "ov.sub":"Everything in one screen. Order today and expiring on top.",
-    "ov.receiving":"Receiving", "ov.recToday":"Received today", "ov.recWeek":"This week", "ov.lastRec":"Last receive", "ov.topWaste":"Top wasted items (this month)", "ov.noWaste":"No waste this month. ✓", "ov.belowMin":"BELOW MIN — order now", "ov.ok":"OK", "ov.min":"min", "ov.max":"max", "ov.daysAgo":"days ago", "ov.haveUse":"Have / Use", "ov.orderQty":"Order Qty", "ov.qty":"Qty", "ov.expires":"Expires", "ov.today":"Today", "ov.tomorrow":"Tomorrow", "ov.days":"days", "ov.day":"day", "ov.now":"now", "ov.colItem":"Item", "ov.autoOrder":"Auto-order", "idle.warnMsg":"⏱ Signing out in 10 min — tap to stay", "idle.outMsg":"You have been signed out after 8 hours.", "ov.d90btn":"3 months", "ov.kWaste":"Waste", "ov.kVsPrevRange":"vs previous period", "ov.lblWeek":"last 7 days", "ov.lblMonth":"last 30 days", "ov.lbl3Months":"last 90 days", "ov.topWasteShort":"Top wasted items", "ov.recPeriod":"This period", "ov.clearFilter":"✕", "ov.kStockVal":"Stock Value", "ov.kItems":"items", "ov.kWasteMo":"Waste This Month", "ov.kVsPrev":"vs last month", "ov.kExpiring":"Expiring ≤7 days", "ov.kBatches":"batches", "ov.kReorder":"To Reorder", "ov.kItemsLow":"items below min", "ov.chWaste":"Waste — last 6 months", "ov.chStockCat":"Stock value by category", "ov.expSoon":"Expiring soon", "ov.noExp":"Nothing expiring soon. Good.", "ov.noData":"No data yet.", "ov.orderToday":"Order today — below minimum", "ov.nothingOrder":"Nothing needs ordering. Stock levels healthy.",
+    "ov.receiving":"Receiving", "ov.recToday":"Received today", "ov.recWeek":"This week", "ov.lastRec":"Last receive", "ov.topWaste":"Top wasted items (this month)", "ov.noWaste":"No waste this month. ✓", "ov.belowMin":"BELOW MIN — order now", "ov.ok":"OK", "ov.min":"min", "ov.max":"max", "ov.daysAgo":"days ago", "ov.haveUse":"Have / Use", "ov.orderQty":"Order Qty", "ov.qty":"Qty", "ov.expires":"Expires", "ov.today":"Today", "ov.tomorrow":"Tomorrow", "ov.days":"days", "ov.day":"day", "ov.now":"now", "ov.colItem":"Item", "ov.autoOrder":"Auto-order", "idle.warnMsg":"⏱ Signing out in 10 min — tap to stay", "idle.outMsg":"You have been signed out after 8 hours.", "ov.d90btn":"3 months", "ov.kWaste":"Waste", "ov.kVsPrevRange":"vs previous period", "ov.lblWeek":"last 7 days", "ov.lblMonth":"last 30 days", "ov.lbl3Months":"last 90 days", "ov.topWasteShort":"Top wasted items", "ov.recPeriod":"This period", "ov.clearFilter":"✕", "common.in":"in", "common.howMany":"How many", "common.pricePer":"Price per", "common.unit":"unit", "nav.map":"Map", "map.title":"Warehouse Map", "map.sub":"Live view of every zone. Color shows temperature, capacity, and expiry status.", "map.legOk":"OK", "map.legWarn":"Warning", "map.legBad":"Critical", "map.legUnknown":"No data", "map.emptyTitle":"No zones configured yet", "map.emptyMsg":"Add storage zones in Manage → Locations to see your warehouse map.", "map.gotoManage":"Go to Manage", "map.row":"Row", "map.unassigned":"Unassigned zones", "map.temp":"Temp", "map.capacity":"Capacity", "map.batches":"batches", "map.tempBad":"TEMP CRITICAL", "map.tempWarn":"Temp drift", "map.capBad":"FULL", "map.capWarn":"Near full", "map.expiringSoon":"expiring", "map.detSummary":"Summary", "map.detItems":"Items in zone", "map.noItems":"No active stock in this zone.", "map.zoneType":"Zone type", "map.tempNow":"Current temp", "map.tempRange":"Target range", "map.stockValue":"Stock value", "map.notes":"Notes", "map.zt.freezer":"Freezer", "map.zt.chiller":"Chiller", "map.zt.cool_dry":"Cool dry", "map.zt.ambient":"Ambient", "map.zt.hazmat":"Hazmat", "map.zt.bonded":"Bonded", "map.zt.office":"Office", "map.zt.dry":"Dry storage", "map.zt.bar":"Bar", "m.currentTemp":"Current temperature", "m.capacity":"Capacity (units)", "m.gridRow":"Grid row", "m.gridCol":"Grid column", "m.notes":"Notes", "ov.kStockVal":"Stock Value", "ov.kItems":"items", "ov.kWasteMo":"Waste This Month", "ov.kVsPrev":"vs last month", "ov.kExpiring":"Expiring ≤7 days", "ov.kBatches":"batches", "ov.kReorder":"To Reorder", "ov.kItemsLow":"items below min", "ov.chWaste":"Waste — last 6 months", "ov.chStockCat":"Stock value by category", "ov.expSoon":"Expiring soon", "ov.noExp":"Nothing expiring soon. Good.", "ov.noData":"No data yet.", "ov.orderToday":"Order today — below minimum", "ov.nothingOrder":"Nothing needs ordering. Stock levels healthy.",
     "ov.haveUse":"Have / use per day", "ov.orderQty":"Order this much", "ov.day":"day",
     "ov.expiring3":"Expiring in 3 days — use NOW", "ov.nothing3":"Nothing expiring in 3 days. Good.",
     "ov.expiring7":"Expiring this week (4–7 days) — plan ahead", "ov.nothing7":"Nothing expiring this week.",
@@ -1559,7 +1708,7 @@ const I18N = {
     "m.needCodeName":"ຕ້ອງມີລະຫັດ ແລະ ຊື່", "m.tempErr":"ອຸນຫະພູມຕ່ຳ ສູງກວ່າ ສູງ ບໍ່ໄດ້",
     "nav.overview":"ພາບລວມ",
     "ov.title":"ພາບລວມ — ສຳລັບເຈົ້າຂອງ", "ov.sub":"ທຸກຢ່າງໃນໜ້າດຽວ. ສັ່ງຊື້ມື້ນີ້ ແລະ ໝົດອາຍຸ ຢູ່ເທິງ.",
-    "ov.receiving":"ການຮັບສິນຄ້າ", "ov.recToday":"ຮັບມື້ນີ້", "ov.recWeek":"ອາທິດນີ້", "ov.lastRec":"ຮັບຄັ້ງລ່າສຸດ", "ov.topWaste":"ສິນຄ້າເສຍຫຼາຍສຸດ (ເດືອນນີ້)", "ov.noWaste":"ບໍ່ມີຂີ້ເສຍເດືອນນີ້. ✓", "ov.belowMin":"ຕ່ຳກວ່າຂັ້ນຕ່ຳ — ສັ່ງດຽວນີ້", "ov.ok":"ປົກກະຕິ", "ov.min":"ຕ່ຳ", "ov.max":"ສູງ", "ov.daysAgo":"ມື້ກ່ອນ", "ov.haveUse":"ມີ / ໃຊ້", "ov.orderQty":"ສັ່ງຊື້", "ov.qty":"ຈຳນວນ", "ov.expires":"ໝົດອາຍຸ", "ov.today":"ມື້ນີ້", "ov.tomorrow":"ມື້ອື່ນ", "ov.days":"ມື້", "ov.day":"ມື້", "ov.now":"ດຽວນີ້", "ov.colItem":"ສິນຄ້າ", "ov.autoOrder":"ສັ່ງອັດຕະໂນມັດ", "idle.warnMsg":"⏱ ຈະອອກຈາກລະບົບໃນ 10 ນາທີ — ແຕະເພື່ອຢູ່ຕໍ່", "idle.outMsg":"ທ່ານອອກຈາກລະບົບແລ້ວ ຫຼັງຈາກ 8 ຊົ່ວໂມງ.", "ov.d90btn":"3 ເດືອນ", "ov.kWaste":"ຂີ້ເສຍ", "ov.kVsPrevRange":"ທຽບກັບໄລຍະກ່ອນ", "ov.lblWeek":"7 ມື້ຜ່ານມາ", "ov.lblMonth":"30 ມື້ຜ່ານມາ", "ov.lbl3Months":"90 ມື້ຜ່ານມາ", "ov.topWasteShort":"ສິນຄ້າເສຍຫຼາຍສຸດ", "ov.recPeriod":"ໄລຍະນີ້", "ov.clearFilter":"✕", "ov.kStockVal":"ມູນຄ່າສິນຄ້າ", "ov.kItems":"ລາຍການ", "ov.kWasteMo":"ຂີ້ເສຍເດືອນນີ້", "ov.kVsPrev":"ທຽບເດືອນກ່ອນ", "ov.kExpiring":"ໝົດອາຍຸ ≤7ມື້", "ov.kBatches":"ລັອດ", "ov.kReorder":"ຕ້ອງສັ່ງຊື້", "ov.kItemsLow":"ລາຍການຕ່ຳ", "ov.chWaste":"ຂີ້ເສຍ — 6 ເດືອນຜ່ານມາ", "ov.chStockCat":"ມູນຄ່າຕາມໝວດ", "ov.expSoon":"ໃກ້ໝົດອາຍຸ", "ov.noExp":"ບໍ່ມີຫຍັງໃກ້ໝົດອາຍຸ. ດີ.", "ov.noData":"ຍັງບໍ່ມີຂໍ້ມູນ.", "ov.orderToday":"ສັ່ງຊື້ມື້ນີ້ — ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "ov.nothingOrder":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຊື້. ສິນຄ້າພຽງພໍ.",
+    "ov.receiving":"ການຮັບສິນຄ້າ", "ov.recToday":"ຮັບມື້ນີ້", "ov.recWeek":"ອາທິດນີ້", "ov.lastRec":"ຮັບຄັ້ງລ່າສຸດ", "ov.topWaste":"ສິນຄ້າເສຍຫຼາຍສຸດ (ເດືອນນີ້)", "ov.noWaste":"ບໍ່ມີຂີ້ເສຍເດືອນນີ້. ✓", "ov.belowMin":"ຕ່ຳກວ່າຂັ້ນຕ່ຳ — ສັ່ງດຽວນີ້", "ov.ok":"ປົກກະຕິ", "ov.min":"ຕ່ຳ", "ov.max":"ສູງ", "ov.daysAgo":"ມື້ກ່ອນ", "ov.haveUse":"ມີ / ໃຊ້", "ov.orderQty":"ສັ່ງຊື້", "ov.qty":"ຈຳນວນ", "ov.expires":"ໝົດອາຍຸ", "ov.today":"ມື້ນີ້", "ov.tomorrow":"ມື້ອື່ນ", "ov.days":"ມື້", "ov.day":"ມື້", "ov.now":"ດຽວນີ້", "ov.colItem":"ສິນຄ້າ", "ov.autoOrder":"ສັ່ງອັດຕະໂນມັດ", "idle.warnMsg":"⏱ ຈະອອກຈາກລະບົບໃນ 10 ນາທີ — ແຕະເພື່ອຢູ່ຕໍ່", "idle.outMsg":"ທ່ານອອກຈາກລະບົບແລ້ວ ຫຼັງຈາກ 8 ຊົ່ວໂມງ.", "ov.d90btn":"3 ເດືອນ", "ov.kWaste":"ຂີ້ເສຍ", "ov.kVsPrevRange":"ທຽບກັບໄລຍະກ່ອນ", "ov.lblWeek":"7 ມື້ຜ່ານມາ", "ov.lblMonth":"30 ມື້ຜ່ານມາ", "ov.lbl3Months":"90 ມື້ຜ່ານມາ", "ov.topWasteShort":"ສິນຄ້າເສຍຫຼາຍສຸດ", "ov.recPeriod":"ໄລຍະນີ້", "ov.clearFilter":"✕", "common.in":"ໃນ", "common.howMany":"ຈຳນວນເທົ່າໃດ", "common.pricePer":"ລາຄາຕໍ່", "common.unit":"ໜ່ວຍ", "nav.map":"ແຜນທີ່", "map.title":"ແຜນທີ່ສາງ", "map.sub":"ມຸມມອງສົດໆຂອງທຸກໂຊນ. ສີສະແດງສະຖານະອຸນຫະພູມ, ຄວາມຈຸ, ແລະວັນໝົດອາຍຸ.", "map.legOk":"ປົກກະຕິ", "map.legWarn":"ເຕືອນ", "map.legBad":"ວິກິດ", "map.legUnknown":"ບໍ່ມີຂໍ້ມູນ", "map.emptyTitle":"ຍັງບໍ່ໄດ້ຕັ້ງຄ່າໂຊນ", "map.emptyMsg":"ເພີ່ມໂຊນເກັບສິນຄ້າໃນ ຈັດການ → ສະຖານທີ່ ເພື່ອເບິ່ງແຜນທີ່ສາງ.", "map.gotoManage":"ໄປຫາ ຈັດການ", "map.row":"ແຖວ", "map.unassigned":"ໂຊນທີ່ບໍ່ໄດ້ກຳນົດ", "map.temp":"ອຸນຫະພູມ", "map.capacity":"ຄວາມຈຸ", "map.batches":"ລັອດ", "map.tempBad":"ອຸນຫະພູມວິກິດ", "map.tempWarn":"ອຸນຫະພູມຄາດເຄື່ອນ", "map.capBad":"ເຕັມ", "map.capWarn":"ໃກ້ເຕັມ", "map.expiringSoon":"ໃກ້ໝົດອາຍຸ", "map.detSummary":"ສະຫຼຸບ", "map.detItems":"ສິນຄ້າໃນໂຊນ", "map.noItems":"ບໍ່ມີສິນຄ້າຢູ່ໃນໂຊນນີ້.", "map.zoneType":"ປະເພດໂຊນ", "map.tempNow":"ອຸນຫະພູມປັດຈຸບັນ", "map.tempRange":"ຊ່ວງເປົ້າໝາຍ", "map.stockValue":"ມູນຄ່າສິນຄ້າ", "map.notes":"ໝາຍເຫດ", "map.zt.freezer":"ຕູ້ແຊ່ແຂງ", "map.zt.chiller":"ຕູ້ເຢັນ", "map.zt.cool_dry":"ແຫ້ງເຢັນ", "map.zt.ambient":"ອຸນຫະພູມຫ້ອງ", "map.zt.hazmat":"ສານອັນຕະລາຍ", "map.zt.bonded":"ກັກພາສີ", "map.zt.office":"ຫ້ອງການ", "map.zt.dry":"ສາງແຫ້ງ", "map.zt.bar":"ບາ", "m.currentTemp":"ອຸນຫະພູມປັດຈຸບັນ", "m.capacity":"ຄວາມຈຸ (ໜ່ວຍ)", "m.gridRow":"ແຖວຕາຕະລາງ", "m.gridCol":"ຄໍລຳຕາຕະລາງ", "m.notes":"ໝາຍເຫດ", "ov.kStockVal":"ມູນຄ່າສິນຄ້າ", "ov.kItems":"ລາຍການ", "ov.kWasteMo":"ຂີ້ເສຍເດືອນນີ້", "ov.kVsPrev":"ທຽບເດືອນກ່ອນ", "ov.kExpiring":"ໝົດອາຍຸ ≤7ມື້", "ov.kBatches":"ລັອດ", "ov.kReorder":"ຕ້ອງສັ່ງຊື້", "ov.kItemsLow":"ລາຍການຕ່ຳ", "ov.chWaste":"ຂີ້ເສຍ — 6 ເດືອນຜ່ານມາ", "ov.chStockCat":"ມູນຄ່າຕາມໝວດ", "ov.expSoon":"ໃກ້ໝົດອາຍຸ", "ov.noExp":"ບໍ່ມີຫຍັງໃກ້ໝົດອາຍຸ. ດີ.", "ov.noData":"ຍັງບໍ່ມີຂໍ້ມູນ.", "ov.orderToday":"ສັ່ງຊື້ມື້ນີ້ — ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "ov.nothingOrder":"ບໍ່ມີຫຍັງຕ້ອງສັ່ງຊື້. ສິນຄ້າພຽງພໍ.",
     "ov.haveUse":"ມີ / ໃຊ້ຕໍ່ມື້", "ov.orderQty":"ສັ່ງຊື້ຈຳນວນນີ້", "ov.day":"ມື້",
     "ov.expiring3":"ໝົດອາຍຸໃນ 3 ມື້ — ໃຊ້ດຽວນີ້", "ov.nothing3":"ບໍ່ມີຫຍັງໝົດອາຍຸໃນ 3 ມື້. ດີ.",
     "ov.expiring7":"ໝົດອາຍຸອາທິດນີ້ (4–7 ມື້) — ວາງແຜນລ່ວງໜ້າ", "ov.nothing7":"ບໍ່ມີຫຍັງໝົດອາຍຸອາທິດນີ້.",
@@ -1724,7 +1873,7 @@ const I18N = {
     "m.needCodeName":"ต้องมีรหัสและชื่อ", "m.tempErr":"อุณหภูมิต่ำสูงกว่าสูงไม่ได้",
     "nav.overview":"ภาพรวม",
     "ov.title":"ภาพรวม — สำหรับเจ้าของ", "ov.sub":"ทุกอย่างในหน้าเดียว. สั่งซื้อวันนี้และหมดอายุอยู่บน.",
-    "ov.receiving":"การรับสินค้า", "ov.recToday":"รับวันนี้", "ov.recWeek":"สัปดาห์นี้", "ov.lastRec":"รับครั้งล่าสุด", "ov.topWaste":"เสียมากสุด (เดือนนี้)", "ov.noWaste":"ไม่มีของเสียเดือนนี้. ✓", "ov.belowMin":"ต่ำกว่าขั้นต่ำ — สั่งเลย", "ov.ok":"ปกติ", "ov.min":"ต่ำ", "ov.max":"สูง", "ov.daysAgo":"วันก่อน", "ov.haveUse":"มี / ใช้", "ov.orderQty":"สั่งซื้อ", "ov.qty":"จำนวน", "ov.expires":"หมดอายุ", "ov.today":"วันนี้", "ov.tomorrow":"พรุ่งนี้", "ov.days":"วัน", "ov.day":"วัน", "ov.now":"ตอนนี้", "ov.colItem":"สินค้า", "ov.autoOrder":"สั่งอัตโนมัติ", "idle.warnMsg":"⏱ จะออกจากระบบใน 10 นาที — แตะเพื่ออยู่ต่อ", "idle.outMsg":"คุณถูกออกจากระบบหลังผ่าน 8 ชั่วโมง.", "ov.d90btn":"3 เดือน", "ov.kWaste":"ของเสีย", "ov.kVsPrevRange":"เทียบช่วงก่อน", "ov.lblWeek":"7 วันที่ผ่านมา", "ov.lblMonth":"30 วันที่ผ่านมา", "ov.lbl3Months":"90 วันที่ผ่านมา", "ov.topWasteShort":"เสียมากสุด", "ov.recPeriod":"ช่วงนี้", "ov.clearFilter":"✕", "ov.kStockVal":"มูลค่าสต็อก", "ov.kItems":"รายการ", "ov.kWasteMo":"ของเสียเดือนนี้", "ov.kVsPrev":"เทียบเดือนก่อน", "ov.kExpiring":"หมดอายุ ≤7วัน", "ov.kBatches":"ล็อต", "ov.kReorder":"ต้องสั่งซื้อ", "ov.kItemsLow":"รายการต่ำ", "ov.chWaste":"ของเสีย — 6 เดือนล่าสุด", "ov.chStockCat":"มูลค่าตามหมวด", "ov.expSoon":"ใกล้หมดอายุ", "ov.noExp":"ไม่มีอะไรใกล้หมดอายุ. ดี.", "ov.noData":"ยังไม่มีข้อมูล.", "ov.orderToday":"สั่งซื้อวันนี้ — ต่ำกว่าขั้นต่ำ", "ov.nothingOrder":"ไม่มีอะไรต้องสั่งซื้อ. สต็อกพอ.",
+    "ov.receiving":"การรับสินค้า", "ov.recToday":"รับวันนี้", "ov.recWeek":"สัปดาห์นี้", "ov.lastRec":"รับครั้งล่าสุด", "ov.topWaste":"เสียมากสุด (เดือนนี้)", "ov.noWaste":"ไม่มีของเสียเดือนนี้. ✓", "ov.belowMin":"ต่ำกว่าขั้นต่ำ — สั่งเลย", "ov.ok":"ปกติ", "ov.min":"ต่ำ", "ov.max":"สูง", "ov.daysAgo":"วันก่อน", "ov.haveUse":"มี / ใช้", "ov.orderQty":"สั่งซื้อ", "ov.qty":"จำนวน", "ov.expires":"หมดอายุ", "ov.today":"วันนี้", "ov.tomorrow":"พรุ่งนี้", "ov.days":"วัน", "ov.day":"วัน", "ov.now":"ตอนนี้", "ov.colItem":"สินค้า", "ov.autoOrder":"สั่งอัตโนมัติ", "idle.warnMsg":"⏱ จะออกจากระบบใน 10 นาที — แตะเพื่ออยู่ต่อ", "idle.outMsg":"คุณถูกออกจากระบบหลังผ่าน 8 ชั่วโมง.", "ov.d90btn":"3 เดือน", "ov.kWaste":"ของเสีย", "ov.kVsPrevRange":"เทียบช่วงก่อน", "ov.lblWeek":"7 วันที่ผ่านมา", "ov.lblMonth":"30 วันที่ผ่านมา", "ov.lbl3Months":"90 วันที่ผ่านมา", "ov.topWasteShort":"เสียมากสุด", "ov.recPeriod":"ช่วงนี้", "ov.clearFilter":"✕", "common.in":"ใน", "common.howMany":"จำนวนเท่าใด", "common.pricePer":"ราคาต่อ", "common.unit":"หน่วย", "nav.map":"แผนผัง", "map.title":"แผนผังคลังสินค้า", "map.sub":"มุมมองสดของทุกโซน สีแสดงอุณหภูมิ ความจุ และวันหมดอายุ", "map.legOk":"ปกติ", "map.legWarn":"เตือน", "map.legBad":"วิกฤต", "map.legUnknown":"ไม่มีข้อมูล", "map.emptyTitle":"ยังไม่ได้ตั้งค่าโซน", "map.emptyMsg":"เพิ่มโซนเก็บสินค้าใน จัดการ → สถานที่ เพื่อดูแผนผังคลัง", "map.gotoManage":"ไปที่ จัดการ", "map.row":"แถว", "map.unassigned":"โซนที่ยังไม่ระบุ", "map.temp":"อุณหภูมิ", "map.capacity":"ความจุ", "map.batches":"ล็อต", "map.tempBad":"อุณหภูมิวิกฤต", "map.tempWarn":"อุณหภูมิเบี่ยงเบน", "map.capBad":"เต็ม", "map.capWarn":"ใกล้เต็ม", "map.expiringSoon":"ใกล้หมดอายุ", "map.detSummary":"สรุป", "map.detItems":"สินค้าในโซน", "map.noItems":"ไม่มีสินค้าในโซนนี้", "map.zoneType":"ประเภทโซน", "map.tempNow":"อุณหภูมิปัจจุบัน", "map.tempRange":"ช่วงเป้าหมาย", "map.stockValue":"มูลค่าสต็อก", "map.notes":"หมายเหตุ", "map.zt.freezer":"ห้องแช่แข็ง", "map.zt.chiller":"ห้องเย็น", "map.zt.cool_dry":"แห้งเย็น", "map.zt.ambient":"อุณหภูมิห้อง", "map.zt.hazmat":"วัตถุอันตราย", "map.zt.bonded":"เขตศุลกากร", "map.zt.office":"สำนักงาน", "map.zt.dry":"คลังแห้ง", "map.zt.bar":"บาร์", "m.currentTemp":"อุณหภูมิปัจจุบัน", "m.capacity":"ความจุ (หน่วย)", "m.gridRow":"แถวกริด", "m.gridCol":"คอลัมน์กริด", "m.notes":"หมายเหตุ", "ov.kStockVal":"มูลค่าสต็อก", "ov.kItems":"รายการ", "ov.kWasteMo":"ของเสียเดือนนี้", "ov.kVsPrev":"เทียบเดือนก่อน", "ov.kExpiring":"หมดอายุ ≤7วัน", "ov.kBatches":"ล็อต", "ov.kReorder":"ต้องสั่งซื้อ", "ov.kItemsLow":"รายการต่ำ", "ov.chWaste":"ของเสีย — 6 เดือนล่าสุด", "ov.chStockCat":"มูลค่าตามหมวด", "ov.expSoon":"ใกล้หมดอายุ", "ov.noExp":"ไม่มีอะไรใกล้หมดอายุ. ดี.", "ov.noData":"ยังไม่มีข้อมูล.", "ov.orderToday":"สั่งซื้อวันนี้ — ต่ำกว่าขั้นต่ำ", "ov.nothingOrder":"ไม่มีอะไรต้องสั่งซื้อ. สต็อกพอ.",
     "ov.haveUse":"มี / ใช้ต่อวัน", "ov.orderQty":"สั่งซื้อจำนวนนี้", "ov.day":"วัน",
     "ov.expiring3":"หมดอายุใน 3 วัน — ใช้เลยตอนนี้", "ov.nothing3":"ไม่มีอะไรหมดอายุใน 3 วัน. ดี.",
     "ov.expiring7":"หมดอายุสัปดาห์นี้ (4–7 วัน) — วางแผนล่วงหน้า", "ov.nothing7":"ไม่มีอะไรหมดอายุสัปดาห์นี้.",
@@ -1887,7 +2036,7 @@ const I18N = {
     "m.needCodeName":"需要代码和名称", "m.tempErr":"最低温度不能高于最高温度",
     "nav.overview":"总览",
     "ov.title":"总览 — 业主驾驶舱", "ov.sub":"一屏看全部。今日订购和即将过期在顶部。",
-    "ov.receiving":"入库", "ov.recToday":"今日入库", "ov.recWeek":"本周", "ov.lastRec":"上次入库", "ov.topWaste":"损耗最多 (本月)", "ov.noWaste":"本月无损耗. ✓", "ov.belowMin":"低于最低 — 立即订购", "ov.ok":"正常", "ov.min":"最低", "ov.max":"最高", "ov.daysAgo":"天前", "ov.haveUse":"现有 / 用量", "ov.orderQty":"订购量", "ov.qty":"数量", "ov.expires":"过期", "ov.today":"今天", "ov.tomorrow":"明天", "ov.days":"天", "ov.day":"天", "ov.now":"现在", "ov.colItem":"项目", "ov.autoOrder":"自动订购", "idle.warnMsg":"⏱ 将在10分钟内退出 — 点击保持登录", "idle.outMsg":"已闲置8小时，已自动退出。", "ov.d90btn":"3个月", "ov.kWaste":"损耗", "ov.kVsPrevRange":"对比上一周期", "ov.lblWeek":"近7天", "ov.lblMonth":"近30天", "ov.lbl3Months":"近90天", "ov.topWasteShort":"损耗最多", "ov.recPeriod":"本周期", "ov.clearFilter":"✕", "ov.kStockVal":"库存价值", "ov.kItems":"项", "ov.kWasteMo":"本月损耗", "ov.kVsPrev":"对比上月", "ov.kExpiring":"≤7天过期", "ov.kBatches":"批次", "ov.kReorder":"需补货", "ov.kItemsLow":"低于最低项", "ov.chWaste":"损耗 — 近6个月", "ov.chStockCat":"按类别库存价值", "ov.expSoon":"即将过期", "ov.noExp":"无即将过期。良好。", "ov.noData":"暂无数据。", "ov.orderToday":"今日订购 — 低于最低", "ov.nothingOrder":"无需订购。库存充足。",
+    "ov.receiving":"入库", "ov.recToday":"今日入库", "ov.recWeek":"本周", "ov.lastRec":"上次入库", "ov.topWaste":"损耗最多 (本月)", "ov.noWaste":"本月无损耗. ✓", "ov.belowMin":"低于最低 — 立即订购", "ov.ok":"正常", "ov.min":"最低", "ov.max":"最高", "ov.daysAgo":"天前", "ov.haveUse":"现有 / 用量", "ov.orderQty":"订购量", "ov.qty":"数量", "ov.expires":"过期", "ov.today":"今天", "ov.tomorrow":"明天", "ov.days":"天", "ov.day":"天", "ov.now":"现在", "ov.colItem":"项目", "ov.autoOrder":"自动订购", "idle.warnMsg":"⏱ 将在10分钟内退出 — 点击保持登录", "idle.outMsg":"已闲置8小时，已自动退出。", "ov.d90btn":"3个月", "ov.kWaste":"损耗", "ov.kVsPrevRange":"对比上一周期", "ov.lblWeek":"近7天", "ov.lblMonth":"近30天", "ov.lbl3Months":"近90天", "ov.topWasteShort":"损耗最多", "ov.recPeriod":"本周期", "ov.clearFilter":"✕", "common.in":"以", "common.howMany":"多少", "common.pricePer":"单价", "common.unit":"单位", "nav.map":"地图", "map.title":"仓库地图", "map.sub":"每个区域的实时视图。颜色显示温度、容量和到期状态。", "map.legOk":"正常", "map.legWarn":"警告", "map.legBad":"危急", "map.legUnknown":"无数据", "map.emptyTitle":"尚未配置区域", "map.emptyMsg":"在 管理 → 位置 中添加存储区域以查看仓库地图。", "map.gotoManage":"前往 管理", "map.row":"行", "map.unassigned":"未分配区域", "map.temp":"温度", "map.capacity":"容量", "map.batches":"批次", "map.tempBad":"温度危急", "map.tempWarn":"温度偏离", "map.capBad":"已满", "map.capWarn":"接近满", "map.expiringSoon":"即将过期", "map.detSummary":"摘要", "map.detItems":"区域内物品", "map.noItems":"此区域没有活动库存。", "map.zoneType":"区域类型", "map.tempNow":"当前温度", "map.tempRange":"目标范围", "map.stockValue":"库存价值", "map.notes":"备注", "map.zt.freezer":"冷冻库", "map.zt.chiller":"冷藏库", "map.zt.cool_dry":"阴凉干燥", "map.zt.ambient":"常温", "map.zt.hazmat":"危险品", "map.zt.bonded":"保税", "map.zt.office":"办公室", "map.zt.dry":"干仓", "map.zt.bar":"吧台", "m.currentTemp":"当前温度", "m.capacity":"容量（单位）", "m.gridRow":"网格行", "m.gridCol":"网格列", "m.notes":"备注", "ov.kStockVal":"库存价值", "ov.kItems":"项", "ov.kWasteMo":"本月损耗", "ov.kVsPrev":"对比上月", "ov.kExpiring":"≤7天过期", "ov.kBatches":"批次", "ov.kReorder":"需补货", "ov.kItemsLow":"低于最低项", "ov.chWaste":"损耗 — 近6个月", "ov.chStockCat":"按类别库存价值", "ov.expSoon":"即将过期", "ov.noExp":"无即将过期。良好。", "ov.noData":"暂无数据。", "ov.orderToday":"今日订购 — 低于最低", "ov.nothingOrder":"无需订购。库存充足。",
     "ov.haveUse":"现有 / 每日用量", "ov.orderQty":"订购此数量", "ov.day":"天",
     "ov.expiring3":"3天内过期 — 立即使用", "ov.nothing3":"3天内无过期。很好。",
     "ov.expiring7":"本周过期 (4–7天) — 提前计划", "ov.nothing7":"本周无过期。",
@@ -2051,7 +2200,7 @@ const I18N = {
     "m.needCodeName":"코드와 이름 필요", "m.tempErr":"최저 온도가 최고보다 높을 수 없음",
     "nav.overview":"개요",
     "ov.title":"개요 — 소유자 콕핏", "ov.sub":"한 화면에 전부. 오늘 주문과 만료가 상단에.",
-    "ov.receiving":"입고", "ov.recToday":"오늘 입고", "ov.recWeek":"이번 주", "ov.lastRec":"마지막 입고", "ov.topWaste":"최다 폐기 품목 (이달)", "ov.noWaste":"이달 폐기 없음. ✓", "ov.belowMin":"최소 이하 — 즉시 주문", "ov.ok":"정상", "ov.min":"최소", "ov.max":"최대", "ov.daysAgo":"일 전", "ov.haveUse":"보유 / 사용", "ov.orderQty":"주문량", "ov.qty":"수량", "ov.expires":"만료", "ov.today":"오늘", "ov.tomorrow":"내일", "ov.days":"일", "ov.day":"일", "ov.now":"현재", "ov.colItem":"품목", "ov.autoOrder":"자동 주문", "idle.warnMsg":"⏱ 10분 후 로그아웃 — 유지하려면 탭하세요", "idle.outMsg":"8시간 후 자동 로그아웃되었습니다.", "ov.d90btn":"3개월", "ov.kWaste":"폐기", "ov.kVsPrevRange":"이전 기간 대비", "ov.lblWeek":"최근 7일", "ov.lblMonth":"최근 30일", "ov.lbl3Months":"최근 90일", "ov.topWasteShort":"최다 폐기", "ov.recPeriod":"이 기간", "ov.clearFilter":"✕", "ov.kStockVal":"재고 가치", "ov.kItems":"항목", "ov.kWasteMo":"이달 폐기", "ov.kVsPrev":"전월 대비", "ov.kExpiring":"≤7일 만료", "ov.kBatches":"배치", "ov.kReorder":"재주문 필요", "ov.kItemsLow":"최소 이하 항목", "ov.chWaste":"폐기 — 최근 6개월", "ov.chStockCat":"카테고리별 재고 가치", "ov.expSoon":"곧 만료", "ov.noExp":"곧 만료되는 항목 없음. 양호.", "ov.noData":"데이터 없음.", "ov.orderToday":"오늘 주문 — 최소 이하", "ov.nothingOrder":"주문할 것 없음. 재고 충분.",
+    "ov.receiving":"입고", "ov.recToday":"오늘 입고", "ov.recWeek":"이번 주", "ov.lastRec":"마지막 입고", "ov.topWaste":"최다 폐기 품목 (이달)", "ov.noWaste":"이달 폐기 없음. ✓", "ov.belowMin":"최소 이하 — 즉시 주문", "ov.ok":"정상", "ov.min":"최소", "ov.max":"최대", "ov.daysAgo":"일 전", "ov.haveUse":"보유 / 사용", "ov.orderQty":"주문량", "ov.qty":"수량", "ov.expires":"만료", "ov.today":"오늘", "ov.tomorrow":"내일", "ov.days":"일", "ov.day":"일", "ov.now":"현재", "ov.colItem":"품목", "ov.autoOrder":"자동 주문", "idle.warnMsg":"⏱ 10분 후 로그아웃 — 유지하려면 탭하세요", "idle.outMsg":"8시간 후 자동 로그아웃되었습니다.", "ov.d90btn":"3개월", "ov.kWaste":"폐기", "ov.kVsPrevRange":"이전 기간 대비", "ov.lblWeek":"최근 7일", "ov.lblMonth":"최근 30일", "ov.lbl3Months":"최근 90일", "ov.topWasteShort":"최다 폐기", "ov.recPeriod":"이 기간", "ov.clearFilter":"✕", "common.in":"단위", "common.howMany":"몇 개", "common.pricePer":"단가", "common.unit":"단위", "nav.map":"지도", "map.title":"창고 지도", "map.sub":"모든 구역의 실시간 보기. 색상은 온도, 용량, 만료 상태를 표시합니다.", "map.legOk":"정상", "map.legWarn":"경고", "map.legBad":"위급", "map.legUnknown":"데이터 없음", "map.emptyTitle":"아직 구역이 구성되지 않음", "map.emptyMsg":"창고 지도를 보려면 관리 → 위치에서 보관 구역을 추가하세요.", "map.gotoManage":"관리로 이동", "map.row":"행", "map.unassigned":"미할당 구역", "map.temp":"온도", "map.capacity":"용량", "map.batches":"배치", "map.tempBad":"온도 위급", "map.tempWarn":"온도 편차", "map.capBad":"가득 참", "map.capWarn":"거의 가득", "map.expiringSoon":"만료 임박", "map.detSummary":"요약", "map.detItems":"구역 내 품목", "map.noItems":"이 구역에 활성 재고가 없습니다.", "map.zoneType":"구역 유형", "map.tempNow":"현재 온도", "map.tempRange":"목표 범위", "map.stockValue":"재고 가치", "map.notes":"비고", "map.zt.freezer":"냉동고", "map.zt.chiller":"냉장고", "map.zt.cool_dry":"건랭", "map.zt.ambient":"상온", "map.zt.hazmat":"위험물", "map.zt.bonded":"보세", "map.zt.office":"사무실", "map.zt.dry":"건조 보관", "map.zt.bar":"바", "m.currentTemp":"현재 온도", "m.capacity":"용량 (단위)", "m.gridRow":"그리드 행", "m.gridCol":"그리드 열", "m.notes":"비고", "ov.kStockVal":"재고 가치", "ov.kItems":"항목", "ov.kWasteMo":"이달 폐기", "ov.kVsPrev":"전월 대비", "ov.kExpiring":"≤7일 만료", "ov.kBatches":"배치", "ov.kReorder":"재주문 필요", "ov.kItemsLow":"최소 이하 항목", "ov.chWaste":"폐기 — 최근 6개월", "ov.chStockCat":"카테고리별 재고 가치", "ov.expSoon":"곧 만료", "ov.noExp":"곧 만료되는 항목 없음. 양호.", "ov.noData":"데이터 없음.", "ov.orderToday":"오늘 주문 — 최소 이하", "ov.nothingOrder":"주문할 것 없음. 재고 충분.",
     "ov.haveUse":"보유 / 일일 사용", "ov.orderQty":"이만큼 주문", "ov.day":"일",
     "ov.expiring3":"3일 내 만료 — 지금 사용", "ov.nothing3":"3일 내 만료 없음. 좋음.",
     "ov.expiring7":"이번 주 만료 (4–7일) — 미리 계획", "ov.nothing7":"이번 주 만료 없음.",
@@ -2136,6 +2285,62 @@ const I18N = {
 let __lang = localStorage.getItem('kl_lang') || 'en';
 if (!I18N[__lang]) __lang = 'en';
 function t(key) { return (I18N[__lang] && I18N[__lang][key]) || I18N.en[key] || key; }
+
+// Translate a unit string ("bottle", "kg", "box"...) to the current language.
+// Falls back to the original string if no translation exists, so custom units
+// the warehouse owner types in still display correctly.
+const KL_UNIT_T = {
+  en: {}, // English is source — passthrough
+  lo: {
+    'kg':'ກິໂລ', 'g':'ກຣາມ', 'ton':'ໂຕນ',
+    'l':'ລິດ', 'liter':'ລິດ', 'litre':'ລິດ', 'ml':'ມລ',
+    'pcs':'ອັນ', 'piece':'ອັນ', 'pieces':'ອັນ', 'each':'ອັນ', 'ea':'ອັນ', 'unit':'ໜ່ວຍ',
+    'dozen':'ໂຫຼ',
+    'bottle':'ຂວດ', 'box':'ກ່ອງ', 'can':'ກະປ໋ອງ', 'bag':'ຖົງ',
+    'pack':'ແພັກ', 'carton':'ລັງ', 'crate':'ລັງ', 'case':'ລັງ',
+    'jar':'ກະປຸກ', 'sack':'ຖົງໃຫຍ່', 'tray':'ຖາດ', 'tube':'ຫຼອດ',
+    'roll':'ມ້ວນ', 'bundle':'ມັດ'
+  },
+  th: {
+    'kg':'กก.', 'g':'กรัม', 'ton':'ตัน',
+    'l':'ลิตร', 'liter':'ลิตร', 'litre':'ลิตร', 'ml':'มล.',
+    'pcs':'ชิ้น', 'piece':'ชิ้น', 'pieces':'ชิ้น', 'each':'ชิ้น', 'ea':'ชิ้น', 'unit':'หน่วย',
+    'dozen':'โหล',
+    'bottle':'ขวด', 'box':'กล่อง', 'can':'กระป๋อง', 'bag':'ถุง',
+    'pack':'แพ็ค', 'carton':'ลัง', 'crate':'ลัง', 'case':'เคส',
+    'jar':'โหล', 'sack':'กระสอบ', 'tray':'ถาด', 'tube':'หลอด',
+    'roll':'ม้วน', 'bundle':'มัด'
+  },
+  zh: {
+    'kg':'公斤', 'g':'克', 'ton':'吨',
+    'l':'升', 'liter':'升', 'litre':'升', 'ml':'毫升',
+    'pcs':'个', 'piece':'个', 'pieces':'个', 'each':'个', 'ea':'个', 'unit':'单位',
+    'dozen':'打',
+    'bottle':'瓶', 'box':'盒', 'can':'罐', 'bag':'袋',
+    'pack':'包', 'carton':'箱', 'crate':'箱', 'case':'箱',
+    'jar':'罐', 'sack':'大袋', 'tray':'盘', 'tube':'管',
+    'roll':'卷', 'bundle':'捆'
+  },
+  ko: {
+    'kg':'kg', 'g':'g', 'ton':'톤',
+    'l':'L', 'liter':'L', 'litre':'L', 'ml':'mL',
+    'pcs':'개', 'piece':'개', 'pieces':'개', 'each':'개', 'ea':'개', 'unit':'단위',
+    'dozen':'다스',
+    'bottle':'병', 'box':'상자', 'can':'캔', 'bag':'봉지',
+    'pack':'팩', 'carton':'박스', 'crate':'박스', 'case':'케이스',
+    'jar':'병', 'sack':'자루', 'tray':'쟁반', 'tube':'튜브',
+    'roll':'롤', 'bundle':'묶음'
+  }
+};
+function klUnitT(unit) {
+  if (!unit) return '';
+  const u = String(unit).trim();
+  // Look up by lower-case key, but preserve original if no match
+  // (so custom units like "SKU" or "pallet" the user added still show).
+  const map = KL_UNIT_T[__lang] || KL_UNIT_T.en;
+  const hit = map[u.toLowerCase()];
+  return hit || u;
+}
 function setLang(lang) {
   if (!I18N[lang]) return;
   __lang = lang;
@@ -2160,6 +2365,7 @@ function setLang(lang) {
     else if (r === 'dashboard') initDashboardPage();
     else if (r === 'receive')   initReceivePage();
     else if (r === 'stock')     initStockPage();
+    else if (r === 'map')       initMapPage();
     else if (r === 'checkout')  initCheckoutPage();
   } catch (e) { /* page not ready yet — applyI18n already handled static text */ }
 }
@@ -2400,7 +2606,7 @@ function showMsg(elId, text, type) {
   if (type === 'ok') setTimeout(() => el.innerHTML = '', 4000);
 }
 
-const ROUTES = ['login','dashboard','overview','receive','stock','checkout','reports','manage'];
+const ROUTES = ['login','dashboard','overview','receive','stock','map','checkout','reports','manage'];
 function currentRoute() {
   const h = (location.hash || '').replace(/^#\//, '');
   return ROUTES.includes(h) ? h : (klSession() ? 'dashboard' : 'login');
@@ -2450,6 +2656,7 @@ function showPage(name) {
   else if (name === 'overview')  initOverviewPage();
   else if (name === 'receive')   initReceivePage();
   else if (name === 'stock')     initStockPage();
+  else if (name === 'map')       initMapPage();
   else if (name === 'checkout')  initCheckoutPage();
   else if (name === 'reports')   initReportsPage();
   else if (name === 'manage')    initManagePage();
@@ -2495,7 +2702,7 @@ window.addEventListener('hashchange', route);
 // hardening; the real security is the database RLS (anon = zero rows),
 // proven separately. Both layers together = MarketMan's model.
 // =====================================================================
-const GATED_PAGES = ['dashboard','overview','receive','stock','checkout','reports','manage'];
+const GATED_PAGES = ['dashboard','overview','receive','stock','map','checkout','reports','manage'];
 const __pageStash = {};
 let __pagesGated = false;
 
@@ -2837,7 +3044,7 @@ async function initStockPage() {
               + '<th>' + t('stock.col.expiry') + '</th></tr></thead><tbody>';
         list.forEach(r => {
           const oh = Number(r.on_hand) || 0;
-          const unit = r.unit ? ' ' + h(r.unit) : '';
+          const unit = r.unit ? ' ' + klUnitT(r.unit) : '';
           const lowFlag = (r.reorder_level != null && oh <= Number(r.reorder_level));
           let expCell = '<span class="kl-pill kl-pill-ok">' + t('stock.nodate') + '</span>';
           if (r.earliest_expiry) {
@@ -2993,12 +3200,18 @@ function wireReceiveHandlers() {
     // Show the item's unit clearly (bottle, box, kg, etc.) so staff
     // know what they are counting — e.g. "Quantity — in bottle".
     const unit = item.unit ? String(item.unit).trim() : '';
+    const unitDisp = klUnitT(unit); // translated label for current language
     const uh = document.getElementById('recUnitHint');
-    if (uh) uh.textContent = unit ? `— in ${unit}` : '';
+    if (uh) uh.textContent = unit ? `— ${t('common.in')||'in'} ${unitDisp}` : '';
     const qtyIn = document.getElementById('recQty');
-    if (qtyIn) qtyIn.placeholder = unit ? `How many ${unit}?` : '0';
+    if (qtyIn) qtyIn.placeholder = unit ? (t('common.howMany')||'How many') + ' ' + unitDisp + '?' : '0';
     const ucIn = document.getElementById('recUnitCost');
-    if (ucIn) ucIn.placeholder = unit ? `Price per ${unit}` : '0';
+    if (ucIn) ucIn.placeholder = unit ? (t('common.pricePer')||'Price per') + ' ' + unitDisp : '0';
+    // Update the unit suffix badges shown inside the input fields
+    const qSuf = document.getElementById('recQtySuffix');
+    if (qSuf) qSuf.textContent = unitDisp || (t('common.unit')||'unit');
+    const cSuf = document.getElementById('recCostSuffix');
+    if (cSuf) cSuf.textContent = unitDisp ? `₭ / ${unitDisp}` : `₭ / ${t('common.unit')||'unit'}`;
   });
 
   const recForm = document.getElementById('receiveForm');
@@ -3066,7 +3279,7 @@ async function doReceive() {
       sub.className = 'kl-sticker-sub'; sub.textContent = item.name_lao;
       nameEl.appendChild(sub);
     }
-    document.getElementById('stkQty').textContent = fmtQty(quantity) + ' ' + item.unit;
+    document.getElementById('stkQty').textContent = fmtQty(quantity) + ' ' + klUnitT(item.unit);
     document.getElementById('stkLoc').textContent = loc.name;
     if (expiry_date) {
       document.getElementById('stkExpRow').style.display = 'flex';
@@ -3486,7 +3699,7 @@ async function renderWasteReport(u) {
       html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
         + '<th>'+t('r.colItem')+'</th><th>'+t('r.colWasted')+'</th><th>'+t('r.colLost')+'</th><th>'+t('r.colReason')+'</th></tr></thead><tbody>';
       topWaste.forEach(r=>{
-        html += '<tr><td>'+h(r.name)+'</td><td>'+fmtQty(r.qty_wasted)+' '+h(r.unit||'')+'</td>'
+        html += '<tr><td>'+h(r.name)+'</td><td>'+fmtQty(r.qty_wasted)+' '+klUnitT(r.unit||'')+'</td>'
           + '<td style="color:var(--kl-danger);font-weight:600">'+money(r.money_lost)+'</td>'
           + '<td>'+h(r.waste_reason||'-')+'</td></tr>';
       });
@@ -3504,9 +3717,9 @@ async function renderWasteReport(u) {
       needRe.forEach(r=>{
         const perDay = Number(r.used_per_day||0);
         const suggest = Math.max(Number(r.par_level||0) - Number(r.on_hand||0), Math.ceil(perDay*7));
-        html += '<tr><td>'+h(r.name)+'</td><td>'+fmtQty(r.on_hand)+' '+h(r.unit||'')+'</td>'
+        html += '<tr><td>'+h(r.name)+'</td><td>'+fmtQty(r.on_hand)+' '+klUnitT(r.unit||'')+'</td>'
           + '<td>'+fmtQty(perDay)+'</td>'
-          + '<td style="font-weight:600">'+fmtQty(suggest)+' '+h(r.unit||'')+'</td>'
+          + '<td style="font-weight:600">'+fmtQty(suggest)+' '+klUnitT(r.unit||'')+'</td>'
           + '<td>'+h(r.usual_supplier||'—')+'</td></tr>';
       });
       html += '</tbody></table></div>';
@@ -4302,9 +4515,9 @@ async function renderVarianceReport(u) {
         const gapCol = leak ? 'color:var(--kl-danger);font-weight:700'
                             : (Number(r.variance_value)<0 ? 'color:var(--kl-success)' : '');
         html += '<tr><td>'+h(nm)+'</td>'
-          + '<td>'+fmtQty(r.theoretical_used)+' '+h(r.unit||'')+'</td>'
-          + '<td>'+fmtQty(r.actual_used)+' '+h(r.unit||'')+'</td>'
-          + '<td style="'+gapCol+'">'+fmtQty(r.variance_qty)+' '+h(r.unit||'')+'</td>'
+          + '<td>'+fmtQty(r.theoretical_used)+' '+klUnitT(r.unit||'')+'</td>'
+          + '<td>'+fmtQty(r.actual_used)+' '+klUnitT(r.unit||'')+'</td>'
+          + '<td style="'+gapCol+'">'+fmtQty(r.variance_qty)+' '+klUnitT(r.unit||'')+'</td>'
           + '<td style="'+gapCol+'">'+money(r.variance_value)+'</td>'
           + '<td style="'+gapCol+'">'+(r.variance_pct!=null?r.variance_pct+'%':'—')+'</td></tr>';
       });
@@ -4514,6 +4727,275 @@ window.expWasteConfirm = async function(batchId) {
   } catch (e) {
     alert(t('ew.fail') + ': ' + (e.message || e));
   }
+};
+
+// =====================================================================
+// v3.4 — WAREHOUSE MAP (visual floor plan with status colors)
+// =====================================================================
+// Reads v_warehouse_map view which pre-computes:
+//   - temp_status      (ok / warn / bad / unknown)
+//   - capacity_status  (ok / warn / bad / unknown)
+//   - expiry_status    (ok / warn) — any batch expiring in <=7 days
+//   - batch_count, stock_value, expiring_soon_count
+// Zone is shown in worst-of-three status colors so attention goes
+// where it's actually needed.
+const KL_ZONE_ICON = {
+  freezer:'❄️', chiller:'🌡️', cool_dry:'📦', ambient:'📋',
+  hazmat:'⚠️', bonded:'🔒', office:'🏢',
+  dry:'📦', bar:'🥃' // legacy zones (kept for old data)
+};
+
+function klMapZoneIcon(z){ return KL_ZONE_ICON[z] || '📍'; }
+
+function klMapZoneTypeLabel(z){
+  const key = 'map.zt.'+z;
+  const v = t(key);
+  return v === key ? z : v; // fallback to raw if no translation
+}
+
+// Worst-of-three: pick the most-alarming status across temp/capacity/expiry.
+function klMapWorstStatus(z){
+  const order = { bad:3, warn:2, ok:1, unknown:0 };
+  const s = [z.temp_status||'unknown', z.capacity_status||'unknown', z.expiry_status||'ok'];
+  let worst = 'unknown', worstN = 0;
+  s.forEach(x => { if (order[x] > worstN) { worstN = order[x]; worst = x; } });
+  return worst;
+}
+
+async function initMapPage() {
+  const u = await klRequireLogin(); if (!u) return;
+  document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
+  const body = document.getElementById('mapBody');
+  // Map is sensitive — owner/manager/sa only.
+  if (!['sa','owner','manager'].includes(u.user.role)) {
+    body.innerHTML = '<div class="kl-ov-card warn"><div class="kl-ov-head">'+t('ov.noAccess')+'</div>'
+      + '<p class="kl-rsmall">'+t('ov.mgrOnly')+' "'+h(u.user.role)+'".</p></div>';
+    return;
+  }
+  body.innerHTML = '<p class="kl-muted">'+t('common.loading')+'</p>';
+
+  try {
+    const { data: zones, error } = await sb.from('v_warehouse_map').select('*')
+      .order('display_row', { ascending: true }).order('display_col', { ascending: true })
+      .order('name', { ascending: true });
+    if (error) throw error;
+
+    if (!zones || zones.length === 0) {
+      body.innerHTML = '<div class="kl-map-empty">'
+        + '<h3>'+t('map.emptyTitle')+'</h3>'
+        + '<p>'+t('map.emptyMsg')+'</p>'
+        + '<a href="#/manage" class="kl-btn kl-btn-primary">'+t('map.gotoManage')+'</a>'
+        + '</div>';
+      return;
+    }
+
+    // Group by display_row so each row is a "floor section". Zones with no
+    // grid position fall into an "Unassigned" row at the bottom so the
+    // owner can see them and assign positions.
+    const rows = {};
+    let hasUnassigned = false;
+    zones.forEach(z => {
+      const r = z.display_row || 0;
+      if (r === 0) hasUnassigned = true;
+      if (!rows[r]) rows[r] = [];
+      rows[r].push(z);
+    });
+    const rowKeys = Object.keys(rows).map(Number).sort((a,b) => a - b);
+
+    let html = '';
+    rowKeys.forEach(rk => {
+      // Sort each row by display_col, then name.
+      rows[rk].sort((a,b) =>
+        (a.display_col||999) - (b.display_col||999) || a.name.localeCompare(b.name)
+      );
+      html += '<div class="kl-map-floor">';
+      const title = rk === 0 ? t('map.unassigned')
+                  : (t('map.row') + ' ' + rk);
+      html += '<p class="kl-map-floor-title">'+h(title)+'</p>';
+      html += '<div class="kl-map-grid">';
+      rows[rk].forEach(z => {
+        const worst = klMapWorstStatus(z);
+        const icon = klMapZoneIcon(z.temp_zone);
+        // Build warning pills
+        let warns = '';
+        if (z.temp_status === 'bad')   warns += '<span class="kl-map-zone-warn-pill bad">🌡 '+t('map.tempBad')+'</span>';
+        else if (z.temp_status === 'warn') warns += '<span class="kl-map-zone-warn-pill warn">🌡 '+t('map.tempWarn')+'</span>';
+        if (z.capacity_status === 'bad')   warns += '<span class="kl-map-zone-warn-pill bad">📦 '+t('map.capBad')+'</span>';
+        else if (z.capacity_status === 'warn') warns += '<span class="kl-map-zone-warn-pill warn">📦 '+t('map.capWarn')+'</span>';
+        if (z.expiring_soon_count > 0)
+          warns += '<span class="kl-map-zone-warn-pill warn">⏱ '+z.expiring_soon_count+' '+t('map.expiringSoon')+'</span>';
+
+        // Temp display
+        let tempVal, tempCls = '';
+        if (z.current_temp_c === null || z.current_temp_c === undefined) {
+          tempVal = '—'; tempCls = '';
+        } else {
+          tempVal = Number(z.current_temp_c).toFixed(1) + '°C';
+          if (z.temp_status === 'bad') tempCls = 'bad';
+          else if (z.temp_status === 'warn') tempCls = 'warn';
+        }
+        // Capacity
+        let capPct = 0, capVal = '—', capCls = '';
+        if (z.capacity_units && z.capacity_units > 0) {
+          capPct = Math.min(100, (Number(z.batch_count||0) / Number(z.capacity_units)) * 100);
+          capVal = z.batch_count + ' / ' + z.capacity_units;
+          if (z.capacity_status === 'bad') capCls = 'bad';
+          else if (z.capacity_status === 'warn') capCls = 'warn';
+        } else {
+          capVal = (z.batch_count||0) + ' ' + t('map.batches');
+        }
+
+        html += '<div class="kl-map-zone status-'+worst+'" '
+              + 'data-loc-id="'+z.location_id+'" onclick="klMapOpenDrawer('+z.location_id+')">'
+              + '<div class="kl-map-zone-top">'
+              + '<span class="kl-map-zone-icon">'+icon+'</span>'
+              + '<span class="kl-map-zone-name">'+h(z.name)+'</span>'
+              + '<span class="kl-map-zone-code">'+h(z.code)+'</span>'
+              + '</div>'
+              + '<div class="kl-map-zone-warns">'+warns+'</div>'
+              + '<div class="kl-map-zone-stats">'
+              +   '<div><div class="kl-map-zone-stat-lbl">'+t('map.temp')+'</div>'
+              +     '<div class="kl-map-zone-stat-val '+tempCls+'">'+tempVal+'</div></div>'
+              +   '<div><div class="kl-map-zone-stat-lbl">'+t('map.capacity')+'</div>'
+              +     '<div class="kl-map-zone-stat-val '+capCls+'">'+capVal+'</div></div>'
+              +   (z.capacity_units > 0
+                  ? '<div class="kl-map-zone-cap-bar"><div class="kl-map-zone-cap-fill '+capCls+'" style="width:'+capPct.toFixed(1)+'%"></div></div>'
+                  : '')
+              + '</div>'
+              + '</div>';
+      });
+      html += '</div></div>';
+    });
+
+    // Detail drawer + backdrop (rendered once, populated on click)
+    html += '<div class="kl-map-drawer-backdrop" id="klMapBackdrop" onclick="klMapCloseDrawer()"></div>';
+    html += '<div class="kl-map-drawer" id="klMapDrawer">'
+          + '<div class="kl-map-drawer-head">'
+          +   '<h2 id="klMapDrawerTitle">—</h2>'
+          +   '<button class="kl-map-drawer-close" onclick="klMapCloseDrawer()" aria-label="Close">×</button>'
+          + '</div>'
+          + '<div class="kl-map-drawer-body" id="klMapDrawerBody"></div>'
+          + '</div>';
+
+    body.innerHTML = html;
+    // Stash zones on the page so click handler can find them fast.
+    body.__zones = zones;
+  } catch (e) {
+    body.innerHTML = '<div class="kl-ov-card bad"><div class="kl-ov-head">'+t('r.loadFail')+'</div>'
+      + '<p class="kl-rsmall">'+h(e.message||String(e))+'</p></div>';
+  }
+}
+
+// Open the drawer showing all batches in a zone.
+window.klMapOpenDrawer = async function(locationId) {
+  const body = document.getElementById('mapBody');
+  const zones = body && body.__zones;
+  if (!zones) return;
+  const z = zones.find(x => x.location_id === locationId);
+  if (!z) return;
+
+  document.getElementById('klMapDrawerTitle').textContent =
+    klMapZoneIcon(z.temp_zone) + ' ' + z.name + ' (' + z.code + ')';
+
+  const drawerBody = document.getElementById('klMapDrawerBody');
+  drawerBody.innerHTML = '<p class="kl-muted">'+t('common.loading')+'</p>';
+
+  // Build summary section immediately from cached zone data.
+  let html = '';
+  html += '<div class="kl-map-drawer-section">';
+  html += '<h3>'+t('map.detSummary')+'</h3>';
+  html += '<div class="kl-map-drawer-row"><span class="kl-map-drawer-lbl">'+t('map.zoneType')+'</span>'
+        + '<span class="kl-map-drawer-val">'+h(klMapZoneTypeLabel(z.temp_zone))+'</span></div>';
+  // Temperature line with status color
+  let tempTxt = '—', tempCls = '';
+  if (z.current_temp_c !== null && z.current_temp_c !== undefined) {
+    tempTxt = Number(z.current_temp_c).toFixed(1) + '°C';
+    tempCls = z.temp_status === 'bad' ? 'bad' : (z.temp_status === 'warn' ? 'warn' : 'ok');
+  }
+  let rangeTxt = '—';
+  if (z.target_temp_min_c !== null && z.target_temp_max_c !== null) {
+    rangeTxt = Number(z.target_temp_min_c).toFixed(0) + '°C → ' + Number(z.target_temp_max_c).toFixed(0) + '°C';
+  }
+  html += '<div class="kl-map-drawer-row"><span class="kl-map-drawer-lbl">'+t('map.tempNow')+'</span>'
+        + '<span class="kl-map-drawer-val '+tempCls+'">'+tempTxt+'</span></div>';
+  html += '<div class="kl-map-drawer-row"><span class="kl-map-drawer-lbl">'+t('map.tempRange')+'</span>'
+        + '<span class="kl-map-drawer-val">'+rangeTxt+'</span></div>';
+  // Capacity
+  let capTxt;
+  if (z.capacity_units && z.capacity_units > 0) {
+    const pct = ((z.batch_count||0) / z.capacity_units * 100).toFixed(0);
+    capTxt = z.batch_count + ' / ' + z.capacity_units + ' (' + pct + '%)';
+  } else {
+    capTxt = (z.batch_count||0) + ' ' + t('map.batches');
+  }
+  const capCls = z.capacity_status === 'bad' ? 'bad' : (z.capacity_status === 'warn' ? 'warn' : 'ok');
+  html += '<div class="kl-map-drawer-row"><span class="kl-map-drawer-lbl">'+t('map.capacity')+'</span>'
+        + '<span class="kl-map-drawer-val '+capCls+'">'+capTxt+'</span></div>';
+  html += '<div class="kl-map-drawer-row"><span class="kl-map-drawer-lbl">'+t('map.stockValue')+'</span>'
+        + '<span class="kl-map-drawer-val">'+money(z.stock_value||0)+'</span></div>';
+  if (z.notes) {
+    html += '<div class="kl-map-drawer-row"><span class="kl-map-drawer-lbl">'+t('map.notes')+'</span>'
+          + '<span class="kl-map-drawer-val">'+h(z.notes)+'</span></div>';
+  }
+  html += '</div>';
+  html += '<div class="kl-map-drawer-section" id="klMapDrawerItems">'
+        + '<h3>'+t('map.detItems')+'</h3>'
+        + '<p class="kl-muted">'+t('common.loading')+'</p>'
+        + '</div>';
+  drawerBody.innerHTML = html;
+  document.getElementById('klMapBackdrop').classList.add('open');
+  document.getElementById('klMapDrawer').classList.add('open');
+
+  // Now fetch the actual items in this zone (batches with item + qty + expiry).
+  try {
+    const { data: batches, error } = await sb.from('batches')
+      .select('batch_id, quantity_remaining, expiry_date, unit_cost, items(name,name_lao,unit)')
+      .eq('location_id', locationId).eq('status','active').gt('quantity_remaining', 0)
+      .order('expiry_date', { ascending: true, nullsFirst: false }).limit(50);
+    const itemsBox = document.getElementById('klMapDrawerItems');
+    if (!itemsBox) return; // drawer closed already
+    if (error) { itemsBox.innerHTML = '<h3>'+t('map.detItems')+'</h3><p class="kl-rsmall">'+h(error.message)+'</p>'; return; }
+    if (!batches || !batches.length) {
+      itemsBox.innerHTML = '<h3>'+t('map.detItems')+'</h3>'
+        + '<p class="kl-muted kl-rsmall">'+t('map.noItems')+'</p>';
+      return;
+    }
+    let ih = '<h3>'+t('map.detItems')+' ('+batches.length+')</h3>';
+    const today = new Date();
+    batches.forEach(b => {
+      const it = b.items || {};
+      const nm = (__lang==='lo' && it.name_lao) ? it.name_lao : (it.name || '?');
+      const un = klUnitT(it.unit||'');
+      let expTxt = '—', expCls = '';
+      if (b.expiry_date) {
+        const d = new Date(b.expiry_date);
+        const days = Math.round((d - today) / 86400000);
+        if (days <= 0)      { expTxt = t('ov.today');      expCls = 'bad'; }
+        else if (days === 1){ expTxt = t('ov.tomorrow');   expCls = 'bad'; }
+        else if (days <= 7) { expTxt = days+' '+t('ov.days'); expCls = 'warn'; }
+        else                { expTxt = b.expiry_date; }
+      }
+      ih += '<div class="kl-map-drawer-item">'
+          + '<div class="kl-map-drawer-item-name">'+h(nm)+'</div>'
+          + '<div class="kl-map-drawer-item-meta">'
+          +   fmtQty(b.quantity_remaining)+' '+h(un)
+          +   ' · '+money(Number(b.quantity_remaining||0) * Number(b.unit_cost||0))
+          +   ' · <span class="'+(expCls?'kl-map-drawer-val '+expCls:'')+'">'+t('ov.expires')+': '+expTxt+'</span>'
+          + '</div></div>';
+    });
+    itemsBox.innerHTML = ih;
+  } catch (e) {
+    const itemsBox = document.getElementById('klMapDrawerItems');
+    if (itemsBox) itemsBox.innerHTML = '<h3>'+t('map.detItems')+'</h3>'
+      + '<p class="kl-rsmall">'+h(e.message||String(e))+'</p>';
+  }
+};
+
+window.klMapCloseDrawer = function() {
+  const bd = document.getElementById('klMapBackdrop');
+  const dr = document.getElementById('klMapDrawer');
+  if (bd) bd.classList.remove('open');
+  if (dr) dr.classList.remove('open');
 };
 
 // =====================================================================
@@ -4772,7 +5254,7 @@ async function initOverviewPage() {
               + '<span class="kl-ov-slv-nums">'
               + '<span class="kl-ov-slv-n"><b>'+t('ov.min')+'</b> '+fmtQty(mn)+'</span>'
               + '<span class="kl-ov-slv-n" style="color:'+stCol+';font-weight:700">'+t('ov.now')+' '+fmtQty(oh)+'</span>'
-              + '<span class="kl-ov-slv-n"><b>'+t('ov.max')+'</b> '+fmtQty(mx)+' '+h(r.unit||'')+'</span>'
+              + '<span class="kl-ov-slv-n"><b>'+t('ov.max')+'</b> '+fmtQty(mx)+' '+klUnitT(r.unit||'')+'</span>'
               + '</span></div>'
               + '<div class="kl-ov-wbar-wrap"><div class="kl-ov-wbar" style="width:'+pct+'%;background:'+stCol+'"></div></div>'
               + '</div>';
@@ -4828,7 +5310,7 @@ async function initOverviewPage() {
               + '<span class="kl-ov-otd-col">'+fmtQty(mx)+'</span>'
               + '<span class="kl-ov-otd-col" style="color:#c0392b;font-weight:700">'+fmtQty(onHand)+'</span>'
               + '<span class="kl-ov-otd-col">'+fmtQty(mn)+'</span>'
-              + '<span class="kl-ov-otd-col kl-ov-otd-order" style="color:#c0392b;font-weight:700">'+fmtQty(suggest)+' '+h(r.unit||'')+'</span>'
+              + '<span class="kl-ov-otd-col kl-ov-otd-order" style="color:#c0392b;font-weight:700">'+fmtQty(suggest)+' '+klUnitT(r.unit||'')+'</span>'
               + '</div>';
       });
       html += '</div>';
@@ -4869,7 +5351,7 @@ async function initOverviewPage() {
       topWaste.forEach(w => {
         const pct = Math.max(6, (w.val/maxW)*100);
         html += '<div class="kl-ov-wrow">'
-              + '<div class="kl-ov-wname">'+h(w.name)+' <span class="kl-rsmall">('+fmtQty(w.qty)+' '+h(w.unit)+')</span></div>'
+              + '<div class="kl-ov-wname">'+h(w.name)+' <span class="kl-rsmall">('+fmtQty(w.qty)+' '+klUnitT(w.unit)+')</span></div>'
               + '<div class="kl-ov-wbar-wrap"><div class="kl-ov-wbar" style="width:'+pct+'%"></div></div>'
               + '<div class="kl-ov-wval">'+money(w.val)+'</div></div>';
       });
@@ -4895,7 +5377,7 @@ async function initOverviewPage() {
         const dd = dDays(r.expiry_date);
         const cls = dd<=1 ? 'kl-pill-bad' : (dd<=3 ? 'kl-pill-warn' : 'kl-pill-ok');
         html += '<div class="kl-ov-mini-row">'
-              + '<span class="kl-ov-mini-lbl"><strong>'+h(nm)+'</strong> <span class="kl-rsmall">('+fmtQty(r.quantity_remaining)+' '+h(un)+')</span></span>'
+              + '<span class="kl-ov-mini-lbl"><strong>'+h(nm)+'</strong> <span class="kl-rsmall">('+fmtQty(r.quantity_remaining)+' '+klUnitT(un)+')</span></span>'
               + '<span class="kl-pill '+cls+'">'+whenLabel(dd)+'</span>'
               + '</div>';
       });
@@ -5182,23 +5664,45 @@ async function renderLocations(u, body) {
 window.locForm = function(id){
   const l=id?(window.__locs||[]).find(x=>x.location_id===id):{};
   const v=(k,d='')=>(l&&l[k]!=null)?l[k]:d;
+  // 7 modern zone types per global 3PL standard (freezer, chiller, cool dry,
+  // ambient dry, hazmat, bonded customs hold, office). Legacy values ('dry',
+  // 'bar') still display correctly if older data uses them.
+  const ZTYPES = ['freezer','chiller','cool_dry','ambient','hazmat','bonded','office'];
+  // If editing and the existing zone is a legacy type, include it in the list
+  // so the dropdown doesn't lose the saved value.
+  const currentZ = v('temp_zone','cool_dry');
+  if (!ZTYPES.includes(currentZ)) ZTYPES.unshift(currentZ);
   modal(id?t('m.editLoc'):t('m.addLoc').replace('+ ',''),
-     '<div class="kl-form-row"><label>'+t('m.code')+' *</label><input id="lf_code" value="'+h(v('code'))+'"></div>'
-    +'<div class="kl-form-row"><label>'+t('m.name')+' *</label><input id="lf_name" value="'+h(v('name'))+'"></div>'
+     '<div class="kl-form-row"><label>'+t('m.code')+' *</label><input id="lf_code" value="'+h(v('code'))+'" maxlength="20"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.name')+' *</label><input id="lf_name" value="'+h(v('name'))+'" maxlength="100"></div>'
     +'<div class="kl-form-row"><label>'+t('m.zone')+'</label><select id="lf_zone">'
-      +['freezer','chiller','dry','ambient','bar'].map(z=>'<option '+(v('temp_zone','dry')===z?'selected':'')+'>'+z+'</option>').join('')
+      +ZTYPES.map(z=>'<option value="'+z+'" '+(currentZ===z?'selected':'')+'>'+h(klMapZoneTypeLabel(z))+'</option>').join('')
     +'</select></div>'
-    +'<div class="kl-form-row"><label>'+t('m.tmin')+'</label><input id="lf_min" type="number" value="'+h(v('target_temp_min_c'))+'"></div>'
-    +'<div class="kl-form-row"><label>'+t('m.tmax')+'</label><input id="lf_max" type="number" value="'+h(v('target_temp_max_c'))+'"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.tmin')+' (°C)</label><input id="lf_min" type="number" step="0.1" value="'+h(v('target_temp_min_c'))+'"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.tmax')+' (°C)</label><input id="lf_max" type="number" step="0.1" value="'+h(v('target_temp_max_c'))+'"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.currentTemp')+' (°C)</label><input id="lf_curt" type="number" step="0.1" value="'+h(v('current_temp_c'))+'"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.capacity')+'</label><input id="lf_cap" type="number" min="0" step="1" value="'+h(v('capacity_units'))+'"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.gridRow')+' (1-20)</label><input id="lf_row" type="number" min="1" max="20" step="1" value="'+h(v('display_row'))+'"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.gridCol')+' (1-20)</label><input id="lf_col" type="number" min="1" max="20" step="1" value="'+h(v('display_col'))+'"></div>'
+    +'<div class="kl-form-row"><label>'+t('m.notes')+'</label><input id="lf_notes" value="'+h(v('notes'))+'" maxlength="500"></div>'
     +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveLoc('+(id||'null')+')">'+t('m.save')+'</button> '
     +'<button class="kl-btn" onclick="closeModal()">'+t('m.cancel')+'</button>');
 };
 window.saveLoc = async function(id){
   const g=(x)=>document.getElementById(x);
+  const numOrNull = (s) => { const v = g(s).value; return v === '' ? null : Number(v); };
   const rec={ code:g('lf_code').value.trim(), name:g('lf_name').value.trim(),
     temp_zone:g('lf_zone').value,
-    target_temp_min_c:g('lf_min').value?Number(g('lf_min').value):null,
-    target_temp_max_c:g('lf_max').value?Number(g('lf_max').value):null };
+    target_temp_min_c: numOrNull('lf_min'),
+    target_temp_max_c: numOrNull('lf_max'),
+    current_temp_c: numOrNull('lf_curt'),
+    capacity_units: numOrNull('lf_cap'),
+    display_row: numOrNull('lf_row'),
+    display_col: numOrNull('lf_col'),
+    notes: g('lf_notes').value.trim() || null
+  };
+  // Update last_temp_at if user set a current temp
+  if (rec.current_temp_c !== null) rec.last_temp_at = new Date().toISOString();
   if(!rec.code||!rec.name){ alert(t('m.needCodeName')); return; }
   if(rec.target_temp_min_c!=null && rec.target_temp_max_c!=null
      && rec.target_temp_min_c > rec.target_temp_max_c){
