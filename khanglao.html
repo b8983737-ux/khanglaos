@@ -8,8 +8,8 @@
   default-src 'self';
   script-src  'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.supabase.co;
   style-src   'self' 'unsafe-inline' https://fonts.googleapis.com;
-  img-src     'self' data: blob:;
-  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com;
+  img-src     'self' data: blob: https://api.qrserver.com;
+  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com https://api.qrserver.com;
   font-src    'self' data: https://fonts.gstatic.com;
   frame-src   'self';
 ">
@@ -1123,8 +1123,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.26-supplier-portal-pro-2026-05-25 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.26-portal-pro</div>
+<!-- KHANGLAOS BUILD: v3.26.1-qr-csp-fix-2026-05-25 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.26.1-qr-csp-fix</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -3804,30 +3804,17 @@ function klLoadQrLib() {
 }
 
 async function klRenderDnQr(targetId, payload) {
-  // v3.26: 3-layer fallback so suppliers in low-connectivity areas (rural
-  // Lao mobile) ALWAYS see a working QR or at minimum the reference code.
-  //   Layer 1: jsdelivr CDN qrcode lib (best — local canvas render)
-  //   Layer 2: goqr.me image API (works on any network that can hit any CDN)
-  //   Layer 3: big readable text fallback (works even fully offline-cached)
+  // v3.26.1: 3-layer fallback with image-API first (more reliable than
+  // dynamically-loaded CDN scripts which get blocked by browser tracking
+  // prevention even when CSP allows them).
+  //   Layer 1: goqr.me image API (just an <img src> — most resilient)
+  //   Layer 2: jsdelivr CDN qrcode lib (canvas render — best quality)
+  //   Layer 3: big readable text fallback (works even fully offline)
   const wrap = document.getElementById(targetId);
   if (!wrap) return;
   const safePayload = String(payload || '');
 
-  // ----- Layer 1: try the canvas-based local renderer -----
-  try {
-    const QR = await klLoadQrLib();
-    wrap.innerHTML = '<canvas id="dnQrCanvas"></canvas>'
-      + '<div class="kl-pub-qr-cap">'+h(safePayload)+'</div>';
-    await QR.toCanvas(document.getElementById('dnQrCanvas'), safePayload, {
-      width: 240, margin: 1,
-      color: { dark: '#14201b', light: '#ffffff' }
-    });
-    return; // ✓ done
-  } catch (e1) {
-    console.warn('QR layer1 (jsdelivr) failed, trying layer2:', e1 && e1.message);
-  }
-
-  // ----- Layer 2: goqr.me image API — just an <img src> URL -----
+  // ----- Layer 1: goqr.me image API (try first — most reliable) -----
   try {
     const apiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=4&data='
                  + encodeURIComponent(safePayload);
@@ -3843,9 +3830,23 @@ async function klRenderDnQr(targetId, payload) {
         + '<div class="kl-pub-qr-cap">'+h(safePayload)+'</div>';
       return; // ✓ done
     }
-    console.warn('QR layer2 (goqr.me) failed — falling to text');
+    console.warn('QR layer1 (goqr.me) failed, trying layer2');
+  } catch (e1) {
+    console.warn('QR layer1 (goqr.me) threw:', e1 && e1.message);
+  }
+
+  // ----- Layer 2: canvas-based local renderer (jsdelivr) -----
+  try {
+    const QR = await klLoadQrLib();
+    wrap.innerHTML = '<canvas id="dnQrCanvas"></canvas>'
+      + '<div class="kl-pub-qr-cap">'+h(safePayload)+'</div>';
+    await QR.toCanvas(document.getElementById('dnQrCanvas'), safePayload, {
+      width: 240, margin: 1,
+      color: { dark: '#14201b', light: '#ffffff' }
+    });
+    return; // ✓ done
   } catch (e2) {
-    console.warn('QR layer2 (goqr.me) threw:', e2 && e2.message);
+    console.warn('QR layer2 (jsdelivr) failed — falling to text:', e2 && e2.message);
   }
 
   // ----- Layer 3: big readable text fallback — no CDN, no canvas -----
