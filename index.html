@@ -12,7 +12,20 @@
   connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com https://api.qrserver.com;
   font-src    'self' data: https://fonts.gstatic.com;
   frame-src   'self';
+  frame-ancestors 'self';
+  base-uri    'self';
+  form-action 'self';
+  upgrade-insecure-requests;
 ">
+<!-- v3.28.2 Security headers as meta tags (best-effort; real protection
+     comes from Cloudflare Pages headers configured in _headers file) -->
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<!-- v3.28.2 Restrict browser APIs to only what KHANGLAOS needs.
+     Camera is needed on Check-Out/Receive for barcode scanning;
+     everything else is denied. -->
+<meta http-equiv="Permissions-Policy" content="camera=(self), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=()">
 <title>KHANGLAOS</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%2315795f'/%3E%3Ctext x='32' y='46' font-family='Arial,Helvetica,sans-serif' font-size='40' font-weight='700' fill='%23fff' text-anchor='middle'%3EK%3C/text%3E%3Ccircle cx='50' cy='18' r='5.5' fill='%23caa24a'/%3E%3C/svg%3E">
 <!-- Same fonts as EATLAOS.com (font only, not colors) -->
@@ -1249,8 +1262,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.28.1-order-builder-polish-2026-05-25 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.28.1-polish</div>
+<!-- KHANGLAOS BUILD: v3.28.2-security-hardening-2026-05-25 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.28.2-security</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -3757,8 +3770,12 @@ function renderDnForm(body) {
   }
   html += '</div></div>';
 
+  // v3.28.2 Honeypot — bots fill ALL inputs. Real humans never see this
+  // (off-screen, autocomplete=off, tabindex=-1). When dnSubmit checks this
+  // field, finding anything in it means "this is a bot" → silent reject.
   // Supplier identity card
   html += '<div class="kl-pub-card">';
+  html += '<input type="text" id="dn_hp_field" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">';
   html += '<h2>'+t('dn.whoCard')+'</h2>';
   html += '<p class="kl-pub-sub">'+t('dn.whoSub')+'</p>';
   html += '<div class="kl-pub-field" style="margin-bottom:8px">'
@@ -3886,6 +3903,15 @@ function renderDnLines() {
 }
 
 async function dnSubmit() {
+  // v3.28.2 Honeypot check — bots fill ALL form fields; humans never see
+  // the hidden 'website' field. If it has any value, silently reject.
+  const hp = document.getElementById('dn_hp_field');
+  if (hp && hp.value && hp.value.length > 0) {
+    console.warn('Bot detected via honeypot');
+    // Pretend success to not tip off the bot
+    return;
+  }
+
   const submitBtn = document.getElementById('dnSubmitBtn');
   const supName = (document.getElementById('dnSupName').value||'').trim();
   const supPhone= (document.getElementById('dnSupPhone').value||'').trim();
@@ -4290,6 +4316,20 @@ function applyI18n() {
 // rest of the script (especially the public supplier portal) still runs.
 let sb;
 try {
+  // v3.28.2 Anti-self-XSS warning. Attackers trick non-technical users
+  // into pasting malicious JS in DevTools console ("paste this to unlock
+  // a feature"). The warning won't stop a real attacker, but it stops
+  // social engineering against warehouse staff.
+  try {
+    const cs = (s, c) => 'color:' + c + ';font-size:' + s + 'px;font-weight:700';
+    console.log('%c🛑 STOP!', cs(48, '#c0392b'));
+    console.log('%cThis is a developer console.', cs(20, '#14201b'));
+    console.log('%cIf someone told you to paste code here to ' +
+                '"unlock a feature" or "get free stuff", they are trying to ' +
+                'STEAL YOUR ACCOUNT. Close this window now.',
+                cs(14, '#14201b'));
+    console.log('%c— KHANGLAOS Security', cs(12, '#69707d'));
+  } catch (e) {}
   sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: {
       persistSession: true,
