@@ -1,0 +1,45 @@
+# KHANGLAOS v3.28.2 — Cloudflare Pages security headers
+# Place this file at the root of your khanglaos repo as `_headers`
+# Cloudflare Pages reads it automatically and applies to all responses.
+#
+# These headers are stronger than <meta> tags because they're set BEFORE
+# the HTML loads. Meta tag CSP is best-effort; HTTP header CSP is enforced.
+
+/*
+  # Content Security Policy — what's allowed to load and run
+  # Mirrors the meta CSP but adds the meta-only directives (frame-ancestors).
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://api.qrserver.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com https://api.qrserver.com; font-src 'self' data: https://fonts.gstatic.com; frame-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
+
+  # Clickjacking protection — also blocks <iframe> embedding from other sites
+  X-Frame-Options: SAMEORIGIN
+
+  # Prevent browsers from guessing content type (MIME sniffing attacks)
+  X-Content-Type-Options: nosniff
+
+  # Don't leak the secret URL token via Referer when supplier clicks
+  # "Open in Maps" or any external link
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Restrict powerful browser APIs to what we actually need
+  Permissions-Policy: camera=(self), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), interest-cohort=()
+
+  # HSTS — force HTTPS for 1 year, including subdomains.
+  # Cloudflare Pages serves HTTPS by default but this PINS it.
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+  # Old XSS auditor (still useful in some browsers)
+  X-XSS-Protection: 1; mode=block
+
+# Long cache on static assets (but NOT on index.html so updates ship fast)
+/*.js
+  Cache-Control: public, max-age=604800, immutable
+/*.css
+  Cache-Control: public, max-age=604800, immutable
+/*.png
+  Cache-Control: public, max-age=604800, immutable
+
+# index.html must NEVER be cached, or v3.28 bug fixes won't deploy
+/index.html
+  Cache-Control: no-store, no-cache, must-revalidate
+/
+  Cache-Control: no-store, no-cache, must-revalidate
