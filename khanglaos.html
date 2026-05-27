@@ -1871,8 +1871,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.39-itemid-fix-mobile-polish-2026-05-27 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.39-fix-mobile</div>
+<!-- KHANGLAOS BUILD: v3.40-stabilize-2026-05-27 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.40-stable</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -6863,145 +6863,75 @@ async function renderReceiveHistory(u) {
     cutoff.setDate(cutoff.getDate() - (RECV_HIST_RANGE - 1));
     const cutoffISO = cutoff.toISOString();
 
-    // v3.38: One query against v_receive_history view (pre-joined data).
-    // Tries the new view first; falls back to legacy 2-query approach if the
-    // view doesn't exist yet (i.e. SQL migration not run).
+    // v3.40: Clean legacy approach (proven working in v3.37). Two queries:
+    //   1. ASN-based receives from v_delivery_notes
+    //   2. Manual receives from movements
     let entries = [];
-    let useFallback = false;
 
-    const histQ = await sb.from('v_receive_history')
-      .select('movement_id, received_at, quantity, source, receive_status, '
-            + 'po_id, po_number, dn_id, dn_number, '
-            + 'item_id, item_name, item_name_lao, item_unit, '
-            + 'unit_cost, lot_number, expiry_date, '
-            + 'location_name, supplier_name, '
-            + 'received_by_user_id, received_by_name')
+    const asnQ = await sb.from('v_delivery_notes')
+      .select('dn_id, dn_number, supplier_display_name, supplier_name, received_at, line_count')
+      .eq('status', 'received')
       .gte('received_at', cutoffISO)
       .order('received_at', { ascending: false })
-      .limit(100);
+      .limit(50);
+    if (asnQ.error) throw asnQ.error;
 
-    if (histQ.error) {
-      // v_receive_history doesn't exist → fall back to legacy queries
-      console.warn('v_receive_history not available, using legacy queries:', histQ.error.message);
-      useFallback = true;
+    const manualQ = await sb.from('movements')
+      .select('movement_id, created_at, quantity, note, batches(items(name,unit), unit_cost), user_id, to_location_id')
+      .eq('movement_type', 'IN')
+      .eq('note', 'Stock received')
+      .gte('created_at', cutoffISO)
+      .order('created_at', { ascending: false })
+      .limit(50);
+    if (manualQ.error) throw manualQ.error;
+
+    // Resolve user names for manual receives in one query
+    const userIds = Array.from(new Set((manualQ.data || []).map(m => m.user_id).filter(Boolean)));
+    let userNames = {};
+    if (userIds.length > 0) {
+      const upQ = await sb.from('user_profiles').select('user_id, full_name').in('user_id', userIds);
+      (upQ.data || []).forEach(u => { userNames[u.user_id] = u.full_name; });
     }
 
-    if (!useFallback) {
-      // Group v_receive_history rows by ASN (multiple rows per dn) or keep manual rows separate
-      const asnGroups = new Map();
-      const manualRows = [];
-      (histQ.data || []).forEach(r => {
-        if (r.source === 'asn' && r.dn_id) {
-          if (!asnGroups.has(r.dn_id)) {
-            asnGroups.set(r.dn_id, {
-              key: 'asn:' + r.dn_id,
-              kind: 'asn',
-              time: r.received_at,
-              title: r.dn_number || '—',
-              supplier: r.supplier_name || '—',
-              receivedBy: r.received_by_name,
-              po_id: r.po_id,
-              po_number: r.po_number,
-              dn_id: r.dn_id,
-              lines: [],
-              status: 'done',
-            });
-          }
-          const g = asnGroups.get(r.dn_id);
-          g.lines.push({
-            item_name: r.item_name,
-            item_name_lao: r.item_name_lao,
-            unit: r.item_unit,
-            quantity: r.quantity,
-            unit_cost: r.unit_cost,
-            location_name: r.location_name,
-            lot_number: r.lot_number,
-            expiry_date: r.expiry_date,
-          });
-          // Earliest received_at across lines becomes the group time
-          if (new Date(r.received_at) > new Date(g.time)) g.time = r.received_at;
-          // If any line is partial, mark the whole group partial
-          if (r.receive_status === 'partial') g.status = 'partial';
-        } else {
-          // Manual receive — one row per movement
-          manualRows.push({
-            key: 'mov:' + r.movement_id,
-            kind: 'manual',
-            time: r.received_at,
-            title: r.item_name || '—',
-            supplier: r.supplier_name || '',
-            receivedBy: r.received_by_name,
-            movement_id: r.movement_id,
-            po_id: null,
-            po_number: null,
-            quantity: r.quantity,
-            unit: r.item_unit,
-            unit_cost: r.unit_cost,
-            location_name: r.location_name,
-            status: 'done',
-            lines: [{
-              item_name: r.item_name,
-              item_name_lao: r.item_name_lao,
-              unit: r.item_unit,
-              quantity: r.quantity,
-              unit_cost: r.unit_cost,
-              location_name: r.location_name,
-              lot_number: r.lot_number,
-              expiry_date: r.expiry_date,
-            }],
-          });
-        }
+    // ASN entries — one row per dn
+    (asnQ.data || []).forEach(dn => {
+      entries.push({
+        key: 'asn:' + dn.dn_id,
+        kind: 'asn',
+        time: dn.received_at,
+        title: dn.dn_number,
+        supplier: dn.supplier_display_name || dn.supplier_name || '—',
+        items: dn.line_count || 0,
+        receivedBy: null,
+        dn_id: dn.dn_id,
+        po_number: null,  // not exposed in current view; future enhancement
+        status: 'done',
       });
-      // Set items count from lines length
-      asnGroups.forEach(g => { g.items = g.lines.length; });
-      manualRows.forEach(r => { r.items = 1; });
-      entries = [...asnGroups.values(), ...manualRows];
-    } else {
-      // Legacy fallback: 2 separate queries (pre-v3.38 SQL)
-      const asnQ = await sb.from('v_delivery_notes')
-        .select('dn_id, dn_number, supplier_display_name, supplier_name, received_at, line_count')
-        .eq('status', 'received')
-        .gte('received_at', cutoffISO)
-        .order('received_at', { ascending: false })
-        .limit(50);
-      const manualQ = await sb.from('movements')
-        .select('movement_id, created_at, quantity, note, batches(items(name,unit), unit_cost), user_id, to_location_id')
-        .eq('movement_type', 'IN').eq('note', 'Stock received')
-        .gte('created_at', cutoffISO)
-        .order('created_at', { ascending: false }).limit(50);
-      if (asnQ.error) throw asnQ.error;
-      if (manualQ.error) throw manualQ.error;
+    });
 
-      const userIds = Array.from(new Set((manualQ.data || []).map(m => m.user_id).filter(Boolean)));
-      let userNames = {};
-      if (userIds.length > 0) {
-        const up = await sb.from('user_profiles').select('user_id, full_name').in('user_id', userIds);
-        (up.data || []).forEach(u => { userNames[u.user_id] = u.full_name; });
-      }
-      (asnQ.data || []).forEach(dn => {
-        entries.push({
-          key: 'asn:' + dn.dn_id, kind: 'asn', time: dn.received_at,
-          title: dn.dn_number, supplier: dn.supplier_display_name || dn.supplier_name || '—',
-          items: dn.line_count || 0, receivedBy: null,
-          dn_id: dn.dn_id, po_id: null, po_number: null, status: 'done',
-        });
+    // Manual entries — one row per movement
+    (manualQ.data || []).forEach(m => {
+      const itemName = m.batches && m.batches.items ? m.batches.items.name : '—';
+      const unit = m.batches && m.batches.items ? m.batches.items.unit : '';
+      entries.push({
+        key: 'mov:' + m.movement_id,
+        kind: 'manual',
+        time: m.created_at,
+        title: itemName,
+        supplier: '',
+        items: 1,
+        receivedBy: userNames[m.user_id] || null,
+        movement_id: m.movement_id,
+        quantity: m.quantity,
+        unit: unit,
+        unit_cost: m.batches ? m.batches.unit_cost : null,
+        to_location_id: m.to_location_id,
+        po_number: null,
+        status: 'done',
       });
-      (manualQ.data || []).forEach(m => {
-        const itemName = m.batches && m.batches.items ? m.batches.items.name : '—';
-        const unit = m.batches && m.batches.items ? m.batches.items.unit : '';
-        entries.push({
-          key: 'mov:' + m.movement_id, kind: 'manual', time: m.created_at,
-          title: itemName, supplier: '', items: 1,
-          receivedBy: userNames[m.user_id] || null,
-          movement_id: m.movement_id, quantity: m.quantity, unit: unit,
-          unit_cost: m.batches ? m.batches.unit_cost : null,
-          to_location_id: m.to_location_id,
-          po_id: null, po_number: null, status: 'done',
-        });
-      });
-    }
+    });
 
-    // Sort newest first
+        // Sort newest first
     entries.sort((a, b) => new Date(b.time) - new Date(a.time));
 
     if (entries.length === 0) {
@@ -7021,23 +6951,14 @@ async function renderReceiveHistory(u) {
         ? '<span class="kl-rh-source-icon asn">📦</span>'
         : '<span class="kl-rh-source-icon manual">✋</span>';
       const sourceTitle = h(e.title);
-      // v3.38: show PO badge inline when present
-      const poBadge = e.po_number
-        ? ' <span class="kl-rh-po-badge" title="Linked to PO">🔗 ' + h(e.po_number) + '</span>'
-        : '';
-      const walkInBadge = (e.kind === 'manual' && !e.po_number)
-        ? ' <span class="kl-rh-walkin-badge" title="Walk-in / no PO">' + h(t('recvh.walkIn')) + '</span>'
-        : '';
+      const poBadge = '';     // v3.40: simplified — PO badge planned for later
+      const walkInBadge = ''; // v3.40: simplified
       const sourceSub = e.kind === 'asn'
         ? h(e.supplier)
         : (e.kind === 'manual' && e.receivedBy ? '' : h(t('recvh.manualReceive')));
 
-      // v3.38: status from view (done/partial)
-      const statusKey = e.status === 'partial' ? 'statusPartial' : 'statusDone';
-      const statusCls = e.status === 'partial' ? 'partial' : 'done';
-      const statusEmoji = e.status === 'partial' ? '⚠' : '✓';
-      const statusPill = '<span class="kl-rh-status-pill ' + statusCls + '">'
-                       + statusEmoji + ' ' + h(t('recvh.' + statusKey)) + '</span>';
+      // v3.40: status pill — always 'done' (variance detection comes back later)
+      const statusPill = '<span class="kl-rh-status-pill done">✓ ' + h(t('recvh.statusDone')) + '</span>';
 
       html += '<div class="kl-recv-hist-row' + (isExpanded ? ' expanded' : '') + '" '
            +  'data-rh-key="'+h(e.key)+'">'
@@ -7107,35 +7028,6 @@ window.recvHistToggle = function(key) {
 
 async function klRhLoadDetail(entry, detailEl) {
   try {
-    // v3.38: If we have lines pre-loaded (from v_receive_history view), use them
-    if (entry.lines && entry.lines.length > 0) {
-      let html = '';
-      if (entry.po_number) {
-        html += '<div style="margin:8px 0;padding:6px 10px;background:#e8f1fa;border-radius:6px;font-size:12px;color:#1c6ec0">'
-              + '🔗 ' + h(t('recvh.linkedToPo')) + ': <strong>' + h(entry.po_number) + '</strong></div>';
-      }
-      html += '<table class="kl-rh-detail-table"><thead><tr>'
-            + '<th>' + h(t('recvh.colItem')) + '</th>'
-            + '<th class="r">' + h(t('recvh.colQty')) + '</th>'
-            + '<th>' + h(t('recvh.colLocation')) + '</th>'
-            + '<th class="r">' + h(t('recvh.colCost')) + '</th>'
-            + '</tr></thead><tbody>';
-      entry.lines.forEach(ln => {
-        const unit = klUnitT(ln.unit || '');
-        html += '<tr>'
-              + '<td>' + h(ln.item_name || '—')
-              +   (ln.lot_number ? '<div class="muted">' + h(t('recvh.lot')) + ': ' + h(ln.lot_number) + '</div>' : '')
-              + '</td>'
-              + '<td class="r">' + h(fmtQty(ln.quantity)) + ' ' + h(unit) + '</td>'
-              + '<td class="muted">' + h(ln.location_name || '—') + '</td>'
-              + '<td class="r">' + (ln.unit_cost != null ? h(fmtMoney(ln.unit_cost)) + ' / ' + h(unit) : '—') + '</td>'
-              + '</tr>';
-      });
-      html += '</tbody></table>';
-      detailEl.innerHTML = html;
-      return;
-    }
-    // Legacy path (fallback when v_receive_history didn't return lines)
     if (entry.kind === 'asn') {
       // Fetch lines for this ASN
       const linesQ = await sb.from('delivery_note_lines')
