@@ -1871,8 +1871,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.40-stabilize-2026-05-27 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.40-stable</div>
+<!-- KHANGLAOS BUILD: v3.41-asn-fix-debug-2026-05-27 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.41-fix</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -6863,27 +6863,62 @@ async function renderReceiveHistory(u) {
     cutoff.setDate(cutoff.getDate() - (RECV_HIST_RANGE - 1));
     const cutoffISO = cutoff.toISOString();
 
-    // v3.40: Clean legacy approach (proven working in v3.37). Two queries:
-    //   1. ASN-based receives from v_delivery_notes
-    //   2. Manual receives from movements
+    // v3.41: Run queries with detailed logging so we can see what fails.
+    // Each query is logged, and any error is shown to the user (not just stuck on Loading).
     let entries = [];
 
-    const asnQ = await sb.from('v_delivery_notes')
-      .select('dn_id, dn_number, supplier_display_name, supplier_name, received_at, line_count')
-      .eq('status', 'received')
-      .gte('received_at', cutoffISO)
-      .order('received_at', { ascending: false })
-      .limit(50);
-    if (asnQ.error) throw asnQ.error;
+    console.log('[recv-hist] cutoff=', cutoffISO, 'range=', RECV_HIST_RANGE);
 
-    const manualQ = await sb.from('movements')
-      .select('movement_id, created_at, quantity, note, batches(items(name,unit), unit_cost), user_id, to_location_id')
-      .eq('movement_type', 'IN')
-      .eq('note', 'Stock received')
-      .gte('created_at', cutoffISO)
-      .order('created_at', { ascending: false })
-      .limit(50);
-    if (manualQ.error) throw manualQ.error;
+    // Helper: wrap a Supabase query with a 10-second timeout so it can't hang forever.
+    const withTimeout = (promise, label, ms) => Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
+    ]);
+
+    console.log('[recv-hist] querying v_delivery_notes...');
+    const asnQ = await withTimeout(
+      sb.from('v_delivery_notes')
+        .select('dn_id, dn_number, supplier_display_name, supplier_name, received_at, line_count')
+        .eq('status', 'received')
+        .gte('received_at', cutoffISO)
+        .order('received_at', { ascending: false })
+        .limit(50),
+      'v_delivery_notes query', 10000);
+    console.log('[recv-hist] v_delivery_notes →', asnQ.error ? 'ERR ' + asnQ.error.message : (asnQ.data || []).length + ' rows');
+    if (asnQ.error) throw new Error('Loading ASN receives failed: ' + asnQ.error.message);
+
+    console.log('[recv-hist] querying movements...');
+    // v3.41: Use a flatter join — fewer chances for PostgREST to choke
+    const manualQ = await withTimeout(
+      sb.from('movements')
+        .select('movement_id, created_at, quantity, note, user_id, to_location_id, batch_id, batches(unit_cost, item_id)')
+        .eq('movement_type', 'IN')
+        .eq('note', 'Stock received')
+        .gte('created_at', cutoffISO)
+        .order('created_at', { ascending: false })
+        .limit(50),
+      'movements query', 10000);
+    console.log('[recv-hist] movements →', manualQ.error ? 'ERR ' + manualQ.error.message : (manualQ.data || []).length + ' rows');
+    if (manualQ.error) throw new Error('Loading manual receives failed: ' + manualQ.error.message);
+
+    // Resolve item names separately (more reliable than nested joins)
+    const itemIds = Array.from(new Set(
+      (manualQ.data || [])
+        .map(m => m.batches && m.batches.item_id)
+        .filter(Boolean)
+    ));
+    let itemMap = {};
+    if (itemIds.length > 0) {
+      console.log('[recv-hist] resolving', itemIds.length, 'item names...');
+      const itQ = await withTimeout(
+        sb.from('items').select('item_id, name, unit').in('item_id', itemIds),
+        'items query', 5000);
+      if (!itQ.error) {
+        (itQ.data || []).forEach(it => { itemMap[it.item_id] = it; });
+      } else {
+        console.warn('[recv-hist] items lookup failed:', itQ.error.message);
+      }
+    }
 
     // Resolve user names for manual receives in one query
     const userIds = Array.from(new Set((manualQ.data || []).map(m => m.user_id).filter(Boolean)));
@@ -6911,8 +6946,9 @@ async function renderReceiveHistory(u) {
 
     // Manual entries — one row per movement
     (manualQ.data || []).forEach(m => {
-      const itemName = m.batches && m.batches.items ? m.batches.items.name : '—';
-      const unit = m.batches && m.batches.items ? m.batches.items.unit : '';
+      const it = m.batches && itemMap[m.batches.item_id];
+      const itemName = it ? it.name : '—';
+      const unit = it ? it.unit : '';
       entries.push({
         key: 'mov:' + m.movement_id,
         kind: 'manual',
@@ -10665,10 +10701,11 @@ window.saveAsn = async function() {
     if (res.error) throw res.error;
     // Save lines if warehouse picked items
     if (pickedIds.length > 0) {
+      // v3.41: delivery_note_lines does NOT have restaurant_id column.
+      // RLS uses the parent delivery_notes table for access control.
       const lineRows = pickedIds.map((id, idx) => {
         const p = picked[id];
         return {
-          restaurant_id: __profile.restaurant_id,
           dn_id: res.data.dn_id,
           item_id: Number(id),
           item_name: p.item.name,
@@ -10699,10 +10736,10 @@ window.saveAsn = async function() {
         const res = await sb.from('delivery_notes').insert(rec).select('*').single();
         if (res.error) throw res.error;
         if (pickedIds.length > 0) {
+          // v3.41: delivery_note_lines does NOT have restaurant_id column.
           const lineRows = pickedIds.map((id, idx) => {
             const p = picked[id];
             return {
-              restaurant_id: __profile.restaurant_id,
               dn_id: res.data.dn_id,
               item_id: Number(id),
               item_name: p.item.name,
