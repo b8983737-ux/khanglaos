@@ -108,6 +108,50 @@ a:hover { text-decoration: underline; }
   display: none; background: none; border: none; font-size: 22px;
   color: var(--kl-text); cursor: pointer; padding: 4px 8px;
 }
+/* v3.39: brand logo in topbar (mobile-visible) */
+.kl-topbar-brand {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--kl-text);
+  margin-right: 4px;
+}
+.kl-topbar-brand .kl-tb-mark { width: 28px; height: 28px; flex-shrink: 0; }
+.kl-topbar-brand .kl-tb-mark svg { width: 100%; height: 100%; display: block; }
+.kl-tb-brandname {
+  font-family: var(--kl-font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.2px;
+  color: var(--kl-text);
+}
+@media (max-width: 1023px) {
+  /* On mobile, show topbar brand; hide the page title to save room */
+  .kl-topbar-brand { display: inline-flex; }
+  .kl-topbar-title { font-size: 0; flex: 0 0 0; padding: 0; margin: 0; }
+  .kl-topbar { padding: 0 12px; gap: 8px; min-height: 56px; }
+  .kl-tools { gap: 6px; }
+  .kl-tools select { padding: 4px 22px 4px 6px; font-size: 12px; }
+  .kl-tools #topUserLabel { display: none; }  /* hide on mobile to save space */
+  .kl-tools a { font-size: 12px; }
+}
+@media (max-width: 480px) {
+  /* On very small phones, hide the brand text — keep just the mark */
+  .kl-tb-brandname { display: none; }
+}
+/* v3.39: tighten container padding on small screens */
+@media (max-width: 767px) {
+  .kl-container { padding: 18px 14px 80px; }
+  .kl-page-title { font-size: 22px; letter-spacing: -0.3px; }
+  .kl-page-sub { font-size: 13px; margin-bottom: 18px; }
+  .kl-card { padding: 16px; border-radius: 10px; }
+}
+@media (max-width: 480px) {
+  .kl-container { padding: 14px 10px 80px; }
+  .kl-page-title { font-size: 19px; }
+  .kl-card { padding: 14px 12px; }
+}
 .kl-tools { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--kl-text-soft); }
 .kl-tools select {
   appearance: none; -webkit-appearance: none; -moz-appearance: none;
@@ -1827,8 +1871,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </style>
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.38-po-asn-linkage-2026-05-27 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.38-linkage</div>
+<!-- KHANGLAOS BUILD: v3.39-itemid-fix-mobile-polish-2026-05-27 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.39-fix-mobile</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -2167,6 +2211,11 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 ═══════════════════════════════════════════════════════════════ -->
 <header id="kl-topbar" class="kl-topbar kl-no-print" style="display:none">
   <button id="klSidebarToggle" class="kl-sb-toggle" aria-label="Menu">☰</button>
+  <!-- v3.39: brand logo for mobile (hidden on desktop where sidebar shows it) -->
+  <a href="#/dashboard" class="kl-topbar-brand" aria-label="Khanglaos home">
+    <span class="kl-tb-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></span>
+    <span class="kl-tb-brandname">KHANGLAOS</span>
+  </a>
   <h1 id="klPageHeading" class="kl-topbar-title"></h1>
   <div class="kl-tools">
     <select id="topLangSel" aria-label="Language">
@@ -4626,7 +4675,11 @@ async function dnConfirmAsn() {
   try {
     // Use existing submit_asn_from_supplier RPC — pass the existing lines
     // back (already shaped right by fetch_asn_for_supplier).
+    // v3.39: CRITICAL — include item_id so warehouse-prefilled items keep their
+    // link to the items table. Without this, the RPC's DELETE+INSERT cycle
+    // wipes out item_id, causing data mismatch on warehouse receive.
     const payload = (__supplierAsn.lines || []).map(l => ({
+      item_id: l.item_id != null ? Number(l.item_id) : null,
       item_name: l.item_name,
       unit: l.unit || null,
       claimed_quantity: Number(l.claimed_quantity || 0),
@@ -4860,7 +4913,11 @@ async function dnSubmit() {
   if (!supName) { alert(t('dn.errNoName')); return; }
   if (!lines.length) { alert(t('dn.errNoLines')); return; }
   // Normalize numbers
+  // v3.39: include item_id when present so warehouse-prefilled items keep their link
+  // to the items table after supplier submits. Without this, receive flow loses
+  // the item link and creates batches with NULL item_id (data mismatch bug).
   const payload = lines.map(l => ({
+    item_id: l.item_id != null ? Number(l.item_id) : null,
     item_name: l.item_name.trim(),
     unit: (l.unit||'').trim() || null,
     claimed_quantity: Number(l.claimed_quantity || 0),
