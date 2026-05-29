@@ -1929,8 +1929,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 <!-- Landing CSS removed: moved to /index.html -->
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.49.3-stable-switch-2026-05-29 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.49.3-switch</div>
+<!-- KHANGLAOS BUILD: v3.49.4-stable-switch-fix-2026-05-29 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.49.4-switch</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -6031,23 +6031,58 @@ document.addEventListener('DOMContentLoaded', () => {
   // Top bar
   document.getElementById('topLangSel').addEventListener('change', e => setLang(e.target.value));
   document.getElementById('topLogoutLink').addEventListener('click', e => { e.preventDefault(); klLogout(); });
-  // v3.49.3: Switch Account — opens a fresh popup window with isolated session
-  // so Owner can test what Staff/Manager/Receiver sees without losing main login.
-  // Uses noopener so the popup has its OWN localStorage/cookies → independent session.
+  // v3.49.4: Switch Account — opens INCOGNITO instructions modal.
+  // Why not auto-magic? Browsers share localStorage between same-origin tabs/
+  // windows, so any "fresh session" popup can't really be isolated without
+  // wiping the parent's session. Big SaaS (Google, Stripe) all guide users to
+  // incognito or different browser profile for testing role-based views.
   (function(){
     var sw = document.getElementById('topSwitchLink');
     if (sw && !sw.dataset.wired) {
       sw.dataset.wired = '1';
       sw.addEventListener('click', function(e){
         e.preventDefault();
-        // Build a fresh-session URL: same app, but trigger logout on load
-        // so the new window starts at the login screen.
-        var url = window.location.origin + window.location.pathname + '?fresh=1';
-        // Open in a new window — popup gets its own session storage (Chrome/Edge/Firefox behavior)
-        var w = window.open(url, '_blank', 'noopener,noreferrer,width=1280,height=800');
-        if (!w) {
-          alert('Popup blocked. Please allow popups for KHANGLAOS, then click 🔀 Switch again.');
-        }
+        // Build instruction modal
+        var existing = document.getElementById('klSwitchModal');
+        if (existing) existing.remove();
+        var modal = document.createElement('div');
+        modal.id = 'klSwitchModal';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(14,24,22,0.6);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)';
+        modal.innerHTML =
+          '<div style="background:#fff;border-radius:16px;max-width:560px;width:100%;padding:32px;box-shadow:0 30px 80px rgba(0,0,0,0.3);font-family:Inter,sans-serif">' +
+            '<div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">' +
+              '<span style="font-size:32px">🔀</span>' +
+              '<h2 style="margin:0;font-size:22px;color:#0e1816">Switch Account</h2>' +
+            '</div>' +
+            '<p style="color:#5a6962;line-height:1.6;font-size:15px;margin-bottom:18px">' +
+              'To view KHANGLAOS as a different user (e.g. test what Staff sees while staying logged in as Owner), use one of these methods:' +
+            '</p>' +
+            '<div style="background:#f4faf7;border-left:4px solid #15795f;padding:16px 20px;border-radius:8px;margin-bottom:14px">' +
+              '<div style="font-weight:600;color:#0e1816;margin-bottom:6px">🥇 Easiest: Incognito window</div>' +
+              '<div style="color:#5a6962;font-size:14px;line-height:1.5">' +
+                'Press <kbd style="background:#fff;border:1px solid #ccc;border-radius:4px;padding:2px 6px;font-family:monospace;font-size:12px">Ctrl+Shift+N</kbd> (Windows) or <kbd style="background:#fff;border:1px solid #ccc;border-radius:4px;padding:2px 6px;font-family:monospace;font-size:12px">Cmd+Shift+N</kbd> (Mac), then visit khanglaos.eatlaos.com/app/ — login as different user. This window stays signed in.' +
+              '</div>' +
+            '</div>' +
+            '<div style="background:#f4faf7;border-left:4px solid #caa24a;padding:16px 20px;border-radius:8px;margin-bottom:14px">' +
+              '<div style="font-weight:600;color:#0e1816;margin-bottom:6px">🥈 Alternative: Different browser</div>' +
+              '<div style="color:#5a6962;font-size:14px;line-height:1.5">' +
+                'Use Chrome for Owner, Firefox for Staff. Each browser has its own session.' +
+              '</div>' +
+            '</div>' +
+            '<div style="background:#f4faf7;border-left:4px solid #caa24a;padding:16px 20px;border-radius:8px;margin-bottom:22px">' +
+              '<div style="font-weight:600;color:#0e1816;margin-bottom:6px">🥉 Chrome profiles</div>' +
+              '<div style="color:#5a6962;font-size:14px;line-height:1.5">' +
+                'Chrome → top-right profile icon → "Add" → new profile = separate session.' +
+              '</div>' +
+            '</div>' +
+            '<div style="display:flex;justify-content:flex-end;gap:10px">' +
+              '<button id="klSwitchCancel" style="padding:10px 22px;border-radius:10px;border:1.5px solid #e6ebe8;background:#fff;color:#0e1816;font-weight:600;cursor:pointer;font-family:inherit">Got it</button>' +
+            '</div>' +
+          '</div>';
+        document.body.appendChild(modal);
+        var close = function(){ if (modal && modal.parentNode) modal.parentNode.removeChild(modal); };
+        modal.addEventListener('click', function(ev){ if (ev.target === modal) close(); });
+        document.getElementById('klSwitchCancel').addEventListener('click', close);
       });
     }
   })();
@@ -6064,32 +6099,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (bd) bd.addEventListener('click', closeSb);
   })();
 
-  // v3.49.3: ?fresh=1 — if Switch Account popup, force logout first
-  // so the new window starts at the login screen with no session inheritance.
-  // (Note: popup shares localStorage with parent in same-origin, so we must
-  // explicitly signOut the Supabase session and clear the local auth keys.)
-  (async function(){
-    try {
-      var qs = new URLSearchParams(window.location.search);
-      if (qs.get('fresh') === '1') {
-        // Strip the ?fresh=1 from URL so future refreshes don't keep logging out
-        var clean = window.location.origin + window.location.pathname + (window.location.hash || '');
-        try { history.replaceState(null, '', clean); } catch(e) {}
-        // Sign out any inherited session
-        if (typeof sb !== 'undefined' && sb && sb.auth && typeof sb.auth.signOut === 'function') {
-          try { await sb.auth.signOut(); } catch(e) { /* ignore */ }
-        }
-        // Clear Supabase-related localStorage keys (defensive)
-        try {
-          var keysToWipe = [];
-          for (var i = 0; i < localStorage.length; i++) {
-            var k = localStorage.key(i);
-            if (k && (k.indexOf('supabase') !== -1 || k.indexOf('sb-') === 0)) keysToWipe.push(k);
-          }
-          keysToWipe.forEach(function(k){ try { localStorage.removeItem(k); } catch(e){} });
-        } catch(e) {}
-      }
-    } catch(e) { /* never break boot */ }
+  // v3.49.3: ?fresh=1 was a broken approach — wipes localStorage which is
+  // SHARED across same-origin tabs, so it also kills the parent window's
+  // session. Removed in v3.49.4. Switch Account now uses incognito-style
+  // guidance instead. This block is intentionally empty to preserve patch
+  // numbering and make rollback easy.
+  (function(){
+    // No-op — kept for marker only
   })();
 
   // Boot — sync UI controls to the SAVED language (persists across refresh)
