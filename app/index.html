@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -1928,8 +1929,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 <!-- Landing CSS removed: moved to /index.html -->
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.49-split-landing-2026-05-27 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.49-app-only</div>
+<!-- KHANGLAOS BUILD: v3.49.1-login-fix-2026-05-27 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.49.1-login-fix</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -6089,18 +6090,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasSession && typeof enterApp === 'function') {
           // Logged-in user (incl. after refresh) → go straight to app.
           enterApp();
+          // v3.49.1 FIX: enterApp() is now no-op (landing moved to /).
+          // We must call route() so the correct page is shown.
+          if (typeof route === 'function') route();
           // Start the 8-hour inactivity countdown for the restored session.
           if (typeof klResetIdleTimer === 'function') klResetIdleTimer();
         } else if (appShown) {
           // App view already explicitly shown (clicked Get Started).
           route();
         } else {
-          // Fresh visitor with no session → landing page. Clear any
-          // stale app hash so it isn't mistaken for a deep link.
-          if (location.hash && location.hash.indexOf('#/') === 0) {
-            try { history.replaceState(null, '', location.pathname + location.search); } catch(e) { location.hash = ''; }
+          // v3.49.1 FIX: Fresh visitor with no session in /app/ context.
+          // We're already in the app folder — the only page to show is login.
+          // Previously this branch was a no-op (assumed landing was showing).
+          if (!location.hash || location.hash === '' || location.hash === '#') {
+            location.hash = '#/login';
           }
-          /* landing page is showing — leave the app dormant */
+          if (typeof route === 'function') route();
         }
         // Decision made — reveal the correct screen and drop the splash.
         try {
