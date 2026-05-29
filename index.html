@@ -13,7 +13,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Lao:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Lao:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -598,8 +598,15 @@ function setLang(lang) {
   const btns = document.querySelectorAll('.foot-langs button');
   if (btns[map[lang]]) btns[map[lang]].classList.add('active');
   document.documentElement.lang = lang;
-  if (lang === 'lo') { document.body.style.fontFamily = 'Noto Sans Lao, Inter, sans-serif'; }
-  else { document.body.style.fontFamily = ''; }
+  // Apply proper font stack per language for best rendering
+  const fontMap = {
+    'lo': '"Noto Sans Lao", Inter, sans-serif',
+    'th': '"Noto Sans Thai", Inter, sans-serif',
+    'zh': '"Noto Sans SC", Inter, sans-serif',
+    'ko': '"Noto Sans KR", Inter, sans-serif',
+    'en': ''
+  };
+  document.body.style.fontFamily = fontMap[lang] || '';
   try { localStorage.setItem('kl_landing_lang', lang); } catch(e){}
 }
 
