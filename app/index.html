@@ -1929,8 +1929,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 <!-- Landing CSS removed: moved to /index.html -->
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.49.4-stable-switch-fix-2026-05-29 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.49.4-switch</div>
+<!-- KHANGLAOS BUILD: v3.49.5-variance-fix-2026-05-29 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.49.5-variance-fix</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -7085,7 +7085,7 @@ async function recvVarianceLoad() {
   const cutoffIso = cutoff.toISOString();
   try {
     const { data: dnData, error: dnErr } = await sb.from('delivery_notes')
-      .select('asn_id, supplier_name, received_at, asn:asn_id ( supplier_name )')
+      .select('asn_id, supplier_name, received_at')
       .gte('received_at', cutoffIso)
       .not('received_at', 'is', null);
     if (dnErr) throw dnErr;
@@ -7098,7 +7098,7 @@ async function recvVarianceLoad() {
     }
     const dnMap = {};
     (dnData || []).forEach(d => {
-      const sup = (d.asn && d.asn.supplier_name) || d.supplier_name || t('recv.var.unknownSupplier');
+      const sup = d.supplier_name || t('recv.var.unknownSupplier');
       dnMap[d.asn_id] = { supplier: sup, received_at: d.received_at };
     });
     const { data: lineData, error: lineErr } = await sb.from('delivery_note_lines')
