@@ -1929,8 +1929,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 <!-- Landing CSS removed: moved to /index.html -->
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.51-pro-pdf-2026-05-30 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.51-pro-pdf</div>
+<!-- KHANGLAOS BUILD: v3.51.1-pro-pdf-fontfix-2026-05-30 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.51.1-pdf-fontfix</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -9510,17 +9510,19 @@ async function klFetchFontBase64(url) {
 // ---- Load all Noto Sans variants we need (call once per session) ----
 async function klLoadPdfFonts() {
   if (window.__klFonts.loaded) return window.__klFonts;
-  const BASE = 'https://cdn.jsdelivr.net/npm/';
+  // CORRECTED URL pattern from official fontsource CDN docs:
+  //   https://cdn.jsdelivr.net/fontsource/fonts/{family}@latest/{subset}-{weight}-{style}.ttf
+  const BASE = 'https://cdn.jsdelivr.net/fontsource/fonts/';
   const urls = {
-    latin:      BASE + '@fontsource/noto-sans@latest/files/noto-sans-latin-400-normal.ttf',
-    latinBold:  BASE + '@fontsource/noto-sans@latest/files/noto-sans-latin-700-normal.ttf',
-    lao:        BASE + '@fontsource/noto-sans-lao@latest/files/noto-sans-lao-lao-400-normal.ttf',
-    laoBold:    BASE + '@fontsource/noto-sans-lao@latest/files/noto-sans-lao-lao-700-normal.ttf',
-    thai:       BASE + '@fontsource/noto-sans-thai@latest/files/noto-sans-thai-thai-400-normal.ttf',
-    thaiBold:   BASE + '@fontsource/noto-sans-thai@latest/files/noto-sans-thai-thai-700-normal.ttf',
+    latin:      BASE + 'noto-sans@latest/latin-400-normal.ttf',
+    latinBold:  BASE + 'noto-sans@latest/latin-700-normal.ttf',
+    lao:        BASE + 'noto-sans-lao@latest/lao-400-normal.ttf',
+    laoBold:    BASE + 'noto-sans-lao@latest/lao-700-normal.ttf',
+    thai:       BASE + 'noto-sans-thai@latest/thai-400-normal.ttf',
+    thaiBold:   BASE + 'noto-sans-thai@latest/thai-700-normal.ttf',
   };
   try {
-    const [latin, latinBold, lao, laoBold, thai, thaiBold] = await Promise.all([
+    const results = await Promise.allSettled([
       klFetchFontBase64(urls.latin),
       klFetchFontBase64(urls.latinBold),
       klFetchFontBase64(urls.lao),
@@ -9528,42 +9530,73 @@ async function klLoadPdfFonts() {
       klFetchFontBase64(urls.thai),
       klFetchFontBase64(urls.thaiBold),
     ]);
-    window.__klFonts = { loaded: true, latin, latinBold, lao, laoBold, thai, thaiBold };
+    // Track which fonts succeeded — partial success still helps (e.g. Lao but not Thai)
+    const failed = [];
+    const names = ['latin','latinBold','lao','laoBold','thai','thaiBold'];
+    const fonts = { loaded: false };
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled') fonts[names[i]] = r.value;
+      else failed.push(names[i] + ': ' + (r.reason && r.reason.message || r.reason));
+    });
+    // Need at least Latin + one CJK script font to declare "loaded"
+    fonts.loaded = !!(fonts.latin && fonts.latinBold);
+    if (failed.length) {
+      console.warn('[KL fonts] Failed to load:', failed.join('; '));
+    }
+    if (!fonts.loaded) {
+      console.error('[KL fonts] Critical fonts missing. PDF will use Helvetica (no Lao/Thai support).');
+    }
+    window.__klFonts = fonts;
   } catch (e) {
-    console.warn('PDF font load failed, falling back to helvetica:', e);
+    console.error('[KL fonts] Unexpected error:', e);
     window.__klFonts = { loaded: false };
   }
   return window.__klFonts;
 }
 
 // ---- Register loaded fonts with a fresh jsPDF doc ----
+// Returns object showing what's actually available in this doc.
 function klRegisterPdfFonts(doc, fonts) {
-  if (!fonts.loaded) return false;
-  doc.addFileToVFS('NotoSans-Regular.ttf', fonts.latin);
-  doc.addFileToVFS('NotoSans-Bold.ttf',    fonts.latinBold);
-  doc.addFileToVFS('NotoSansLao-Regular.ttf',  fonts.lao);
-  doc.addFileToVFS('NotoSansLao-Bold.ttf',     fonts.laoBold);
-  doc.addFileToVFS('NotoSansThai-Regular.ttf', fonts.thai);
-  doc.addFileToVFS('NotoSansThai-Bold.ttf',    fonts.thaiBold);
-  doc.addFont('NotoSans-Regular.ttf',     'NotoSans',     'normal');
-  doc.addFont('NotoSans-Bold.ttf',        'NotoSans',     'bold');
-  doc.addFont('NotoSansLao-Regular.ttf',  'NotoSansLao',  'normal');
-  doc.addFont('NotoSansLao-Bold.ttf',     'NotoSansLao',  'bold');
-  doc.addFont('NotoSansThai-Regular.ttf', 'NotoSansThai', 'normal');
-  doc.addFont('NotoSansThai-Bold.ttf',    'NotoSansThai', 'bold');
-  return true;
+  const avail = { latin: false, lao: false, thai: false };
+  if (!fonts) return avail;
+  if (fonts.latin && fonts.latinBold) {
+    doc.addFileToVFS('NotoSans-Regular.ttf', fonts.latin);
+    doc.addFileToVFS('NotoSans-Bold.ttf',    fonts.latinBold);
+    doc.addFont('NotoSans-Regular.ttf', 'NotoSans', 'normal');
+    doc.addFont('NotoSans-Bold.ttf',    'NotoSans', 'bold');
+    avail.latin = true;
+  }
+  if (fonts.lao && fonts.laoBold) {
+    doc.addFileToVFS('NotoSansLao-Regular.ttf', fonts.lao);
+    doc.addFileToVFS('NotoSansLao-Bold.ttf',    fonts.laoBold);
+    doc.addFont('NotoSansLao-Regular.ttf', 'NotoSansLao', 'normal');
+    doc.addFont('NotoSansLao-Bold.ttf',    'NotoSansLao', 'bold');
+    avail.lao = true;
+  }
+  if (fonts.thai && fonts.thaiBold) {
+    doc.addFileToVFS('NotoSansThai-Regular.ttf', fonts.thai);
+    doc.addFileToVFS('NotoSansThai-Bold.ttf',    fonts.thaiBold);
+    doc.addFont('NotoSansThai-Regular.ttf', 'NotoSansThai', 'normal');
+    doc.addFont('NotoSansThai-Bold.ttf',    'NotoSansThai', 'bold');
+    avail.thai = true;
+  }
+  return avail;
 }
 
 // ---- Detect script of a string and set appropriate font ----
 // Lao Unicode block: 0x0E80–0x0EFF · Thai: 0x0E00–0x0E7F
-function klSetFont(doc, text, weight, hasNoto) {
+// `avail` is the object returned by klRegisterPdfFonts.
+function klSetFont(doc, text, weight, avail) {
   weight = weight || 'normal';
-  const fallback = 'helvetica';
-  if (!hasNoto) { doc.setFont(fallback, weight); return; }
   const s = String(text || '');
-  if (/[\u0E80-\u0EFF]/.test(s))      doc.setFont('NotoSansLao',  weight);
-  else if (/[\u0E00-\u0E7F]/.test(s)) doc.setFont('NotoSansThai', weight);
-  else                                doc.setFont('NotoSans',     weight);
+  // Detect script
+  const isLao  = /[\u0E80-\u0EFF]/.test(s);
+  const isThai = /[\u0E00-\u0E7F]/.test(s);
+  // Pick font with graceful degradation
+  if (isLao  && avail && avail.lao)   { doc.setFont('NotoSansLao',  weight); return; }
+  if (isThai && avail && avail.thai)  { doc.setFont('NotoSansThai', weight); return; }
+  if (avail && avail.latin)           { doc.setFont('NotoSans',     weight); return; }
+  doc.setFont('helvetica', weight);   // last-resort fallback
 }
 
 // ---- Smart text helper: auto-selects font for the string before writing ----
@@ -9582,6 +9615,18 @@ async function poRenderPdf({ po, lines, sup, itemMap, jsPDFCtor }) {
   const fonts = await klLoadPdfFonts();
   const doc = new jsPDFCtor({ unit: 'mm', format: 'a4', compress: true });
   const hasNoto = klRegisterPdfFonts(doc, fonts);
+
+  // Helper: get translation but fall back to English if active lang's font failed.
+  // Prevents garbled output when e.g. Lao font fetch failed and labels would
+  // otherwise come through as Lao Unicode that Helvetica can't render.
+  const cur = (typeof __lang !== 'undefined' ? __lang : 'en');
+  const safeLang = (cur === 'lo' && !hasNoto.lao)  ? 'en' :
+                   (cur === 'th' && !hasNoto.thai) ? 'en' : cur;
+  const tt = (key) => {
+    if (safeLang === cur) return t(key);
+    // Force English: read directly from I18N.en
+    return (typeof I18N !== 'undefined' && I18N.en && I18N.en[key]) || t(key);
+  };
 
   // Brand palette
   const BRAND = [21, 121, 95];     // emerald
@@ -9628,7 +9673,7 @@ async function poRenderPdf({ po, lines, sup, itemMap, jsPDFCtor }) {
   // PURCHASE ORDER title (top-right, white)
   doc.setFontSize(16);
   klSetFont(doc, 'PURCHASE ORDER', 'bold', hasNoto);
-  doc.text(t('po.pdfTitle') || 'PURCHASE ORDER', W - M, 14, { align: 'right' });
+  doc.text(tt('po.pdfTitle') || 'PURCHASE ORDER', W - M, 14, { align: 'right' });
   // PO number under title
   doc.setFontSize(10);
   klSetFont(doc, '', 'normal', hasNoto);
@@ -9656,9 +9701,9 @@ async function poRenderPdf({ po, lines, sup, itemMap, jsPDFCtor }) {
   doc.setTextColor.apply(doc, MUTED);
   doc.setFontSize(7.5);
   klSetFont(doc, 'FROM', 'bold', hasNoto);
-  doc.text((t('po.pdfFrom') || 'FROM (WAREHOUSE)'), COL_L + 2, y + 4);
+  doc.text((tt('po.pdfFrom') || 'FROM (WAREHOUSE)'), COL_L + 2, y + 4);
   // TO label
-  doc.text((t('po.pdfTo') || 'TO (SUPPLIER)'), COL_R + 2, y + 4);
+  doc.text((tt('po.pdfTo') || 'TO (SUPPLIER)'), COL_R + 2, y + 4);
   y += 9;
 
   // FROM body
@@ -9723,12 +9768,12 @@ async function poRenderPdf({ po, lines, sup, itemMap, jsPDFCtor }) {
 
   // Meta cells
   const metaCells = [
-    [t('po.pdfPoNum') || 'PO NUMBER',         po.po_number || '—'],
-    [t('po.pdfDate') || 'ISSUE DATE',         issueDate],
-    [t('po.pdfExpected') || 'EXPECTED DELIVERY', expectedDate],
-    [t('po.pdfCurrency') || 'CURRENCY',       'LAK ( ₭ )'],
-    [t('po.pdfTerms') || 'PAYMENT TERMS',     'Net ' + termsDays + ' days'],
-    [t('po.pdfDue') || 'PAYMENT DUE',         dueDateStr],
+    [tt('po.pdfPoNum') || 'PO NUMBER',         po.po_number || '—'],
+    [tt('po.pdfDate') || 'ISSUE DATE',         issueDate],
+    [tt('po.pdfExpected') || 'EXPECTED DELIVERY', expectedDate],
+    [tt('po.pdfCurrency') || 'CURRENCY',       'LAK ( ₭ )'],
+    [tt('po.pdfTerms') || 'PAYMENT TERMS',     'Net ' + termsDays + ' days'],
+    [tt('po.pdfDue') || 'PAYMENT DUE',         dueDateStr],
   ];
   metaCells.forEach((cell, i) => {
     const cx = M + (i % 3) * cellW + 4;
@@ -9756,11 +9801,11 @@ async function poRenderPdf({ po, lines, sup, itemMap, jsPDFCtor }) {
   doc.setFontSize(9);
   klSetFont(doc, '', 'bold', hasNoto);
   doc.text('#',                              C.num,   y + 5.5);
-  doc.text(t('po.pdfItem') || 'DESCRIPTION', C.item,  y + 5.5);
-  doc.text(t('po.pdfQty') || 'QTY',          C.qty,   y + 5.5, { align: 'right' });
-  doc.text(t('po.pdfUnit') || 'UNIT',        C.unit,  y + 5.5);
-  doc.text(t('po.pdfPrice') || 'UNIT PRICE', C.price, y + 5.5, { align: 'right' });
-  doc.text(t('po.pdfSubtotal') || 'AMOUNT',  C.total, y + 5.5, { align: 'right' });
+  doc.text(tt('po.pdfItem') || 'DESCRIPTION', C.item,  y + 5.5);
+  doc.text(tt('po.pdfQty') || 'QTY',          C.qty,   y + 5.5, { align: 'right' });
+  doc.text(tt('po.pdfUnit') || 'UNIT',        C.unit,  y + 5.5);
+  doc.text(tt('po.pdfPrice') || 'UNIT PRICE', C.price, y + 5.5, { align: 'right' });
+  doc.text(tt('po.pdfSubtotal') || 'AMOUNT',  C.total, y + 5.5, { align: 'right' });
   y += 8;
 
   // Body rows (alternating zebra stripe)
@@ -9854,13 +9899,13 @@ async function poRenderPdf({ po, lines, sup, itemMap, jsPDFCtor }) {
   doc.setFontSize(10);
   doc.setTextColor.apply(doc, MUTED);
   klSetFont(doc, '', 'normal', hasNoto);
-  doc.text((t('po.pdfSubtotal') || 'Subtotal'), TOTAL_X_LBL, y);
+  doc.text((tt('po.pdfSubtotal') || 'Subtotal'), TOTAL_X_LBL, y);
   doc.setTextColor.apply(doc, INK);
   doc.text(klFmtNum(subtotal) + ' ₭', TOTAL_X_VAL, y, { align: 'right' });
   y += 6;
 
   doc.setTextColor.apply(doc, MUTED);
-  doc.text((t('po.pdfVat') || 'VAT') + ' (' + (KL_VAT_RATE * 100).toFixed(0) + '%)', TOTAL_X_LBL, y);
+  doc.text((tt('po.pdfVat') || 'VAT') + ' (' + (KL_VAT_RATE * 100).toFixed(0) + '%)', TOTAL_X_LBL, y);
   doc.setTextColor.apply(doc, INK);
   doc.text(klFmtNum(vat) + ' ₭', TOTAL_X_VAL, y, { align: 'right' });
   y += 4;
@@ -9871,7 +9916,7 @@ async function poRenderPdf({ po, lines, sup, itemMap, jsPDFCtor }) {
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(11);
   klSetFont(doc, '', 'bold', hasNoto);
-  doc.text((t('po.pdfGrandTotal') || 'GRAND TOTAL'), TOTAL_X_LBL, y + 6.5);
+  doc.text((tt('po.pdfGrandTotal') || 'GRAND TOTAL'), TOTAL_X_LBL, y + 6.5);
   doc.setFontSize(12);
   doc.text(klFmtNum(grand) + ' ₭', TOTAL_X_VAL, y + 6.5, { align: 'right' });
   doc.setTextColor.apply(doc, INK);
@@ -9883,7 +9928,7 @@ async function poRenderPdf({ po, lines, sup, itemMap, jsPDFCtor }) {
     doc.setFontSize(9);
     doc.setTextColor.apply(doc, MUTED);
     klSetFont(doc, '', 'bold', hasNoto);
-    doc.text((t('po.notes') || 'Notes'), M, y); y += 4.5;
+    doc.text((tt('po.notes') || 'Notes'), M, y); y += 4.5;
     doc.setTextColor.apply(doc, INK);
     klSetFont(doc, po.notes, 'normal', hasNoto);
     const wrap = doc.splitTextToSize(po.notes, CONTENT_W);
@@ -9901,8 +9946,8 @@ async function poRenderPdf({ po, lines, sup, itemMap, jsPDFCtor }) {
   doc.setFontSize(8);
   doc.setTextColor.apply(doc, MUTED);
   klSetFont(doc, '', 'normal', hasNoto);
-  doc.text((t('po.pdfAuthSig') || 'Authorized signature (Warehouse)'), M, y + 16);
-  doc.text((t('po.pdfSupSig') || 'Acknowledged (Supplier)'), M + sigW + 10, y + 16);
+  doc.text((tt('po.pdfAuthSig') || 'Authorized signature (Warehouse)'), M, y + 16);
+  doc.text((tt('po.pdfSupSig') || 'Acknowledged (Supplier)'), M + sigW + 10, y + 16);
 
   // ===== FOOTER (all pages) =====
   const pageCount = doc.internal.getNumberOfPages();
@@ -9917,7 +9962,7 @@ async function poRenderPdf({ po, lines, sup, itemMap, jsPDFCtor }) {
     doc.setTextColor.apply(doc, MUTED);
     klSetFont(doc, '', 'normal', hasNoto);
     doc.text(KL_WAREHOUSE.name + ' · ' + KL_WAREHOUSE.address, M, H - 7);
-    doc.text((t('po.pdfPage') || 'Page') + ' ' + p + ' / ' + pageCount,
+    doc.text((tt('po.pdfPage') || 'Page') + ' ' + p + ' / ' + pageCount,
              W - M, H - 7, { align: 'right' });
     doc.text('Generated ' + new Date().toISOString().slice(0, 16).replace('T', ' '),
              W / 2, H - 7, { align: 'center' });
