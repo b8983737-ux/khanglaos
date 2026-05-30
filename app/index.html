@@ -1929,8 +1929,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 <!-- Landing CSS removed: moved to /index.html -->
 </head>
 <body>
-<!-- KHANGLAOS BUILD: v3.51-purchasing-nav-2026-05-29 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.51-purchasing-nav</div>
+<!-- KHANGLAOS BUILD: v3.50-po-share-2026-05-29 -->
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.50-po-share</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -2067,7 +2067,6 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
     <a href="#/asn"       data-nav="asn"       data-i18n="nav.asn"><span class="kl-sb-ic">📦</span><span class="kl-sb-lbl">ASN</span></a>
     <a href="#/receive"   data-nav="receive"   data-i18n="nav.receive"><span class="kl-sb-ic">⬇</span><span class="kl-sb-lbl">Receive</span></a>
     <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout"><span class="kl-sb-ic">⬆</span><span class="kl-sb-lbl">Check-Out</span></a>
-    <a href="#/purchasing" data-nav="purchasing" data-i18n="nav.purchasing"><span class="kl-sb-ic">🛒</span><span class="kl-sb-lbl">Purchasing</span></a>
 
     <div class="kl-sb-section" data-i18n="navg.inventory">INVENTORY</div>
     <a href="#/inventory" data-nav="inventory" data-i18n="nav.inventory"><span class="kl-sb-ic">📦</span><span class="kl-sb-lbl">Inventory</span></a>
@@ -2611,7 +2610,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_yrh-5VTEtaFBv7-djGPR3Q_8XIPu9ps';
 const I18N = {
   en: {
     "app.tag": "Warehouse Management",
-    "stock.items":"Total items", "stock.low":"Low stock", "stock.expiring":"Expiring ≤7d", "stock.all":"All", "stock.none":"No items match.", "stock.col.item":"Item", "stock.col.onhand":"On hand", "stock.col.expiry":"Earliest expiry", "stock.nodate":"No expiry", "stock.expired":"Expired", "stock.lowtag":"LOW", "nav.dashboard":"Dashboard", "nav.receive":"Receive", "nav.checkout":"Check-Out", "nav.purchasing":"Purchasing", "nav.logout":"Logout",
+    "stock.items":"Total items", "stock.low":"Low stock", "stock.expiring":"Expiring ≤7d", "stock.all":"All", "stock.none":"No items match.", "stock.col.item":"Item", "stock.col.onhand":"On hand", "stock.col.expiry":"Earliest expiry", "stock.nodate":"No expiry", "stock.expired":"Expired", "stock.lowtag":"LOW", "nav.dashboard":"Dashboard", "nav.receive":"Receive", "nav.checkout":"Check-Out", "nav.logout":"Logout",
     "nav.reports":"Analytics", "nav.manage":"Manage",
     "reports.title":"Analytics", "reports.sub":"Everything you need to make decisions — KPIs, trends, and exports in one place.",
     "manage.title":"Manage", "manage.sub":"Add and edit items, suppliers, locations, staff. Tap to edit.",
@@ -2770,7 +2769,7 @@ const I18N = {
   },
   lo: {
     "app.tag": "ລະບົບຈັດການສາງສິນຄ້າ",
-    "stock.items":"ລາຍການທັງໝົດ", "stock.low":"ສະຕັອກຕ່ຳ", "stock.expiring":"ໃກ້ໝົດອາຍຸ ≤7ມື້", "stock.all":"ທັງໝົດ", "stock.none":"ບໍ່ມີລາຍການ.", "stock.col.item":"ສິນຄ້າ", "stock.col.onhand":"ຄົງເຫຼືອ", "stock.col.expiry":"ໝົດອາຍຸໄວສຸດ", "stock.nodate":"ບໍ່ມີວັນໝົດ", "stock.expired":"ໝົດອາຍຸ", "stock.lowtag":"ຕ່ຳ", "nav.dashboard":"ໜ້າຫລັກ", "nav.receive":"ຮັບສິນຄ້າ", "nav.checkout":"ເບີກສິນຄ້າ", "nav.purchasing":"ການສັ່ງຊື້", "nav.logout":"ອອກຈາກລະບົບ",
+    "stock.items":"ລາຍການທັງໝົດ", "stock.low":"ສະຕັອກຕ່ຳ", "stock.expiring":"ໃກ້ໝົດອາຍຸ ≤7ມື້", "stock.all":"ທັງໝົດ", "stock.none":"ບໍ່ມີລາຍການ.", "stock.col.item":"ສິນຄ້າ", "stock.col.onhand":"ຄົງເຫຼືອ", "stock.col.expiry":"ໝົດອາຍຸໄວສຸດ", "stock.nodate":"ບໍ່ມີວັນໝົດ", "stock.expired":"ໝົດອາຍຸ", "stock.lowtag":"ຕ່ຳ", "nav.dashboard":"ໜ້າຫລັກ", "nav.receive":"ຮັບສິນຄ້າ", "nav.checkout":"ເບີກສິນຄ້າ", "nav.logout":"ອອກຈາກລະບົບ",
     "nav.reports":"ການວິເຄາະ", "nav.manage":"ຈັດການ",
     "reports.title":"ການວິເຄາະ", "reports.sub":"ທຸກສິ່ງທີ່ທ່ານຕ້ອງການເພື່ອການຕັດສິນໃຈ — KPI, ແນວໂນ້ມ, ແລະການສົ່ງອອກໃນບ່ອນດຽວ.",
     "manage.title":"ຈັດການ", "manage.sub":"ເພີ່ມ ແລະ ແກ້ໄຂ ສິນຄ້າ, ຜູ້ສະໜອງ, ບ່ອນເກັບ, ພະນັກງານ.",
@@ -2931,7 +2930,7 @@ const I18N = {
   },
   th: {
     "app.tag":"ระบบจัดการคลังสินค้า",
-    "stock.items":"รายการทั้งหมด", "stock.low":"สต็อกต่ำ", "stock.expiring":"ใกล้หมดอายุ ≤7วัน", "stock.all":"ทั้งหมด", "stock.none":"ไม่มีรายการ.", "stock.col.item":"สินค้า", "stock.col.onhand":"คงเหลือ", "stock.col.expiry":"หมดอายุเร็วสุด", "stock.nodate":"ไม่มีวันหมด", "stock.expired":"หมดอายุ", "stock.lowtag":"ต่ำ", "nav.dashboard":"หน้าหลัก", "nav.receive":"รับสินค้า", "nav.checkout":"เบิกสินค้า", "nav.purchasing":"การสั่งซื้อ", "nav.logout":"ออกจากระบบ",
+    "stock.items":"รายการทั้งหมด", "stock.low":"สต็อกต่ำ", "stock.expiring":"ใกล้หมดอายุ ≤7วัน", "stock.all":"ทั้งหมด", "stock.none":"ไม่มีรายการ.", "stock.col.item":"สินค้า", "stock.col.onhand":"คงเหลือ", "stock.col.expiry":"หมดอายุเร็วสุด", "stock.nodate":"ไม่มีวันหมด", "stock.expired":"หมดอายุ", "stock.lowtag":"ต่ำ", "nav.dashboard":"หน้าหลัก", "nav.receive":"รับสินค้า", "nav.checkout":"เบิกสินค้า", "nav.logout":"ออกจากระบบ",
     "nav.reports":"การวิเคราะห์", "nav.manage":"จัดการ",
     "reports.title":"การวิเคราะห์", "reports.sub":"ทุกอย่างที่คุณต้องการในการตัดสินใจ — KPI แนวโน้ม และส่งออก ในที่เดียว",
     "manage.title":"จัดการ", "manage.sub":"เพิ่มและแก้ไข สินค้า ผู้จัดส่ง สถานที่ พนักงาน.",
@@ -3092,7 +3091,7 @@ const I18N = {
   },
   zh: {
     "app.tag":"仓库管理系统",
-    "stock.items":"项目总数", "stock.low":"库存低", "stock.expiring":"≤7天过期", "stock.all":"全部", "stock.none":"无匹配项目。", "stock.col.item":"项目", "stock.col.onhand":"现有", "stock.col.expiry":"最早过期", "stock.nodate":"无到期", "stock.expired":"已过期", "stock.lowtag":"低", "nav.dashboard":"仪表盘", "nav.receive":"入库", "nav.checkout":"出库", "nav.purchasing":"采购", "nav.logout":"退出",
+    "stock.items":"项目总数", "stock.low":"库存低", "stock.expiring":"≤7天过期", "stock.all":"全部", "stock.none":"无匹配项目。", "stock.col.item":"项目", "stock.col.onhand":"现有", "stock.col.expiry":"最早过期", "stock.nodate":"无到期", "stock.expired":"已过期", "stock.lowtag":"低", "nav.dashboard":"仪表盘", "nav.receive":"入库", "nav.checkout":"出库", "nav.logout":"退出",
     "nav.reports":"分析", "nav.manage":"管理",
     "reports.title":"分析", "reports.sub":"决策所需的一切 — KPI、趋势和导出，集中在一个地方。",
     "manage.title":"管理", "manage.sub":"添加和编辑物品、供应商、位置、员工。",
@@ -3251,7 +3250,7 @@ const I18N = {
   },
   ko: {
     "app.tag":"창고 관리 시스템",
-    "stock.items":"총 품목", "stock.low":"재고 부족", "stock.expiring":"≤7일 만료", "stock.all":"전체", "stock.none":"항목 없음.", "stock.col.item":"품목", "stock.col.onhand":"보유량", "stock.col.expiry":"최단 만료", "stock.nodate":"만료 없음", "stock.expired":"만료됨", "stock.lowtag":"부족", "nav.dashboard":"대시보드", "nav.receive":"입고", "nav.checkout":"출고", "nav.purchasing":"구매", "nav.logout":"로그아웃",
+    "stock.items":"총 품목", "stock.low":"재고 부족", "stock.expiring":"≤7일 만료", "stock.all":"전체", "stock.none":"항목 없음.", "stock.col.item":"품목", "stock.col.onhand":"보유량", "stock.col.expiry":"최단 만료", "stock.nodate":"만료 없음", "stock.expired":"만료됨", "stock.lowtag":"부족", "nav.dashboard":"대시보드", "nav.receive":"입고", "nav.checkout":"출고", "nav.logout":"로그아웃",
     "nav.reports":"분석", "nav.manage":"관리",
     "reports.title":"분석", "reports.sub":"의사 결정에 필요한 모든 것 — KPI, 추세, 내보내기를 한 곳에서.",
     "manage.title":"관리", "manage.sub":"품목, 공급업체, 위치, 직원 추가 및 편집.",
@@ -5794,7 +5793,7 @@ function showMsg(elId, text, type) {
   if (type === 'ok') setTimeout(() => el.innerHTML = '', 4000);
 }
 
-const ROUTES = ['login','dashboard','overview','receive','stock','map','checkout','reports','manage','asn','inventory','purchasing'];
+const ROUTES = ['login','dashboard','overview','receive','stock','map','checkout','reports','manage','asn','inventory'];
 function currentRoute() {
   const h = (location.hash || '').replace(/^#\//, '');
   return ROUTES.includes(h) ? h : (klSession() ? 'dashboard' : 'login');
@@ -5831,23 +5830,11 @@ function showPage(name) {
   document.querySelectorAll('#kl-sidebar .kl-sb-nav a').forEach(a => {
     a.classList.toggle('active', a.getAttribute('data-nav') === name);
   });
-  // v3.51: When on Analytics with the Purchasing tab open, visually highlight
-  // the Purchasing sidebar entry (not Analytics). Same idea: Purchasing is
-  // a sidebar shortcut to the purchasing tab inside reports.
-  if (name === 'reports' && typeof REPORT_TAB !== 'undefined' && REPORT_TAB === 'purchasing') {
-    document.querySelectorAll('#kl-sidebar .kl-sb-nav a').forEach(a => a.classList.remove('active'));
-    const purLink = document.querySelector('#kl-sidebar .kl-sb-nav a[data-nav="purchasing"]');
-    if (purLink) {
-      purLink.classList.add('active');
-      const lbl = purLink.querySelector('.kl-sb-lbl');
-      if (heading && lbl) heading.textContent = lbl.textContent;
-    }
-  }
   // Show Reports/Manage nav only for owner/manager/sa (cleaner UX —
   // staff don't see buttons they can't use; DB RLS enforces it anyway)
   const role = (__profile && __profile.role) || '';
   const canManage = ['sa','owner','manager'].includes(role);
-  document.querySelectorAll('#kl-sidebar .kl-sb-nav a[data-nav="reports"], #kl-sidebar .kl-sb-nav a[data-nav="manage"], #kl-sidebar .kl-sb-nav a[data-nav="overview"], #kl-sidebar .kl-sb-nav a[data-nav="purchasing"]')
+  document.querySelectorAll('#kl-sidebar .kl-sb-nav a[data-nav="reports"], #kl-sidebar .kl-sb-nav a[data-nav="manage"], #kl-sidebar .kl-sb-nav a[data-nav="overview"]')
     .forEach(a => { a.style.display = canManage ? '' : 'none'; });
   applyI18n();
   // page-specific init
@@ -5859,14 +5846,6 @@ function showPage(name) {
     REPORT_TAB = 'overview';
     location.hash = '#/reports';
     return;  // The hashchange will trigger initReportsPage with overview tab active
-  }
-  else if (name === 'purchasing') {
-    // v3.51: Purchasing is a virtual route — it lives as a tab inside Analytics
-    // but appears as its own sidebar entry for direct access. Same pattern
-    // as the overview redirect above.
-    REPORT_TAB = 'purchasing';
-    location.hash = '#/reports';
-    return;
   }
   else if (name === 'receive')   initReceivePage();
   else if (name === 'stock') {
@@ -5928,7 +5907,7 @@ async function route() {
   // ROLE GATE: manager-only pages. Staff cannot reach Reports, Manage,
   // or Overview even by typing the URL directly — not just hidden buttons.
   // (Database RLS still enforces data access; this blocks the screens too.)
-  const MANAGER_ONLY = ['reports', 'manage', 'overview', 'purchasing'];
+  const MANAGER_ONLY = ['reports', 'manage', 'overview'];
   const _role = (__profile && __profile.role) || '';
   const _canManage = ['sa', 'owner', 'manager'].includes(_role);
   if (MANAGER_ONLY.includes(r) && !_canManage) {
@@ -5947,7 +5926,7 @@ window.addEventListener('hashchange', route);
 // hardening; the real security is the database RLS (anon = zero rows),
 // proven separately. Both layers together = MarketMan's model.
 // =====================================================================
-const GATED_PAGES = ['dashboard','overview','receive','stock','map','checkout','reports','manage','asn','inventory','purchasing'];
+const GATED_PAGES = ['dashboard','overview','receive','stock','map','checkout','reports','manage','asn','inventory'];
 const __pageStash = {};
 let __pagesGated = false;
 
