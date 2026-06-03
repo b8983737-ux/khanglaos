@@ -1939,7 +1939,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s5</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s7</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -4526,6 +4526,7 @@ function renderDnConfirm(body) {
   // Print / PDF download row (v3.31 Stage 3)
   html += '<div class="kl-pub-download-row">';
   html += '<button onclick="dnPrintConfirmPage()">🖨 '+t('dn.btnPrint')+'</button>';
+  html += '<button onclick="dnDownloadPoPdf()">📄 '+(t('po.downloadPdf')||'Download PO PDF')+'</button>';
   html += '<button onclick="dnDownloadPdf()">📄 '+t('dn.btnDownload')+'</button>';
   html += '</div>';
   html += '</div>';
@@ -4691,6 +4692,84 @@ window.dnDownloadPdf = async function() {
     doc.save(filename);
   } catch (e) {
     console.error('PDF failed:', e);
+    alert((t('dn.pdfFail') || 'Could not generate PDF') + ': ' + (e.message || String(e)));
+  }
+};
+
+// v3.55-s7: Supplier-side PURCHASE ORDER PDF (with prices) — same order data the
+// supplier received via the ASN, rendered in PO format. Self-contained (helvetica).
+window.dnDownloadPoPdf = async function() {
+  try {
+    if (typeof jspdf === 'undefined' && typeof window.jspdf === 'undefined') { await dnLoadJsPdf(); }
+    const jsPDFCtor = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+    if (!jsPDFCtor) throw new Error('jsPDF not loaded');
+    const a = __supplierAsn || {};
+    const lines = a.lines || [];
+    const doc = new jsPDFCtor({ unit: 'mm', format: 'a4' });
+    const M = (n) => (Number(n || 0)).toLocaleString('en-US') + ' K';
+    const today = new Date().toISOString().slice(0, 10);
+    let y = 18;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
+    doc.text('KHANGLAOS', 14, y);
+    doc.text('PURCHASE ORDER', 196, y, { align: 'right' });
+    y += 6;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(120);
+    doc.text('Warehouse Management', 14, y);
+    doc.setTextColor(0); doc.setFontSize(10);
+    doc.text('PO #: ' + (a.po_number || a.dn_number || ''), 196, y, { align: 'right' });
+    y += 5;
+    doc.setDrawColor(190); doc.line(14, y, 196, y); y += 8;
+    doc.setFontSize(8); doc.setTextColor(120);
+    doc.text('TO (SUPPLIER):', 14, y);
+    doc.text('DATE:', 196, y, { align: 'right' });
+    doc.setTextColor(0); doc.setFontSize(11); doc.setFont('helvetica', 'bold');
+    y += 5;
+    doc.text(a.supplier_name || '-', 14, y);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+    doc.text(today, 196, y, { align: 'right' });
+    y += 5;
+    if (a.supplier_phone) { doc.setFontSize(9); doc.text('Tel: ' + a.supplier_phone, 14, y); }
+    if (a.expected_date) {
+      doc.setFontSize(8); doc.setTextColor(120);
+      doc.text('EXPECTED DELIVERY:', 196, y, { align: 'right' });
+      doc.setTextColor(0); doc.setFontSize(10);
+      y += 5; doc.text(String(a.expected_date), 196, y, { align: 'right' });
+    }
+    y += 9;
+    doc.setFillColor(244, 244, 240); doc.rect(14, y - 4, 182, 7, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(80);
+    doc.text('#', 16, y);
+    doc.text('ITEM', 24, y);
+    doc.text('QTY', 120, y, { align: 'right' });
+    doc.text('UNIT', 128, y);
+    doc.text('PRICE', 165, y, { align: 'right' });
+    doc.text('SUBTOTAL', 195, y, { align: 'right' });
+    doc.setTextColor(0); y += 7;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+    let total = 0;
+    lines.forEach((l, i) => {
+      const qty = Number(l.claimed_quantity || 0);
+      const price = Number(l.claimed_unit_cost || 0);
+      const sub = qty * price; total += sub;
+      if (y > 265) { doc.addPage(); y = 18; }
+      const nm = doc.splitTextToSize(String(l.item_name || ''), 90);
+      doc.text(String(i + 1), 16, y);
+      doc.text(nm, 24, y);
+      doc.text(String(qty), 120, y, { align: 'right' });
+      doc.text(String(l.unit || ''), 128, y);
+      doc.text(M(price), 165, y, { align: 'right' });
+      doc.text(M(sub), 195, y, { align: 'right' });
+      y += Math.max(nm.length * 5, 7);
+    });
+    y += 2; doc.setDrawColor(190); doc.line(120, y, 196, y); y += 7;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
+    doc.text('ORDER TOTAL', 120, y);
+    doc.text(M(total), 195, y, { align: 'right' });
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(130);
+    doc.text('Generated ' + new Date().toLocaleString() + ' KHANGLAOS Warehouse Management', 14, 290);
+    doc.save((a.po_number || a.dn_number || 'PO') + '.pdf');
+  } catch (e) {
+    console.error('PO PDF failed:', e);
     alert((t('dn.pdfFail') || 'Could not generate PDF') + ': ' + (e.message || String(e)));
   }
 };
@@ -8767,6 +8846,7 @@ async function pobLoadAsn(poId) {
       return;
     }
     const dn = rows[0];
+    window.__pobAsnDn = dn;                          // used by the Send-link button below
     const fmt = (x) => { if (!x) return ''; try { return new Date(x).toLocaleString(); } catch (e) { return ''; } };
     const row = (lbl, val) => val
       ? ('<div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-top:1px solid var(--kl-border,#eee)">'
@@ -8787,9 +8867,13 @@ async function pobLoadAsn(poId) {
       + '<div style="font-weight:700;margin-bottom:4px">📦 ' + h(t('asn.viewTitle') || 'Delivery detail') + '</div>'
       + body;
     if (dn.fill_token) {
-      html += '<button class="secondary" style="margin-top:10px;width:100%" '
-        + 'onclick="closeModal();location.hash=\'#/dn/' + h(dn.fill_token) + '\'">📋 '
-        + h(t('dn.portal') || 'Open full delivery tracking') + '</button>';
+      // Send the supplier link (copy / WhatsApp / email) — this is what goes to the supplier.
+      html += '<button class="primary" style="margin-top:10px;width:100%" onclick="asnShareModal(window.__pobAsnDn)">📤 '
+        + h(t('asn.shareTitle') || 'Send link to supplier') + '</button>';
+      // Preview the portal in a NEW TAB so the app stays open (no dead-end / can\'t-go-back).
+      html += '<button class="secondary" style="margin-top:8px;width:100%" '
+        + 'onclick="window.open(klDnPublicUrl(\'' + h(dn.fill_token) + '\'),\'_blank\')">🔗 '
+        + h(t('dn.portal') || 'Open supplier portal') + '</button>';
     }
     html += '</div>';
     box.innerHTML = html;
