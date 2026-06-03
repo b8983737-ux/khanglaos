@@ -1939,7 +1939,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s3</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s5</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -8750,6 +8750,89 @@ window.deleteRecipe = async function(id) {
 // =====================================================================
 // v2.6 — PURCHASING REPORT (purchase orders + supplier price alerts)
 // =====================================================================
+// v3.55-s4: Load the linked delivery note (ASN) detail into the PO dialog,
+// so the order view shows the supplier's confirmation + live tracking in one place.
+async function pobLoadAsn(poId) {
+  try {
+    const box = document.getElementById('pob_asnBox');
+    if (!box) return;
+    const res = await sb.from('delivery_notes').select('*').eq('po_id', poId).order('created_at', { ascending: false });
+    const rows = (res && res.data) ? res.data : [];
+    if (!rows.length) {
+      // Orphan: PO is sent but has no linked delivery note yet — offer to create the link now.
+      box.innerHTML = '<div class="kl-rcard" style="margin-top:8px">'
+        + '<div class="kl-rsmall" style="margin-bottom:8px">' + h(t('asn.noLinkYet') || 'No supplier delivery link yet for this order.') + '</div>'
+        + '<button class="primary" style="width:100%" onclick="pobRelinkAsn(' + Number(poId) + ')">🔗 ' + h(t('asn.createLink') || 'Create supplier delivery link') + '</button>'
+        + '</div>';
+      return;
+    }
+    const dn = rows[0];
+    const fmt = (x) => { if (!x) return ''; try { return new Date(x).toLocaleString(); } catch (e) { return ''; } };
+    const row = (lbl, val) => val
+      ? ('<div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-top:1px solid var(--kl-border,#eee)">'
+         + '<span class="kl-rsmall">' + h(lbl) + '</span>'
+         + '<span style="font-weight:600;text-align:right">' + h(val) + '</span></div>')
+      : '';
+    let body = '';
+    body += row(t('asn.colNumber') || 'Number',  dn.dn_number || '');
+    body += row(t('asn.colStatus') || 'Status',  t('asn.status.' + dn.status) || dn.status || '');
+    body += row(t('dn.etaCard') || 'ETA',         fmt(dn.eta_at));
+    body += row(t('po.tl.confirmed') || 'Confirmed', fmt(dn.confirmed_at));
+    body += row(t('po.tl.departed') || 'Departed',   fmt(dn.departed_at));
+    body += row(t('po.tl.arrived') || 'Arrived',     fmt(dn.arrived_at));
+    body += row(t('po.tl.received') || 'Received',   fmt(dn.received_at));
+    body += row(t('dn.supName') || 'Supplier',    dn.supplier_name || '');
+    body += row(t('dn.supPhone') || 'Phone',      dn.supplier_phone || '');
+    let html = '<div class="kl-rcard" style="margin-top:8px">'
+      + '<div style="font-weight:700;margin-bottom:4px">📦 ' + h(t('asn.viewTitle') || 'Delivery detail') + '</div>'
+      + body;
+    if (dn.fill_token) {
+      html += '<button class="secondary" style="margin-top:10px;width:100%" '
+        + 'onclick="closeModal();location.hash=\'#/dn/' + h(dn.fill_token) + '\'">📋 '
+        + h(t('dn.portal') || 'Open full delivery tracking') + '</button>';
+    }
+    html += '</div>';
+    box.innerHTML = html;
+  } catch (e) { console.error('pobLoadAsn', e); }
+}
+
+// v3.55-s5: Create (or re-create) the linked supplier delivery note for a PO that
+// has none — e.g. an order sent during the earlier updated_at error window.
+// Reuses the exact send logic so the link + tracking + detail all work the same.
+async function pobRelinkAsn(poId) {
+  try {
+    if (!confirm(t('asn.relinkConfirm') || 'Create a supplier delivery link for this order?')) return;
+    const poRes = await sb.from('purchase_orders').select('*').eq('po_id', poId).single();
+    if (poRes.error || !poRes.data) throw (poRes.error || new Error('PO not found'));
+    const po = poRes.data;
+    const plRes = await sb.from('po_lines').select('*').eq('po_id', poId);
+    const pl = (plRes && plRes.data) ? plRes.data : [];
+    if (!pl.length) { alert(t('asn.noLines') || 'This order has no items.'); return; }
+    const ids = Array.from(new Set(pl.map(r => r.item_id).filter(v => v != null)));
+    const itemMap = {};
+    if (ids.length) {
+      const itRes = await sb.from('items').select('*').in('item_id', ids);
+      (itRes.data || []).forEach(it => { itemMap[it.item_id] = it; });
+    }
+    const lines = pl.map(r => ({
+      item_id: r.item_id,
+      qty_ordered: r.qty_ordered,
+      unit_cost: r.unit_cost,
+      unit: r.unit || (itemMap[r.item_id] && itemMap[r.item_id].unit) || null,
+      _itemName: (itemMap[r.item_id] && itemMap[r.item_id].name) || null,
+    }));
+    if (!window.__poSups) {
+      const sRes = await sb.from('suppliers').select('*');
+      window.__poSups = (sRes && sRes.data) ? sRes.data : [];
+    }
+    await pobSendToSupplier(poId, po.supplier_id, lines, po);   // creates the ASN + shows the share link
+    if (typeof renderPurchasingReport === 'function') renderPurchasingReport();
+  } catch (e) {
+    console.error('pobRelinkAsn', e);
+    alert((t('asn.errSave') || 'Could not create delivery link') + ': ' + (e.message || String(e)));
+  }
+}
+
 function poStatusChip(st) {
   // v3.55: expanded status vocabulary for PO↔ASN merge.
   // Full PO lifecycle: draft → sent → confirmed → in_transit → received → closed
@@ -9014,6 +9097,7 @@ window.poForm = async function(id, prefillLines) {
             + '<div style="margin-top:10px">' + poTimelineCompact(po) + '</div>'
             + '</div>'
           : '')
+      + '  <div id="pob_asnBox"></div>'
       + '  <div class="kl-pob-actions">';
     if (editable) {
       html += '<button class="primary" id="pob_saveBtn" onclick="pobSave(false)">💾 ' + h(t('po.saveDraft')) + '</button>';
@@ -9022,7 +9106,7 @@ window.poForm = async function(id, prefillLines) {
     // v3.55-s3: receiving is SCAN-BASED and step-by-step (core rule) — no one-click receive here.
     // For in-progress orders, offer a jump to the Receive page scan flow instead.
     if (id && (po.status === 'sent' || po.status === 'confirmed' || po.status === 'in_transit')) {
-      html += '<button class="primary" onclick="closeModal();location.hash=\'#/receive\'">➜ ' + h(t('dn.btnReceiveNow') || 'Receive items now') + '</button>';
+      html += '<button class="primary" onclick="closeModal();location.hash=\'#/receive\'">' + h(t('dn.btnReceiveNow') || '➜ Receive items now') + '</button>';
     }
     // v3.50: PDF download + Share with supplier — only for SAVED POs (have an id)
     if (id) {
@@ -9037,6 +9121,7 @@ window.poForm = async function(id, prefillLines) {
 
     modal(headerTitle, html);
     pobOnSupplierChange();
+    if (id && po.status && po.status !== 'draft') pobLoadAsn(id);
   } catch (e) {
     console.error(e);
     alert(t('po.loadFail') + ': ' + (e.message || String(e)));
