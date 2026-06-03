@@ -1939,7 +1939,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s2</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s3</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -9004,13 +9004,25 @@ window.poForm = async function(id, prefillLines) {
       + '    <span class="kl-pob-total-lbl">' + h(t('po.orderTotal')) + '</span>'
       + '    <span class="kl-pob-total-val" id="pob_totalVal">0 ₭</span>'
       + '  </div>'
+      // v3.55-s3: show live STATUS MOVEMENT (timeline) inside the order — not a one-click receive.
+      + (id && po.status && po.status !== 'draft'
+          ? '<div class="kl-rcard" style="margin-top:8px">'
+            + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">'
+            +   '<span class="kl-rsmall" style="font-weight:600">' + h(t('po.colTimeline')) + '</span>'
+            +   poStatusChip(po.status)
+            + '</div>'
+            + '<div style="margin-top:10px">' + poTimelineCompact(po) + '</div>'
+            + '</div>'
+          : '')
       + '  <div class="kl-pob-actions">';
     if (editable) {
       html += '<button class="primary" id="pob_saveBtn" onclick="pobSave(false)">💾 ' + h(t('po.saveDraft')) + '</button>';
       html += '<button class="primary" id="pob_sendBtn" onclick="pobSave(true)">📤 ' + h(t('po.sendNow')) + '</button>';
     }
-    if (id && po.status === 'sent') {
-      html += '<button class="primary" onclick="poReceive(' + id + ')">📥 ' + h(t('po.receive')) + '</button>';
+    // v3.55-s3: receiving is SCAN-BASED and step-by-step (core rule) — no one-click receive here.
+    // For in-progress orders, offer a jump to the Receive page scan flow instead.
+    if (id && (po.status === 'sent' || po.status === 'confirmed' || po.status === 'in_transit')) {
+      html += '<button class="primary" onclick="closeModal();location.hash=\'#/receive\'">➜ ' + h(t('dn.btnReceiveNow') || 'Receive items now') + '</button>';
     }
     // v3.50: PDF download + Share with supplier — only for SAVED POs (have an id)
     if (id) {
