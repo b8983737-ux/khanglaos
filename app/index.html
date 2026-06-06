@@ -1826,6 +1826,18 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 .kl-co-pick-exp.warn { color:#b9791b; }
 .kl-co-pick-exp.bad  { color:#c0392b; }
 .kl-co-pick-go { font-size:20px; color:#cbd3da; font-weight:700; }
+.kl-co-pick-bc { font-size:16px; background:#f4f6f8; border:1px solid var(--kl-border,#eceef1);
+  border-radius:8px; padding:4px 9px; cursor:pointer; line-height:1; }
+.kl-co-pick-bc:hover { background:#e7f4ef; border-color:#15795f; }
+.kl-bc-modal { position:fixed; inset:0; background:rgba(20,32,48,.45); z-index:9999;
+  display:flex; align-items:center; justify-content:center; padding:20px; }
+.kl-bc-modal-card { background:#fff; border-radius:14px; padding:18px 20px; max-width:420px;
+  width:100%; box-shadow:0 18px 50px rgba(20,32,48,.3); }
+.kl-bc-modal-head { display:flex; align-items:center; justify-content:space-between; gap:10px;
+  font-weight:700; font-size:14px; color:var(--kl-text,#14201b); margin-bottom:14px; }
+.kl-bc-modal-x { background:none; border:none; font-size:24px; line-height:1; cursor:pointer;
+  color:#69707d; padding:0 4px; }
+.kl-bc-modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:16px; }
 
 /* Empty state */
 .kl-map-empty { background:#fff; border:1px dashed var(--kl-border,#eceef1);
@@ -2020,7 +2032,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s19</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s21</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -2512,6 +2524,18 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
     <div class="kl-card" id="coPoPicker" style="display:none">
       <h2>📦 <span id="coPoPickerTitle"></span></h2>
       <div id="coPoPickerList"></div>
+    </div>
+
+    <div id="coBarcodeModal" class="kl-bc-modal" style="display:none">
+      <div class="kl-bc-modal-card">
+        <div class="kl-bc-modal-head"><span id="coBarcodeTitle"></span>
+          <button class="kl-bc-modal-x" onclick="coCloseBarcode()" aria-label="Close">×</button></div>
+        <div id="coBarcodeBox" class="kl-pub-barcode-wrap"></div>
+        <div class="kl-bc-modal-actions">
+          <button class="kl-btn" onclick="coPrintBarcode()">🖨 Print</button>
+          <button class="kl-btn kl-btn-primary" onclick="coCloseBarcode()" data-i18n="common.close">Close</button>
+        </div>
+      </div>
     </div>
 
     <div class="kl-card" id="coBatchCard" style="display:none">
@@ -8100,11 +8124,40 @@ async function coLookupByPo(poNumber) {
     const poRes = await sb.from('purchase_orders').select('po_id').eq('po_number', poNumber).limit(1);
     const poId = (poRes && poRes.data && poRes.data[0]) ? poRes.data[0].po_id : null;
     if (!poId) { showMsg('checkoutMsg', t('checkout.batch.notfound'), 'err'); return; }
-    const bRes = await sb.from('batches')
-      .select('*, items(name, name_lao, unit), locations(name,name_lao,name_th,name_zh,name_ko), suppliers(name)')
-      .eq('po_id', poId).eq('status', 'active').gt('quantity_remaining', 0)
+
+    const sel = '*, items(name, name_lao, unit), locations(name,name_lao,name_th,name_zh,name_ko), suppliers(name)';
+    const ord = (q) => q.eq('status', 'active').gt('quantity_remaining', 0)
       .order('expiry_date', { ascending: true, nullsFirst: false });
-    const batches = (bRes && bRes.data) ? bRes.data : [];
+    let batches = [];
+
+    // 1) Precise: batches tagged with this PO (po_id column may not exist — ignore errors)
+    try {
+      const r = await ord(sb.from('batches').select(sel).eq('po_id', poId));
+      if (!r.error && r.data) batches = r.data;
+    } catch (e) { /* po_id column absent */ }
+
+    // 2) Fallback: by the PO's delivery note(s)
+    if (!batches.length) {
+      try {
+        const dnR = await sb.from('delivery_notes').select('dn_id').eq('po_id', poId);
+        const dnIds = (dnR.data || []).map(d => d.dn_id).filter(Boolean);
+        if (dnIds.length) {
+          const r = await ord(sb.from('batches').select(sel).in('dn_id', dnIds));
+          if (!r.error && r.data) batches = r.data;
+        }
+      } catch (e) { /* dn_id column absent */ }
+    }
+
+    // 3) Fallback: by the items this PO ordered (always works — every batch has item_id)
+    if (!batches.length) {
+      const plR = await sb.from('po_lines').select('item_id').eq('po_id', poId);
+      const itemIds = [...new Set((plR.data || []).map(l => l.item_id).filter(Boolean))];
+      if (itemIds.length) {
+        const r = await ord(sb.from('batches').select(sel).in('item_id', itemIds));
+        if (!r.error && r.data) batches = r.data;
+      }
+    }
+
     if (!batches.length) { showMsg('checkoutMsg', t('checkout.batch.notfound'), 'err'); return; }
     showMsg('checkoutMsg', '', 'ok');
     if (batches.length === 1) {
@@ -8144,6 +8197,7 @@ function coShowBatchPicker(poNumber, batches) {
         +   '<span class="kl-co-pick-meta">' + fmtQty(b.quantity_remaining) + ' ' + h(un)
         +     (b.locations ? ' · ' + h(klLocName(b.locations)) : '') + '</span></div>'
         + (expTxt ? '<span class="kl-co-pick-exp ' + expCls + '">' + t('ov.expires') + ': ' + expTxt + '</span>' : '')
+        + '<button class="kl-co-pick-bc" onclick="event.stopPropagation();coShowBarcode(' + i + ')" title="Barcode">📷</button>'
         + '<span class="kl-co-pick-go">›</span>'
         + '</div>';
   });
@@ -8158,6 +8212,29 @@ window.coPickBatch = function(i) {
   document.getElementById('coPoPicker').style.display = 'none';
   CO_STATE.batch = b;
   renderBatchCard(b);
+};
+
+// v3.55-s20: show a batch's sticker barcode from the PO picker
+window.coShowBarcode = async function(i) {
+  const b = CO_PO_BATCHES[i];
+  if (!b) return;
+  const it = b.items || {};
+  const nm = (__lang === 'lo' && it.name_lao) ? it.name_lao : (it.name || '');
+  const code = b.barcode || '';
+  document.getElementById('coBarcodeTitle').textContent = nm + (code ? ' — ' + code : '');
+  document.getElementById('coBarcodeModal').style.display = 'flex';
+  const box = document.getElementById('coBarcodeBox');
+  if (code) { await klRenderDnBarcode('coBarcodeBox', code); }
+  else if (box) { box.innerHTML = '<p class="kl-muted">' + t('checkout.batch.notfound') + '</p>'; }
+};
+window.coCloseBarcode = function() {
+  const m = document.getElementById('coBarcodeModal'); if (m) m.style.display = 'none';
+};
+window.coPrintBarcode = function() {
+  const box = document.getElementById('coBarcodeBox'); if (!box) return;
+  const w = window.open('', '_blank', 'width=420,height=320'); if (!w) return;
+  w.document.write('<html><head><title>Barcode</title></head><body style="text-align:center;font-family:sans-serif;padding:24px">' + box.innerHTML + '</body></html>');
+  w.document.close(); w.focus(); setTimeout(function(){ try { w.print(); } catch(e){} }, 250);
 };
 
 function renderBatchCard(b) {
