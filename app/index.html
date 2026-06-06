@@ -1939,7 +1939,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s7</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s8</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -6700,6 +6700,16 @@ async function recvLookupAsn(scanned) {
     query = query.eq('dn_number', s.toUpperCase());
   } else if (/^[a-f0-9]{16,}$/i.test(s)) {
     query = query.eq('fill_token', s);
+  } else if (/^PO-/i.test(s)) {
+    // v3.55-s8: typed a PO number → resolve to its linked delivery note (ASN),
+    // so staff can scan/type EITHER the PO number OR the ASN number.
+    const poRes = await sb.from('purchase_orders').select('po_id').eq('po_number', s.toUpperCase()).limit(1);
+    const poId = (poRes && poRes.data && poRes.data[0]) ? poRes.data[0].po_id : null;
+    if (!poId) { showMsg('receiveMsg', t('recv.scanNotFound') + ': ' + s, 'err'); return; }
+    const dnRes = await sb.from('delivery_notes').select('fill_token').eq('po_id', poId).order('created_at', { ascending: false }).limit(1);
+    const tok = (dnRes && dnRes.data && dnRes.data[0]) ? dnRes.data[0].fill_token : null;
+    if (!tok) { showMsg('receiveMsg', t('recv.scanNotFound') + ': ' + s, 'err'); return; }
+    query = sb.from('delivery_notes').select('*').eq('fill_token', tok);
   } else {
     // Try ASN number directly (might be typed without prefix)
     query = query.eq('dn_number', s.toUpperCase());
