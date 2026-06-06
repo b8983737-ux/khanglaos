@@ -1745,6 +1745,43 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 .kl-map-zone-cap-fill { height:100%; background:#15795f; transition:width .3s; }
 .kl-map-zone-cap-fill.warn { background:#caa24a; }
 .kl-map-zone-cap-fill.bad  { background:#c0392b; }
+/* v3.55-s15: status label in title + obvious click affordance */
+.kl-map-zone-st { font-size:10px; font-weight:800; padding:2px 8px; border-radius:999px;
+  letter-spacing:.02em; white-space:nowrap; }
+.kl-map-zone-st.st-ok      { background:#e7f4ef; color:#15795f; }
+.kl-map-zone-st.st-warn    { background:#fdf3e3; color:#b9791b; }
+.kl-map-zone-st.st-bad     { background:#fdecea; color:#c0392b; }
+.kl-map-zone-st.st-unknown { background:#eef1f4; color:#69707d; }
+.kl-map-zone-go { position:absolute; right:12px; bottom:9px; font-size:22px; line-height:1;
+  color:#cbd3da; font-weight:700; transition:color .12s, transform .12s; }
+.kl-map-zone:hover .kl-map-zone-go { color:#15795f; transform:translateX(3px); }
+/* v3.55-s16: 3D isometric warehouse view */
+.kl-map-viewtoggle { display:inline-flex; gap:6px; }
+.kl-map-viewtoggle .kl-tab { font-size:12.5px; padding:5px 12px; border-radius:8px;
+  border:1px solid var(--kl-border,#eceef1); background:#fff; cursor:pointer; font-weight:700;
+  color:var(--kl-text-soft,#69707d); }
+.kl-map-viewtoggle .kl-tab.active { background:#15795f; color:#fff; border-color:#15795f; }
+.kl-iso-grid { display:grid; gap:24px 16px;
+  grid-template-columns:repeat(auto-fit, minmax(140px,1fr));
+  padding:24px 14px 16px; border-radius:14px;
+  background:linear-gradient(180deg,#f8fafb 0%,#e9eef2 100%);
+  border:1px solid var(--kl-border,#eceef1); }
+.kl-iso-tile { display:flex; flex-direction:column; align-items:center; text-align:center;
+  cursor:pointer; padding:8px 6px 10px; border-radius:12px;
+  transition:transform .12s, background .12s; position:relative; }
+.kl-iso-tile:hover { transform:translateY(-4px); background:rgba(255,255,255,.75); }
+.kl-iso-stage { width:116px; height:104px; position:relative; margin-bottom:4px;
+  filter:drop-shadow(0 9px 9px rgba(20,32,48,.16)); }
+.kl-iso-stage svg { width:100%; height:100%; display:block; }
+.kl-iso-name { font-size:13.5px; font-weight:700; color:var(--kl-text,#14201b); line-height:1.2; }
+.kl-iso-meta { display:flex; align-items:center; gap:6px; margin-top:5px;
+  flex-wrap:wrap; justify-content:center; }
+.kl-iso-code { font-size:10px; font-family:var(--kl-font-mono,monospace); font-weight:600;
+  color:var(--kl-text-soft,#69707d); background:#fff; padding:1px 6px; border-radius:4px; }
+.kl-iso-cap { font-size:11.5px; color:var(--kl-text-soft,#69707d); margin-top:4px; font-weight:600; }
+.kl-iso-exp { position:absolute; top:2px; right:8px; background:#fdf3e3; color:#b9791b;
+  font-size:10px; font-weight:800; padding:2px 7px; border-radius:999px;
+  box-shadow:0 1px 3px rgba(0,0,0,.12); }
 
 /* Empty state */
 .kl-map-empty { background:#fff; border:1px dashed var(--kl-border,#eceef1);
@@ -1939,7 +1976,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s14</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s16</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -6425,7 +6462,12 @@ function renderInventoryTab(u) {
     // Build the Map tab UI — same layout as the old #page-map
     body.innerHTML = ''
       + '<div class="kl-ov-header" style="margin-bottom:16px">'
-      +   '<div class="kl-ov-header-text"></div>'
+      + '<div class="kl-ov-header-text">'
+      +   '<div class="kl-map-viewtoggle">'
+      +     '<button id="klMapViewIso" class="kl-tab'+(KL_MAP_VIEW==='iso'?' active':'')+'" onclick="klMapSetView(\'iso\')">🏭 3D</button>'
+      +     '<button id="klMapViewCards" class="kl-tab'+(KL_MAP_VIEW==='cards'?' active':'')+'" onclick="klMapSetView(\'cards\')">🗂 Cards</button>'
+      +   '</div>'
+      + '</div>'
       +   '<div class="kl-map-legend">'
       +     '<span class="kl-map-leg-item"><span class="kl-map-leg-dot ok"></span><span>'+h(t('map.legOk'))+'</span></span>'
       +     '<span class="kl-map-leg-item"><span class="kl-map-leg-dot warn"></span><span>'+h(t('map.legWarn'))+'</span></span>'
@@ -11200,6 +11242,34 @@ function klMapWorstStatus(z){
   return worst;
 }
 
+// v3.55-s15: human label for a status, reusing the legend translations
+function klMapStatusLabel(s){
+  if (s === 'ok')   return t('map.legOk');
+  if (s === 'warn') return t('map.legWarn');
+  if (s === 'bad')  return t('map.legBad');
+  return t('map.legUnknown');
+}
+
+// v3.55-s16: 3D isometric warehouse view
+let KL_MAP_VIEW = 'iso';   // 'iso' (3D) | 'cards'
+function klMapIsoCrateSVG(status){
+  const C = {
+    ok:      ['#1f9b7b','#15795f','#0f5c47'],
+    warn:    ['#e0bd6a','#caa24a','#9c7a2f'],
+    bad:     ['#e0594b','#c0392b','#8f291f'],
+    unknown: ['#b6c0c8','#9aa6b0','#6f7a83']
+  }[status] || ['#b6c0c8','#9aa6b0','#6f7a83'];
+  const top = C[0], right = C[1], left = C[2];
+  return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+    + '<polygon points="60,30 102,54 60,78 18,54" fill="'+top+'"/>'
+    + '<polygon points="18,54 60,78 60,108 18,84" fill="'+left+'"/>'
+    + '<polygon points="60,78 102,54 102,84 60,108" fill="'+right+'"/>'
+    + '<polygon points="60,40 80,51 60,62 40,51" fill="#dcb98c"/>'
+    + '<polygon points="40,51 60,62 60,74 40,63" fill="#b98e5e"/>'
+    + '<polygon points="60,62 80,51 80,63 60,74" fill="#caa172"/>'
+    + '</svg>';
+}
+
 async function initMapPage() {
   const u = await klRequireLogin(); if (!u) return;
   document.getElementById('topUserLabel').textContent = u.user.full_name + ' · ' + u.user.role;
@@ -11250,7 +11320,7 @@ async function initMapPage() {
       const title = rk === 0 ? t('map.unassigned')
                   : (t('map.row') + ' ' + rk);
       html += '<p class="kl-map-floor-title">'+h(title)+'</p>';
-      html += '<div class="kl-map-grid">';
+      html += '<div class="'+(KL_MAP_VIEW==='iso'?'kl-iso-grid':'kl-map-grid')+'">';
       rows[rk].forEach(z => {
         const worst = klMapWorstStatus(z);
         const icon = klMapZoneIcon(z.temp_zone);
@@ -11283,11 +11353,26 @@ async function initMapPage() {
           capVal = (z.batch_count||0) + ' ' + t('map.batches');
         }
 
+        if (KL_MAP_VIEW === 'iso') {
+          const expBadge = (z.expiring_soon_count > 0)
+            ? '<span class="kl-iso-exp">⏱ '+z.expiring_soon_count+'</span>' : '';
+          html += '<div class="kl-iso-tile status-'+worst+'" '
+                + 'data-loc-id="'+z.location_id+'" onclick="klMapOpenDrawer('+z.location_id+')">'
+                + '<div class="kl-iso-stage">'+klMapIsoCrateSVG(worst)+expBadge+'</div>'
+                + '<div class="kl-iso-name">'+h(klLocName(z))+'</div>'
+                + '<div class="kl-iso-meta">'
+                +   '<span class="kl-map-zone-st st-'+worst+'">'+h(klMapStatusLabel(worst))+'</span>'
+                +   '<span class="kl-iso-code">'+h(z.code)+'</span>'
+                + '</div>'
+                + '<div class="kl-iso-cap">'+capVal+'</div>'
+                + '</div>';
+        } else {
         html += '<div class="kl-map-zone status-'+worst+'" '
               + 'data-loc-id="'+z.location_id+'" onclick="klMapOpenDrawer('+z.location_id+')">'
               + '<div class="kl-map-zone-top">'
               + '<span class="kl-map-zone-icon">'+icon+'</span>'
               + '<span class="kl-map-zone-name">'+h(klLocName(z))+'</span>'
+              + '<span class="kl-map-zone-st st-'+worst+'">'+h(klMapStatusLabel(worst))+'</span>'
               + '<span class="kl-map-zone-code">'+h(z.code)+'</span>'
               + '</div>'
               + '<div class="kl-map-zone-warns">'+warns+'</div>'
@@ -11300,7 +11385,9 @@ async function initMapPage() {
                   ? '<div class="kl-map-zone-cap-bar"><div class="kl-map-zone-cap-fill '+capCls+'" style="width:'+capPct.toFixed(1)+'%"></div></div>'
                   : '')
               + '</div>'
+              + '<span class="kl-map-zone-go" aria-hidden="true">›</span>'
               + '</div>';
+        }
       });
       html += '</div></div>';
     });
@@ -11434,6 +11521,16 @@ window.klMapCloseDrawer = function() {
   const dr = document.getElementById('klMapDrawer');
   if (bd) bd.classList.remove('open');
   if (dr) dr.classList.remove('open');
+};
+
+// v3.55-s16: switch between 3D (iso) and Cards view, then repaint the map.
+window.klMapSetView = function(v){
+  KL_MAP_VIEW = (v === 'cards') ? 'cards' : 'iso';
+  const a = document.getElementById('klMapViewIso');
+  const b = document.getElementById('klMapViewCards');
+  if (a) a.classList.toggle('active', KL_MAP_VIEW === 'iso');
+  if (b) b.classList.toggle('active', KL_MAP_VIEW === 'cards');
+  initMapPage();
 };
 
 // =====================================================================
