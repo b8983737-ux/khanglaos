@@ -2032,7 +2032,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s21</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s23</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -3859,6 +3859,10 @@ window.klRenderStockLevels = function(baseRows) {
 // is blocked by our CSP (script-src allows only jsdelivr/unpkg/cdnjs/supabase).
 // We try CDNs in order; first success wins. Same pattern as html5-qrcode loader.
 const KL_SHEETJS_CDNS = [
+  // v3.55-s22: xlsx-js-style first (same API + cell styling: bold/colors/borders).
+  'https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js',
+  'https://unpkg.com/xlsx-js-style@1.2.0/dist/xlsx.bundle.js',
+  // Plain SheetJS fallback (still works; styles are simply ignored).
   'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',
   'https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'
@@ -4138,6 +4142,13 @@ window.klExpRun = async function() {
         wsCover[addr].z = '#,##0';
       }
     });
+    // v3.55-s22: professional styling (ignored by plain SheetJS fallback)
+    wsCover['!merges'] = [ {s:{r:0,c:0},e:{r:0,c:4}}, {s:{r:1,c:0},e:{r:1,c:4}}, {s:{r:7,c:0},e:{r:7,c:4}} ];
+    if (wsCover['A1']) wsCover['A1'].s = { font:{ bold:true, sz:18, color:{rgb:'15795F'} } };
+    if (wsCover['A2']) wsCover['A2'].s = { font:{ bold:true, sz:12, color:{rgb:'B9791B'} } };
+    if (wsCover['A8']) wsCover['A8'].s = { font:{ bold:true, sz:12, color:{rgb:'FFFFFF'} }, fill:{ patternType:'solid', fgColor:{rgb:'15795F'} } };
+    ['A4','A5','A6','A13'].forEach(a => { if (wsCover[a]) wsCover[a].s = { font:{ bold:true } }; });
+    ['A9','A10','A11','D9','D10','D11'].forEach(a => { if (wsCover[a]) wsCover[a].s = { font:{ color:{rgb:'5A626D'} } }; });
     XLSX.utils.book_append_sheet(wb, wsCover, t('exp.sheet.cover') || 'Cover');
 
     // ---- Sheet 2: MOVEMENT REPORT (main table) ----
@@ -4200,6 +4211,38 @@ window.klExpRun = async function() {
         }
       });
     }
+    // v3.55-s22: professional styling (bold emerald header, borders, banded rows,
+    // totals row). Styles are silently ignored if the plain-SheetJS fallback loads.
+    const bd = (c) => ({ style:'thin', color:{ rgb:c } });
+    const cellBorder = { top:bd('E2E6EA'), bottom:bd('E2E6EA'), left:bd('E2E6EA'), right:bd('E2E6EA') };
+    const ncols = headers.length;
+    const numIdx = [6,7,8,9,10,11,13,14,15,16]; // 0-based numeric columns
+    for (let c = 0; c < ncols; c++) {
+      const a = XLSX.utils.encode_col(c) + '1';
+      if (wsData[a]) wsData[a].s = {
+        font:{ bold:true, color:{rgb:'FFFFFF'}, sz:11 },
+        fill:{ patternType:'solid', fgColor:{rgb:'15795F'} },
+        alignment:{ horizontal:'center', vertical:'center', wrapText:true },
+        border: cellBorder
+      };
+    }
+    for (let r = 2; r <= nRows; r++) {
+      const isTot = (r === nRows);
+      for (let c = 0; c < ncols; c++) {
+        const a = XLSX.utils.encode_col(c) + r;
+        if (!wsData[a]) continue;
+        const numeric = numIdx.indexOf(c) >= 0;
+        wsData[a].s = {
+          border: cellBorder,
+          alignment:{ horizontal: numeric ? 'right' : 'left', vertical:'center' },
+          font: isTot ? { bold:true } : { sz:10 },
+          fill: isTot ? { patternType:'solid', fgColor:{rgb:'FBF4E2'} }
+                      : ((r % 2 === 1) ? { patternType:'solid', fgColor:{rgb:'F6F8FA'} } : undefined)
+        };
+      }
+    }
+    wsData['!rows'] = [{ hpt: 22 }]; // taller header row
+    wsData['!autofilter'] = { ref: 'A1:' + XLSX.utils.encode_col(ncols - 1) + nRows };
     XLSX.utils.book_append_sheet(wb, wsData, t('exp.sheet.report') || 'Movement Report');
 
     // 8. Trigger download. Filename: khanglaos-movements-FROM_to_TO.xlsx
@@ -6556,7 +6599,7 @@ function renderInventoryTab(u) {
     // Build the Stock tab UI — same layout as the old #page-stock
     body.innerHTML = ''
       + '<div class="kl-stock-tools">'
-      +   '<input type="text" id="stockSearch" class="kl-stock-search" placeholder="'+h(t('stock.searchPh') || 'Search item…')+'" autocomplete="off">'
+      +   '<input type="text" id="stockSearch" class="kl-stock-search" placeholder="'+h(t('asn.itemsSearch') || 'Search items…')+'" autocomplete="off">'
       +   '<div class="kl-dr-group" id="stockFilter">'
       +     '<button class="kl-dr-btn active" data-sf="all">'+h(t('stock.all'))+'</button>'
       +     '<button class="kl-dr-btn" data-sf="low">'+h(t('stock.low'))+'</button>'
@@ -10168,18 +10211,26 @@ async function klFetchImageDataUrl(url) {
 }
 
 // ---- Fetch a font from CDN, return base64 string ----
-async function klFetchFontBase64(url) {
-  const resp = await fetch(url, { mode: 'cors' });
-  if (!resp.ok) throw new Error('Font fetch failed: ' + resp.status);
-  const buf = await resp.arrayBuffer();
-  // Convert ArrayBuffer → base64 (chunked to avoid call-stack overflow)
-  const bytes = new Uint8Array(buf);
-  let bin = '';
-  const CHUNK = 0x8000;
-  for (let i = 0; i < bytes.length; i += CHUNK) {
-    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+// Accepts a single URL or an array of candidate URLs (tries each until one works).
+async function klFetchFontBase64(urls) {
+  const list = Array.isArray(urls) ? urls : [urls];
+  let lastErr = null;
+  for (const url of list) {
+    try {
+      const resp = await fetch(url, { mode: 'cors' });
+      if (!resp.ok) { lastErr = new Error('HTTP ' + resp.status + ' @ ' + url); continue; }
+      const buf = await resp.arrayBuffer();
+      // Convert ArrayBuffer → base64 (chunked to avoid call-stack overflow)
+      const bytes = new Uint8Array(buf);
+      let bin = '';
+      const CHUNK = 0x8000;
+      for (let i = 0; i < bytes.length; i += CHUNK) {
+        bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+      }
+      return btoa(bin);
+    } catch (e) { lastErr = e; }
   }
-  return btoa(bin);
+  throw lastErr || new Error('All font URLs failed');
 }
 
 // ---- Load all Noto Sans variants we need (call once per session) ----
@@ -10188,13 +10239,16 @@ async function klLoadPdfFonts() {
   // CORRECTED URL pattern from official fontsource CDN docs:
   //   https://cdn.jsdelivr.net/fontsource/fonts/{family}@latest/{subset}-{weight}-{style}.ttf
   const BASE = 'https://cdn.jsdelivr.net/fontsource/fonts/';
+  // Each font has @latest first, then a pinned version as fallback (in case the
+  // @latest tag fails to resolve on the static CDN). Confirmed package versions
+  // June 2026: noto-sans 5.2.10, noto-sans-lao 5.2.8, noto-sans-thai 5.2.8.
   const urls = {
-    latin:      BASE + 'noto-sans@latest/latin-400-normal.ttf',
-    latinBold:  BASE + 'noto-sans@latest/latin-700-normal.ttf',
-    lao:        BASE + 'noto-sans-lao@latest/lao-400-normal.ttf',
-    laoBold:    BASE + 'noto-sans-lao@latest/lao-700-normal.ttf',
-    thai:       BASE + 'noto-sans-thai@latest/thai-400-normal.ttf',
-    thaiBold:   BASE + 'noto-sans-thai@latest/thai-700-normal.ttf',
+    latin:     [BASE + 'noto-sans@latest/latin-400-normal.ttf',     BASE + 'noto-sans@5.2.10/latin-400-normal.ttf'],
+    latinBold: [BASE + 'noto-sans@latest/latin-700-normal.ttf',     BASE + 'noto-sans@5.2.10/latin-700-normal.ttf'],
+    lao:       [BASE + 'noto-sans-lao@latest/lao-400-normal.ttf',   BASE + 'noto-sans-lao@5.2.8/lao-400-normal.ttf'],
+    laoBold:   [BASE + 'noto-sans-lao@latest/lao-700-normal.ttf',   BASE + 'noto-sans-lao@5.2.8/lao-700-normal.ttf'],
+    thai:      [BASE + 'noto-sans-thai@latest/thai-400-normal.ttf', BASE + 'noto-sans-thai@5.2.8/thai-400-normal.ttf'],
+    thaiBold:  [BASE + 'noto-sans-thai@latest/thai-700-normal.ttf', BASE + 'noto-sans-thai@5.2.8/thai-700-normal.ttf'],
   };
   try {
     const results = await Promise.allSettled([
