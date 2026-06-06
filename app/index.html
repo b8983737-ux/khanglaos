@@ -1939,7 +1939,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s11</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s12</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -4523,11 +4523,9 @@ function renderDnConfirm(body) {
   html += '<button class="reject" id="dnRejectBtn">✕ '+t('dn.btnReject')+'</button>';
   html += '</div>';
 
-  // Print / PDF download row (v3.31 Stage 3)
+  // Print row — v3.55-s12: supplier link does NOT expose prices or PDFs.
   html += '<div class="kl-pub-download-row">';
   html += '<button onclick="dnPrintConfirmPage()">🖨 '+t('dn.btnPrint')+'</button>';
-  html += '<button onclick="dnDownloadPoPdf()">📄 '+(t('po.downloadPdf')||'Download PO PDF')+'</button>';
-  html += '<button onclick="dnDownloadPdf()">📄 '+t('dn.btnDownload')+'</button>';
   html += '</div>';
   html += '</div>';
 
@@ -8857,6 +8855,23 @@ async function pobLoadAsn(poId) {
     }
     const dn = rows[0];
     window.__pobAsnDn = dn;                          // used by the Send-link button below
+    // v3.55-s12: reflect the delivery's REAL progress in the PO timeline + chip
+    // (PO status may still say "sent" while the delivery is already received).
+    try {
+      const dnSt = dn.status || 'sent';
+      const mapped = (dnSt === 'submitted') ? 'confirmed' : dnSt;   // submitted = supplier confirmed
+      const tlRow = {
+        status: mapped,
+        confirmed_at: dn.confirmed_at,
+        any_departed: !!dn.departed_at,
+        any_arrived: !!dn.arrived_at,
+        any_received: !!dn.received_at,
+      };
+      const tlBox = document.getElementById('pob_tlBox');
+      if (tlBox) tlBox.innerHTML = poTimelineCompact(tlRow);
+      const chip = document.getElementById('pob_stChip');
+      if (chip) chip.innerHTML = poStatusChip(mapped);
+    } catch (e) { console.error('tl refresh', e); }
     const fmt = (x) => { if (!x) return ''; try { return new Date(x).toLocaleString(); } catch (e) { return ''; } };
     const row = (lbl, val) => val
       ? ('<div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-top:1px solid var(--kl-border,#eee)">'
@@ -9186,9 +9201,9 @@ window.poForm = async function(id, prefillLines) {
           ? '<div class="kl-rcard" style="margin-top:8px">'
             + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">'
             +   '<span class="kl-rsmall" style="font-weight:600">' + h(t('po.colTimeline')) + '</span>'
-            +   poStatusChip(po.status)
+            +   '<span id="pob_stChip">' + poStatusChip(po.status) + '</span>'
             + '</div>'
-            + '<div style="margin-top:10px">' + poTimelineCompact(po) + '</div>'
+            + '<div id="pob_tlBox" style="margin-top:10px">' + poTimelineCompact(po) + '</div>'
             + '</div>'
           : '')
       + '  <div id="pob_asnBox"></div>'
