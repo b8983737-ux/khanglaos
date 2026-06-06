@@ -1939,7 +1939,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s9</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s10</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -7696,9 +7696,9 @@ async function klRhLoadDetail(entry, detailEl) {
     if (entry.kind === 'asn') {
       // Fetch lines for this ASN
       const linesQ = await sb.from('delivery_note_lines')
-        .select('line_id, item_name_text, claimed_quantity, actual_quantity, variance_quantity, variance_note, unit_text, unit_cost, lot_number, items(name,unit), locations(name)')
+        .select('line_no, item_name_text, claimed_quantity, actual_quantity, variance_quantity, variance_note, unit_text, unit_cost, lot_number, items(name,unit), locations(name)')
         .eq('dn_id', entry.dn_id)
-        .order('line_id');
+        .order('line_no');
       if (linesQ.error) throw linesQ.error;
 
       const lines = linesQ.data || [];
