@@ -1939,7 +1939,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s8</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s9</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -9591,9 +9591,13 @@ async function pobSendToSupplier(poId, supId, lines, poRec) {
   if (upd.error) throw upd.error;
 
   const sup = (window.__poSups || []).find(s => s.supplier_id === supId) || {};
-  const dnNumber = (typeof klNextAsnNumber === 'function')
-    ? await klNextAsnNumber()
-    : ('ASN-' + Date.now().toString().slice(-8));
+  // v3.55-s9: ONE number everywhere — a PO-linked delivery uses the PO's own number
+  // (PO-YYYYMMDD-NNNN). Standalone ASNs (Manage → ASN, no PO) keep ASN-YYYY-NNNN.
+  const dnNumber = (poRec && poRec.po_number)
+    ? poRec.po_number
+    : ((typeof klNextAsnNumber === 'function')
+        ? await klNextAsnNumber()
+        : ('ASN-' + Date.now().toString().slice(-8)));
   const token = (typeof klRandomToken === 'function')
     ? klRandomToken(20)
     : (Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)).slice(0, 32);
