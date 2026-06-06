@@ -1939,7 +1939,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s12</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s13</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -7191,11 +7191,11 @@ async function recvVarianceLoad() {
   const cutoffIso = cutoff.toISOString();
   try {
     const { data: dnData, error: dnErr } = await sb.from('delivery_notes')
-      .select('asn_id, supplier_name, received_at')
+      .select('dn_id, supplier_name, received_at')
       .gte('received_at', cutoffIso)
       .not('received_at', 'is', null);
     if (dnErr) throw dnErr;
-    const dnIds = (dnData || []).map(d => d.asn_id).filter(Boolean);
+    const dnIds = (dnData || []).map(d => d.dn_id).filter(Boolean);
     if (dnIds.length === 0) {
       RECV_VAR_STATE.cache = { lines: [], byDn: {} };
       recvVarianceRenderKpis();
@@ -7205,11 +7205,11 @@ async function recvVarianceLoad() {
     const dnMap = {};
     (dnData || []).forEach(d => {
       const sup = d.supplier_name || t('recv.var.unknownSupplier');
-      dnMap[d.asn_id] = { supplier: sup, received_at: d.received_at };
+      dnMap[d.dn_id] = { supplier: sup, received_at: d.received_at };
     });
     const { data: lineData, error: lineErr } = await sb.from('delivery_note_lines')
-      .select('asn_id, item_id, item_name, claimed_qty, actual_qty, unit')
-      .in('asn_id', dnIds);
+      .select('dn_id, item_id, item_name, claimed_quantity, actual_quantity, unit')
+      .in('dn_id', dnIds);
     if (lineErr) throw lineErr;
     const itemIds = [...new Set((lineData || []).map(l => l.item_id).filter(Boolean))];
     let costMap = {};
@@ -7226,12 +7226,12 @@ async function recvVarianceLoad() {
       });
     }
     const enriched = (lineData || []).map(l => {
-      const claimed = Number(l.claimed_qty || 0);
-      const actual = Number(l.actual_qty || 0);
+      const claimed = Number(l.claimed_quantity || 0);
+      const actual = Number(l.actual_quantity || 0);
       const qtyDiff = actual - claimed;
       const unitCost = costMap[l.item_id] || 0;
       const moneyImpact = qtyDiff * unitCost;
-      const dn = dnMap[l.asn_id] || {};
+      const dn = dnMap[l.dn_id] || {};
       return { ...l, qtyDiff, unitCost, moneyImpact,
         supplier: dn.supplier || t('recv.var.unknownSupplier'),
         received_at: dn.received_at };
@@ -7302,7 +7302,7 @@ function recvVarianceRenderTable() {
     const agg = {};
     lines.forEach(l => {
       if (!agg[l.supplier]) agg[l.supplier] = { receives: new Set(), totalLines: 0, varLines: 0, money: 0 };
-      agg[l.supplier].receives.add(l.asn_id);
+      agg[l.supplier].receives.add(l.dn_id);
       agg[l.supplier].totalLines++;
       if (Math.abs(l.qtyDiff) > 0.001) agg[l.supplier].varLines++;
       agg[l.supplier].money += l.moneyImpact;
@@ -7335,7 +7335,7 @@ function recvVarianceRenderTable() {
       const key = d.getFullYear() + '-W' + String(getISOWeek(d)).padStart(2, '0');
       const lbl = t('recv.var.weekOf') + ' ' + d.toISOString().slice(0,10);
       if (!agg[key]) agg[key] = { label: lbl, receives: new Set(), varLines: 0, totalLines: 0, money: 0 };
-      agg[key].receives.add(l.asn_id);
+      agg[key].receives.add(l.dn_id);
       agg[key].totalLines++;
       if (Math.abs(l.qtyDiff) > 0.001) agg[key].varLines++;
       agg[key].money += l.moneyImpact;
