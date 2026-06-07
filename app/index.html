@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -2042,7 +2041,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.56-wh-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.57-lic-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -2746,7 +2745,7 @@ const I18N = {
     "nav.reports":"Analytics", "nav.manage":"Manage",
     "reports.title":"Analytics", "reports.sub":"Everything you need to make decisions — KPIs, trends, and exports in one place.",
     "manage.title":"Manage", "manage.sub":"Add and edit items, suppliers, locations, staff. Tap to edit.",
-    "manage.items":"Items", "manage.suppliers":"Suppliers", "manage.locations":"Locations", "manage.users":"Staff", "manage.company":"🏢 Company", "manage.warehouses":"🏭 Warehouses", "wh.title":"Warehouses", "wh.sub":"One Main warehouse buys from suppliers. Sub-warehouses (branches) receive their stock from the Main.", "wh.mainBadge":"MAIN", "wh.mainCard":"Central hub — receives from suppliers, supplies the sub-warehouses.", "wh.addSub":"+ Add sub-warehouse", "wh.editSub":"Edit sub-warehouse", "wh.parentMain":"This branch receives its stock from your Main warehouse.", "wh.name":"Warehouse name", "wh.code":"Short code", "wh.address":"Address", "wh.phone":"Phone", "wh.active":"Active", "wh.colName":"Name", "wh.colCode":"Code", "wh.colAddress":"Address", "wh.colActive":"Active", "wh.noSubs":"No sub-warehouses yet. Add your first branch above.", "wh.needName":"Please enter a warehouse name.", "wh.noMain":"No Main warehouse found. Please run the v3.56 SQL migration in Supabase first.", "wh.notMigrated":"Multi-warehouse isn't enabled in your database yet. Please run the v3.56 SQL migration in Supabase first.", "wh.saveFail":"Save failed", "m.coOwnerOnly":"Only the owner can view or edit Company settings.", "m.coInfoTitle":"Company Information", "m.coName":"Company name", "m.coTagline":"Tagline", "m.coAddress":"Address", "m.coPhone":"Phone", "m.coEmail":"Email", "m.coWebsite":"Website", "m.coVatId":"TIN / Tax ID", "m.coLogoTitle":"Company Logo", "m.coLogoHelp":"PNG or JPG, recommended square, under 500 KB. Shown on PDFs.", "m.coLogoUpload":"Upload logo", "m.coLogoRemove":"Remove", "m.coLogoTooBig":"Logo must be under 500 KB.", "m.coLogoBadType":"Logo must be PNG, JPG, or WebP.", "m.coLogoFail":"Logo upload failed", "m.coLogoUploadedHint":"✅ Logo uploaded. Click Save changes to apply.", "m.coLogoRemoveConfirm":"Remove the current logo?", "m.coBankTitle":"Banking", "m.coBankHelp":"Shown on POs and invoices so suppliers know where to send payment.", "m.coBankName":"Bank name", "m.coBankAccName":"Account name", "m.coBankAccNo":"Account number", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"Branch", "m.coDelTitle":"Delivery Instructions", "m.coDelHelp":"Shown on POs so suppliers know where, when, and how to deliver.", "m.coDelAddress":"Delivery address", "m.coDelHours":"Operating hours", "m.coDelContact":"On-site contact", "m.coDelNote":"Note to supplier", "m.coDefTitle":"Defaults", "m.coDefHelp":"Used on POs and invoices. VAT rate and payment terms.", "m.coVatPct":"VAT (%)", "m.coTerms":"Payment terms (days)", "m.coNameRequired":"Company name is required.", "m.coSaved":"✅ Saved!", "m.coSaveFail":"Save failed", "m.coLoadFail":"Failed to load company settings: ", "po.noLinkedItems":"No items linked to this supplier yet", "po.noLinkedHelp":"Open Manage → Items, then set this supplier as the primary supplier for each item you buy from them.", "po.showAllItems":"Show all items anyway", "m.supplier":"Supplier", "m.primarySupplier":"Primary supplier", "m.primarySupplierHelp":"Used to filter items when creating a PO. Pick the supplier you usually buy this from.", "m.noSupplier":"No primary supplier", "m.noSupplierTip":"No primary supplier set",
+    "manage.items":"Items", "manage.suppliers":"Suppliers", "manage.locations":"Locations", "manage.users":"Staff", "manage.company":"🏢 Company", "manage.warehouses":"🏭 Warehouses", "wh.title":"Warehouses", "wh.sub":"One Main warehouse buys from suppliers. Sub-warehouses (branches) receive their stock from the Main.", "wh.mainBadge":"MAIN", "wh.mainCard":"Central hub — receives from suppliers, supplies the sub-warehouses.", "wh.addSub":"+ Add sub-warehouse", "wh.editSub":"Edit sub-warehouse", "wh.parentMain":"This branch receives its stock from your Main warehouse.", "wh.name":"Warehouse name", "wh.code":"Short code", "wh.address":"Address", "wh.phone":"Phone", "wh.active":"Active", "wh.colName":"Name", "wh.colCode":"Code", "wh.colAddress":"Address", "wh.colActive":"Active", "wh.noSubs":"No sub-warehouses yet. Add your first branch above.", "wh.needName":"Please enter a warehouse name.", "wh.noMain":"No Main warehouse found. Please run the v3.56 SQL migration in Supabase first.", "wh.notMigrated":"Multi-warehouse isn't enabled in your database yet. Please run the v3.56 SQL migration in Supabase first.", "wh.saveFail":"Save failed", "lic.subsUsed":"Sub-warehouses used", "lic.licenseStatus":"License status", "lic.validUntil":"Valid until {date} · {days} days left", "lic.expired":"Expired — read-only", "lic.none":"No license set", "lic.expiredBanner":"⚠ Your KHANGLAOS license has expired — your account is read-only. Contact KHANGLAOS to renew.", "lic.expiredHint":"License expired — contact KHANGLAOS to renew.", "lic.subLimitHint":"Sub-warehouse limit reached — contact KHANGLAOS to add more.", "m.coOwnerOnly":"Only the owner can view or edit Company settings.", "m.coInfoTitle":"Company Information", "m.coName":"Company name", "m.coTagline":"Tagline", "m.coAddress":"Address", "m.coPhone":"Phone", "m.coEmail":"Email", "m.coWebsite":"Website", "m.coVatId":"TIN / Tax ID", "m.coLogoTitle":"Company Logo", "m.coLogoHelp":"PNG or JPG, recommended square, under 500 KB. Shown on PDFs.", "m.coLogoUpload":"Upload logo", "m.coLogoRemove":"Remove", "m.coLogoTooBig":"Logo must be under 500 KB.", "m.coLogoBadType":"Logo must be PNG, JPG, or WebP.", "m.coLogoFail":"Logo upload failed", "m.coLogoUploadedHint":"✅ Logo uploaded. Click Save changes to apply.", "m.coLogoRemoveConfirm":"Remove the current logo?", "m.coBankTitle":"Banking", "m.coBankHelp":"Shown on POs and invoices so suppliers know where to send payment.", "m.coBankName":"Bank name", "m.coBankAccName":"Account name", "m.coBankAccNo":"Account number", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"Branch", "m.coDelTitle":"Delivery Instructions", "m.coDelHelp":"Shown on POs so suppliers know where, when, and how to deliver.", "m.coDelAddress":"Delivery address", "m.coDelHours":"Operating hours", "m.coDelContact":"On-site contact", "m.coDelNote":"Note to supplier", "m.coDefTitle":"Defaults", "m.coDefHelp":"Used on POs and invoices. VAT rate and payment terms.", "m.coVatPct":"VAT (%)", "m.coTerms":"Payment terms (days)", "m.coNameRequired":"Company name is required.", "m.coSaved":"✅ Saved!", "m.coSaveFail":"Save failed", "m.coLoadFail":"Failed to load company settings: ", "po.noLinkedItems":"No items linked to this supplier yet", "po.noLinkedHelp":"Open Manage → Items, then set this supplier as the primary supplier for each item you buy from them.", "po.showAllItems":"Show all items anyway", "m.supplier":"Supplier", "m.primarySupplier":"Primary supplier", "m.primarySupplierHelp":"Used to filter items when creating a PO. Pick the supplier you usually buy this from.", "m.noSupplier":"No primary supplier", "m.noSupplierTip":"No primary supplier set",
     "login.remember":"Remember me", "login.email":"Email", "login.password":"Password", "login.button":"Sign in",
     "login.error":"Invalid username or password.", "login.locked":"Too many failed attempts. Try again in 15 minutes.",
     "login.connecting":"Connecting...", "login.expired":"Session expired. Please sign in again.",
@@ -2905,7 +2904,7 @@ const I18N = {
     "nav.reports":"ການວິເຄາະ", "nav.manage":"ຈັດການ",
     "reports.title":"ການວິເຄາະ", "reports.sub":"ທຸກສິ່ງທີ່ທ່ານຕ້ອງການເພື່ອການຕັດສິນໃຈ — KPI, ແນວໂນ້ມ, ແລະການສົ່ງອອກໃນບ່ອນດຽວ.",
     "manage.title":"ຈັດການ", "manage.sub":"ເພີ່ມ ແລະ ແກ້ໄຂ ສິນຄ້າ, ຜູ້ສະໜອງ, ບ່ອນເກັບ, ພະນັກງານ.",
-    "manage.items":"ສິນຄ້າ", "manage.suppliers":"ຜູ້ສະໜອງ", "manage.locations":"ບ່ອນເກັບ", "manage.users":"ພະນັກງານ", "manage.company":"🏢 ບໍລິສັດ", "manage.warehouses":"🏭 ສາງ", "wh.title":"ສາງ", "wh.sub":"ສາງຫຼັກໜຶ່ງຊື້ຈາກຜູ້ສະໜອງ. ສາງຍ່ອຍ (ສາຂາ) ຮັບສິນຄ້າຈາກສາງຫຼັກ.", "wh.mainBadge":"ຫຼັກ", "wh.mainCard":"ສູນກາງ — ຮັບຈາກຜູ້ສະໜອງ, ສົ່ງໃຫ້ສາງຍ່ອຍ.", "wh.addSub":"+ ເພີ່ມສາງຍ່ອຍ", "wh.editSub":"ແກ້ໄຂສາງຍ່ອຍ", "wh.parentMain":"ສາຂານີ້ຮັບສິນຄ້າຈາກສາງຫຼັກຂອງທ່ານ.", "wh.name":"ຊື່ສາງ", "wh.code":"ລະຫັດສັ້ນ", "wh.address":"ທີ່ຢູ່", "wh.phone":"ໂທລະສັບ", "wh.active":"ໃຊ້ງານ", "wh.colName":"ຊື່", "wh.colCode":"ລະຫັດ", "wh.colAddress":"ທີ່ຢູ່", "wh.colActive":"ໃຊ້ງານ", "wh.noSubs":"ຍັງບໍ່ມີສາງຍ່ອຍ. ເພີ່ມສາຂາທຳອິດຂ້າງເທິງ.", "wh.needName":"ກະລຸນາໃສ່ຊື່ສາງ.", "wh.noMain":"ບໍ່ພົບສາງຫຼັກ. ກະລຸນາດຳເນີນການ SQL migration v3.56 ໃນ Supabase ກ່ອນ.", "wh.notMigrated":"ຫຼາຍສາງຍັງບໍ່ໄດ້ເປີດໃຊ້ໃນຖານຂໍ້ມູນ. ກະລຸນາດຳເນີນການ SQL migration v3.56 ໃນ Supabase ກ່ອນ.", "wh.saveFail":"ບັນທຶກລົ້ມເຫລວ", "m.coOwnerOnly":"ມີແຕ່ເຈົ້າຂອງເທົ່ານັ້ນທີ່ສາມາດເບິ່ງຫຼືແກ້ໄຂການຕັ້ງຄ່າບໍລິສັດ.", "m.coInfoTitle":"ຂໍ້ມູນບໍລິສັດ", "m.coName":"ຊື່ບໍລິສັດ", "m.coTagline":"ສະໂລການ", "m.coAddress":"ທີ່ຢູ່", "m.coPhone":"ໂທລະສັບ", "m.coEmail":"ອີເມວ", "m.coWebsite":"ເວັບໄຊ", "m.coVatId":"ເລກປະຈຳຕົວ TIN", "m.coLogoTitle":"ໂລໂກບໍລິສັດ", "m.coLogoHelp":"PNG ຫຼື JPG, ແນະນຳສີ່ຫຼ່ຽມ, ບໍ່ເກີນ 500 KB. ສະແດງເທິງ PDF.", "m.coLogoUpload":"ອັບໂຫລດໂລໂກ", "m.coLogoRemove":"ລຶບ", "m.coLogoTooBig":"ໂລໂກບໍ່ເກີນ 500 KB.", "m.coLogoBadType":"ໂລໂກຕ້ອງເປັນ PNG, JPG ຫຼື WebP.", "m.coLogoFail":"ອັບໂຫລດໂລໂກລົ້ມເຫລວ", "m.coLogoUploadedHint":"✅ ອັບໂຫລດໂລໂກສຳເລັດ. ກົດບັນທຶກເພື່ອນຳໃຊ້.", "m.coLogoRemoveConfirm":"ລຶບໂລໂກປັດຈຸບັນ?", "m.coBankTitle":"ທະນາຄານ", "m.coBankHelp":"ສະແດງເທິງ PO ແລະ ໃບແຈ້ງໜີ້ ໃຫ້ຜູ້ສະໜອງຮູ້ບ່ອນຊຳລະ.", "m.coBankName":"ຊື່ທະນາຄານ", "m.coBankAccName":"ຊື່ບັນຊີ", "m.coBankAccNo":"ເລກບັນຊີ", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"ສາຂາ", "m.coDelTitle":"ຄຳແນະນຳການຈັດສົ່ງ", "m.coDelHelp":"ສະແດງເທິງ PO ໃຫ້ຜູ້ສະໜອງຮູ້ບ່ອນ, ເວລາ, ແລະ ວິທີຈັດສົ່ງ.", "m.coDelAddress":"ທີ່ຢູ່ສົ່ງ", "m.coDelHours":"ເວລາເຮັດການ", "m.coDelContact":"ຕິດຕໍ່ໃນສະຖານທີ່", "m.coDelNote":"ໝາຍເຫດເຖິງຜູ້ສະໜອງ", "m.coDefTitle":"ຄ່າເລີ່ມຕົ້ນ", "m.coDefHelp":"ໃຊ້ໃນ PO ແລະ ໃບແຈ້ງໜີ້. ອັດຕາ VAT ແລະ ເງື່ອນໄຂການຊຳລະ.", "m.coVatPct":"VAT (%)", "m.coTerms":"ເງື່ອນໄຂການຊຳລະ (ມື້)", "m.coNameRequired":"ຕ້ອງມີຊື່ບໍລິສັດ.", "m.coSaved":"✅ ບັນທຶກສຳເລັດ!", "m.coSaveFail":"ບັນທຶກລົ້ມເຫລວ", "m.coLoadFail":"ໂຫລດການຕັ້ງຄ່າບໍລິສັດລົ້ມເຫລວ: ", "po.noLinkedItems":"ຍັງບໍ່ມີສິນຄ້າທີ່ເຊື່ອມໂຍງກັບຜູ້ສະໜອງນີ້", "po.noLinkedHelp":"ເປີດ ຈັດການ → ສິນຄ້າ, ແລ້ວຕັ້ງຜູ້ສະໜອງນີ້ເປັນຜູ້ສະໜອງຫຼັກສຳລັບແຕ່ລະສິນຄ້າທີ່ທ່ານຊື້ຈາກພວກເຂົາ.", "po.showAllItems":"ສະແດງສິນຄ້າທັງໝົດ", "m.supplier":"ຜູ້ສະໜອງ", "m.primarySupplier":"ຜູ້ສະໜອງຫຼັກ", "m.primarySupplierHelp":"ໃຊ້ເພື່ອກັ່ນຕອງສິນຄ້າເມື່ອສ້າງ PO. ເລືອກຜູ້ສະໜອງທີ່ທ່ານປົກກະຕິຊື້ສິນຄ້ານີ້ຈາກ.", "m.noSupplier":"ບໍ່ມີຜູ້ສະໜອງຫຼັກ", "m.noSupplierTip":"ບໍ່ໄດ້ຕັ້ງຜູ້ສະໜອງຫຼັກ",
+    "manage.items":"ສິນຄ້າ", "manage.suppliers":"ຜູ້ສະໜອງ", "manage.locations":"ບ່ອນເກັບ", "manage.users":"ພະນັກງານ", "manage.company":"🏢 ບໍລິສັດ", "manage.warehouses":"🏭 ສາງ", "wh.title":"ສາງ", "wh.sub":"ສາງຫຼັກໜຶ່ງຊື້ຈາກຜູ້ສະໜອງ. ສາງຍ່ອຍ (ສາຂາ) ຮັບສິນຄ້າຈາກສາງຫຼັກ.", "wh.mainBadge":"ຫຼັກ", "wh.mainCard":"ສູນກາງ — ຮັບຈາກຜູ້ສະໜອງ, ສົ່ງໃຫ້ສາງຍ່ອຍ.", "wh.addSub":"+ ເພີ່ມສາງຍ່ອຍ", "wh.editSub":"ແກ້ໄຂສາງຍ່ອຍ", "wh.parentMain":"ສາຂານີ້ຮັບສິນຄ້າຈາກສາງຫຼັກຂອງທ່ານ.", "wh.name":"ຊື່ສາງ", "wh.code":"ລະຫັດສັ້ນ", "wh.address":"ທີ່ຢູ່", "wh.phone":"ໂທລະສັບ", "wh.active":"ໃຊ້ງານ", "wh.colName":"ຊື່", "wh.colCode":"ລະຫັດ", "wh.colAddress":"ທີ່ຢູ່", "wh.colActive":"ໃຊ້ງານ", "wh.noSubs":"ຍັງບໍ່ມີສາງຍ່ອຍ. ເພີ່ມສາຂາທຳອິດຂ້າງເທິງ.", "wh.needName":"ກະລຸນາໃສ່ຊື່ສາງ.", "wh.noMain":"ບໍ່ພົບສາງຫຼັກ. ກະລຸນາດຳເນີນການ SQL migration v3.56 ໃນ Supabase ກ່ອນ.", "wh.notMigrated":"ຫຼາຍສາງຍັງບໍ່ໄດ້ເປີດໃຊ້ໃນຖານຂໍ້ມູນ. ກະລຸນາດຳເນີນການ SQL migration v3.56 ໃນ Supabase ກ່ອນ.", "wh.saveFail":"ບັນທຶກລົ້ມເຫລວ", "lic.subsUsed":"ສາງຍ່ອຍທີ່ໃຊ້", "lic.licenseStatus":"ສະຖານະໃບອະນຸຍາດ", "lic.validUntil":"ໃຊ້ໄດ້ຮອດ {date} · ເຫຼືອ {days} ມື້", "lic.expired":"ໝົດອາຍຸ — ອ່ານຢ່າງດຽວ", "lic.none":"ຍັງບໍ່ໄດ້ຕັ້ງໃບອະນຸຍາດ", "lic.expiredBanner":"⚠ ໃບອະນຸຍາດ KHANGLAOS ຂອງທ່ານໝົດອາຍຸແລ້ວ — ບັນຊີອ່ານໄດ້ຢ່າງດຽວ. ຕິດຕໍ່ KHANGLAOS ເພື່ອຕໍ່ອາຍຸ.", "lic.expiredHint":"ໃບອະນຸຍາດໝົດອາຍຸ — ຕິດຕໍ່ KHANGLAOS ເພື່ອຕໍ່ອາຍຸ.", "lic.subLimitHint":"ຮອດຂີດຈຳກັດສາງຍ່ອຍແລ້ວ — ຕິດຕໍ່ KHANGLAOS ເພື່ອເພີ່ມ.", "m.coOwnerOnly":"ມີແຕ່ເຈົ້າຂອງເທົ່ານັ້ນທີ່ສາມາດເບິ່ງຫຼືແກ້ໄຂການຕັ້ງຄ່າບໍລິສັດ.", "m.coInfoTitle":"ຂໍ້ມູນບໍລິສັດ", "m.coName":"ຊື່ບໍລິສັດ", "m.coTagline":"ສະໂລການ", "m.coAddress":"ທີ່ຢູ່", "m.coPhone":"ໂທລະສັບ", "m.coEmail":"ອີເມວ", "m.coWebsite":"ເວັບໄຊ", "m.coVatId":"ເລກປະຈຳຕົວ TIN", "m.coLogoTitle":"ໂລໂກບໍລິສັດ", "m.coLogoHelp":"PNG ຫຼື JPG, ແນະນຳສີ່ຫຼ່ຽມ, ບໍ່ເກີນ 500 KB. ສະແດງເທິງ PDF.", "m.coLogoUpload":"ອັບໂຫລດໂລໂກ", "m.coLogoRemove":"ລຶບ", "m.coLogoTooBig":"ໂລໂກບໍ່ເກີນ 500 KB.", "m.coLogoBadType":"ໂລໂກຕ້ອງເປັນ PNG, JPG ຫຼື WebP.", "m.coLogoFail":"ອັບໂຫລດໂລໂກລົ້ມເຫລວ", "m.coLogoUploadedHint":"✅ ອັບໂຫລດໂລໂກສຳເລັດ. ກົດບັນທຶກເພື່ອນຳໃຊ້.", "m.coLogoRemoveConfirm":"ລຶບໂລໂກປັດຈຸບັນ?", "m.coBankTitle":"ທະນາຄານ", "m.coBankHelp":"ສະແດງເທິງ PO ແລະ ໃບແຈ້ງໜີ້ ໃຫ້ຜູ້ສະໜອງຮູ້ບ່ອນຊຳລະ.", "m.coBankName":"ຊື່ທະນາຄານ", "m.coBankAccName":"ຊື່ບັນຊີ", "m.coBankAccNo":"ເລກບັນຊີ", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"ສາຂາ", "m.coDelTitle":"ຄຳແນະນຳການຈັດສົ່ງ", "m.coDelHelp":"ສະແດງເທິງ PO ໃຫ້ຜູ້ສະໜອງຮູ້ບ່ອນ, ເວລາ, ແລະ ວິທີຈັດສົ່ງ.", "m.coDelAddress":"ທີ່ຢູ່ສົ່ງ", "m.coDelHours":"ເວລາເຮັດການ", "m.coDelContact":"ຕິດຕໍ່ໃນສະຖານທີ່", "m.coDelNote":"ໝາຍເຫດເຖິງຜູ້ສະໜອງ", "m.coDefTitle":"ຄ່າເລີ່ມຕົ້ນ", "m.coDefHelp":"ໃຊ້ໃນ PO ແລະ ໃບແຈ້ງໜີ້. ອັດຕາ VAT ແລະ ເງື່ອນໄຂການຊຳລະ.", "m.coVatPct":"VAT (%)", "m.coTerms":"ເງື່ອນໄຂການຊຳລະ (ມື້)", "m.coNameRequired":"ຕ້ອງມີຊື່ບໍລິສັດ.", "m.coSaved":"✅ ບັນທຶກສຳເລັດ!", "m.coSaveFail":"ບັນທຶກລົ້ມເຫລວ", "m.coLoadFail":"ໂຫລດການຕັ້ງຄ່າບໍລິສັດລົ້ມເຫລວ: ", "po.noLinkedItems":"ຍັງບໍ່ມີສິນຄ້າທີ່ເຊື່ອມໂຍງກັບຜູ້ສະໜອງນີ້", "po.noLinkedHelp":"ເປີດ ຈັດການ → ສິນຄ້າ, ແລ້ວຕັ້ງຜູ້ສະໜອງນີ້ເປັນຜູ້ສະໜອງຫຼັກສຳລັບແຕ່ລະສິນຄ້າທີ່ທ່ານຊື້ຈາກພວກເຂົາ.", "po.showAllItems":"ສະແດງສິນຄ້າທັງໝົດ", "m.supplier":"ຜູ້ສະໜອງ", "m.primarySupplier":"ຜູ້ສະໜອງຫຼັກ", "m.primarySupplierHelp":"ໃຊ້ເພື່ອກັ່ນຕອງສິນຄ້າເມື່ອສ້າງ PO. ເລືອກຜູ້ສະໜອງທີ່ທ່ານປົກກະຕິຊື້ສິນຄ້ານີ້ຈາກ.", "m.noSupplier":"ບໍ່ມີຜູ້ສະໜອງຫຼັກ", "m.noSupplierTip":"ບໍ່ໄດ້ຕັ້ງຜູ້ສະໜອງຫຼັກ",
     "login.remember":"ຈື່ຂ້ອຍໄວ້", "login.email":"ອີເມວ", "login.password":"ລະຫັດຜ່ານ", "login.button":"ເຂົ້າສູ່ລະບົບ",
     "login.error":"ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ",
     "login.locked":"ພະຍາຍາມຫຼາຍຄັ້ງເກີນໄປ. ລອງໃໝ່ໃນ 15 ນາທີ",
@@ -5819,6 +5818,34 @@ try {
 // Cache for current user profile (joined from user_profiles + restaurants)
 let __profile = null;
 
+// =====================================================================
+// v3.57 LICENSING — client state. The limits/license are ENFORCED in the
+// database (triggers + RPCs); this is only the friendly on-screen layer.
+// Nothing secret lives here: we learn "are you admin?" from kl_my_license.
+// =====================================================================
+window.__lic = null;
+const KL_SA_ROUTE = 'kl-console-9x2k7';   // hidden, non-guessable SA console route
+async function klLoadLicense(){
+  try {
+    const { data, error } = await sb.rpc('kl_my_license');
+    window.__lic = (error || !data) ? null : data;   // fail-open: null = treat as active
+  } catch(e){ window.__lic = null; }
+  return window.__lic;
+}
+function klLicActive(){ return !window.__lic || window.__lic.active !== false; }
+function klIsPlatformAdmin(){ return !!(window.__lic && window.__lic.is_platform_admin); }
+function klRenderLicenseBanner(){
+  var id='kl-lic-banner', ex=document.getElementById(id);
+  if (window.__lic && window.__lic.active === false){
+    if(!ex){
+      ex=document.createElement('div'); ex.id=id;
+      ex.style.cssText='position:fixed;top:0;left:0;right:0;z-index:10000;background:#c0392b;color:#fff;text-align:center;padding:8px 14px;font-size:13px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.2)';
+      document.body.appendChild(ex);
+    }
+    ex.textContent = t('lic.expiredBanner');
+  } else if (ex){ ex.remove(); }
+}
+
 async function loadProfile() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) { __profile = null; return null; }
@@ -6138,6 +6165,18 @@ async function route() {
     const token = rawHash.slice(3).trim();
     return renderSupplierPoPortal(token);
   }
+  // ============================================================
+  // v3.57: Hidden SA (platform-admin) console — secret route.
+  // Not linked anywhere in the UI. Even if someone finds this
+  // route in the code, the DB rejects non-admins (sa_* RPCs
+  // return NOT_AUTHORIZED), so it is safe regardless of secrecy.
+  // ============================================================
+  if (rawHash === KL_SA_ROUTE) {
+    if (!__profile) await loadProfile();
+    if (!window.__lic) await klLoadLicense();
+    if (!klSession() || !klIsPlatformAdmin()) { location.hash = '#/dashboard'; return; }
+    return renderSAConsole();
+  }
   const r = currentRoute();
   // Login page must show immediately — it needs no database/profile.
   // (Previously a slow/failed profile load left a blank screen.)
@@ -6148,7 +6187,9 @@ async function route() {
   }
   // Other routes require auth — resolve profile from Supabase session.
   if (!__profile) await loadProfile();
+  if (__profile && !window.__lic) await klLoadLicense();   // v3.57: license status (fail-open)
   if (r !== 'login' && !klSession()) {
+    window.__lic = null;
     location.hash = '#/login';
     return;
   }
@@ -6166,6 +6207,7 @@ async function route() {
     location.hash = '#/dashboard';
     return;
   }
+  klRenderLicenseBanner();   // v3.57: show read-only banner if license expired
   showPage(r);
 }
 window.addEventListener('hashchange', route);
@@ -13727,6 +13769,81 @@ window.saveLoc = async function(id){
 // ---- WAREHOUSES (v3.56: Main + Sub, hub-and-spoke) ----
 // Manager/owner/sa only. The DB also enforces tenant isolation + manager
 // writes via RLS — this is the friendly UI layer on top.
+// =====================================================================
+// v3.57 — HIDDEN SA CONSOLE (platform admin only). Fully isolated:
+// own secret route, own overlay, own functions. Never touches the
+// customer pages. Every action is re-checked by the database (sa_* RPCs
+// require is_platform_admin), so a non-admin who reaches it gets nothing.
+// =====================================================================
+async function renderSAConsole(){
+  var ov=document.getElementById('kl-sa-console'); if(ov) ov.remove();
+  ov=document.createElement('div'); ov.id='kl-sa-console';
+  ov.style.cssText='position:fixed;inset:0;z-index:9998;background:#f7f8fa;overflow:auto;padding:18px';
+  ov.innerHTML='<div style="max-width:1000px;margin:0 auto">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'
+      + '<div style="font-size:20px;font-weight:800;color:#15795f">👑 KHANGLAOS — Customers &amp; Licenses</div>'
+      + '<button class="kl-btn" onclick="var o=document.getElementById(\'kl-sa-console\');if(o)o.remove();location.hash=\'#/dashboard\'">✕ Close</button>'
+    + '</div>'
+    + '<div class="kl-rsmall kl-muted" style="margin-bottom:10px">Renew or change a customer\'s license. Changes apply instantly and are enforced by the database.</div>'
+    + '<div id="kl-sa-body"><p class="kl-rsmall kl-muted">Loading customers…</p></div>'
+  + '</div>';
+  document.body.appendChild(ov);
+  await klSaReload();
+}
+async function klSaReload(){
+  var body=document.getElementById('kl-sa-body'); if(!body) return;
+  var rows;
+  try { var r=await sb.rpc('sa_list_customers'); if(r.error) throw r.error; rows=r.data||[]; }
+  catch(e){ body.innerHTML='<div class="kl-rcard warn"><p class="kl-rsmall">Not authorized, or the v3.57 SQL has not been run yet.<br><span class="kl-muted">'+h(String(e.message||e))+'</span></p></div>'; return; }
+  if(!rows.length){ body.innerHTML='<p class="kl-rsmall kl-muted">No customers found.</p>'; return; }
+  var bs='padding:4px 9px;font-size:12px;margin:1px';
+  var html='<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+    +'<th>Customer</th><th>Owner</th><th>Subs</th><th>Expires</th><th>Days</th><th>Renew</th><th>Set</th></tr></thead><tbody>';
+  rows.forEach(function(c){
+    var exp=c.license_expires_at||'—', dl=c.days_left;
+    var col=(c.status==='expired')?'#c0392b':((dl!=null&&dl<=30)?'#caa24a':'#15795f');
+    var rid=c.restaurant_id;
+    html+='<tr>'
+      +'<td><b>'+h(c.name||'')+'</b>'+(c.code?' <span class="kl-muted">('+h(c.code)+')</span>':'')+'</td>'
+      +'<td>'+h(c.owner_name||'—')+'</td>'
+      +'<td>'+c.subs_used+' / '+c.max_sub_warehouses+'</td>'
+      +'<td>'+h(String(exp))+'</td>'
+      +'<td style="color:'+col+';font-weight:700">'+(dl!=null?dl:'—')+'</td>'
+      +'<td style="white-space:nowrap">'
+        +'<button class="kl-btn" style="'+bs+'" onclick="klSaRenew('+rid+',1)">+1m</button>'
+        +'<button class="kl-btn" style="'+bs+'" onclick="klSaRenew('+rid+',3)">+3m</button>'
+        +'<button class="kl-btn" style="'+bs+'" onclick="klSaRenew('+rid+',6)">+6m</button>'
+        +'<button class="kl-btn kl-btn-primary" style="'+bs+'" onclick="klSaRenew('+rid+',12)">+1yr</button>'
+      +'</td>'
+      +'<td style="white-space:nowrap">'
+        +'<button class="kl-btn" style="'+bs+'" onclick="klSaSetSubs('+rid+','+c.max_sub_warehouses+')">Subs</button>'
+        +'<button class="kl-btn" style="'+bs+'" onclick="klSaSetDate('+rid+')">Date</button>'
+      +'</td>'
+    +'</tr>';
+  });
+  html+='</tbody></table></div>';
+  body.innerHTML=html;
+}
+async function klSaRenew(rid, months){
+  try{ var r=await sb.rpc('sa_renew_license',{p_restaurant_id:rid,p_months:months}); if(r.error) throw r.error;
+    alert('✅ Renewed +'+months+' month(s). New expiry: '+((r.data&&r.data.new_expiry)||'?')); await klSaReload();
+  }catch(e){ alert('❌ '+(e.message||e)); }
+}
+async function klSaSetSubs(rid, cur){
+  var v=prompt('Max sub-warehouses for this customer:', cur); if(v===null) return;
+  var n=parseInt(v,10); if(isNaN(n)||n<0){ alert('Please enter a number (0 or more).'); return; }
+  try{ var r=await sb.rpc('sa_set_license',{p_restaurant_id:rid,p_max_subs:n,p_expires_at:null}); if(r.error) throw r.error;
+    alert('✅ Sub limit set to '+n); await klSaReload();
+  }catch(e){ alert('❌ '+(e.message||e)); }
+}
+async function klSaSetDate(rid){
+  var v=prompt('Custom expiry date (YYYY-MM-DD):',''); if(!v) return;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(v)){ alert('Please use the format YYYY-MM-DD'); return; }
+  try{ var r=await sb.rpc('sa_set_license',{p_restaurant_id:rid,p_max_subs:null,p_expires_at:v}); if(r.error) throw r.error;
+    alert('✅ Expiry set to '+v); await klSaReload();
+  }catch(e){ alert('❌ '+(e.message||e)); }
+}
+
 async function renderWarehouses(u, body){
   const role = u.user.role;
   if (!['sa','owner','manager'].includes(role)) {
@@ -13756,13 +13873,41 @@ async function renderWarehouses(u, body){
 
   let html = '<div class="kl-rcard info" style="margin-bottom:14px"><p class="kl-rbig">'+t('wh.title')+'</p><p class="kl-rsmall">'+t('wh.sub')+'</p></div>';
 
+  // v3.57 licensing: sub counter + license status card (display only; DB enforces)
+  var _lic = window.__lic || null;
+  var _activeSubs = subs.filter(function(w){return w.is_active;}).length;
+  var _maxSubs = (_lic && _lic.max_sub_warehouses!=null) ? _lic.max_sub_warehouses : 2;
+  var _licActive = !_lic || _lic.active !== false;
+  var _daysLeft = _lic ? _lic.days_left : null;
+  var _expDate  = _lic ? _lic.license_expires_at : null;
+  var _subFull  = _activeSubs >= _maxSubs;
+  var _licColor = !_licActive ? '#c0392b' : ((_daysLeft!=null && _daysLeft<=30) ? '#caa24a' : '#15795f');
+  var _licMsg   = !_licActive ? t('lic.expired')
+                : (_expDate ? t('lic.validUntil').replace('{date}', _expDate).replace('{days}', (_daysLeft!=null?_daysLeft:'?'))
+                            : t('lic.none'));
+  html += '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px">'
+    + '<div style="flex:1;min-width:130px;border:1px solid #e6e9ee;border-radius:10px;padding:10px 14px;background:#fff">'
+      + '<div class="kl-rsmall kl-muted">'+t('lic.subsUsed')+'</div>'
+      + '<div style="font-size:20px;font-weight:800;color:'+(_subFull?'#c0392b':'#15795f')+'">'+_activeSubs+' / '+_maxSubs+'</div>'
+    + '</div>'
+    + '<div style="flex:2;min-width:200px;border:1px solid #e6e9ee;border-left:4px solid '+_licColor+';border-radius:10px;padding:10px 14px;background:#fff">'
+      + '<div class="kl-rsmall kl-muted">'+t('lic.licenseStatus')+'</div>'
+      + '<div style="font-size:14px;font-weight:700;color:'+_licColor+'">'+_licMsg+'</div>'
+    + '</div>'
+  + '</div>';
+
   if (main){
     html += '<div style="border:2px solid #15795f;border-radius:12px;padding:16px;background:rgba(21,121,95,0.06);margin-bottom:6px">'
       + '<span style="display:inline-block;background:#15795f;color:#fff;font-weight:700;font-size:11px;padding:3px 10px;border-radius:20px;letter-spacing:1px">'+t('wh.mainBadge')+'</span>'
       + '<div style="font-size:18px;font-weight:700;margin-top:8px">'+h(main.name)+(main.code?' <span class="kl-muted" style="font-weight:400">('+h(main.code)+')</span>':'')+'</div>'
       + '<div class="kl-rsmall kl-muted" style="margin-top:2px">'+t('wh.mainCard')+'</div>'
       + '</div>';
-    html += '<button class="kl-btn kl-btn-primary" style="margin:14px 0" onclick="whForm()">'+t('wh.addSub')+'</button>';
+    if (_subFull || !_licActive){
+      html += '<button class="kl-btn" style="margin:14px 0;opacity:.55;cursor:not-allowed" disabled>'+t('wh.addSub')+'</button>'
+        + '<div class="kl-rsmall" style="color:#c0392b;margin:-4px 0 10px">'+(!_licActive ? t('lic.expiredHint') : t('lic.subLimitHint'))+'</div>';
+    } else {
+      html += '<button class="kl-btn kl-btn-primary" style="margin:14px 0" onclick="whForm()">'+t('wh.addSub')+'</button>';
+    }
   } else {
     html += '<div class="kl-rcard warn"><p class="kl-rsmall">'+t('wh.noMain')+'</p></div>';
   }
