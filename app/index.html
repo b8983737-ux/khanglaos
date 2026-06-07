@@ -2041,7 +2041,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.55-po-asn-s25</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.56-wh-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -2656,6 +2656,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
       <button class="kl-tab active" data-mtab="items"     data-i18n="manage.items">Items</button>
       <button class="kl-tab" data-mtab="suppliers" data-i18n="manage.suppliers">Suppliers</button>
       <button class="kl-tab" data-mtab="locations" data-i18n="manage.locations">Locations</button>
+      <button class="kl-tab" data-mtab="warehouses" data-i18n="manage.warehouses">🏭 Warehouses</button>
       <button class="kl-tab" data-mtab="users"     data-i18n="manage.users">Staff</button>
       <button class="kl-tab" data-mtab="company"   data-i18n="manage.company">🏢 Company</button>
     </div>
@@ -2744,7 +2745,7 @@ const I18N = {
     "nav.reports":"Analytics", "nav.manage":"Manage",
     "reports.title":"Analytics", "reports.sub":"Everything you need to make decisions — KPIs, trends, and exports in one place.",
     "manage.title":"Manage", "manage.sub":"Add and edit items, suppliers, locations, staff. Tap to edit.",
-    "manage.items":"Items", "manage.suppliers":"Suppliers", "manage.locations":"Locations", "manage.users":"Staff", "manage.company":"🏢 Company", "m.coOwnerOnly":"Only the owner can view or edit Company settings.", "m.coInfoTitle":"Company Information", "m.coName":"Company name", "m.coTagline":"Tagline", "m.coAddress":"Address", "m.coPhone":"Phone", "m.coEmail":"Email", "m.coWebsite":"Website", "m.coVatId":"TIN / Tax ID", "m.coLogoTitle":"Company Logo", "m.coLogoHelp":"PNG or JPG, recommended square, under 500 KB. Shown on PDFs.", "m.coLogoUpload":"Upload logo", "m.coLogoRemove":"Remove", "m.coLogoTooBig":"Logo must be under 500 KB.", "m.coLogoBadType":"Logo must be PNG, JPG, or WebP.", "m.coLogoFail":"Logo upload failed", "m.coLogoUploadedHint":"✅ Logo uploaded. Click Save changes to apply.", "m.coLogoRemoveConfirm":"Remove the current logo?", "m.coBankTitle":"Banking", "m.coBankHelp":"Shown on POs and invoices so suppliers know where to send payment.", "m.coBankName":"Bank name", "m.coBankAccName":"Account name", "m.coBankAccNo":"Account number", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"Branch", "m.coDelTitle":"Delivery Instructions", "m.coDelHelp":"Shown on POs so suppliers know where, when, and how to deliver.", "m.coDelAddress":"Delivery address", "m.coDelHours":"Operating hours", "m.coDelContact":"On-site contact", "m.coDelNote":"Note to supplier", "m.coDefTitle":"Defaults", "m.coDefHelp":"Used on POs and invoices. VAT rate and payment terms.", "m.coVatPct":"VAT (%)", "m.coTerms":"Payment terms (days)", "m.coNameRequired":"Company name is required.", "m.coSaved":"✅ Saved!", "m.coSaveFail":"Save failed", "m.coLoadFail":"Failed to load company settings: ", "po.noLinkedItems":"No items linked to this supplier yet", "po.noLinkedHelp":"Open Manage → Items, then set this supplier as the primary supplier for each item you buy from them.", "po.showAllItems":"Show all items anyway", "m.supplier":"Supplier", "m.primarySupplier":"Primary supplier", "m.primarySupplierHelp":"Used to filter items when creating a PO. Pick the supplier you usually buy this from.", "m.noSupplier":"No primary supplier", "m.noSupplierTip":"No primary supplier set",
+    "manage.items":"Items", "manage.suppliers":"Suppliers", "manage.locations":"Locations", "manage.users":"Staff", "manage.company":"🏢 Company", "manage.warehouses":"🏭 Warehouses", "wh.title":"Warehouses", "wh.sub":"One Main warehouse buys from suppliers. Sub-warehouses (branches) receive their stock from the Main.", "wh.mainBadge":"MAIN", "wh.mainCard":"Central hub — receives from suppliers, supplies the sub-warehouses.", "wh.addSub":"+ Add sub-warehouse", "wh.editSub":"Edit sub-warehouse", "wh.parentMain":"This branch receives its stock from your Main warehouse.", "wh.name":"Warehouse name", "wh.code":"Short code", "wh.address":"Address", "wh.phone":"Phone", "wh.active":"Active", "wh.colName":"Name", "wh.colCode":"Code", "wh.colAddress":"Address", "wh.colActive":"Active", "wh.noSubs":"No sub-warehouses yet. Add your first branch above.", "wh.needName":"Please enter a warehouse name.", "wh.noMain":"No Main warehouse found. Please run the v3.56 SQL migration in Supabase first.", "wh.notMigrated":"Multi-warehouse isn't enabled in your database yet. Please run the v3.56 SQL migration in Supabase first.", "wh.saveFail":"Save failed", "m.coOwnerOnly":"Only the owner can view or edit Company settings.", "m.coInfoTitle":"Company Information", "m.coName":"Company name", "m.coTagline":"Tagline", "m.coAddress":"Address", "m.coPhone":"Phone", "m.coEmail":"Email", "m.coWebsite":"Website", "m.coVatId":"TIN / Tax ID", "m.coLogoTitle":"Company Logo", "m.coLogoHelp":"PNG or JPG, recommended square, under 500 KB. Shown on PDFs.", "m.coLogoUpload":"Upload logo", "m.coLogoRemove":"Remove", "m.coLogoTooBig":"Logo must be under 500 KB.", "m.coLogoBadType":"Logo must be PNG, JPG, or WebP.", "m.coLogoFail":"Logo upload failed", "m.coLogoUploadedHint":"✅ Logo uploaded. Click Save changes to apply.", "m.coLogoRemoveConfirm":"Remove the current logo?", "m.coBankTitle":"Banking", "m.coBankHelp":"Shown on POs and invoices so suppliers know where to send payment.", "m.coBankName":"Bank name", "m.coBankAccName":"Account name", "m.coBankAccNo":"Account number", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"Branch", "m.coDelTitle":"Delivery Instructions", "m.coDelHelp":"Shown on POs so suppliers know where, when, and how to deliver.", "m.coDelAddress":"Delivery address", "m.coDelHours":"Operating hours", "m.coDelContact":"On-site contact", "m.coDelNote":"Note to supplier", "m.coDefTitle":"Defaults", "m.coDefHelp":"Used on POs and invoices. VAT rate and payment terms.", "m.coVatPct":"VAT (%)", "m.coTerms":"Payment terms (days)", "m.coNameRequired":"Company name is required.", "m.coSaved":"✅ Saved!", "m.coSaveFail":"Save failed", "m.coLoadFail":"Failed to load company settings: ", "po.noLinkedItems":"No items linked to this supplier yet", "po.noLinkedHelp":"Open Manage → Items, then set this supplier as the primary supplier for each item you buy from them.", "po.showAllItems":"Show all items anyway", "m.supplier":"Supplier", "m.primarySupplier":"Primary supplier", "m.primarySupplierHelp":"Used to filter items when creating a PO. Pick the supplier you usually buy this from.", "m.noSupplier":"No primary supplier", "m.noSupplierTip":"No primary supplier set",
     "login.remember":"Remember me", "login.email":"Email", "login.password":"Password", "login.button":"Sign in",
     "login.error":"Invalid username or password.", "login.locked":"Too many failed attempts. Try again in 15 minutes.",
     "login.connecting":"Connecting...", "login.expired":"Session expired. Please sign in again.",
@@ -2903,7 +2904,7 @@ const I18N = {
     "nav.reports":"ການວິເຄາະ", "nav.manage":"ຈັດການ",
     "reports.title":"ການວິເຄາະ", "reports.sub":"ທຸກສິ່ງທີ່ທ່ານຕ້ອງການເພື່ອການຕັດສິນໃຈ — KPI, ແນວໂນ້ມ, ແລະການສົ່ງອອກໃນບ່ອນດຽວ.",
     "manage.title":"ຈັດການ", "manage.sub":"ເພີ່ມ ແລະ ແກ້ໄຂ ສິນຄ້າ, ຜູ້ສະໜອງ, ບ່ອນເກັບ, ພະນັກງານ.",
-    "manage.items":"ສິນຄ້າ", "manage.suppliers":"ຜູ້ສະໜອງ", "manage.locations":"ບ່ອນເກັບ", "manage.users":"ພະນັກງານ", "manage.company":"🏢 ບໍລິສັດ", "m.coOwnerOnly":"ມີແຕ່ເຈົ້າຂອງເທົ່ານັ້ນທີ່ສາມາດເບິ່ງຫຼືແກ້ໄຂການຕັ້ງຄ່າບໍລິສັດ.", "m.coInfoTitle":"ຂໍ້ມູນບໍລິສັດ", "m.coName":"ຊື່ບໍລິສັດ", "m.coTagline":"ສະໂລການ", "m.coAddress":"ທີ່ຢູ່", "m.coPhone":"ໂທລະສັບ", "m.coEmail":"ອີເມວ", "m.coWebsite":"ເວັບໄຊ", "m.coVatId":"ເລກປະຈຳຕົວ TIN", "m.coLogoTitle":"ໂລໂກບໍລິສັດ", "m.coLogoHelp":"PNG ຫຼື JPG, ແນະນຳສີ່ຫຼ່ຽມ, ບໍ່ເກີນ 500 KB. ສະແດງເທິງ PDF.", "m.coLogoUpload":"ອັບໂຫລດໂລໂກ", "m.coLogoRemove":"ລຶບ", "m.coLogoTooBig":"ໂລໂກບໍ່ເກີນ 500 KB.", "m.coLogoBadType":"ໂລໂກຕ້ອງເປັນ PNG, JPG ຫຼື WebP.", "m.coLogoFail":"ອັບໂຫລດໂລໂກລົ້ມເຫລວ", "m.coLogoUploadedHint":"✅ ອັບໂຫລດໂລໂກສຳເລັດ. ກົດບັນທຶກເພື່ອນຳໃຊ້.", "m.coLogoRemoveConfirm":"ລຶບໂລໂກປັດຈຸບັນ?", "m.coBankTitle":"ທະນາຄານ", "m.coBankHelp":"ສະແດງເທິງ PO ແລະ ໃບແຈ້ງໜີ້ ໃຫ້ຜູ້ສະໜອງຮູ້ບ່ອນຊຳລະ.", "m.coBankName":"ຊື່ທະນາຄານ", "m.coBankAccName":"ຊື່ບັນຊີ", "m.coBankAccNo":"ເລກບັນຊີ", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"ສາຂາ", "m.coDelTitle":"ຄຳແນະນຳການຈັດສົ່ງ", "m.coDelHelp":"ສະແດງເທິງ PO ໃຫ້ຜູ້ສະໜອງຮູ້ບ່ອນ, ເວລາ, ແລະ ວິທີຈັດສົ່ງ.", "m.coDelAddress":"ທີ່ຢູ່ສົ່ງ", "m.coDelHours":"ເວລາເຮັດການ", "m.coDelContact":"ຕິດຕໍ່ໃນສະຖານທີ່", "m.coDelNote":"ໝາຍເຫດເຖິງຜູ້ສະໜອງ", "m.coDefTitle":"ຄ່າເລີ່ມຕົ້ນ", "m.coDefHelp":"ໃຊ້ໃນ PO ແລະ ໃບແຈ້ງໜີ້. ອັດຕາ VAT ແລະ ເງື່ອນໄຂການຊຳລະ.", "m.coVatPct":"VAT (%)", "m.coTerms":"ເງື່ອນໄຂການຊຳລະ (ມື້)", "m.coNameRequired":"ຕ້ອງມີຊື່ບໍລິສັດ.", "m.coSaved":"✅ ບັນທຶກສຳເລັດ!", "m.coSaveFail":"ບັນທຶກລົ້ມເຫລວ", "m.coLoadFail":"ໂຫລດການຕັ້ງຄ່າບໍລິສັດລົ້ມເຫລວ: ", "po.noLinkedItems":"ຍັງບໍ່ມີສິນຄ້າທີ່ເຊື່ອມໂຍງກັບຜູ້ສະໜອງນີ້", "po.noLinkedHelp":"ເປີດ ຈັດການ → ສິນຄ້າ, ແລ້ວຕັ້ງຜູ້ສະໜອງນີ້ເປັນຜູ້ສະໜອງຫຼັກສຳລັບແຕ່ລະສິນຄ້າທີ່ທ່ານຊື້ຈາກພວກເຂົາ.", "po.showAllItems":"ສະແດງສິນຄ້າທັງໝົດ", "m.supplier":"ຜູ້ສະໜອງ", "m.primarySupplier":"ຜູ້ສະໜອງຫຼັກ", "m.primarySupplierHelp":"ໃຊ້ເພື່ອກັ່ນຕອງສິນຄ້າເມື່ອສ້າງ PO. ເລືອກຜູ້ສະໜອງທີ່ທ່ານປົກກະຕິຊື້ສິນຄ້ານີ້ຈາກ.", "m.noSupplier":"ບໍ່ມີຜູ້ສະໜອງຫຼັກ", "m.noSupplierTip":"ບໍ່ໄດ້ຕັ້ງຜູ້ສະໜອງຫຼັກ",
+    "manage.items":"ສິນຄ້າ", "manage.suppliers":"ຜູ້ສະໜອງ", "manage.locations":"ບ່ອນເກັບ", "manage.users":"ພະນັກງານ", "manage.company":"🏢 ບໍລິສັດ", "manage.warehouses":"🏭 ສາງ", "wh.title":"ສາງ", "wh.sub":"ສາງຫຼັກໜຶ່ງຊື້ຈາກຜູ້ສະໜອງ. ສາງຍ່ອຍ (ສາຂາ) ຮັບສິນຄ້າຈາກສາງຫຼັກ.", "wh.mainBadge":"ຫຼັກ", "wh.mainCard":"ສູນກາງ — ຮັບຈາກຜູ້ສະໜອງ, ສົ່ງໃຫ້ສາງຍ່ອຍ.", "wh.addSub":"+ ເພີ່ມສາງຍ່ອຍ", "wh.editSub":"ແກ້ໄຂສາງຍ່ອຍ", "wh.parentMain":"ສາຂານີ້ຮັບສິນຄ້າຈາກສາງຫຼັກຂອງທ່ານ.", "wh.name":"ຊື່ສາງ", "wh.code":"ລະຫັດສັ້ນ", "wh.address":"ທີ່ຢູ່", "wh.phone":"ໂທລະສັບ", "wh.active":"ໃຊ້ງານ", "wh.colName":"ຊື່", "wh.colCode":"ລະຫັດ", "wh.colAddress":"ທີ່ຢູ່", "wh.colActive":"ໃຊ້ງານ", "wh.noSubs":"ຍັງບໍ່ມີສາງຍ່ອຍ. ເພີ່ມສາຂາທຳອິດຂ້າງເທິງ.", "wh.needName":"ກະລຸນາໃສ່ຊື່ສາງ.", "wh.noMain":"ບໍ່ພົບສາງຫຼັກ. ກະລຸນາດຳເນີນການ SQL migration v3.56 ໃນ Supabase ກ່ອນ.", "wh.notMigrated":"ຫຼາຍສາງຍັງບໍ່ໄດ້ເປີດໃຊ້ໃນຖານຂໍ້ມູນ. ກະລຸນາດຳເນີນການ SQL migration v3.56 ໃນ Supabase ກ່ອນ.", "wh.saveFail":"ບັນທຶກລົ້ມເຫລວ", "m.coOwnerOnly":"ມີແຕ່ເຈົ້າຂອງເທົ່ານັ້ນທີ່ສາມາດເບິ່ງຫຼືແກ້ໄຂການຕັ້ງຄ່າບໍລິສັດ.", "m.coInfoTitle":"ຂໍ້ມູນບໍລິສັດ", "m.coName":"ຊື່ບໍລິສັດ", "m.coTagline":"ສະໂລການ", "m.coAddress":"ທີ່ຢູ່", "m.coPhone":"ໂທລະສັບ", "m.coEmail":"ອີເມວ", "m.coWebsite":"ເວັບໄຊ", "m.coVatId":"ເລກປະຈຳຕົວ TIN", "m.coLogoTitle":"ໂລໂກບໍລິສັດ", "m.coLogoHelp":"PNG ຫຼື JPG, ແນະນຳສີ່ຫຼ່ຽມ, ບໍ່ເກີນ 500 KB. ສະແດງເທິງ PDF.", "m.coLogoUpload":"ອັບໂຫລດໂລໂກ", "m.coLogoRemove":"ລຶບ", "m.coLogoTooBig":"ໂລໂກບໍ່ເກີນ 500 KB.", "m.coLogoBadType":"ໂລໂກຕ້ອງເປັນ PNG, JPG ຫຼື WebP.", "m.coLogoFail":"ອັບໂຫລດໂລໂກລົ້ມເຫລວ", "m.coLogoUploadedHint":"✅ ອັບໂຫລດໂລໂກສຳເລັດ. ກົດບັນທຶກເພື່ອນຳໃຊ້.", "m.coLogoRemoveConfirm":"ລຶບໂລໂກປັດຈຸບັນ?", "m.coBankTitle":"ທະນາຄານ", "m.coBankHelp":"ສະແດງເທິງ PO ແລະ ໃບແຈ້ງໜີ້ ໃຫ້ຜູ້ສະໜອງຮູ້ບ່ອນຊຳລະ.", "m.coBankName":"ຊື່ທະນາຄານ", "m.coBankAccName":"ຊື່ບັນຊີ", "m.coBankAccNo":"ເລກບັນຊີ", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"ສາຂາ", "m.coDelTitle":"ຄຳແນະນຳການຈັດສົ່ງ", "m.coDelHelp":"ສະແດງເທິງ PO ໃຫ້ຜູ້ສະໜອງຮູ້ບ່ອນ, ເວລາ, ແລະ ວິທີຈັດສົ່ງ.", "m.coDelAddress":"ທີ່ຢູ່ສົ່ງ", "m.coDelHours":"ເວລາເຮັດການ", "m.coDelContact":"ຕິດຕໍ່ໃນສະຖານທີ່", "m.coDelNote":"ໝາຍເຫດເຖິງຜູ້ສະໜອງ", "m.coDefTitle":"ຄ່າເລີ່ມຕົ້ນ", "m.coDefHelp":"ໃຊ້ໃນ PO ແລະ ໃບແຈ້ງໜີ້. ອັດຕາ VAT ແລະ ເງື່ອນໄຂການຊຳລະ.", "m.coVatPct":"VAT (%)", "m.coTerms":"ເງື່ອນໄຂການຊຳລະ (ມື້)", "m.coNameRequired":"ຕ້ອງມີຊື່ບໍລິສັດ.", "m.coSaved":"✅ ບັນທຶກສຳເລັດ!", "m.coSaveFail":"ບັນທຶກລົ້ມເຫລວ", "m.coLoadFail":"ໂຫລດການຕັ້ງຄ່າບໍລິສັດລົ້ມເຫລວ: ", "po.noLinkedItems":"ຍັງບໍ່ມີສິນຄ້າທີ່ເຊື່ອມໂຍງກັບຜູ້ສະໜອງນີ້", "po.noLinkedHelp":"ເປີດ ຈັດການ → ສິນຄ້າ, ແລ້ວຕັ້ງຜູ້ສະໜອງນີ້ເປັນຜູ້ສະໜອງຫຼັກສຳລັບແຕ່ລະສິນຄ້າທີ່ທ່ານຊື້ຈາກພວກເຂົາ.", "po.showAllItems":"ສະແດງສິນຄ້າທັງໝົດ", "m.supplier":"ຜູ້ສະໜອງ", "m.primarySupplier":"ຜູ້ສະໜອງຫຼັກ", "m.primarySupplierHelp":"ໃຊ້ເພື່ອກັ່ນຕອງສິນຄ້າເມື່ອສ້າງ PO. ເລືອກຜູ້ສະໜອງທີ່ທ່ານປົກກະຕິຊື້ສິນຄ້ານີ້ຈາກ.", "m.noSupplier":"ບໍ່ມີຜູ້ສະໜອງຫຼັກ", "m.noSupplierTip":"ບໍ່ໄດ້ຕັ້ງຜູ້ສະໜອງຫຼັກ",
     "login.remember":"ຈື່ຂ້ອຍໄວ້", "login.email":"ອີເມວ", "login.password":"ລະຫັດຜ່ານ", "login.button":"ເຂົ້າສູ່ລະບົບ",
     "login.error":"ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ",
     "login.locked":"ພະຍາຍາມຫຼາຍຄັ້ງເກີນໄປ. ລອງໃໝ່ໃນ 15 ນາທີ",
@@ -3064,7 +3065,7 @@ const I18N = {
     "nav.reports":"การวิเคราะห์", "nav.manage":"จัดการ",
     "reports.title":"การวิเคราะห์", "reports.sub":"ทุกอย่างที่คุณต้องการในการตัดสินใจ — KPI แนวโน้ม และส่งออก ในที่เดียว",
     "manage.title":"จัดการ", "manage.sub":"เพิ่มและแก้ไข สินค้า ผู้จัดส่ง สถานที่ พนักงาน.",
-    "manage.items":"สินค้า", "manage.suppliers":"ผู้จัดส่ง", "manage.locations":"สถานที่", "manage.users":"พนักงาน", "manage.company":"🏢 บริษัท", "m.coOwnerOnly":"เฉพาะเจ้าของเท่านั้นที่ดูหรือแก้ไขการตั้งค่าบริษัทได้", "m.coInfoTitle":"ข้อมูลบริษัท", "m.coName":"ชื่อบริษัท", "m.coTagline":"สโลแกน", "m.coAddress":"ที่อยู่", "m.coPhone":"โทรศัพท์", "m.coEmail":"อีเมล", "m.coWebsite":"เว็บไซต์", "m.coVatId":"เลขประจำตัว TIN", "m.coLogoTitle":"โลโก้บริษัท", "m.coLogoHelp":"PNG หรือ JPG, แนะนำสี่เหลี่ยม, ไม่เกิน 500 KB แสดงบน PDF", "m.coLogoUpload":"อัปโหลดโลโก้", "m.coLogoRemove":"ลบ", "m.coLogoTooBig":"โลโก้ต้องไม่เกิน 500 KB", "m.coLogoBadType":"โลโก้ต้องเป็น PNG, JPG หรือ WebP", "m.coLogoFail":"อัปโหลดโลโก้ล้มเหลว", "m.coLogoUploadedHint":"✅ อัปโหลดโลโก้แล้ว กดบันทึกเพื่อใช้งาน", "m.coLogoRemoveConfirm":"ลบโลโก้ปัจจุบัน?", "m.coBankTitle":"ธนาคาร", "m.coBankHelp":"แสดงบน PO และใบแจ้งหนี้ ให้ซัพพลายเออร์รู้ที่ชำระ", "m.coBankName":"ชื่อธนาคาร", "m.coBankAccName":"ชื่อบัญชี", "m.coBankAccNo":"เลขบัญชี", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"สาขา", "m.coDelTitle":"คำแนะนำการจัดส่ง", "m.coDelHelp":"แสดงบน PO ให้ซัพพลายเออร์รู้ที่ เวลา และวิธีจัดส่ง", "m.coDelAddress":"ที่อยู่จัดส่ง", "m.coDelHours":"เวลาทำการ", "m.coDelContact":"ติดต่อหน้างาน", "m.coDelNote":"หมายเหตุถึงซัพพลายเออร์", "m.coDefTitle":"ค่าเริ่มต้น", "m.coDefHelp":"ใช้ใน PO และใบแจ้งหนี้ อัตรา VAT และเงื่อนไขการชำระ", "m.coVatPct":"VAT (%)", "m.coTerms":"เงื่อนไขการชำระ (วัน)", "m.coNameRequired":"ต้องระบุชื่อบริษัท", "m.coSaved":"✅ บันทึกแล้ว!", "m.coSaveFail":"บันทึกล้มเหลว", "m.coLoadFail":"โหลดการตั้งค่าบริษัทล้มเหลว: ", "po.noLinkedItems":"ยังไม่มีสินค้าที่เชื่อมโยงกับซัพพลายเออร์นี้", "po.noLinkedHelp":"เปิด จัดการ → สินค้า แล้วตั้งซัพพลายเออร์นี้เป็นซัพพลายเออร์หลักของแต่ละสินค้าที่คุณซื้อจากพวกเขา", "po.showAllItems":"แสดงสินค้าทั้งหมด", "m.supplier":"ซัพพลายเออร์", "m.primarySupplier":"ซัพพลายเออร์หลัก", "m.primarySupplierHelp":"ใช้กรองสินค้าเมื่อสร้าง PO เลือกซัพพลายเออร์ที่คุณมักซื้อสินค้านี้จาก", "m.noSupplier":"ไม่มีซัพพลายเออร์หลัก", "m.noSupplierTip":"ไม่ได้ตั้งซัพพลายเออร์หลัก",
+    "manage.items":"สินค้า", "manage.suppliers":"ผู้จัดส่ง", "manage.locations":"สถานที่", "manage.users":"พนักงาน", "manage.company":"🏢 บริษัท", "manage.warehouses":"🏭 คลัง", "wh.title":"คลังสินค้า", "wh.sub":"คลังหลักหนึ่งแห่งซื้อจากซัพพลายเออร์ คลังย่อย (สาขา) รับสินค้าจากคลังหลัก", "wh.mainBadge":"หลัก", "wh.mainCard":"ศูนย์กลาง — รับจากซัพพลายเออร์ ส่งให้คลังย่อย", "wh.addSub":"+ เพิ่มคลังย่อย", "wh.editSub":"แก้ไขคลังย่อย", "wh.parentMain":"สาขานี้รับสินค้าจากคลังหลักของคุณ", "wh.name":"ชื่อคลัง", "wh.code":"รหัสย่อ", "wh.address":"ที่อยู่", "wh.phone":"โทรศัพท์", "wh.active":"ใช้งาน", "wh.colName":"ชื่อ", "wh.colCode":"รหัส", "wh.colAddress":"ที่อยู่", "wh.colActive":"ใช้งาน", "wh.noSubs":"ยังไม่มีคลังย่อย เพิ่มสาขาแรกด้านบน", "wh.needName":"กรุณาใส่ชื่อคลัง", "wh.noMain":"ไม่พบคลังหลัก กรุณารัน SQL migration v3.56 ใน Supabase ก่อน", "wh.notMigrated":"หลายคลังยังไม่เปิดใช้งานในฐานข้อมูล กรุณารัน SQL migration v3.56 ใน Supabase ก่อน", "wh.saveFail":"บันทึกล้มเหลว", "m.coOwnerOnly":"เฉพาะเจ้าของเท่านั้นที่ดูหรือแก้ไขการตั้งค่าบริษัทได้", "m.coInfoTitle":"ข้อมูลบริษัท", "m.coName":"ชื่อบริษัท", "m.coTagline":"สโลแกน", "m.coAddress":"ที่อยู่", "m.coPhone":"โทรศัพท์", "m.coEmail":"อีเมล", "m.coWebsite":"เว็บไซต์", "m.coVatId":"เลขประจำตัว TIN", "m.coLogoTitle":"โลโก้บริษัท", "m.coLogoHelp":"PNG หรือ JPG, แนะนำสี่เหลี่ยม, ไม่เกิน 500 KB แสดงบน PDF", "m.coLogoUpload":"อัปโหลดโลโก้", "m.coLogoRemove":"ลบ", "m.coLogoTooBig":"โลโก้ต้องไม่เกิน 500 KB", "m.coLogoBadType":"โลโก้ต้องเป็น PNG, JPG หรือ WebP", "m.coLogoFail":"อัปโหลดโลโก้ล้มเหลว", "m.coLogoUploadedHint":"✅ อัปโหลดโลโก้แล้ว กดบันทึกเพื่อใช้งาน", "m.coLogoRemoveConfirm":"ลบโลโก้ปัจจุบัน?", "m.coBankTitle":"ธนาคาร", "m.coBankHelp":"แสดงบน PO และใบแจ้งหนี้ ให้ซัพพลายเออร์รู้ที่ชำระ", "m.coBankName":"ชื่อธนาคาร", "m.coBankAccName":"ชื่อบัญชี", "m.coBankAccNo":"เลขบัญชี", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"สาขา", "m.coDelTitle":"คำแนะนำการจัดส่ง", "m.coDelHelp":"แสดงบน PO ให้ซัพพลายเออร์รู้ที่ เวลา และวิธีจัดส่ง", "m.coDelAddress":"ที่อยู่จัดส่ง", "m.coDelHours":"เวลาทำการ", "m.coDelContact":"ติดต่อหน้างาน", "m.coDelNote":"หมายเหตุถึงซัพพลายเออร์", "m.coDefTitle":"ค่าเริ่มต้น", "m.coDefHelp":"ใช้ใน PO และใบแจ้งหนี้ อัตรา VAT และเงื่อนไขการชำระ", "m.coVatPct":"VAT (%)", "m.coTerms":"เงื่อนไขการชำระ (วัน)", "m.coNameRequired":"ต้องระบุชื่อบริษัท", "m.coSaved":"✅ บันทึกแล้ว!", "m.coSaveFail":"บันทึกล้มเหลว", "m.coLoadFail":"โหลดการตั้งค่าบริษัทล้มเหลว: ", "po.noLinkedItems":"ยังไม่มีสินค้าที่เชื่อมโยงกับซัพพลายเออร์นี้", "po.noLinkedHelp":"เปิด จัดการ → สินค้า แล้วตั้งซัพพลายเออร์นี้เป็นซัพพลายเออร์หลักของแต่ละสินค้าที่คุณซื้อจากพวกเขา", "po.showAllItems":"แสดงสินค้าทั้งหมด", "m.supplier":"ซัพพลายเออร์", "m.primarySupplier":"ซัพพลายเออร์หลัก", "m.primarySupplierHelp":"ใช้กรองสินค้าเมื่อสร้าง PO เลือกซัพพลายเออร์ที่คุณมักซื้อสินค้านี้จาก", "m.noSupplier":"ไม่มีซัพพลายเออร์หลัก", "m.noSupplierTip":"ไม่ได้ตั้งซัพพลายเออร์หลัก",
     "login.remember":"จดจำฉัน", "login.email":"อีเมล", "login.password":"รหัสผ่าน", "login.button":"เข้าสู่ระบบ",
     "login.error":"ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
     "login.locked":"ลองผิดหลายครั้งเกินไป รอ 15 นาที", "login.connecting":"กำลังเชื่อมต่อ...",
@@ -3225,7 +3226,7 @@ const I18N = {
     "nav.reports":"分析", "nav.manage":"管理",
     "reports.title":"分析", "reports.sub":"决策所需的一切 — KPI、趋势和导出，集中在一个地方。",
     "manage.title":"管理", "manage.sub":"添加和编辑物品、供应商、位置、员工。",
-    "manage.items":"物品", "manage.suppliers":"供应商", "manage.locations":"位置", "manage.users":"员工", "manage.company":"🏢 公司", "m.coOwnerOnly":"只有所有者可以查看或编辑公司设置。", "m.coInfoTitle":"公司信息", "m.coName":"公司名称", "m.coTagline":"标语", "m.coAddress":"地址", "m.coPhone":"电话", "m.coEmail":"邮箱", "m.coWebsite":"网站", "m.coVatId":"税号 TIN", "m.coLogoTitle":"公司徽标", "m.coLogoHelp":"PNG 或 JPG，推荐方形，500 KB 以内。显示在 PDF 上。", "m.coLogoUpload":"上传徽标", "m.coLogoRemove":"删除", "m.coLogoTooBig":"徽标必须小于 500 KB。", "m.coLogoBadType":"徽标必须是 PNG、JPG 或 WebP。", "m.coLogoFail":"徽标上传失败", "m.coLogoUploadedHint":"✅ 徽标已上传。点击保存以应用。", "m.coLogoRemoveConfirm":"删除当前徽标?", "m.coBankTitle":"银行", "m.coBankHelp":"显示在采购订单和发票上，让供应商知道付款地址。", "m.coBankName":"银行名称", "m.coBankAccName":"账户名称", "m.coBankAccNo":"账户号码", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"分行", "m.coDelTitle":"配送说明", "m.coDelHelp":"显示在 PO 上，让供应商知道地点、时间和方式。", "m.coDelAddress":"配送地址", "m.coDelHours":"营业时间", "m.coDelContact":"现场联系人", "m.coDelNote":"给供应商的备注", "m.coDefTitle":"默认值", "m.coDefHelp":"用于 PO 和发票。VAT 税率和付款条件。", "m.coVatPct":"VAT (%)", "m.coTerms":"付款条件（天）", "m.coNameRequired":"公司名称为必填项。", "m.coSaved":"✅ 已保存！", "m.coSaveFail":"保存失败", "m.coLoadFail":"加载公司设置失败: ", "po.noLinkedItems":"暂无与此供应商关联的商品", "po.noLinkedHelp":"打开 管理 → 商品，然后将此供应商设为您从其购买的每件商品的主要供应商。", "po.showAllItems":"仍显示所有商品", "m.supplier":"供应商", "m.primarySupplier":"主要供应商", "m.primarySupplierHelp":"创建PO时用于筛选商品。选择您通常从其购买此商品的供应商。", "m.noSupplier":"无主要供应商", "m.noSupplierTip":"未设置主要供应商",
+    "manage.items":"物品", "manage.suppliers":"供应商", "manage.locations":"位置", "manage.users":"员工", "manage.company":"🏢 公司", "manage.warehouses":"🏭 仓库", "wh.title":"仓库", "wh.sub":"一个主仓库向供应商采购。子仓库（分店）从主仓库接收库存。", "wh.mainBadge":"主", "wh.mainCard":"中心枢纽 — 从供应商接收，供应给子仓库。", "wh.addSub":"+ 添加子仓库", "wh.editSub":"编辑子仓库", "wh.parentMain":"此分店从您的主仓库接收库存。", "wh.name":"仓库名称", "wh.code":"短代码", "wh.address":"地址", "wh.phone":"电话", "wh.active":"启用", "wh.colName":"名称", "wh.colCode":"代码", "wh.colAddress":"地址", "wh.colActive":"启用", "wh.noSubs":"暂无子仓库。在上方添加您的第一个分店。", "wh.needName":"请输入仓库名称。", "wh.noMain":"未找到主仓库。请先在 Supabase 运行 v3.56 SQL 迁移。", "wh.notMigrated":"数据库中尚未启用多仓库。请先在 Supabase 运行 v3.56 SQL 迁移。", "wh.saveFail":"保存失败", "m.coOwnerOnly":"只有所有者可以查看或编辑公司设置。", "m.coInfoTitle":"公司信息", "m.coName":"公司名称", "m.coTagline":"标语", "m.coAddress":"地址", "m.coPhone":"电话", "m.coEmail":"邮箱", "m.coWebsite":"网站", "m.coVatId":"税号 TIN", "m.coLogoTitle":"公司徽标", "m.coLogoHelp":"PNG 或 JPG，推荐方形，500 KB 以内。显示在 PDF 上。", "m.coLogoUpload":"上传徽标", "m.coLogoRemove":"删除", "m.coLogoTooBig":"徽标必须小于 500 KB。", "m.coLogoBadType":"徽标必须是 PNG、JPG 或 WebP。", "m.coLogoFail":"徽标上传失败", "m.coLogoUploadedHint":"✅ 徽标已上传。点击保存以应用。", "m.coLogoRemoveConfirm":"删除当前徽标?", "m.coBankTitle":"银行", "m.coBankHelp":"显示在采购订单和发票上，让供应商知道付款地址。", "m.coBankName":"银行名称", "m.coBankAccName":"账户名称", "m.coBankAccNo":"账户号码", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"分行", "m.coDelTitle":"配送说明", "m.coDelHelp":"显示在 PO 上，让供应商知道地点、时间和方式。", "m.coDelAddress":"配送地址", "m.coDelHours":"营业时间", "m.coDelContact":"现场联系人", "m.coDelNote":"给供应商的备注", "m.coDefTitle":"默认值", "m.coDefHelp":"用于 PO 和发票。VAT 税率和付款条件。", "m.coVatPct":"VAT (%)", "m.coTerms":"付款条件（天）", "m.coNameRequired":"公司名称为必填项。", "m.coSaved":"✅ 已保存！", "m.coSaveFail":"保存失败", "m.coLoadFail":"加载公司设置失败: ", "po.noLinkedItems":"暂无与此供应商关联的商品", "po.noLinkedHelp":"打开 管理 → 商品，然后将此供应商设为您从其购买的每件商品的主要供应商。", "po.showAllItems":"仍显示所有商品", "m.supplier":"供应商", "m.primarySupplier":"主要供应商", "m.primarySupplierHelp":"创建PO时用于筛选商品。选择您通常从其购买此商品的供应商。", "m.noSupplier":"无主要供应商", "m.noSupplierTip":"未设置主要供应商",
     "login.remember":"记住我", "login.email":"邮箱", "login.password":"密码", "login.button":"登录",
     "login.error":"用户名或密码错误", "login.locked":"失败次数过多,请15分钟后再试",
     "login.connecting":"连接中...", "login.expired":"会话已过期,请重新登录",
@@ -3384,7 +3385,7 @@ const I18N = {
     "nav.reports":"분석", "nav.manage":"관리",
     "reports.title":"분석", "reports.sub":"의사 결정에 필요한 모든 것 — KPI, 추세, 내보내기를 한 곳에서.",
     "manage.title":"관리", "manage.sub":"품목, 공급업체, 위치, 직원 추가 및 편집.",
-    "manage.items":"품목", "manage.suppliers":"공급업체", "manage.locations":"위치", "manage.users":"직원", "manage.company":"🏢 회사", "m.coOwnerOnly":"소유자만 회사 설정을 보거나 편집할 수 있습니다.", "m.coInfoTitle":"회사 정보", "m.coName":"회사명", "m.coTagline":"슬로건", "m.coAddress":"주소", "m.coPhone":"전화", "m.coEmail":"이메일", "m.coWebsite":"웹사이트", "m.coVatId":"세금 ID TIN", "m.coLogoTitle":"회사 로고", "m.coLogoHelp":"PNG 또는 JPG, 정사각형 권장, 500 KB 이하. PDF에 표시됩니다.", "m.coLogoUpload":"로고 업로드", "m.coLogoRemove":"삭제", "m.coLogoTooBig":"로고는 500 KB 미만이어야 합니다.", "m.coLogoBadType":"로고는 PNG, JPG 또는 WebP여야 합니다.", "m.coLogoFail":"로고 업로드 실패", "m.coLogoUploadedHint":"✅ 로고가 업로드되었습니다. 저장을 클릭하여 적용하세요.", "m.coLogoRemoveConfirm":"현재 로고를 삭제하시겠습니까?", "m.coBankTitle":"은행", "m.coBankHelp":"PO 및 인보이스에 표시되어 공급업체가 결제처를 알 수 있습니다.", "m.coBankName":"은행명", "m.coBankAccName":"계좌명", "m.coBankAccNo":"계좌번호", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"지점", "m.coDelTitle":"배송 지침", "m.coDelHelp":"PO에 표시되어 공급업체가 장소, 시간 및 방법을 알 수 있습니다.", "m.coDelAddress":"배송 주소", "m.coDelHours":"영업 시간", "m.coDelContact":"현장 연락처", "m.coDelNote":"공급업체에 메모", "m.coDefTitle":"기본값", "m.coDefHelp":"PO 및 인보이스에 사용됩니다. VAT 비율 및 결제 조건.", "m.coVatPct":"VAT (%)", "m.coTerms":"결제 조건 (일)", "m.coNameRequired":"회사명이 필요합니다.", "m.coSaved":"✅ 저장됨!", "m.coSaveFail":"저장 실패", "m.coLoadFail":"회사 설정 로드 실패: ", "po.noLinkedItems":"이 공급업체에 연결된 품목이 아직 없습니다", "po.noLinkedHelp":"관리 → 품목을 열고, 구매하는 각 품목의 기본 공급업체로 이 공급업체를 설정하세요.", "po.showAllItems":"모든 품목 표시", "m.supplier":"공급업체", "m.primarySupplier":"기본 공급업체", "m.primarySupplierHelp":"PO 생성 시 품목 필터링에 사용됩니다. 이 품목을 일반적으로 구매하는 공급업체를 선택하세요.", "m.noSupplier":"기본 공급업체 없음", "m.noSupplierTip":"기본 공급업체가 설정되지 않음",
+    "manage.items":"품목", "manage.suppliers":"공급업체", "manage.locations":"위치", "manage.users":"직원", "manage.company":"🏢 회사", "manage.warehouses":"🏭 창고", "wh.title":"창고", "wh.sub":"하나의 메인 창고가 공급업체에서 구매합니다. 서브 창고(지점)는 메인에서 재고를 받습니다.", "wh.mainBadge":"메인", "wh.mainCard":"중앙 허브 — 공급업체에서 받아 서브 창고에 공급합니다.", "wh.addSub":"+ 서브 창고 추가", "wh.editSub":"서브 창고 편집", "wh.parentMain":"이 지점은 메인 창고에서 재고를 받습니다.", "wh.name":"창고 이름", "wh.code":"짧은 코드", "wh.address":"주소", "wh.phone":"전화", "wh.active":"활성", "wh.colName":"이름", "wh.colCode":"코드", "wh.colAddress":"주소", "wh.colActive":"활성", "wh.noSubs":"아직 서브 창고가 없습니다. 위에서 첫 지점을 추가하세요.", "wh.needName":"창고 이름을 입력하세요.", "wh.noMain":"메인 창고를 찾을 수 없습니다. 먼저 Supabase에서 v3.56 SQL 마이그레이션을 실행하세요.", "wh.notMigrated":"데이터베이스에 다중 창고가 아직 활성화되지 않았습니다. 먼저 Supabase에서 v3.56 SQL 마이그레이션을 실행하세요.", "wh.saveFail":"저장 실패", "m.coOwnerOnly":"소유자만 회사 설정을 보거나 편집할 수 있습니다.", "m.coInfoTitle":"회사 정보", "m.coName":"회사명", "m.coTagline":"슬로건", "m.coAddress":"주소", "m.coPhone":"전화", "m.coEmail":"이메일", "m.coWebsite":"웹사이트", "m.coVatId":"세금 ID TIN", "m.coLogoTitle":"회사 로고", "m.coLogoHelp":"PNG 또는 JPG, 정사각형 권장, 500 KB 이하. PDF에 표시됩니다.", "m.coLogoUpload":"로고 업로드", "m.coLogoRemove":"삭제", "m.coLogoTooBig":"로고는 500 KB 미만이어야 합니다.", "m.coLogoBadType":"로고는 PNG, JPG 또는 WebP여야 합니다.", "m.coLogoFail":"로고 업로드 실패", "m.coLogoUploadedHint":"✅ 로고가 업로드되었습니다. 저장을 클릭하여 적용하세요.", "m.coLogoRemoveConfirm":"현재 로고를 삭제하시겠습니까?", "m.coBankTitle":"은행", "m.coBankHelp":"PO 및 인보이스에 표시되어 공급업체가 결제처를 알 수 있습니다.", "m.coBankName":"은행명", "m.coBankAccName":"계좌명", "m.coBankAccNo":"계좌번호", "m.coBankSwift":"SWIFT / BIC", "m.coBankBranch":"지점", "m.coDelTitle":"배송 지침", "m.coDelHelp":"PO에 표시되어 공급업체가 장소, 시간 및 방법을 알 수 있습니다.", "m.coDelAddress":"배송 주소", "m.coDelHours":"영업 시간", "m.coDelContact":"현장 연락처", "m.coDelNote":"공급업체에 메모", "m.coDefTitle":"기본값", "m.coDefHelp":"PO 및 인보이스에 사용됩니다. VAT 비율 및 결제 조건.", "m.coVatPct":"VAT (%)", "m.coTerms":"결제 조건 (일)", "m.coNameRequired":"회사명이 필요합니다.", "m.coSaved":"✅ 저장됨!", "m.coSaveFail":"저장 실패", "m.coLoadFail":"회사 설정 로드 실패: ", "po.noLinkedItems":"이 공급업체에 연결된 품목이 아직 없습니다", "po.noLinkedHelp":"관리 → 품목을 열고, 구매하는 각 품목의 기본 공급업체로 이 공급업체를 설정하세요.", "po.showAllItems":"모든 품목 표시", "m.supplier":"공급업체", "m.primarySupplier":"기본 공급업체", "m.primarySupplierHelp":"PO 생성 시 품목 필터링에 사용됩니다. 이 품목을 일반적으로 구매하는 공급업체를 선택하세요.", "m.noSupplier":"기본 공급업체 없음", "m.noSupplierTip":"기본 공급업체가 설정되지 않음",
     "login.remember":"로그인 정보 저장", "login.email":"이메일", "login.password":"비밀번호", "login.button":"로그인",
     "login.error":"사용자명 또는 비밀번호가 잘못되었습니다",
     "login.locked":"실패 횟수 초과. 15분 후 다시 시도하세요",
@@ -12541,6 +12542,7 @@ async function renderManageTab(u) {
     if (MANAGE_TAB === 'items')     return renderItems(u, body);
     if (MANAGE_TAB === 'suppliers') return renderSuppliers(u, body);
     if (MANAGE_TAB === 'locations') return renderLocations(u, body);
+    if (MANAGE_TAB === 'warehouses') return renderWarehouses(u, body);
     if (MANAGE_TAB === 'users')     return renderUsers(u, body);
     if (MANAGE_TAB === 'company')   return renderCompanyTab(u, body);
   } catch (e) {
@@ -13719,6 +13721,98 @@ window.saveLoc = async function(id){
     }
     closeModal(); renderManageTab(klSession());
   }catch(e){ alert('Save failed: '+(e.message||e)); }
+};
+
+// ---- WAREHOUSES (v3.56: Main + Sub, hub-and-spoke) ----
+// Manager/owner/sa only. The DB also enforces tenant isolation + manager
+// writes via RLS — this is the friendly UI layer on top.
+async function renderWarehouses(u, body){
+  const role = u.user.role;
+  if (!['sa','owner','manager'].includes(role)) {
+    body.innerHTML = '<div class="kl-rcard warn"><p class="kl-rsmall">'+t('m.mgrOnly')+'</p></div>';
+    return;
+  }
+  let data=null;
+  try {
+    const res = await sb.from('warehouses')
+      .select('warehouse_id,name,code,warehouse_type,parent_warehouse_id,address,phone,is_active')
+      .order('warehouse_type',{ascending:true}).order('name');
+    if (res.error) throw res.error;
+    data = res.data;
+  } catch(e){
+    const msg=String(e.message||e).toLowerCase();
+    if (e.code==='42P01' || msg.includes('does not exist') || (msg.includes('warehouses')&&msg.includes('relation'))){
+      body.innerHTML='<div class="kl-rcard warn"><p class="kl-rsmall">'+t('wh.notMigrated')+'</p></div>';
+      return;
+    }
+    throw e;
+  }
+  const whs = data||[];
+  const main = whs.find(w=>w.warehouse_type==='main' && w.is_active) || whs.find(w=>w.warehouse_type==='main');
+  const subs = whs.filter(w=>w.warehouse_type==='sub');
+  window.__whs = whs;
+  window.__whMainId = main ? main.warehouse_id : null;
+
+  let html = '<div class="kl-rcard info" style="margin-bottom:14px"><p class="kl-rbig">'+t('wh.title')+'</p><p class="kl-rsmall">'+t('wh.sub')+'</p></div>';
+
+  if (main){
+    html += '<div style="border:2px solid #15795f;border-radius:12px;padding:16px;background:rgba(21,121,95,0.06);margin-bottom:6px">'
+      + '<span style="display:inline-block;background:#15795f;color:#fff;font-weight:700;font-size:11px;padding:3px 10px;border-radius:20px;letter-spacing:1px">'+t('wh.mainBadge')+'</span>'
+      + '<div style="font-size:18px;font-weight:700;margin-top:8px">'+h(main.name)+(main.code?' <span class="kl-muted" style="font-weight:400">('+h(main.code)+')</span>':'')+'</div>'
+      + '<div class="kl-rsmall kl-muted" style="margin-top:2px">'+t('wh.mainCard')+'</div>'
+      + '</div>';
+    html += '<button class="kl-btn kl-btn-primary" style="margin:14px 0" onclick="whForm()">'+t('wh.addSub')+'</button>';
+  } else {
+    html += '<div class="kl-rcard warn"><p class="kl-rsmall">'+t('wh.noMain')+'</p></div>';
+  }
+
+  html += '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+    + '<th>'+t('wh.colName')+'</th><th>'+t('wh.colCode')+'</th><th>'+t('wh.colAddress')+'</th><th>'+t('wh.colActive')+'</th></tr></thead><tbody>';
+  subs.forEach(w=>{
+    html += '<tr class="kl-iedit" onclick=\'whForm('+w.warehouse_id+')\'>'
+      + '<td>'+h(w.name)+'</td><td>'+h(w.code||'-')+'</td><td>'+h(w.address||'-')+'</td>'
+      + '<td>'+(w.is_active?'✅':'❌')+'</td></tr>';
+  });
+  html += '</tbody></table></div>';
+  if (!subs.length) html += '<p class="kl-muted">'+t('wh.noSubs')+'</p>';
+  body.innerHTML = html;
+}
+window.whForm = function(id){
+  const w = id ? (window.__whs||[]).find(x=>x.warehouse_id===id) : {};
+  const v = (k,d='')=>(w&&w[k]!=null)?w[k]:d;
+  modal(id?t('wh.editSub'):t('wh.addSub').replace('+ ',''),
+     '<div class="kl-rsmall kl-muted" style="margin-bottom:10px">'+t('wh.parentMain')+'</div>'
+    +'<div class="kl-form-row"><label>'+t('wh.name')+' *</label><input id="wf_name" value="'+h(v('name'))+'" maxlength="100"></div>'
+    +'<div class="kl-form-row"><label>'+t('wh.code')+'</label><input id="wf_code" value="'+h(v('code'))+'" maxlength="20"></div>'
+    +'<div class="kl-form-row"><label>'+t('wh.address')+'</label><input id="wf_address" value="'+h(v('address'))+'" maxlength="300"></div>'
+    +'<div class="kl-form-row"><label>'+t('wh.phone')+'</label><input id="wf_phone" value="'+h(v('phone'))+'" maxlength="40"></div>'
+    + (id ? '<div class="kl-form-row"><label><input type="checkbox" id="wf_active" '+(v('is_active',true)?'checked':'')+'> '+t('wh.active')+'</label></div>' : '')
+    +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveWh('+(id||'null')+')">'+t('m.save')+'</button> '
+    +'<button class="kl-btn" onclick="closeModal()">'+t('m.cancel')+'</button>');
+};
+window.saveWh = async function(id){
+  const g=(x)=>document.getElementById(x);
+  const name=g('wf_name').value.trim();
+  if(!name){ alert(t('wh.needName')); return; }
+  const rec={ name:name,
+    code: g('wf_code').value.trim() || null,
+    address: g('wf_address').value.trim() || null,
+    phone: g('wf_phone').value.trim() || null };
+  try{
+    let res;
+    if(id){
+      rec.is_active = !!(g('wf_active') && g('wf_active').checked);
+      res=await sb.from('warehouses').update(rec).eq('warehouse_id',id);
+    } else {
+      if(!window.__whMainId){ alert(t('wh.noMain')); return; }
+      rec.warehouse_type='sub';
+      rec.parent_warehouse_id=window.__whMainId;
+      rec.restaurant_id=__profile.restaurant_id;
+      res=await sb.from('warehouses').insert(rec);
+    }
+    if(res.error) throw res.error;
+    closeModal(); renderManageTab(klSession());
+  }catch(e){ alert(t('wh.saveFail')+': '+(e.message||e)); }
 };
 
 // ---- USERS / STAFF (owner/sa/manager: read + edit profile fields) ----
