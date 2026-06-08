@@ -2047,7 +2047,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.57-label-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.59-transfers-c1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -2185,6 +2185,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
     <a href="#/asn"       data-nav="asn"       data-i18n="nav.asn" style="display:none !important"><span class="kl-sb-ic">📦</span><span class="kl-sb-lbl">ASN</span></a>
     <a href="#/receive"   data-nav="receive"   data-i18n="nav.receive"><span class="kl-sb-ic">⬇</span><span class="kl-sb-lbl">Receive</span></a>
     <a href="#/checkout"  data-nav="checkout"  data-i18n="nav.checkout"><span class="kl-sb-ic">⬆</span><span class="kl-sb-lbl">Check-Out</span></a>
+    <a href="#/transfers" data-nav="transfers" data-i18n="nav.transfers"><span class="kl-sb-ic">🔄</span><span class="kl-sb-lbl">Transfers</span></a>
 
     <div class="kl-sb-section" data-i18n="navg.inventory">INVENTORY</div>
     <a href="#/inventory" data-nav="inventory" data-i18n="nav.inventory"><span class="kl-sb-ic">📦</span><span class="kl-sb-lbl">Inventory</span></a>
@@ -2606,6 +2607,12 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   </div>
 </div>
 
+<div id="page-transfers" class="kl-page">
+  <div class="kl-wrap">
+    <div id="transfersBody"></div>
+  </div>
+</div>
+
 <div id="page-map" class="kl-page">
   <div class="kl-wrap">
     <!-- v3.36: This page is deprecated. Routing redirects #/map → #/inventory. -->
@@ -2808,7 +2815,7 @@ const I18N = {
     "checkout.sub":"Scan barcode or type it. FEFO-suggested batch will be picked first.",
     "checkout.scan.title":"Scan barcode", "checkout.scan.start":"📷 Start scanner",
     "checkout.scan.stop":"Stop", "checkout.scan.manual":"Or type barcode",
-    "checkout.lookup":"Find batch", "co.find.title":"Find item", "co.find.sub":"Type the item name or scan its product code, then pick which batch to take from.", "co.find.btn":"Search items", "co.find.min":"Type at least 2 letters.", "co.find.searching":"Searching…", "co.find.none":"No items match.", "co.find.nostock":"No stock in hand for this item.", "co.find.lots":"Pick a batch — oldest expiry first", "checkout.dest":"Check out to", "checkout.dest.use":"Use / Consume",
+    "checkout.lookup":"Find batch", "co.find.title":"Find item", "co.find.sub":"Type the item name or scan its product code, then pick which batch to take from.", "co.find.btn":"Search items", "co.find.min":"Type at least 2 letters.", "co.find.searching":"Searching…", "co.find.none":"No items match.", "co.find.nostock":"No stock in hand for this item.", "co.find.lots":"Pick a batch — oldest expiry first", "checkout.dest":"Check out to", "checkout.dest.use":"Use / Consume", "nav.transfers":"Transfers", "tr.title":"Stock Transfers", "tr.sub":"Branches request stock from the Main warehouse. Every request is tracked here.", "tr.newReq":"Request stock from Main", "tr.newReqSub":"Pick the branch, add the items it needs, then send the request to Main.", "tr.hub":"Branch (requesting)", "tr.item":"Item", "tr.qty":"Qty", "tr.addLine":"Add", "tr.note":"Note (optional)", "tr.submit":"📨 Send request to Main", "tr.noSubs":"No sub-warehouses yet. Add a branch in Manage → 🏭 Warehouses first.", "tr.noLines":"No items added yet.", "tr.needLine":"Pick an item and a quantity first.", "tr.needHub":"Please pick the branch making the request.", "tr.reqOk":"✅ Request sent to Main.", "tr.listTitle":"All transfers", "tr.listEmpty":"No transfers yet.", "tr.colRoute":"From → To", "tr.colItems":"Items", "tr.colStatus":"Status", "tr.colDate":"Date", "tr.items":"items", "tr.notMigrated":"Transfers aren't enabled in your database yet. Please run the v3.58 SQL migration in Supabase first.", "tr.st.requested":"Requested", "tr.st.approved":"Approved", "tr.st.sent":"Sent", "tr.st.received":"Received", "tr.st.cancelled":"Cancelled",
     "checkout.batch.title":"Batch found",
     "checkout.take.qty":"Quantity to take", "checkout.take.type":"Movement type",
     "checkout.type.out":"OUT — kitchen use", "checkout.type.waste":"WASTE — discard",
@@ -2969,7 +2976,7 @@ const I18N = {
     "checkout.sub":"ສະແກນບາໂຄດ ຫຼື ພິມເຂົ້າ. ລ໋ອດທີ່ໝົດອາຍຸໄວສຸດຈະຖືກເລືອກກ່ອນ.",
     "checkout.scan.title":"ສະແກນບາໂຄດ", "checkout.scan.start":"📷 ເລີ່ມສະແກນ",
     "checkout.scan.stop":"ຢຸດ", "checkout.scan.manual":"ຫຼື ພິມບາໂຄດ",
-    "checkout.lookup":"ຄົ້ນຫາລ໋ອດ", "co.find.title":"ຄົ້ນຫາສິນຄ້າ", "co.find.sub":"ພິມຊື່ສິນຄ້າ ຫຼື ສະແກນລະຫັດສິນຄ້າ ແລ້ວເລືອກລັອດທີ່ຈະເອົາ.", "co.find.btn":"ຄົ້ນຫາ", "co.find.min":"ພິມຢ່າງໜ້ອຍ 2 ໂຕ.", "co.find.searching":"ກຳລັງຄົ້ນຫາ…", "co.find.none":"ບໍ່ພົບສິນຄ້າ.", "co.find.nostock":"ສິນຄ້ານີ້ບໍ່ມີໃນສະຕັອກ.", "co.find.lots":"ເລືອກລັອດ — ໝົດອາຍຸເກົ່າສຸດກ່ອນ", "checkout.dest":"ເຊັກເອົາໄປໃສ", "checkout.dest.use":"ໃຊ້ / ບໍລິໂພກ",
+    "checkout.lookup":"ຄົ້ນຫາລ໋ອດ", "co.find.title":"ຄົ້ນຫາສິນຄ້າ", "co.find.sub":"ພິມຊື່ສິນຄ້າ ຫຼື ສະແກນລະຫັດສິນຄ້າ ແລ້ວເລືອກລັອດທີ່ຈະເອົາ.", "co.find.btn":"ຄົ້ນຫາ", "co.find.min":"ພິມຢ່າງໜ້ອຍ 2 ໂຕ.", "co.find.searching":"ກຳລັງຄົ້ນຫາ…", "co.find.none":"ບໍ່ພົບສິນຄ້າ.", "co.find.nostock":"ສິນຄ້ານີ້ບໍ່ມີໃນສະຕັອກ.", "co.find.lots":"ເລືອກລັອດ — ໝົດອາຍຸເກົ່າສຸດກ່ອນ", "checkout.dest":"ເຊັກເອົາໄປໃສ", "checkout.dest.use":"ໃຊ້ / ບໍລິໂພກ", "nav.transfers":"ການໂອນ", "tr.title":"ການໂອນສິນຄ້າ", "tr.sub":"ສາຂາຮ້ອງຂໍສິນຄ້າຈາກສາງຫຼັກ. ທຸກຄຳຂໍຖືກຕິດຕາມຢູ່ນີ້.", "tr.newReq":"ຮ້ອງຂໍສິນຄ້າຈາກສາງຫຼັກ", "tr.newReqSub":"ເລືອກສາຂາ, ເພີ່ມສິນຄ້າທີ່ຕ້ອງການ, ແລ້ວສົ່ງຄຳຂໍໄປສາງຫຼັກ.", "tr.hub":"ສາຂາ (ຜູ້ຂໍ)", "tr.item":"ສິນຄ້າ", "tr.qty":"ຈຳນວນ", "tr.addLine":"ເພີ່ມ", "tr.note":"ໝາຍເຫດ (ບໍ່ບັງຄັບ)", "tr.submit":"📨 ສົ່ງຄຳຂໍໄປສາງຫຼັກ", "tr.noSubs":"ຍັງບໍ່ມີສາງຍ່ອຍ. ເພີ່ມສາຂາໃນ ຈັດການ → 🏭 ສາງ ກ່ອນ.", "tr.noLines":"ຍັງບໍ່ໄດ້ເພີ່ມສິນຄ້າ.", "tr.needLine":"ເລືອກສິນຄ້າ ແລະ ຈຳນວນກ່ອນ.", "tr.needHub":"ກະລຸນາເລືອກສາຂາທີ່ຮ້ອງຂໍ.", "tr.reqOk":"✅ ສົ່ງຄຳຂໍໄປສາງຫຼັກແລ້ວ.", "tr.listTitle":"ການໂອນທັງໝົດ", "tr.listEmpty":"ຍັງບໍ່ມີການໂອນ.", "tr.colRoute":"ຈາກ → ໄປ", "tr.colItems":"ສິນຄ້າ", "tr.colStatus":"ສະຖານະ", "tr.colDate":"ວັນທີ", "tr.items":"ລາຍການ", "tr.notMigrated":"ການໂອນຍັງບໍ່ໄດ້ເປີດໃຊ້ໃນຖານຂໍ້ມູນ. ກະລຸນາດຳເນີນການ SQL v3.58 ໃນ Supabase ກ່ອນ.", "tr.st.requested":"ຮ້ອງຂໍແລ້ວ", "tr.st.approved":"ອະນຸມັດແລ້ວ", "tr.st.sent":"ສົ່ງແລ້ວ", "tr.st.received":"ຮັບແລ້ວ", "tr.st.cancelled":"ຍົກເລີກ",
     "checkout.batch.title":"ພົບລ໋ອດ",
     "checkout.take.qty":"ຈຳນວນທີ່ເບີກ", "checkout.take.type":"ປະເພດການເຄື່ອນໄຫວ",
     "checkout.type.out":"OUT — ໃຊ້ໃນຄົວ", "checkout.type.waste":"WASTE — ຖິ້ມ",
@@ -6199,7 +6206,7 @@ function showMsg(elId, text, type) {
   if (type === 'ok') setTimeout(() => el.innerHTML = '', 4000);
 }
 
-const ROUTES = ['login','dashboard','overview','receive','stock','map','checkout','reports','manage','asn','inventory'];
+const ROUTES = ['login','dashboard','overview','receive','stock','map','checkout','transfers','reports','manage','asn','inventory'];
 function currentRoute() {
   const h = (location.hash || '').replace(/^#\//, '');
   return ROUTES.includes(h) ? h : (klSession() ? 'dashboard' : 'login');
@@ -6268,6 +6275,7 @@ function showPage(name) {
   }
   else if (name === 'inventory') initInventoryPage();
   else if (name === 'checkout')  initCheckoutPage();
+  else if (name === 'transfers') initTransfersPage();
   else if (name === 'reports')   initReportsPage();
   else if (name === 'manage')    initManagePage();
   else if (name === 'asn')       initAsnPage();
@@ -6347,7 +6355,7 @@ window.addEventListener('hashchange', route);
 // hardening; the real security is the database RLS (anon = zero rows),
 // proven separately. Both layers together = MarketMan's model.
 // =====================================================================
-const GATED_PAGES = ['dashboard','overview','receive','stock','map','checkout','reports','manage','asn','inventory'];
+const GATED_PAGES = ['dashboard','overview','receive','stock','map','checkout','transfers','reports','manage','asn','inventory'];
 const __pageStash = {};
 let __pagesGated = false;
 
@@ -8248,7 +8256,15 @@ async function doReceive() {
     const cost_raw = document.getElementById('recUnitCost').value.replace(/,/g, '').trim();
     const unit_cost = cost_raw === '' ? null : parseFloat(cost_raw);
     const received_date = document.getElementById('recReceivedDate').value;
-    const expiry_date = document.getElementById('recExpiryDate').value || null;
+    let expiry_date = document.getElementById('recExpiryDate').value || null;
+    // v3.57 safety net: if expiry left blank but the item has a shelf life,
+    // auto-compute it (received date + shelf-life days) so it's never missed.
+    if (!expiry_date && received_date) {
+      const _it = (RECV_STATE.items || []).find(x => x.item_id === item_id);
+      if (_it && _it.default_shelf_life_days) {
+        expiry_date = addDays(received_date, _it.default_shelf_life_days);
+      }
+    }
     const lot_number = document.getElementById('recLotNumber').value.trim() || null;
     const notes = document.getElementById('recNotes').value.trim() || null;
 
@@ -8357,7 +8373,10 @@ function wireCheckoutHandlers() {
     CO_STATE.batch = null;
   });
   document.getElementById('coMoveType').addEventListener('change', e => {
-    document.getElementById('coWasteReasonRow').style.display = (e.target.value === 'WASTE') ? 'block' : 'none';
+    const isWaste = e.target.value === 'WASTE';
+    document.getElementById('coWasteReasonRow').style.display = isWaste ? 'block' : 'none';
+    const dr = document.getElementById('coDestRow');
+    if (dr) dr.style.display = isWaste ? 'none' : 'block';
   });
   document.getElementById('coConfirmBtn').addEventListener('click', doCheckout);
 }
@@ -8676,6 +8695,8 @@ function renderBatchCard(b) {
   document.getElementById('coNote').value = '';
   document.getElementById('coMoveType').value = status === 'expired' ? 'WASTE' : 'OUT';
   document.getElementById('coWasteReasonRow').style.display = (status === 'expired') ? 'block' : 'none';
+  const _coDestRow = document.getElementById('coDestRow');
+  if (_coDestRow) _coDestRow.style.display = (status === 'expired') ? 'none' : 'block';
   if (status === 'expired') {
     document.getElementById('coWasteReason').value = 'expired';
     showMsg('checkoutMsg', t('checkout.batch.expired'), 'warn');
@@ -8689,11 +8710,175 @@ function renderBatchCard(b) {
   document.getElementById('coBatchCard').scrollIntoView({ behavior: 'smooth' });
 }
 
+// =====================================================================
+// v3.59 — STOCK TRANSFERS (Phase C1): branch REQUESTS stock from Main.
+// Flow: requested → approved → sent → received (approve/send/receive = C2/C3).
+// This stage: create a request + list all transfers so each hub sees what
+// it ordered from Main. No stock moves yet (safe). DB tables from v3.58.
+// =====================================================================
+let TR_STATE = { main: null, subs: [], items: [], lines: [] };
+
+async function initTransfersPage(){
+  const u = await klRequireLogin(); if (!u) return;
+  const body = document.getElementById('transfersBody'); if (!body) return;
+  body.innerHTML = '<p class="kl-muted">' + h(t('common.loading')) + '</p>';
+  try {
+    const wr = await sb.from('warehouses')
+      .select('warehouse_id,name,code,warehouse_type,is_active').order('name');
+    const whs = wr.data || [];
+    TR_STATE.main = whs.find(w => w.warehouse_type === 'main' && w.is_active)
+                 || whs.find(w => w.warehouse_type === 'main') || null;
+    TR_STATE.subs = whs.filter(w => w.warehouse_type === 'sub' && w.is_active);
+  } catch(e){
+    body.innerHTML = '<div class="kl-rcard warn"><p class="kl-rsmall">' + h(t('tr.notMigrated')) + '</p></div>';
+    return;
+  }
+  if (!TR_STATE.main) {
+    body.innerHTML = '<div class="kl-rcard warn"><p class="kl-rsmall">' + h(t('wh.noMain')) + '</p></div>';
+    return;
+  }
+  try {
+    const ir = await sb.from('items').select('item_id,name,name_lao,unit,sku').eq('is_active', true).order('name');
+    TR_STATE.items = ir.data || [];
+  } catch(e){ TR_STATE.items = []; }
+  TR_STATE.lines = [];
+  trRender();
+}
+
+function trRender(){
+  const body = document.getElementById('transfersBody'); if (!body) return;
+  let html = '<h1 class="kl-page-title">' + h(t('tr.title')) + '</h1>'
+           + '<p class="kl-page-sub">' + h(t('tr.sub')) + '</p>';
+  if (!TR_STATE.subs.length){
+    html += '<div class="kl-rcard warn"><p class="kl-rsmall">' + h(t('tr.noSubs')) + '</p></div>'
+         + '<div class="kl-card"><h2>' + h(t('tr.listTitle')) + '</h2><div id="trList"><p class="kl-muted">' + h(t('common.loading')) + '</p></div></div>';
+    body.innerHTML = html;
+    trLoadList();
+    return;
+  }
+  const subOpts  = TR_STATE.subs.map(w => '<option value="' + w.warehouse_id + '">🏭 ' + h(w.name || w.code || ('#' + w.warehouse_id)) + '</option>').join('');
+  const itemOpts = TR_STATE.items.map(it => '<option value="' + it.item_id + '">' + h(it.name || '') + (it.sku ? ' · ' + h(it.sku) : '') + '</option>').join('');
+  html += '<div class="kl-card">'
+    + '<h2>' + h(t('tr.newReq')) + '</h2>'
+    + '<p class="kl-page-sub" style="margin-top:-4px">' + h(t('tr.newReqSub')) + '</p>'
+    + '<div class="kl-form-row"><label>' + h(t('tr.hub')) + '</label><select id="trHub">' + subOpts + '</select></div>'
+    + '<div class="kl-form-row"><label>' + h(t('tr.item')) + '</label>'
+      + '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">'
+      + '<select id="trItem" style="flex:2;min-width:160px">' + itemOpts + '</select>'
+      + '<input id="trQty" type="number" min="0.001" step="0.001" inputmode="decimal" placeholder="' + h(t('tr.qty')) + '" style="flex:1;min-width:90px">'
+      + '<button type="button" class="kl-btn" onclick="trAddLine()">' + h(t('tr.addLine')) + '</button>'
+      + '</div></div>'
+    + '<div id="trLines" style="margin:8px 0"></div>'
+    + '<div class="kl-form-row"><label>' + h(t('tr.note')) + '</label><textarea id="trNote" rows="2"></textarea></div>'
+    + '<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="trSubmitRequest()">' + h(t('tr.submit')) + '</button>'
+    + '<div id="trMsg" class="kl-msg" style="margin-top:8px"></div>'
+    + '</div>'
+    + '<div class="kl-card"><h2>' + h(t('tr.listTitle')) + '</h2><div id="trList"><p class="kl-muted">' + h(t('common.loading')) + '</p></div></div>';
+  body.innerHTML = html;
+  trRenderLines();
+  trLoadList();
+}
+
+window.trAddLine = function(){
+  const itemId = parseInt(document.getElementById('trItem').value);
+  const qty = parseFloat(document.getElementById('trQty').value);
+  if (!itemId || !(qty > 0)) { showMsg('trMsg', t('tr.needLine'), 'err'); return; }
+  const it = TR_STATE.items.find(x => x.item_id === itemId);
+  const ex = TR_STATE.lines.find(l => l.item_id === itemId);
+  if (ex) ex.qty += qty;
+  else TR_STATE.lines.push({ item_id: itemId, name: (it && it.name) || '', unit: (it && it.unit) || '', qty: qty });
+  document.getElementById('trQty').value = '';
+  showMsg('trMsg', '', 'ok');
+  trRenderLines();
+};
+window.trRemoveLine = function(i){ TR_STATE.lines.splice(i, 1); trRenderLines(); };
+
+function trRenderLines(){
+  const box = document.getElementById('trLines'); if (!box) return;
+  if (!TR_STATE.lines.length){ box.innerHTML = '<p class="kl-muted" style="font-size:13px">' + h(t('tr.noLines')) + '</p>'; return; }
+  let html = '<table class="kl-table"><tbody>';
+  TR_STATE.lines.forEach((l, i) => {
+    html += '<tr><td>' + h(l.name) + '</td>'
+      + '<td style="text-align:right">' + h(fmtQty(l.qty)) + ' ' + h(klUnitT(l.unit || '')) + '</td>'
+      + '<td style="text-align:right;width:1%"><button type="button" class="kl-btn" onclick="trRemoveLine(' + i + ')">✕</button></td></tr>';
+  });
+  html += '</tbody></table>';
+  box.innerHTML = html;
+}
+
+window.trSubmitRequest = async function(){
+  const u = await klRequireLogin(); if (!u) return;
+  const hubSel = document.getElementById('trHub');
+  const hubId = hubSel ? parseInt(hubSel.value) : 0;
+  if (!hubId) { showMsg('trMsg', t('tr.needHub'), 'err'); return; }
+  if (!TR_STATE.lines.length) { showMsg('trMsg', t('tr.needLine'), 'err'); return; }
+  if (!TR_STATE.main) { showMsg('trMsg', t('wh.noMain'), 'err'); return; }
+  const note = (document.getElementById('trNote').value || '').trim() || null;
+  showMsg('trMsg', t('common.loading'), 'info');
+  try {
+    const ins = await sb.from('stock_transfers').insert({
+      restaurant_id: u.user.restaurant_id,
+      from_warehouse_id: TR_STATE.main.warehouse_id,
+      to_warehouse_id: hubId,
+      status: 'requested',
+      requested_by: u.user.user_id,
+      note: note,
+    }).select().single();
+    if (ins.error || !ins.data) throw (ins.error || new Error('insert failed'));
+    const tid = ins.data.transfer_id;
+    const lines = TR_STATE.lines.map(l => ({
+      transfer_id: tid, restaurant_id: u.user.restaurant_id, item_id: l.item_id, qty: l.qty,
+    }));
+    const lr = await sb.from('stock_transfer_lines').insert(lines);
+    if (lr.error) throw lr.error;
+    TR_STATE.lines = [];
+    const nb = document.getElementById('trNote'); if (nb) nb.value = '';
+    trRenderLines();
+    showMsg('trMsg', t('tr.reqOk'), 'ok');
+    trLoadList();
+  } catch(e){ console.error(e); showMsg('trMsg', (e.message || String(e)), 'err'); }
+};
+
+async function trLoadList(){
+  const box = document.getElementById('trList'); if (!box) return;
+  try {
+    const r = await sb.from('stock_transfers')
+      .select('transfer_id,from_warehouse_id,to_warehouse_id,status,note,created_at, stock_transfer_lines(item_id,qty)')
+      .order('created_at', { ascending: false }).limit(50);
+    if (r.error) throw r.error;
+    const rows = r.data || [];
+    if (!rows.length){ box.innerHTML = '<p class="kl-muted">' + h(t('tr.listEmpty')) + '</p>'; return; }
+    const whName = {};
+    (TR_STATE.subs || []).forEach(w => { whName[w.warehouse_id] = w.name || w.code || ('#' + w.warehouse_id); });
+    if (TR_STATE.main) whName[TR_STATE.main.warehouse_id] = TR_STATE.main.name || 'Main';
+    let html = '<div class="kl-table-wrap"><table class="kl-table"><thead><tr>'
+      + '<th>' + h(t('tr.colRoute')) + '</th><th>' + h(t('tr.colItems')) + '</th>'
+      + '<th>' + h(t('tr.colStatus')) + '</th><th>' + h(t('tr.colDate')) + '</th></tr></thead><tbody>';
+    rows.forEach(trn => {
+      const lines = trn.stock_transfer_lines || [];
+      const totQty = lines.reduce((a, l) => a + Number(l.qty || 0), 0);
+      const st = trn.status;
+      const stColor = st === 'received' ? '#15795f' : (st === 'cancelled' ? '#c0392b' : (st === 'requested' ? '#caa24a' : '#0f5d49'));
+      html += '<tr>'
+        + '<td>' + h(whName[trn.from_warehouse_id] || '?') + ' → <strong>' + h(whName[trn.to_warehouse_id] || '?') + '</strong></td>'
+        + '<td>' + lines.length + ' ' + h(t('tr.items')) + ' · ' + h(fmtQty(totQty)) + '</td>'
+        + '<td><span style="font-weight:700;color:' + stColor + '">' + h(t('tr.st.' + st) || st) + '</span></td>'
+        + '<td>' + h((trn.created_at || '').slice(0, 10)) + '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+    box.innerHTML = html;
+  } catch(e){
+    const msg = String(e.message || e).toLowerCase();
+    if (msg.includes('does not exist') || msg.includes('relation'))
+      box.innerHTML = '<div class="kl-rcard warn"><p class="kl-rsmall">' + h(t('tr.notMigrated')) + '</p></div>';
+    else box.innerHTML = '<p class="kl-muted">' + h(String(e.message || e)) + '</p>';
+  }
+}
+
 // v3.57: populate "Check out to" — Use/Consume + active sub-warehouses (hubs).
 // Safe if the warehouses table isn't set up yet → keeps the default "Use".
 async function coLoadDest(){
   const sel = document.getElementById('coDest'); if (!sel) return;
-  if (sel.dataset.loaded === '1') return;
   try {
     const r = await sb.from('warehouses')
       .select('warehouse_id,name,code,warehouse_type,is_active')
@@ -8704,7 +8889,6 @@ async function coLoadDest(){
       opts += '<option value="hub:' + w.warehouse_id + '">🏭 ' + h(nm) + '</option>';
     });
     sel.innerHTML = opts;
-    sel.dataset.loaded = '1';
   } catch(e){ /* warehouses table not present yet → keep default Use */ }
 }
 
@@ -8723,9 +8907,14 @@ async function doCheckout() {
   const moveType = document.getElementById('coMoveType').value;
   const wasteReason = moveType === 'WASTE' ? document.getElementById('coWasteReason').value : null;
   const baseNote = document.getElementById('coNote').value.trim();
-  const destSel = document.getElementById('coDest');
-  const destLabel = (destSel && destSel.selectedIndex >= 0) ? destSel.options[destSel.selectedIndex].text : '';
-  const note = ('→ ' + destLabel + (baseNote ? ' | ' + baseNote : '')) || null;
+  // v3.57: destination only makes sense for OUT (kitchen use / hub). WASTE is
+  // discarded — no destination, just the optional note.
+  let note = baseNote || null;
+  if (moveType === 'OUT') {
+    const destSel = document.getElementById('coDest');
+    const destLabel = (destSel && destSel.selectedIndex >= 0) ? destSel.options[destSel.selectedIndex].text : '';
+    if (destLabel) note = '→ ' + destLabel + (baseNote ? ' | ' + baseNote : '');
+  }
 
   const btn = document.getElementById('coConfirmBtn');
   btn.disabled = true; btn.textContent = t('common.loading');
