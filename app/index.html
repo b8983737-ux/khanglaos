@@ -2041,7 +2041,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.57-scan-s2</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.57-find-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -2530,6 +2530,17 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
       <button id="coLookupBtn" class="kl-btn kl-btn-primary" data-i18n="checkout.lookup">Find batch</button>
     </div>
 
+    <div class="kl-card" id="coFindItemCard">
+      <h2>🔍 <span data-i18n="co.find.title">Find item</span></h2>
+      <p class="kl-rsmall" data-i18n="co.find.sub">Type the item name or scan its product code, then pick which batch to take from.</p>
+      <div class="kl-form-row" style="margin-top:8px">
+        <input type="text" id="coItemSearchInput" placeholder="e.g. Beerlao" inputmode="text"
+               onkeydown="if(event.key==='Enter'){event.preventDefault();coItemSearch();}">
+      </div>
+      <button class="kl-btn kl-btn-primary" onclick="coItemSearch()" data-i18n="co.find.btn">Search items</button>
+      <div id="coItemResults" style="margin-top:10px"></div>
+    </div>
+
     <div class="kl-card" id="coPoPicker" style="display:none">
       <h2>📦 <span id="coPoPickerTitle"></span></h2>
       <div id="coPoPickerList"></div>
@@ -2787,7 +2798,7 @@ const I18N = {
     "checkout.sub":"Scan barcode or type it. FEFO-suggested batch will be picked first.",
     "checkout.scan.title":"Scan barcode", "checkout.scan.start":"📷 Start scanner",
     "checkout.scan.stop":"Stop", "checkout.scan.manual":"Or type barcode",
-    "checkout.lookup":"Find batch",
+    "checkout.lookup":"Find batch", "co.find.title":"Find item", "co.find.sub":"Type the item name or scan its product code, then pick which batch to take from.", "co.find.btn":"Search items", "co.find.min":"Type at least 2 letters.", "co.find.searching":"Searching…", "co.find.none":"No items match.", "co.find.nostock":"No stock in hand for this item.", "co.find.lots":"Pick a batch — oldest expiry first",
     "checkout.batch.title":"Batch found",
     "checkout.take.qty":"Quantity to take", "checkout.take.type":"Movement type",
     "checkout.type.out":"OUT — kitchen use", "checkout.type.waste":"WASTE — discard",
@@ -2948,7 +2959,7 @@ const I18N = {
     "checkout.sub":"ສະແກນບາໂຄດ ຫຼື ພິມເຂົ້າ. ລ໋ອດທີ່ໝົດອາຍຸໄວສຸດຈະຖືກເລືອກກ່ອນ.",
     "checkout.scan.title":"ສະແກນບາໂຄດ", "checkout.scan.start":"📷 ເລີ່ມສະແກນ",
     "checkout.scan.stop":"ຢຸດ", "checkout.scan.manual":"ຫຼື ພິມບາໂຄດ",
-    "checkout.lookup":"ຄົ້ນຫາລ໋ອດ",
+    "checkout.lookup":"ຄົ້ນຫາລ໋ອດ", "co.find.title":"ຄົ້ນຫາສິນຄ້າ", "co.find.sub":"ພິມຊື່ສິນຄ້າ ຫຼື ສະແກນລະຫັດສິນຄ້າ ແລ້ວເລືອກລັອດທີ່ຈະເອົາ.", "co.find.btn":"ຄົ້ນຫາ", "co.find.min":"ພິມຢ່າງໜ້ອຍ 2 ໂຕ.", "co.find.searching":"ກຳລັງຄົ້ນຫາ…", "co.find.none":"ບໍ່ພົບສິນຄ້າ.", "co.find.nostock":"ສິນຄ້ານີ້ບໍ່ມີໃນສະຕັອກ.", "co.find.lots":"ເລືອກລັອດ — ໝົດອາຍຸເກົ່າສຸດກ່ອນ",
     "checkout.batch.title":"ພົບລ໋ອດ",
     "checkout.take.qty":"ຈຳນວນທີ່ເບີກ", "checkout.take.type":"ປະເພດການເຄື່ອນໄຫວ",
     "checkout.type.out":"OUT — ໃຊ້ໃນຄົວ", "checkout.type.waste":"WASTE — ຖິ້ມ",
@@ -8474,6 +8485,54 @@ async function coShowItemStatus(itemId) {
     host.style.display = 'block';
   } catch (e) { console.error(e); }
 }
+
+// v3.57: Check-Out "Find item" — search by name or product code, then pick a batch.
+window.coItemSearch = async function() {
+  const inp = document.getElementById('coItemSearchInput'); if (!inp) return;
+  const q = (inp.value || '').trim();
+  const box = document.getElementById('coItemResults'); if (!box) return;
+  if (q.length < 2) { box.innerHTML = '<p class="kl-muted" style="font-size:13px">' + h(t('co.find.min')) + '</p>'; return; }
+  box.innerHTML = '<p class="kl-muted" style="font-size:13px">' + h(t('co.find.searching')) + '</p>';
+  try {
+    const like = '%' + q.replace(/[%_,()]/g, '') + '%';
+    const r = await sb.from('items')
+      .select('item_id,name,name_lao,sku,unit')
+      .or('name.ilike.' + like + ',name_lao.ilike.' + like + ',sku.ilike.' + like)
+      .eq('is_active', true).order('name').limit(20);
+    const items = (r.data || []);
+    if (!items.length) { box.innerHTML = '<p class="kl-muted" style="font-size:13px">' + h(t('co.find.none')) + '</p>'; return; }
+    box.innerHTML = items.map(function(it){
+      return '<button type="button" class="kl-btn" style="display:block;width:100%;text-align:left;margin-bottom:6px" onclick="coPickItem(' + it.item_id + ')">'
+        + '<strong>' + h(it.name || '') + '</strong>'
+        + (it.name_lao ? ' <span style="color:var(--kl-text-soft)">' + h(it.name_lao) + '</span>' : '')
+        + (it.sku ? ' <span class="kl-mono" style="color:var(--kl-text-soft);font-size:12px">· ' + h(it.sku) + '</span>' : '')
+        + '</button>';
+    }).join('');
+  } catch (e) { console.error(e); box.innerHTML = '<p class="kl-muted" style="font-size:13px">' + h(String(e.message || e)) + '</p>'; }
+};
+window.coPickItem = async function(itemId) {
+  try {
+    const sel = '*, items(name, name_lao, unit), locations(name,name_lao,name_th,name_zh,name_ko), suppliers(name)';
+    const r = await sb.from('batches').select(sel)
+      .eq('item_id', itemId).eq('status', 'active').gt('quantity_remaining', 0)
+      .order('expiry_date', { ascending: true, nullsFirst: false });
+    const batches = (r.data || []);
+    showMsg('checkoutMsg', '', 'ok');
+    coShowItemStatus(itemId);
+    if (!batches.length) {
+      document.getElementById('coBatchCard').style.display = 'none';
+      showMsg('checkoutMsg', t('co.find.nostock'), 'warn');
+      return;
+    }
+    if (batches.length === 1) {
+      document.getElementById('coPoPicker').style.display = 'none';
+      CO_STATE.batch = batches[0];
+      renderBatchCard(batches[0]);
+    } else {
+      coShowBatchPicker(t('co.find.lots'), batches);
+    }
+  } catch (e) { console.error(e); showMsg('checkoutMsg', String(e.message || e), 'err'); }
+};
 
 function coShowBatchPicker(poNumber, batches) {
   CO_PO_BATCHES = batches;
