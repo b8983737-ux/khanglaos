@@ -2041,7 +2041,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.57-lic-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.57-scan-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -2719,6 +2719,16 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
     ], function(){ return typeof window.JsBarcode !== 'undefined'; });
     return window.__klJsBarcodePromise;
   };
+  // v3.57: bwip-js — industry barcode engine for proper GS1-128 batch labels.
+  window.klLoadBwipLib = function() {
+    if (window.__klBwipPromise) return window.__klBwipPromise;
+    window.__klBwipPromise = loadFirst([
+      'https://cdn.jsdelivr.net/npm/bwip-js@4.11.1/dist/bwip-js-min.js',
+      'https://unpkg.com/bwip-js@4.11.1/dist/bwip-js-min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/bwip-js/4.11.1/bwip-js-min.js'
+    ], function(){ return typeof window.bwipjs !== 'undefined'; });
+    return window.__klBwipPromise;
+  };
   // Warm-prefetch on idle so first use is instant.
   var prefetch = function(){
     try { window.klLoadScannerLib().catch(function(){}); } catch(e){}
@@ -2786,7 +2796,7 @@ const I18N = {
     "checkout.waste.overcooked":"Overcooked", "checkout.waste.dropped":"Dropped",
     "checkout.waste.other":"Other",
     "checkout.note":"Note", "checkout.confirm":"✓ Confirm check-out",
-    "checkout.batch.notfound":"Barcode not found.",
+    "checkout.batch.notfound":"Barcode not found.", "co.is.below":"BELOW MIN", "co.is.low":"LOW", "co.is.over":"OVER MAX", "co.is.ok":"OK", "co.is.min":"Min", "co.is.max":"Max", "co.is.onorder":"On order", "co.is.reorder":"Need to reorder", "co.is.coming":"stock is on the way",
     "checkout.batch.empty":"This batch is empty.",
     "checkout.batch.expired":"⚠ This batch is EXPIRED. Use WASTE movement type to discard.",
     "checkout.error.exceed":"Quantity exceeds remaining stock.",
@@ -2807,7 +2817,7 @@ const I18N = {
     "m.items":"Items", "m.suppliers":"Suppliers", "m.locations":"Locations", "m.staff":"Staff",
     "m.addItem":"+ Add item", "m.addSup":"+ Add supplier", "m.addLoc":"+ Add location",
     "m.editItem":"Edit item", "m.editSup":"Edit supplier", "m.editLoc":"Edit location",
-    "m.name":"Name", "m.nameLao":"Name (Lao)", "m.sku":"SKU", "m.category":"Category",
+    "m.name":"Name", "m.nameLao":"Name (Lao)", "m.sku":"SKU", "m.label":"Product label", "m.labelHelp":"One stable barcode + QR per product — print and stick it on the shelf or bin so staff always know what it is.", "m.labelShow":"Show / refresh label", "m.labelPrint":"🖨 Print label", "m.labelNeedSku":"Enter a SKU first.", "m.category":"Category",
     "m.unit":"Unit", "m.storage":"Storage", "m.cost":"Cost price (per unit)", "m.shelf":"Shelf life (days)",
     "m.reorder":"Reorder level", "m.par":"Par level", "m.allergens":"Allergens",
     "m.contact":"Contact person", "m.phone":"Phone", "m.terms":"Payment terms",
@@ -2947,7 +2957,7 @@ const I18N = {
     "checkout.waste.overcooked":"ປະຸງເກີນ", "checkout.waste.dropped":"ຕົກ",
     "checkout.waste.other":"ອື່ນໆ",
     "checkout.note":"ໝາຍເຫດ", "checkout.confirm":"✓ ຢືນຢັນເບີກ",
-    "checkout.batch.notfound":"ບໍ່ພົບບາໂຄດ",
+    "checkout.batch.notfound":"ບໍ່ພົບບາໂຄດ", "co.is.below":"ຕ່ຳກວ່າຂັ້ນຕ່ຳ", "co.is.low":"ໃກ້ໝົດ", "co.is.over":"ເກີນສູງສຸດ", "co.is.ok":"ປົກກະຕິ", "co.is.min":"ຕ່ຳສຸດ", "co.is.max":"ສູງສຸດ", "co.is.onorder":"ກຳລັງສັ່ງ", "co.is.reorder":"ຕ້ອງສັ່ງເພີ່ມ", "co.is.coming":"ສິນຄ້າກຳລັງມາ",
     "checkout.batch.empty":"ລ໋ອດນີ້ໝົດແລ້ວ",
     "checkout.batch.expired":"⚠ ລ໋ອດນີ້ໝົດອາຍຸແລ້ວ. ໃຊ້ WASTE ເພື່ອຖິ້ມ.",
     "checkout.error.exceed":"ຈຳນວນເກີນສະຕັອກທີ່ມີ",
@@ -2968,7 +2978,7 @@ const I18N = {
     "m.items":"ສິນຄ້າ", "m.suppliers":"ຜູ້ສະໜອງ", "m.locations":"ບ່ອນເກັບ", "m.staff":"ພະນັກງານ",
     "m.addItem":"+ ເພີ່ມສິນຄ້າ", "m.addSup":"+ ເພີ່ມຜູ້ສະໜອງ", "m.addLoc":"+ ເພີ່ມບ່ອນເກັບ",
     "m.editItem":"ແກ້ໄຂສິນຄ້າ", "m.editSup":"ແກ້ໄຂຜູ້ສະໜອງ", "m.editLoc":"ແກ້ໄຂບ່ອນເກັບ",
-    "m.name":"ຊື່", "m.nameLao":"ຊື່ (ລາວ)", "m.sku":"ລະຫັດ", "m.category":"ໝວດ",
+    "m.name":"ຊື່", "m.nameLao":"ຊື່ (ລາວ)", "m.sku":"ລະຫັດ", "m.label":"ປ້າຍສິນຄ້າ", "m.labelHelp":"ບາໂຄດ + QR ໜຶ່ງຕໍ່ສິນຄ້າ — ພິມຕິດໃສ່ຖ້ານ ຫຼື ບ່ອນວາງ ເພື່ອໃຫ້ພະນັກງານຮູ້ທັນທີວ່າແມ່ນຫຍັງ.", "m.labelShow":"ສະແດງ / ໂຫຼດປ້າຍ", "m.labelPrint":"🖨 ພິມປ້າຍ", "m.labelNeedSku":"ກະລຸນາໃສ່ລະຫັດ (SKU) ກ່ອນ.", "m.category":"ໝວດ",
     "m.unit":"ໜ່ວຍ", "m.storage":"ບ່ອນເກັບ", "m.cost":"ລາຄາຕົ້ນທຶນ (ຕໍ່ໜ່ວຍ)", "m.shelf":"ອາຍຸ (ມື້)",
     "m.reorder":"ລະດັບສັ່ງຊື້", "m.par":"ລະດັບມາດຕະຖານ", "m.allergens":"ສານກໍ່ແພ້",
     "m.contact":"ຜູ້ຕິດຕໍ່", "m.phone":"ໂທລະສັບ", "m.terms":"ເງື່ອນໄຂຈ່າຍ",
@@ -5686,6 +5696,102 @@ async function klRenderDnBarcode(targetId, payload) {
   }
 }
 
+// =====================================================================
+// v3.57 — GS1-128 batch labels (global logistics standard).
+// Encodes the batch reference + lot + expiry as proper GS1 Application
+// Identifiers: (240) internal item ref, (10) batch/lot, (17) expiry YYMMDD.
+// No GS1 prefix licence needed for internal warehouse use. Scans back via
+// klParseScan() below, so existing plain-code batches keep working.
+// =====================================================================
+function klGs1Clean(v){
+  // GS1 AI char set (subset of CSET 82) — keep it safe & scanner-friendly.
+  return String(v == null ? '' : v).replace(/[^0-9A-Za-z._\/-]/g, '').slice(0, 30);
+}
+function klExpiryYYMMDD(dateStr){
+  if (!dateStr) return '';
+  var m = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return '';
+  var y = +m[1], mo = +m[2], d = +m[3];
+  var dt = new Date(Date.UTC(y, mo - 1, d));
+  if (dt.getUTCFullYear() !== y || dt.getUTCMonth() !== mo - 1 || dt.getUTCDate() !== d) return '';
+  return String(y).slice(2) + m[2] + m[3];
+}
+function klGs1BatchText(ref, lot, expiry){
+  var s = '';
+  var r = klGs1Clean(ref); if (r) s += '(240)' + r;
+  var l = klGs1Clean(lot); if (l) s += '(10)' + l;
+  var e = klExpiryYYMMDD(expiry); if (e) s += '(17)' + e;
+  return s;
+}
+async function klRenderGs1Batch(targetId, ref, lot, expiry){
+  var el = document.getElementById(targetId); if (!el) return;
+  // Render into a host that accepts HTML (svg targets get swapped to a div, id kept).
+  var host = el;
+  if (el.tagName && el.tagName.toLowerCase() === 'svg'){
+    host = document.createElement('div'); host.id = el.id; host.className = el.className || '';
+    if (el.parentNode) el.parentNode.replaceChild(host, el);
+  }
+  var text = klGs1BatchText(ref, lot, expiry);
+  if (!text){ host.innerHTML = ''; return; }
+  try {
+    if (typeof window.bwipjs === 'undefined' && typeof window.klLoadBwipLib === 'function') await window.klLoadBwipLib();
+    if (window.bwipjs && typeof window.bwipjs.toSVG === 'function'){
+      host.innerHTML = window.bwipjs.toSVG({
+        bcid: 'gs1-128', text: text, scale: 2, height: 13,
+        includetext: true, textsize: 8, paddingwidth: 4, paddingheight: 2
+      });
+      return;
+    }
+    throw new Error('bwipjs unavailable');
+  } catch(e){
+    console.warn('GS1-128 render failed, fallback to CODE128:', e && e.message);
+    // Fallback 1: plain CODE128 of the ref — still scannable, resolves the same batch.
+    try {
+      if (typeof JsBarcode === 'undefined' && typeof window.klLoadJsBarcodeLib === 'function') await window.klLoadJsBarcodeLib();
+      if (typeof JsBarcode !== 'undefined'){
+        host.innerHTML = '<svg class="kl-pub-barcode-svg"></svg>';
+        JsBarcode(host.querySelector('svg'), String(ref || ''), { format:'CODE128', height:50, width:1.6, fontSize:11, margin:6 });
+        return;
+      }
+    } catch(e2){}
+    // Fallback 2: text
+    host.innerHTML = '<div class="kl-pub-barcode-fallback">' + h(String(ref || '')) + '</div>';
+  }
+}
+// Normalize a scanned/typed value: GS1-128 scans → pull the batch ref;
+// plain codes & PO numbers pass straight through (zero change to old flow).
+function klParseScan(raw){
+  var s = String(raw == null ? '' : raw).trim();
+  if (!s) return s;
+  s = s.replace(/^\][A-Za-z]\d/, '');                 // strip symbology id e.g. ]C1
+  var GS = String.fromCharCode(29);                   // FNC1 group separator
+  var looksGs1 = s.indexOf(GS) >= 0 || /^\(?(01|240|10|17|21)\)?/.test(s);
+  if (!looksGs1) return s;                             // plain code → unchanged
+  try {
+    if (s.indexOf('(') >= 0){                          // human/bracketed form
+      var m = s.match(/\(240\)([^()]+)/) || s.match(/\(21\)([^()]+)/) || s.match(/\(10\)([^()]+)/);
+      return m ? m[1].trim() : s;
+    }
+    var fixed = { '01':14, '11':6, '13':6, '15':6, '17':6 };  // fixed-length AIs
+    var i = 0, found = null;
+    while (i < s.length){
+      var ai2 = s.substr(i, 2);
+      if (s.substr(i, 3) === '240' || ai2 === '10' || ai2 === '21'){
+        var ailen = (s.substr(i, 3) === '240') ? 3 : 2;
+        var rest = s.substr(i + ailen);
+        var gi = rest.indexOf(GS);
+        var val = gi >= 0 ? rest.substr(0, gi) : rest;
+        if (!found) found = val;
+        i += ailen + val.length + (gi >= 0 ? 1 : 0);
+        continue;
+      }
+      if (fixed[ai2] != null){ i += 2 + fixed[ai2]; continue; }
+      break;                                           // unknown AI → stop
+    }
+    return found || s;
+  } catch(e){ return s; }
+}
+
 async function klRenderDnQr(targetId, payload) {
   // v3.26.1: 3-layer fallback with image-API first (more reliable than
   // dynamically-loaded CDN scripts which get blocked by browser tracking
@@ -8144,25 +8250,9 @@ async function doReceive() {
     } else {
       document.getElementById('stkExpRow').style.display = 'none';
     }
-    // v3.27.1: lazy-load barcode lib (in case CDN was blocked at boot)
-    if (typeof JsBarcode === 'undefined') {
-      try { await window.klLoadJsBarcodeLib(); }
-      catch (e) { console.error('JsBarcode lib failed:', e); }
-    }
-    if (typeof JsBarcode !== 'undefined') {
-      JsBarcode(document.getElementById('stkBarcode'), realBC, {
-        format: 'CODE128', height: 50, width: 1.6, fontSize: 11, margin: 6
-      });
-    } else {
-      // Graceful degradation: show code as monospace text
-      const bc = document.getElementById('stkBarcode');
-      if (bc && bc.parentNode) {
-        const fb = document.createElement('div');
-        fb.style.cssText = 'font-family:monospace;font-size:14px;font-weight:700;padding:8px;border:1px dashed #888;text-align:center';
-        fb.textContent = realBC;
-        bc.parentNode.replaceChild(fb, bc);
-      }
-    }
+    // v3.57: render a proper GS1-128 batch label — encodes (240) ref,
+    // (10) lot, (17) expiry. Handles lazy lib-load + fallback internally.
+    await klRenderGs1Batch('stkBarcode', realBC, lot_number, expiry_date);
 
     showMsg('receiveMsg', t('receive.success'), 'ok');
     // v3.37: refresh history list after manual receive
@@ -8225,6 +8315,7 @@ function wireCheckoutHandlers() {
 
 async function lookupBarcode(bc) {
   if (!bc) return;
+  bc = klParseScan(bc);   // v3.57: GS1-128 scans resolve to the batch ref; plain codes unchanged
   // v3.55-s19: typed a PO number → show the items received from that PO to pick from
   if (/^PO-/i.test(bc)) { await coLookupByPo(bc.toUpperCase()); return; }
   try {
@@ -8232,7 +8323,9 @@ async function lookupBarcode(bc) {
       .select('*, items(name, name_lao, unit), locations(name,name_lao,name_th,name_zh,name_ko), suppliers(name)')
       .eq('barcode', bc).single();
     if (error || !data) {
-      showMsg('checkoutMsg', t('checkout.batch.notfound'), 'err');
+      // v3.57: not a batch barcode — maybe a product label (item SKU)?
+      const handled = await coLookupByItemSku(bc);
+      if (!handled) showMsg('checkoutMsg', t('checkout.batch.notfound'), 'err');
       return;
     }
     CO_STATE.batch = data;
@@ -8300,6 +8393,87 @@ async function coLookupByPo(poNumber) {
   }
 }
 
+// v3.57: scan a product label (item SKU) → resolve to that item's in-stock
+// batches (FEFO), and always show the item status card (on hand / min / max / on order).
+async function coLookupByItemSku(code) {
+  try {
+    const itRes = await sb.from('items').select('item_id').eq('sku', code).limit(1);
+    const itemId = (itRes.data && itRes.data[0]) ? itRes.data[0].item_id : null;
+    if (!itemId) return false;
+    const sel = '*, items(name, name_lao, unit), locations(name,name_lao,name_th,name_zh,name_ko), suppliers(name)';
+    const r = await sb.from('batches').select(sel)
+      .eq('item_id', itemId).eq('status', 'active').gt('quantity_remaining', 0)
+      .order('expiry_date', { ascending: true, nullsFirst: false });
+    const batches = (r.data || []);
+    showMsg('checkoutMsg', '', 'ok');
+    coShowItemStatus(itemId);
+    if (!batches.length) {
+      // No stock to take, but show the status so staff see 0 on hand / what's on order.
+      document.getElementById('coBatchCard').style.display = 'none';
+      return true;
+    }
+    if (batches.length === 1) {
+      document.getElementById('coPoPicker').style.display = 'none';
+      CO_STATE.batch = batches[0];
+      renderBatchCard(batches[0]);
+    } else {
+      coShowBatchPicker(code, batches);
+    }
+    return true;
+  } catch (e) { console.error(e); return false; }
+}
+
+// v3.57: render the item status card above the batch card.
+async function coShowItemStatus(itemId) {
+  try {
+    let s = null;
+    const vs = await sb.from('v_item_stock').select('*').eq('item_id', itemId).limit(1);
+    if (vs.data && vs.data[0]) s = vs.data[0];
+    if (!s) {
+      const it = await sb.from('items').select('item_id,name,name_lao,unit,reorder_level,par_level').eq('item_id', itemId).limit(1);
+      s = (it.data && it.data[0]) ? Object.assign({ on_hand: 0 }, it.data[0]) : null;
+    }
+    if (!s) return;
+    // On order: sum qty_ordered across open POs (sent / confirmed / in_transit).
+    let onOrder = 0;
+    try {
+      const poR = await sb.from('purchase_orders').select('po_id').in('status', ['sent', 'confirmed', 'in_transit']);
+      const poIds = (poR.data || []).map(p => p.po_id);
+      if (poIds.length) {
+        const plR = await sb.from('po_lines').select('qty_ordered').eq('item_id', itemId).in('po_id', poIds);
+        onOrder = (plR.data || []).reduce((a, l) => a + Number(l.qty_ordered || 0), 0);
+      }
+    } catch (e) { /* POs optional */ }
+    const on = Number(s.on_hand || 0), mn = Number(s.reorder_level || 0), mx = Number(s.par_level || 0);
+    const st = klItemStatus({ on_hand: on, reorder_level: mn, par_level: mx });
+    const color = st === 'below_min' ? '#c0392b' : (st === 'ok' ? '#15795f' : '#caa24a');
+    const label = st === 'below_min' ? t('co.is.below') : (st === 'low' ? t('co.is.low') : (st === 'over_max' ? t('co.is.over') : t('co.is.ok')));
+    const unit = h(s.unit || '');
+    let host = document.getElementById('coItemStatus');
+    if (!host) {
+      const card = document.getElementById('coBatchCard'); if (!card) return;
+      host = document.createElement('div'); host.id = 'coItemStatus';
+      card.parentNode.insertBefore(host, card);
+    }
+    host.innerHTML =
+      '<div style="background:#fff;border:1px solid #e6e9ee;border-left:5px solid ' + color + ';border-radius:10px;padding:12px 14px;margin-bottom:10px">'
+      + '<div style="font-weight:700;font-size:15px;margin-bottom:2px">' + h(s.name || '') + '</div>'
+      + (s.name_lao ? '<div style="color:var(--kl-text-soft);font-size:12px;margin-bottom:8px">' + h(s.name_lao) + '</div>' : '')
+      + '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">'
+        + '<div style="font-size:22px;font-weight:800;color:' + color + '">' + h(fmtQty(on)) + ' ' + unit + '</div>'
+        + '<span style="font-size:12px;font-weight:700;color:#fff;background:' + color + ';border-radius:20px;padding:3px 10px">' + h(label) + '</span>'
+      + '</div>'
+      + '<div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:8px;font-size:13px;color:var(--kl-text-soft)">'
+        + '<div>' + h(t('co.is.min')) + ': <strong style="color:var(--kl-text)">' + h(fmtQty(mn)) + '</strong></div>'
+        + '<div>' + h(t('co.is.max')) + ': <strong style="color:var(--kl-text)">' + h(fmtQty(mx)) + '</strong></div>'
+        + '<div>🚚 ' + h(t('co.is.onorder')) + ': <strong style="color:' + (onOrder > 0 ? '#15795f' : 'var(--kl-text)') + '">' + h(fmtQty(onOrder)) + ' ' + unit + '</strong></div>'
+      + '</div>'
+      + (st === 'below_min' ? '<div style="margin-top:8px;font-size:12px;color:#c0392b;font-weight:600">⚠ ' + h(t('co.is.reorder')) + (onOrder > 0 ? ' — ' + h(t('co.is.coming')) : '') + '</div>' : '')
+      + '</div>';
+    host.style.display = 'block';
+  } catch (e) { console.error(e); }
+}
+
 function coShowBatchPicker(poNumber, batches) {
   CO_PO_BATCHES = batches;
   document.getElementById('coBatchCard').style.display = 'none';
@@ -8351,7 +8525,7 @@ window.coShowBarcode = async function(i) {
   document.getElementById('coBarcodeTitle').textContent = nm + (code ? ' — ' + code : '');
   document.getElementById('coBarcodeModal').style.display = 'flex';
   const box = document.getElementById('coBarcodeBox');
-  if (code) { await klRenderDnBarcode('coBarcodeBox', code); }
+  if (code) { await klRenderGs1Batch('coBarcodeBox', code, b.lot_number, b.expiry_date); }
   else if (box) { box.innerHTML = '<p class="kl-muted">' + t('checkout.batch.notfound') + '</p>'; }
 };
 window.coCloseBarcode = function() {
@@ -8362,8 +8536,16 @@ window.rhShowSticker = async function(code, name) {
   if (!code) return;
   const ttl = document.getElementById('coBarcodeTitle');
   if (ttl) ttl.textContent = (name || '') + ' — ' + code;
-  const m = document.getElementById('coBarcodeModal'); if (m) m.style.display = 'flex';
-  await klRenderDnBarcode('coBarcodeBox', code);
+  const m = document.getElementById('coBarcodeModal');
+  // v3.57 fix: this modal lives inside the (hidden) Check-Out page, so even
+  // as a fixed overlay it can't appear from the Receive page — a parent with
+  // display:none hides it. Move it to <body> so it shows on any page.
+  if (m && m.parentNode !== document.body) document.body.appendChild(m);
+  if (m) m.style.display = 'flex';
+  try {
+    const { data: _bx } = await sb.from('batches').select('barcode,lot_number,expiry_date').eq('barcode', code).maybeSingle();
+    await klRenderGs1Batch('coBarcodeBox', code, _bx && _bx.lot_number, _bx && _bx.expiry_date);
+  } catch (e) { await klRenderGs1Batch('coBarcodeBox', code, null, null); }
 };
 window.coPrintBarcode = function() {
   const box = document.getElementById('coBarcodeBox'); if (!box) return;
@@ -8404,6 +8586,7 @@ function renderBatchCard(b) {
     showMsg('checkoutMsg', t('checkout.batch.empty'), 'err');
   }
   document.getElementById('coBatchCard').style.display = 'block';
+  if (b.item_id) coShowItemStatus(b.item_id);
   document.getElementById('coBatchCard').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -12685,9 +12868,17 @@ window.itemForm = function(id) {
    +'<div class="kl-form-row"><label>'+t('m.shelf')+'</label><input id="if_shelf" type="number" value="'+h(v('default_shelf_life_days'))+'"></div>'
    +'<div class="kl-form-row"><label>'+t('m.reorder')+'</label><input id="if_re" type="number" value="'+h(v('reorder_level'))+'"></div>'
    +'<div class="kl-form-row"><label>'+t('m.par')+'</label><input id="if_par" type="number" value="'+h(v('par_level'))+'"></div>'
+   +'<div class="kl-form-row"><label>🏷️ '+t('m.label')+'</label>'
+     +'<div class="kl-muted" style="font-size:12px;margin-bottom:6px">'+t('m.labelHelp')+'</div>'
+     +'<div id="if_labelbox" style="display:flex;gap:18px;flex-wrap:wrap;align-items:center;justify-content:center;background:#fff;border:1px solid #e6e9ee;border-radius:10px;padding:12px;min-height:42px"></div>'
+     +'<div style="margin-top:8px">'
+       +'<button type="button" class="kl-btn" onclick="itemShowLabel()">'+t('m.labelShow')+'</button> '
+       +'<button type="button" class="kl-btn" onclick="itemPrintLabel()">'+t('m.labelPrint')+'</button>'
+     +'</div></div>'
    +'<button class="kl-btn kl-btn-primary kl-btn-lg" onclick="saveItem('+(id||'null')+')">'+t('m.save')+'</button> '
    +'<button class="kl-btn" onclick="closeModal()">'+t('m.cancel')+'</button>';
   modal(id?t('m.editItem'):t('m.addItem').replace('+ ',''), html);
+  if (id && v('sku')) { try { itemShowLabel(); } catch(e){} }
 };
 
 window.saveItem = async function(id) {
@@ -12738,6 +12929,36 @@ window.saveItem = async function(id) {
     closeModal();
     renderManageTab(klSession());
   } catch (e) { alert(t('m.saveFail')+': ' + (e.message||e)); }
+};
+
+// v3.57: product label — one stable barcode + QR per item (from its SKU).
+// Separate from batch GS1-128 labels: this says WHAT the product is.
+window.itemShowLabel = function(){
+  var skuEl = document.getElementById('if_sku'); if (!skuEl) return;
+  var sku = (skuEl.value||'').trim();
+  var box = document.getElementById('if_labelbox'); if (!box) return;
+  if (!sku){ box.innerHTML = '<div class="kl-muted" style="font-size:12px">'+h(t('m.labelNeedSku'))+'</div>'; return; }
+  box.innerHTML = '<div style="text-align:center"><div id="if_barcode"></div></div>'
+    + '<div style="text-align:center;width:120px"><div id="if_qr" class="kl-pub-barcode-wrap"></div></div>';
+  try { klRenderDnBarcode('if_barcode', sku); } catch(e){}
+  try { klRenderDnQr('if_qr', sku); } catch(e){}
+};
+window.itemPrintLabel = function(){
+  var box = document.getElementById('if_labelbox');
+  if (!box || !box.innerHTML.trim() || box.querySelector('.kl-muted')) itemShowLabel();
+  box = document.getElementById('if_labelbox'); if (!box) return;
+  var sku  = ((document.getElementById('if_sku')||{}).value||'').trim();
+  var name = ((document.getElementById('if_name')||{}).value||'').trim();
+  if (!sku){ alert(t('m.labelNeedSku')); return; }
+  var esc2 = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+  var w = window.open('', '_blank', 'width=420,height=440'); if (!w) return;
+  w.document.write('<html><head><title>'+esc2(sku)+'</title></head>'
+    + '<body style="text-align:center;font-family:sans-serif;padding:20px">'
+    + '<div style="font-weight:700;font-size:16px;margin-bottom:12px">'+esc2(name)+'</div>'
+    + box.innerHTML
+    + '<div style="font-family:monospace;font-size:13px;margin-top:10px">'+esc2(sku)+'</div>'
+    + '</body></html>');
+  w.document.close(); w.focus(); setTimeout(function(){ try{ w.print(); }catch(e){} }, 350);
 };
 
 // ---- SUPPLIERS ----
