@@ -1354,6 +1354,12 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   display:flex; flex-direction:column; align-items:center;
   width:100%; max-width:320px; box-sizing:border-box; }
 .kl-pub-barcode-wrap svg { max-width:100%; height:auto; display:block; }
+.kl-prodlabel { display:flex; flex-direction:column; align-items:center; gap:16px; padding:10px; }
+.kl-prodlabel-bc { width:100%; max-width:300px; text-align:center; }
+.kl-prodlabel-bc svg { max-width:100%; height:auto; display:block; margin:0 auto; }
+.kl-prodlabel-qr { text-align:center; }
+.kl-prodlabel-qr img { width:130px !important; height:130px !important; display:block; margin:0 auto; }
+.kl-prodlabel-qr .kl-pub-qr-cap { font-family:monospace; font-size:12px; margin-top:4px; }
 .kl-pub-barcode-fallback { font-family:monospace; font-size:14px;
   font-weight:700; padding:14px 8px; text-align:center;
   border:1px dashed var(--kl-border,#888); border-radius:6px;
@@ -2041,7 +2047,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.57-recvbc-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.57-label-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -13069,8 +13075,10 @@ window.itemShowLabel = function(){
   var sku = (skuEl.value||'').trim();
   var box = document.getElementById('if_labelbox'); if (!box) return;
   if (!sku){ box.innerHTML = '<div class="kl-muted" style="font-size:12px">'+h(t('m.labelNeedSku'))+'</div>'; return; }
-  box.innerHTML = '<div style="text-align:center"><div id="if_barcode"></div></div>'
-    + '<div style="text-align:center;width:120px"><div id="if_qr" class="kl-pub-barcode-wrap"></div></div>';
+  box.innerHTML = '<div class="kl-prodlabel">'
+    + '<div class="kl-prodlabel-bc" id="if_barcode"></div>'
+    + '<div class="kl-prodlabel-qr" id="if_qr"></div>'
+    + '</div>';
   try { klRenderDnBarcode('if_barcode', sku); } catch(e){}
   try { klRenderDnQr('if_qr', sku); } catch(e){}
 };
@@ -13083,7 +13091,7 @@ window.itemPrintLabel = function(){
   if (!sku){ alert(t('m.labelNeedSku')); return; }
   var esc2 = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
   var w = window.open('', '_blank', 'width=420,height=440'); if (!w) return;
-  w.document.write('<html><head><title>'+esc2(sku)+'</title></head>'
+  w.document.write('<html><head><title>'+esc2(sku)+'</title><style>img{width:150px;height:150px;margin:10px auto;display:block}svg{max-width:300px;height:auto;margin:0 auto;display:block}</style></head>'
     + '<body style="text-align:center;font-family:sans-serif;padding:20px">'
     + '<div style="font-weight:700;font-size:16px;margin-bottom:12px">'+esc2(name)+'</div>'
     + box.innerHTML
@@ -13105,9 +13113,9 @@ window.invShowBarcode = function(itemId){
   var nameLine = h(r.name||'') + (r.name_lao ? ' <span style="color:var(--kl-text-soft)">'+h(r.name_lao)+'</span>' : '');
   var html = '<div style="text-align:center">'
     + '<div style="font-weight:700;margin-bottom:8px">'+nameLine+'</div>'
-    + '<div id="invbc_box">'
-    +   '<div style="text-align:center"><div id="invbc_bc"></div></div>'
-    +   '<div style="display:flex;justify-content:center;margin-top:8px"><div id="invbc_qr" class="kl-pub-barcode-wrap" style="width:120px"></div></div>'
+    + '<div id="invbc_box" class="kl-prodlabel">'
+    +   '<div class="kl-prodlabel-bc" id="invbc_bc"></div>'
+    +   '<div class="kl-prodlabel-qr" id="invbc_qr"></div>'
     + '</div>'
     + '<div style="font-family:monospace;font-size:13px;margin-top:10px">'+h(sku)+'</div>'
     + '<button type="button" class="kl-btn kl-btn-primary" style="margin-top:12px" onclick="invPrintBarcode()">'+h(t('inv.bc.print'))+'</button>'
@@ -13121,7 +13129,7 @@ window.invPrintBarcode = function(){
   var sku = INV_BC.sku, name = INV_BC.name;
   var esc2 = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
   var w = window.open('', '_blank', 'width=420,height=440'); if (!w) return;
-  w.document.write('<html><head><title>'+esc2(sku)+'</title></head>'
+  w.document.write('<html><head><title>'+esc2(sku)+'</title><style>img{width:150px;height:150px;margin:10px auto;display:block}svg{max-width:300px;height:auto;margin:0 auto;display:block}</style></head>'
     + '<body style="text-align:center;font-family:sans-serif;padding:20px">'
     + '<div style="font-weight:700;font-size:16px;margin-bottom:12px">'+esc2(name)+'</div>'
     + box.innerHTML
