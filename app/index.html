@@ -2041,7 +2041,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.57-scan-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.57-scan-s2</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -8315,13 +8315,14 @@ function wireCheckoutHandlers() {
 
 async function lookupBarcode(bc) {
   if (!bc) return;
-  bc = klParseScan(bc);   // v3.57: GS1-128 scans resolve to the batch ref; plain codes unchanged
+  bc = klParseScan(String(bc || '').trim());   // v3.57: GS1-128 scans resolve to the batch ref; plain codes unchanged
+  if (!bc) return;
   // v3.55-s19: typed a PO number → show the items received from that PO to pick from
   if (/^PO-/i.test(bc)) { await coLookupByPo(bc.toUpperCase()); return; }
   try {
     const { data, error } = await sb.from('batches')
       .select('*, items(name, name_lao, unit), locations(name,name_lao,name_th,name_zh,name_ko), suppliers(name)')
-      .eq('barcode', bc).single();
+      .eq('barcode', bc).maybeSingle();
     if (error || !data) {
       // v3.57: not a batch barcode — maybe a product label (item SKU)?
       const handled = await coLookupByItemSku(bc);
