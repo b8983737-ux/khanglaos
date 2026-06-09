@@ -2047,7 +2047,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.62-saleak-fix-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.63-branchview-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -6006,6 +6006,16 @@ async function loadProfile() {
     restaurant_code: data.restaurants && data.restaurants.code,
     restaurant_name: data.restaurants && data.restaurants.name,
   };
+  // v3.63: is this user assigned to a SUB warehouse (a branch)? Branch users
+  // get a focused view (Transfers only), not Main's full toolset.
+  __profile.is_branch = false;
+  if (__profile.warehouse_id) {
+    try {
+      const wr = await sb.from('warehouses').select('warehouse_type')
+        .eq('warehouse_id', __profile.warehouse_id).single();
+      __profile.is_branch = !!(wr.data && wr.data.warehouse_type === 'sub');
+    } catch(e){ /* warehouses unavailable → treat as Main */ }
+  }
   return __profile;
 }
 
@@ -6261,6 +6271,14 @@ function showPage(name) {
   // every normal customer, so the secret console stays invisible to them.
   const _saLink = document.getElementById('navSaConsole');
   if (_saLink) _saLink.style.display = klIsPlatformAdmin() ? '' : 'none';
+  // v3.63: branch (sub-warehouse) users get a focused view — Transfers only.
+  const _isBranch = !!(klSession() && klSession().user && klSession().user.is_branch);
+  if (_isBranch) {
+    document.querySelectorAll('#kl-sidebar .kl-sb-nav a[data-nav]').forEach(a => {
+      a.style.display = (a.getAttribute('data-nav') === 'transfers') ? '' : 'none';
+    });
+    document.querySelectorAll('#kl-sidebar .kl-sb-nav .kl-sb-section').forEach(s => { s.style.display = 'none'; });
+  }
   applyI18n();
   // page-specific init
   if (name === 'login') initLoginPage();
@@ -6342,6 +6360,12 @@ async function route() {
   }
   if (r === 'login' && klSession()) {
     location.hash = '#/dashboard';
+    return;
+  }
+  // v3.63: branch (sub-warehouse) users are limited to the Transfers screen —
+  // any other route (incl. the default dashboard landing) bounces to Transfers.
+  if (__profile && __profile.is_branch && r !== 'transfers') {
+    location.hash = '#/transfers';
     return;
   }
   // ROLE GATE: manager-only pages. Staff cannot reach Reports, Manage,
