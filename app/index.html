@@ -2047,7 +2047,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.60-saconsole-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.62-sa-addcust-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -2816,7 +2816,7 @@ const I18N = {
     "checkout.sub":"Scan barcode or type it. FEFO-suggested batch will be picked first.",
     "checkout.scan.title":"Scan barcode", "checkout.scan.start":"📷 Start scanner",
     "checkout.scan.stop":"Stop", "checkout.scan.manual":"Or type barcode",
-    "checkout.lookup":"Find batch", "co.find.title":"Find item", "co.find.sub":"Type the item name or scan its product code, then pick which batch to take from.", "co.find.btn":"Search items", "co.find.min":"Type at least 2 letters.", "co.find.searching":"Searching…", "co.find.none":"No items match.", "co.find.nostock":"No stock in hand for this item.", "co.find.lots":"Pick a batch — oldest expiry first", "checkout.dest":"Check out to", "checkout.dest.use":"Use / Consume", "nav.transfers":"Transfers", "nav.saConsole":"SA Console", "tr.title":"Stock Transfers", "tr.sub":"Branches request stock from the Main warehouse. Every request is tracked here.", "tr.newReq":"Request stock from Main", "tr.newReqSub":"Pick the branch, add the items it needs, then send the request to Main.", "tr.hub":"Branch (requesting)", "tr.item":"Item", "tr.qty":"Qty", "tr.addLine":"Add", "tr.note":"Note (optional)", "tr.submit":"📨 Send request to Main", "tr.noSubs":"No sub-warehouses yet. Add a branch in Manage → 🏭 Warehouses first.", "tr.noLines":"No items added yet.", "tr.needLine":"Pick an item and a quantity first.", "tr.needHub":"Please pick the branch making the request.", "tr.reqOk":"✅ Request sent to Main.", "tr.listTitle":"All transfers", "tr.listEmpty":"No transfers yet.", "tr.colRoute":"From → To", "tr.colItems":"Items", "tr.colStatus":"Status", "tr.colDate":"Date", "tr.items":"items", "tr.notMigrated":"Transfers aren't enabled in your database yet. Please run the v3.58 SQL migration in Supabase first.", "tr.st.requested":"Requested", "tr.st.approved":"Approved", "tr.st.sent":"Sent", "tr.st.received":"Received", "tr.st.cancelled":"Cancelled", "tr.detailTitle":"Transfer detail", "tr.approve":"✅ Approve", "tr.send":"📤 Send (take from Main)", "tr.cancelReq":"Cancel request", "tr.awaitRecv":"Sent — waiting for the branch to receive.", "tr.confirmCancel":"Cancel this transfer request?", "tr.confirmSend":"Send now? This takes the stock OUT of Main (oldest batches first) and cannot be undone.",
+    "checkout.lookup":"Find batch", "co.find.title":"Find item", "co.find.sub":"Type the item name or scan its product code, then pick which batch to take from.", "co.find.btn":"Search items", "co.find.min":"Type at least 2 letters.", "co.find.searching":"Searching…", "co.find.none":"No items match.", "co.find.nostock":"No stock in hand for this item.", "co.find.lots":"Pick a batch — oldest expiry first", "checkout.dest":"Check out to", "checkout.dest.use":"Use / Consume", "nav.transfers":"Transfers", "nav.saConsole":"SA Console", "tr.title":"Stock Transfers", "tr.sub":"Branches request stock from the Main warehouse. Every request is tracked here.", "tr.newReq":"Request stock from Main", "tr.newReqSub":"Pick the branch, add the items it needs, then send the request to Main.", "tr.hub":"Branch (requesting)", "tr.item":"Item", "tr.qty":"Qty", "tr.addLine":"Add", "tr.note":"Note (optional)", "tr.submit":"📨 Send request to Main", "tr.noSubs":"No sub-warehouses yet. Add a branch in Manage → 🏭 Warehouses first.", "tr.noLines":"No items added yet.", "tr.needLine":"Pick an item and a quantity first.", "tr.needHub":"Please pick the branch making the request.", "tr.reqOk":"✅ Request sent to Main.", "tr.listTitle":"All transfers", "tr.listEmpty":"No transfers yet.", "tr.colRoute":"From → To", "tr.colItems":"Items", "tr.colStatus":"Status", "tr.colDate":"Date", "tr.items":"items", "tr.notMigrated":"Transfers aren't enabled in your database yet. Please run the v3.58 SQL migration in Supabase first.", "tr.st.requested":"Requested", "tr.st.approved":"Approved", "tr.st.sent":"Sent", "tr.st.received":"Received", "tr.st.cancelled":"Cancelled", "tr.detailTitle":"Transfer detail", "tr.approve":"✅ Approve", "tr.send":"📤 Send (take from Main)", "tr.cancelReq":"Cancel request", "tr.awaitRecv":"Sent — waiting for the branch to receive.", "tr.confirmCancel":"Cancel this transfer request?", "tr.confirmSend":"Send now? This takes the stock OUT of Main (oldest batches first) and cannot be undone.", "tr.receive":"📥 Confirm received", "tr.confirmReceive":"Confirm you received this stock? It will be added to your hub.",
     "checkout.batch.title":"Batch found",
     "checkout.take.qty":"Quantity to take", "checkout.take.type":"Movement type",
     "checkout.type.out":"OUT — kitchen use", "checkout.type.waste":"WASTE — discard",
@@ -2977,7 +2977,7 @@ const I18N = {
     "checkout.sub":"ສະແກນບາໂຄດ ຫຼື ພິມເຂົ້າ. ລ໋ອດທີ່ໝົດອາຍຸໄວສຸດຈະຖືກເລືອກກ່ອນ.",
     "checkout.scan.title":"ສະແກນບາໂຄດ", "checkout.scan.start":"📷 ເລີ່ມສະແກນ",
     "checkout.scan.stop":"ຢຸດ", "checkout.scan.manual":"ຫຼື ພິມບາໂຄດ",
-    "checkout.lookup":"ຄົ້ນຫາລ໋ອດ", "co.find.title":"ຄົ້ນຫາສິນຄ້າ", "co.find.sub":"ພິມຊື່ສິນຄ້າ ຫຼື ສະແກນລະຫັດສິນຄ້າ ແລ້ວເລືອກລັອດທີ່ຈະເອົາ.", "co.find.btn":"ຄົ້ນຫາ", "co.find.min":"ພິມຢ່າງໜ້ອຍ 2 ໂຕ.", "co.find.searching":"ກຳລັງຄົ້ນຫາ…", "co.find.none":"ບໍ່ພົບສິນຄ້າ.", "co.find.nostock":"ສິນຄ້ານີ້ບໍ່ມີໃນສະຕັອກ.", "co.find.lots":"ເລືອກລັອດ — ໝົດອາຍຸເກົ່າສຸດກ່ອນ", "checkout.dest":"ເຊັກເອົາໄປໃສ", "checkout.dest.use":"ໃຊ້ / ບໍລິໂພກ", "nav.transfers":"ການໂອນ", "nav.saConsole":"ຄອນໂຊນ SA", "tr.title":"ການໂອນສິນຄ້າ", "tr.sub":"ສາຂາຮ້ອງຂໍສິນຄ້າຈາກສາງຫຼັກ. ທຸກຄຳຂໍຖືກຕິດຕາມຢູ່ນີ້.", "tr.newReq":"ຮ້ອງຂໍສິນຄ້າຈາກສາງຫຼັກ", "tr.newReqSub":"ເລືອກສາຂາ, ເພີ່ມສິນຄ້າທີ່ຕ້ອງການ, ແລ້ວສົ່ງຄຳຂໍໄປສາງຫຼັກ.", "tr.hub":"ສາຂາ (ຜູ້ຂໍ)", "tr.item":"ສິນຄ້າ", "tr.qty":"ຈຳນວນ", "tr.addLine":"ເພີ່ມ", "tr.note":"ໝາຍເຫດ (ບໍ່ບັງຄັບ)", "tr.submit":"📨 ສົ່ງຄຳຂໍໄປສາງຫຼັກ", "tr.noSubs":"ຍັງບໍ່ມີສາງຍ່ອຍ. ເພີ່ມສາຂາໃນ ຈັດການ → 🏭 ສາງ ກ່ອນ.", "tr.noLines":"ຍັງບໍ່ໄດ້ເພີ່ມສິນຄ້າ.", "tr.needLine":"ເລືອກສິນຄ້າ ແລະ ຈຳນວນກ່ອນ.", "tr.needHub":"ກະລຸນາເລືອກສາຂາທີ່ຮ້ອງຂໍ.", "tr.reqOk":"✅ ສົ່ງຄຳຂໍໄປສາງຫຼັກແລ້ວ.", "tr.listTitle":"ການໂອນທັງໝົດ", "tr.listEmpty":"ຍັງບໍ່ມີການໂອນ.", "tr.colRoute":"ຈາກ → ໄປ", "tr.colItems":"ສິນຄ້າ", "tr.colStatus":"ສະຖານະ", "tr.colDate":"ວັນທີ", "tr.items":"ລາຍການ", "tr.notMigrated":"ການໂອນຍັງບໍ່ໄດ້ເປີດໃຊ້ໃນຖານຂໍ້ມູນ. ກະລຸນາດຳເນີນການ SQL v3.58 ໃນ Supabase ກ່ອນ.", "tr.st.requested":"ຮ້ອງຂໍແລ້ວ", "tr.st.approved":"ອະນຸມັດແລ້ວ", "tr.st.sent":"ສົ່ງແລ້ວ", "tr.st.received":"ຮັບແລ້ວ", "tr.st.cancelled":"ຍົກເລີກ", "tr.detailTitle":"ລາຍລະອຽດການໂອນ", "tr.approve":"✅ ອະນຸມັດ", "tr.send":"📤 ສົ່ງ (ຫັກຈາກສາງຫຼັກ)", "tr.cancelReq":"ຍົກເລີກຄຳຂໍ", "tr.awaitRecv":"ສົ່ງແລ້ວ — ກຳລັງລໍຖ້າສາຂາຮັບ.", "tr.confirmCancel":"ຍົກເລີກຄຳຂໍໂອນນີ້ບໍ?", "tr.confirmSend":"ສົ່ງດຽວນີ້ບໍ? ຈະຫັກສິນຄ້າອອກຈາກສາງຫຼັກ (ລັອດເກົ່າສຸດກ່ອນ) ແລະ ຍົກເລີກບໍ່ໄດ້.",
+    "checkout.lookup":"ຄົ້ນຫາລ໋ອດ", "co.find.title":"ຄົ້ນຫາສິນຄ້າ", "co.find.sub":"ພິມຊື່ສິນຄ້າ ຫຼື ສະແກນລະຫັດສິນຄ້າ ແລ້ວເລືອກລັອດທີ່ຈະເອົາ.", "co.find.btn":"ຄົ້ນຫາ", "co.find.min":"ພິມຢ່າງໜ້ອຍ 2 ໂຕ.", "co.find.searching":"ກຳລັງຄົ້ນຫາ…", "co.find.none":"ບໍ່ພົບສິນຄ້າ.", "co.find.nostock":"ສິນຄ້ານີ້ບໍ່ມີໃນສະຕັອກ.", "co.find.lots":"ເລືອກລັອດ — ໝົດອາຍຸເກົ່າສຸດກ່ອນ", "checkout.dest":"ເຊັກເອົາໄປໃສ", "checkout.dest.use":"ໃຊ້ / ບໍລິໂພກ", "nav.transfers":"ການໂອນ", "nav.saConsole":"ຄອນໂຊນ SA", "tr.title":"ການໂອນສິນຄ້າ", "tr.sub":"ສາຂາຮ້ອງຂໍສິນຄ້າຈາກສາງຫຼັກ. ທຸກຄຳຂໍຖືກຕິດຕາມຢູ່ນີ້.", "tr.newReq":"ຮ້ອງຂໍສິນຄ້າຈາກສາງຫຼັກ", "tr.newReqSub":"ເລືອກສາຂາ, ເພີ່ມສິນຄ້າທີ່ຕ້ອງການ, ແລ້ວສົ່ງຄຳຂໍໄປສາງຫຼັກ.", "tr.hub":"ສາຂາ (ຜູ້ຂໍ)", "tr.item":"ສິນຄ້າ", "tr.qty":"ຈຳນວນ", "tr.addLine":"ເພີ່ມ", "tr.note":"ໝາຍເຫດ (ບໍ່ບັງຄັບ)", "tr.submit":"📨 ສົ່ງຄຳຂໍໄປສາງຫຼັກ", "tr.noSubs":"ຍັງບໍ່ມີສາງຍ່ອຍ. ເພີ່ມສາຂາໃນ ຈັດການ → 🏭 ສາງ ກ່ອນ.", "tr.noLines":"ຍັງບໍ່ໄດ້ເພີ່ມສິນຄ້າ.", "tr.needLine":"ເລືອກສິນຄ້າ ແລະ ຈຳນວນກ່ອນ.", "tr.needHub":"ກະລຸນາເລືອກສາຂາທີ່ຮ້ອງຂໍ.", "tr.reqOk":"✅ ສົ່ງຄຳຂໍໄປສາງຫຼັກແລ້ວ.", "tr.listTitle":"ການໂອນທັງໝົດ", "tr.listEmpty":"ຍັງບໍ່ມີການໂອນ.", "tr.colRoute":"ຈາກ → ໄປ", "tr.colItems":"ສິນຄ້າ", "tr.colStatus":"ສະຖານະ", "tr.colDate":"ວັນທີ", "tr.items":"ລາຍການ", "tr.notMigrated":"ການໂອນຍັງບໍ່ໄດ້ເປີດໃຊ້ໃນຖານຂໍ້ມູນ. ກະລຸນາດຳເນີນການ SQL v3.58 ໃນ Supabase ກ່ອນ.", "tr.st.requested":"ຮ້ອງຂໍແລ້ວ", "tr.st.approved":"ອະນຸມັດແລ້ວ", "tr.st.sent":"ສົ່ງແລ້ວ", "tr.st.received":"ຮັບແລ້ວ", "tr.st.cancelled":"ຍົກເລີກ", "tr.detailTitle":"ລາຍລະອຽດການໂອນ", "tr.approve":"✅ ອະນຸມັດ", "tr.send":"📤 ສົ່ງ (ຫັກຈາກສາງຫຼັກ)", "tr.cancelReq":"ຍົກເລີກຄຳຂໍ", "tr.awaitRecv":"ສົ່ງແລ້ວ — ກຳລັງລໍຖ້າສາຂາຮັບ.", "tr.confirmCancel":"ຍົກເລີກຄຳຂໍໂອນນີ້ບໍ?", "tr.confirmSend":"ສົ່ງດຽວນີ້ບໍ? ຈະຫັກສິນຄ້າອອກຈາກສາງຫຼັກ (ລັອດເກົ່າສຸດກ່ອນ) ແລະ ຍົກເລີກບໍ່ໄດ້.", "tr.receive":"📥 ຢືນຢັນການຮັບ", "tr.confirmReceive":"ຢືນຢັນວ່າທ່ານໄດ້ຮັບສິນຄ້ານີ້ບໍ? ມັນຈະຖືກເພີ່ມເຂົ້າສາງຂອງທ່ານ.",
     "checkout.batch.title":"ພົບລ໋ອດ",
     "checkout.take.qty":"ຈຳນວນທີ່ເບີກ", "checkout.take.type":"ປະເພດການເຄື່ອນໄຫວ",
     "checkout.type.out":"OUT — ໃຊ້ໃນຄົວ", "checkout.type.waste":"WASTE — ຖິ້ມ",
@@ -8903,19 +8903,22 @@ window.trOpenDetail = function(tid){
   bodyHtml += '</tbody></table>';
   if (trn.note) bodyHtml += '<p class="kl-muted">' + h(trn.note) + '</p>';
 
-  const role = (klSession() && klSession().user && klSession().user.role) || '';
+  const sess = (klSession() && klSession().user) || null;
+  const role = (sess && sess.role) || '';
+  const myWh = (sess && sess.warehouse_id) || null;
   const canManage = ['owner','manager','sa'].includes(role);
+  const canReceive = canManage || (myWh && String(myWh) === String(trn.to_warehouse_id));
   let actions = '';
-  if (canManage) {
-    if (trn.status === 'requested') {
-      actions = '<button class="kl-btn kl-btn-primary" onclick="trApprove(' + tid + ')">' + h(t('tr.approve')) + '</button> '
-              + '<button class="kl-btn" onclick="trCancel(' + tid + ')">' + h(t('tr.cancelReq')) + '</button>';
-    } else if (trn.status === 'approved') {
-      actions = '<button class="kl-btn kl-btn-primary" onclick="trSend(' + tid + ')">' + h(t('tr.send')) + '</button> '
-              + '<button class="kl-btn" onclick="trCancel(' + tid + ')">' + h(t('tr.cancelReq')) + '</button>';
-    } else if (trn.status === 'sent') {
-      actions = '<p class="kl-muted">' + h(t('tr.awaitRecv')) + '</p>';
-    }
+  if (trn.status === 'requested' && canManage) {
+    actions = '<button class="kl-btn kl-btn-primary" onclick="trApprove(' + tid + ')">' + h(t('tr.approve')) + '</button> '
+            + '<button class="kl-btn" onclick="trCancel(' + tid + ')">' + h(t('tr.cancelReq')) + '</button>';
+  } else if (trn.status === 'approved' && canManage) {
+    actions = '<button class="kl-btn kl-btn-primary" onclick="trSend(' + tid + ')">' + h(t('tr.send')) + '</button> '
+            + '<button class="kl-btn" onclick="trCancel(' + tid + ')">' + h(t('tr.cancelReq')) + '</button>';
+  } else if (trn.status === 'sent') {
+    actions = canReceive
+      ? '<button class="kl-btn kl-btn-primary" onclick="trReceive(' + tid + ')">' + h(t('tr.receive')) + '</button>'
+      : '<p class="kl-muted">' + h(t('tr.awaitRecv')) + '</p>';
   }
   bodyHtml += '<div id="trDetailMsg" class="kl-msg" style="margin:8px 0"></div>'
             + '<div style="margin-top:10px">' + actions + '</div>';
@@ -8935,6 +8938,7 @@ async function trAct(tid, rpc, confirmMsg){
 window.trApprove = function(tid){ trAct(tid, 'kl_transfer_approve', null); };
 window.trCancel  = function(tid){ trAct(tid, 'kl_transfer_cancel', t('tr.confirmCancel')); };
 window.trSend    = function(tid){ trAct(tid, 'kl_transfer_send', t('tr.confirmSend')); };
+window.trReceive = function(tid){ trAct(tid, 'kl_transfer_receive', t('tr.confirmReceive')); };
 
 // v3.57: populate "Check out to" — Use/Consume + active sub-warehouses (hubs).
 // Safe if the warehouses table isn't set up yet → keeps the default "Use".
@@ -14432,6 +14436,7 @@ async function renderSAConsole(){
       + '<button class="kl-btn" onclick="var o=document.getElementById(\'kl-sa-console\');if(o)o.remove();location.hash=\'#/dashboard\'">✕ Close</button>'
     + '</div>'
     + '<div class="kl-rsmall kl-muted" style="margin-bottom:10px">Renew or change a customer\'s license. Changes apply instantly and are enforced by the database.</div>'
+    + '<div style="margin-bottom:12px"><button class="kl-btn kl-btn-primary" onclick="klSaAddCustomer()">➕ Add customer</button></div>'
     + '<div id="kl-sa-body"><p class="kl-rsmall kl-muted">Loading customers…</p></div>'
   + '</div>';
   document.body.appendChild(ov);
@@ -14465,6 +14470,7 @@ async function klSaReload(){
       +'<td style="white-space:nowrap">'
         +'<button class="kl-btn" style="'+bs+'" onclick="klSaSetSubs('+rid+','+c.max_sub_warehouses+')">Subs</button>'
         +'<button class="kl-btn" style="'+bs+'" onclick="klSaSetDate('+rid+')">Date</button>'
+        +'<button class="kl-btn" style="'+bs+'" onclick="klSaAttachOwner('+rid+')">Owner</button>'
       +'</td>'
     +'</tr>';
   });
@@ -14488,6 +14494,26 @@ async function klSaSetDate(rid){
   if(!/^\d{4}-\d{2}-\d{2}$/.test(v)){ alert('Please use the format YYYY-MM-DD'); return; }
   try{ var r=await sb.rpc('sa_set_license',{p_restaurant_id:rid,p_max_subs:null,p_expires_at:v}); if(r.error) throw r.error;
     alert('✅ Expiry set to '+v); await klSaReload();
+  }catch(e){ alert('❌ '+(e.message||e)); }
+}
+async function klSaAddCustomer(){
+  var name=prompt('New customer name (restaurant / company):',''); if(!name) return;
+  var code=prompt('Short code (optional, e.g. R002) — leave blank to auto-generate:','');
+  try{
+    var r=await sb.rpc('sa_create_customer',{p_name:name,p_code:(code||null),p_max_subs:2,p_months:12});
+    if(r.error) throw r.error;
+    var d=r.data||{};
+    alert('✅ Customer created: '+(d.code||'')+'  (id '+(d.restaurant_id||'')+')\n\nNext steps:\n1) Supabase → Authentication → Users → add the owner login (email + password)\n2) Back here, click "Owner" on this customer and enter that email.');
+    await klSaReload();
+  }catch(e){ alert('❌ '+(e.message||e)); }
+}
+async function klSaAttachOwner(rid){
+  var email=prompt('Owner login email\n(must ALREADY exist in Supabase Authentication):',''); if(!email) return;
+  var nm=prompt('Owner display name:','Owner');
+  try{
+    var r=await sb.rpc('sa_attach_owner',{p_email:email,p_restaurant_id:rid,p_full_name:(nm||'Owner')});
+    if(r.error) throw r.error;
+    alert('✅ Owner linked: '+email); await klSaReload();
   }catch(e){ alert('❌ '+(e.message||e)); }
 }
 
