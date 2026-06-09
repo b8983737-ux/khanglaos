@@ -2047,7 +2047,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.62-sa-addcust-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.62-saleak-fix-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -5982,6 +5982,10 @@ function klRenderLicenseBanner(){
 }
 
 async function loadProfile() {
+  // v3.62: always clear any cached license — it belongs to whoever was
+  // logged in before. This forces a fresh license (incl. is_platform_admin)
+  // for the current account, so SA powers can never leak across logins.
+  window.__lic = null;
   const { data: { user } } = await sb.auth.getUser();
   if (!user) { __profile = null; return null; }
   const { data, error } = await sb.from('user_profiles')
@@ -6040,6 +6044,7 @@ async function klLogin(email, password) {
 async function klLogout() {
   await sb.auth.signOut();
   __profile = null;
+  window.__lic = null;   // v3.62: drop license (incl. SA flag) so it never carries to the next login
   // Clear cached recipe/cost data so the next user on a shared kitchen
   // tablet cannot see the previous restaurant's pricing or recipes.
   window.__recipes = null; window.__rcLines = null;
@@ -6048,6 +6053,7 @@ async function klLogout() {
   window.__pos = null; window.__poLines = null;
   window.__poSups = null; window.__poItems = null;
   window.__salesDishes = null; window.__ewRows = null;
+  window.__trRows = null;
   // Stop the auto-logout timers on logout so they don't fire on the next user.
   klStopIdleWatcher();
   // Re-hide app page structure from the DOM (next person on a shared
