@@ -2086,7 +2086,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.74-btn-consistency-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.77-manage-lock-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -6067,6 +6067,214 @@ function klIsManager() {
   return ['owner','manager','sa'].includes(r);
 }
 
+/* ============================================================
+   Step-up auth — a SEPARATE "price password" (different from the
+   login) is required before sensitive Manage changes (e.g. item
+   price). The password is stored ONLY as a bcrypt hash inside
+   Supabase (table kl_price_lock) and verified by SECURITY DEFINER
+   functions — the plain text never reaches the browser or any
+   readable table. Owner sets it; staff/managers must know it too.
+   Requires the v3.76 SQL (kl_set_price_pin / kl_verify_price_pin /
+   kl_has_price_pin). If those functions are missing, the gate
+   "falls open" (allows the save) so the app is never bricked.
+   ============================================================ */
+const KL_UNLOCK_MINUTES = 10;
+function klIsUnlocked() { return (window.__klUnlockUntil || 0) > Date.now(); }
+function klLockNow() { window.__klUnlockUntil = 0; }
+
+async function klHasPricePin() {
+  try {
+    const { data, error } = await sb.rpc('kl_has_price_pin');
+    if (error) { console.warn('kl_has_price_pin error (run v3.76 SQL?)', error); return null; }
+    return data === true;
+  } catch (e) { console.warn('kl_has_price_pin failed', e); return null; }
+}
+async function klVerifyPricePin(pin) {
+  try {
+    const { data, error } = await sb.rpc('kl_verify_price_pin', { p_pin: pin });
+    if (error) { console.error('verify price pin', error); return false; }
+    return data === true;
+  } catch (e) { console.error('verify price pin failed', e); return false; }
+}
+async function klSetPricePin(pin) {
+  const { data, error } = await sb.rpc('kl_set_price_pin', { p_pin: pin });
+  if (error) throw error;
+  return data === true;
+}
+
+function klInjectStepUpStyle() {
+  if (document.getElementById('kl-su-style')) return;
+  const st = document.createElement('style');
+  st.id = 'kl-su-style';
+  st.textContent =
+    '#kl-su-bg{position:fixed;inset:0;z-index:100001;background:rgba(15,23,32,.55);display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;transition:opacity .16s ease}'
+    + '#kl-su-bg.kl-in{opacity:1}'
+    + '.kl-su{background:#fff;border-radius:16px;max-width:400px;width:100%;padding:22px 20px 18px;box-shadow:0 18px 50px rgba(0,0,0,.28);transform:translateY(10px) scale(.98);transition:transform .18s ease}'
+    + '#kl-su-bg.kl-in .kl-su{transform:none}'
+    + '.kl-su-h{font-size:16px;font-weight:700;color:#1f2d2a;margin:0 0 8px}'
+    + '.kl-su-r{font-size:13.5px;line-height:1.5;color:#566b66;margin:0 0 8px}'
+    + '.kl-su-lbl{font-size:12.5px;color:#46524f;margin:10px 2px 0;font-weight:600}'
+    + '.kl-su input{width:100%;box-sizing:border-box;padding:11px 12px;border:1.5px solid #d7dee0;border-radius:10px;font-size:15px;font-family:inherit;margin-top:5px}'
+    + '.kl-su input:focus{outline:none;border-color:#15795f}'
+    + '.kl-su-msg{min-height:17px;font-size:13px;color:#c0392b;margin:8px 2px 0}'
+    + '.kl-su-link{background:none;border:0;color:#15795f;font-size:12.5px;cursor:pointer;padding:8px 0 0;text-decoration:underline;font-family:inherit}'
+    + '.kl-su-row{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}'
+    + '.kl-su-btn{border:0;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}'
+    + '.kl-su-cancel{background:#eef1f0;color:#33403d}'
+    + '.kl-su-ok{background:#15795f;color:#fff}';
+  document.head.appendChild(st);
+}
+
+/* Self-contained overlay. modeHasPin = does a price password already exist?
+   Resolves true once the PIN is set/verified, false on Cancel/Esc/backdrop. */
+function klStepUpVerify(reasonText, modeHasPin) {
+  return new Promise((resolve) => {
+    const sess = klSession();
+    if (!sess || !sess.user) { resolve(false); return; }
+    const isOwner = sess.user.role === 'owner';
+    klInjectStepUpStyle();
+
+    const bg = document.createElement('div'); bg.id = 'kl-su-bg';
+    const card = document.createElement('div'); card.className = 'kl-su';
+    const hd = document.createElement('div'); hd.className = 'kl-su-h';
+    const rs = document.createElement('div'); rs.className = 'kl-su-r';
+    const fields = document.createElement('div');
+    const msg = document.createElement('div'); msg.className = 'kl-su-msg';
+    const linkWrap = document.createElement('div');
+    const row = document.createElement('div'); row.className = 'kl-su-row';
+    const bCancel = document.createElement('button'); bCancel.className = 'kl-su-btn kl-su-cancel'; bCancel.textContent = 'Cancel';
+    const bOk = document.createElement('button'); bOk.className = 'kl-su-btn kl-su-ok'; bOk.textContent = 'Unlock';
+    row.appendChild(bCancel); row.appendChild(bOk);
+    card.appendChild(hd); card.appendChild(rs); card.appendChild(fields); card.appendChild(msg); card.appendChild(linkWrap); card.appendChild(row);
+    bg.appendChild(card); document.body.appendChild(bg);
+    requestAnimationFrame(() => bg.classList.add('kl-in'));
+
+    let done = false;
+    const cleanup = (val) => {
+      if (done) return; done = true;
+      document.removeEventListener('keydown', onKey, true);
+      bg.classList.remove('kl-in');
+      setTimeout(() => { if (bg.parentNode) bg.parentNode.removeChild(bg); }, 180);
+      resolve(val);
+    };
+    const unlock = () => { window.__klUnlockUntil = Date.now() + KL_UNLOCK_MINUTES * 60 * 1000; cleanup(true); };
+
+    const addField = (labelText, ph) => {
+      const l = document.createElement('div'); l.className = 'kl-su-lbl'; l.textContent = labelText;
+      const i = document.createElement('input'); i.type = 'password'; i.placeholder = ph || ''; i.autocomplete = 'off';
+      fields.appendChild(l); fields.appendChild(i); return i;
+    };
+
+    let inputs = [];
+    let submit = async () => {};
+
+    const setBusy = (on, label) => {
+      bOk.disabled = on; bCancel.disabled = on;
+      if (on) { bOk.dataset.old = bOk.textContent; bOk.textContent = label || 'Working\u2026'; }
+      else if (bOk.dataset.old) { bOk.textContent = bOk.dataset.old; }
+    };
+
+    function render(mode) {
+      fields.textContent = ''; linkWrap.textContent = ''; msg.textContent = '';
+      inputs = [];
+
+      if (mode === 'blocked') {
+        hd.textContent = '🔐 Price password not set';
+        rs.textContent = 'No price password has been set yet. Please ask the owner to set it before changing prices.';
+        bOk.style.display = 'none';
+        bCancel.textContent = 'Close';
+        return;
+      }
+
+      bOk.style.display = '';
+      if (mode === 'set') {
+        hd.textContent = '🔐 Set your price password';
+        rs.textContent = 'Choose a password only you know. Anyone changing item prices will need it — keep it different from your login.';
+        const a = addField('New price password', 'At least 4 characters');
+        const b = addField('Confirm password', 'Type it again');
+        inputs = [a, b];
+        bOk.textContent = 'Set & unlock';
+        submit = async () => {
+          const p1 = a.value || '', p2 = b.value || '';
+          if (p1.trim().length < 4) { msg.textContent = 'Password must be at least 4 characters.'; return; }
+          if (p1 !== p2) { msg.textContent = 'The two passwords do not match.'; return; }
+          setBusy(true, 'Saving\u2026');
+          try { await klSetPricePin(p1); unlock(); }
+          catch (e) { console.error('set price pin', e); setBusy(false); msg.textContent = (e && e.message) ? e.message : 'Could not set the password.'; }
+        };
+      } else if (mode === 'change') {
+        hd.textContent = '🔐 Change price password';
+        rs.textContent = 'Enter the current password, then your new one.';
+        const cur = addField('Current password', '');
+        const a = addField('New password', 'At least 4 characters');
+        const b = addField('Confirm new password', '');
+        inputs = [cur, a, b];
+        bOk.textContent = 'Change & unlock';
+        submit = async () => {
+          const c = cur.value || '', p1 = a.value || '', p2 = b.value || '';
+          if (!c) { msg.textContent = 'Enter your current password.'; return; }
+          if (p1.trim().length < 4) { msg.textContent = 'New password must be at least 4 characters.'; return; }
+          if (p1 !== p2) { msg.textContent = 'The new passwords do not match.'; return; }
+          setBusy(true, 'Checking\u2026');
+          const ok = await klVerifyPricePin(c);
+          if (!ok) { setBusy(false); msg.textContent = 'Current password is wrong.'; try { cur.select(); } catch (_) {} return; }
+          setBusy(true, 'Saving\u2026');
+          try { await klSetPricePin(p1); unlock(); }
+          catch (e) { console.error('change price pin', e); setBusy(false); msg.textContent = (e && e.message) ? e.message : 'Could not change the password.'; }
+        };
+      } else { // 'enter'
+        hd.textContent = '🔐 Enter price password';
+        rs.textContent = reasonText || 'Enter your price password to change item details.';
+        const a = addField('Price password', '');
+        inputs = [a];
+        bOk.textContent = 'Unlock';
+        submit = async () => {
+          const p = a.value || '';
+          if (!p) { msg.textContent = 'Please enter the price password.'; return; }
+          setBusy(true, 'Checking\u2026');
+          const ok = await klVerifyPricePin(p);
+          if (ok) { unlock(); }
+          else { setBusy(false); msg.textContent = 'Wrong password. Please try again.'; try { a.select(); } catch (_) {} }
+        };
+        if (isOwner) {
+          const link = document.createElement('button');
+          link.className = 'kl-su-link'; link.textContent = 'Change price password';
+          link.onclick = () => render('change');
+          linkWrap.appendChild(link);
+        }
+      }
+      setTimeout(() => { if (inputs[0]) inputs[0].focus(); }, 50);
+    }
+
+    const onKey = (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); cleanup(false); }
+      else if (e.key === 'Enter') { e.preventDefault(); submit(); }
+    };
+    bCancel.onclick = () => cleanup(false);
+    bOk.onclick = () => submit();
+    bg.onclick = (e) => { if (e.target === bg) cleanup(false); };
+    document.addEventListener('keydown', onKey, true);
+
+    // Decide opening mode
+    if (modeHasPin) render('enter');
+    else if (isOwner) render('set');
+    else render('blocked');
+  });
+}
+
+/* Gate: true if already unlocked, else prompt. SA/platform-admin bypasses.
+   Falls open if the DB functions aren't installed yet (so Manage/edits are
+   never bricked before the v3.76 SQL is run). */
+async function klRequireUnlock(reasonText) {
+  const sess = klSession();
+  if (sess && sess.user && sess.user.role === 'sa') return true;            // platform admin
+  if (typeof klIsPlatformAdmin === 'function' && klIsPlatformAdmin()) return true;
+  if (klIsUnlocked()) return true;
+  const has = await klHasPricePin();
+  if (has === null) { console.warn('Price lock not installed (run v3.76 SQL) — allowing'); return true; }
+  return await klStepUpVerify(reasonText, has);
+}
+
 async function klLogin(email, password) {
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
   if (error) {
@@ -6094,6 +6302,7 @@ async function klLogin(email, password) {
 async function klLogout() {
   await sb.auth.signOut();
   __profile = null;
+  klLockNow();           // 🔐 drop the price-edit unlock so the next login starts locked
   window.__lic = null;   // v3.62: drop license (incl. SA flag) so it never carries to the next login
   // Clear cached recipe/cost data so the next user on a shared kitchen
   // tablet cannot see the previous restaurant's pricing or recipes.
@@ -13518,6 +13727,12 @@ async function initManagePage() {
       + '<p class="kl-rsmall">' + t('m.mgrOnly') + ' "' + h(u.user.role) + '".</p></div>';
     return;
   }
+  // 🔐 Whole-Manage lock: require the price password before opening Manage.
+  // (Owner/manager only reach here; SA bypasses inside klRequireUnlock.)
+  if (!(await klRequireUnlock('Enter your price password to open Manage.'))) {
+    location.hash = '#/inventory';
+    return;
+  }
   document.getElementById('manageTabs').style.display = '';
   // v3.52: Company tab is owner-only (banking details are sensitive)
   const isOwner = u.user.role === 'owner' || u.user.role === 'sa';
@@ -13740,6 +13955,9 @@ window.itemForm = function(id) {
 };
 
 window.saveItem = async function(id) {
+  // 🔐 Step-up: require the separate PRICE PASSWORD before changing item
+  // details (including price). Unlocks all item edits for 10 minutes.
+  if (!(await klRequireUnlock('Enter your price password to change item details, including price. It stays unlocked for 10 minutes.'))) return;
   const g = (x)=>document.getElementById(x);
   // Note: allergen fields (contains_peanut, _shellfish, etc) are intentionally
   // NOT in this object. Supabase update only changes columns we send, so
