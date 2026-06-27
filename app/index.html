@@ -264,10 +264,14 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   border-radius: var(--kl-radius); padding: 18px 20px; box-shadow: var(--kl-shadow);
 }
 .kl-kpi-label { color: var(--kl-text-soft); font-size: 13px; font-weight: 500; }
-.kl-kpi-value { font-size: 30px; font-weight: 700; margin-top: 6px; letter-spacing: -0.5px; }
+.kl-kpi-value { font-family: var(--kl-font-display); font-size: 30px; font-weight: 700;
+  margin-top: 6px; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
 .kl-kpi.is-danger  .kl-kpi-value { color: var(--kl-danger); }
 .kl-kpi.is-warn    .kl-kpi-value { color: var(--kl-warn); }
 .kl-kpi.is-success .kl-kpi-value { color: var(--kl-success); }
+.kl-kpi.is-danger::before  { background: var(--kl-danger); }
+.kl-kpi.is-warn::before    { background: var(--kl-warn); }
+.kl-kpi.is-success::before { background: var(--kl-success); }
 
 .kl-form-row { margin-bottom: 14px; }
 /* Input with unit suffix badge inside on the right (e.g. "55 bottle") */
@@ -353,11 +357,13 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   padding: 13px 16px; text-align: left;
   border-bottom: 1px solid var(--kl-border);
   font-size: 14px; vertical-align: middle;
+  font-variant-numeric: tabular-nums;
 }
+.kl-table td.num, .kl-table th.num { text-align: right; }
 .kl-table tr:last-child td { border-bottom: none; }
 .kl-table th {
-  background: var(--kl-surface-2); font-weight: 600; color: var(--kl-text-soft);
-  font-size: 12px; letter-spacing: 0.2px;
+  background: var(--kl-surface-2); font-weight: 700; color: var(--kl-text-soft);
+  font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase;
 }
 .kl-table tbody tr { transition: background .1s; }
 .kl-table tbody tr:hover td { background: var(--kl-surface-2); }
@@ -538,7 +544,10 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   .kl-dr-date{flex:1;min-width:120px;} .kl-dr-apply{width:100%;} }
 /* Report cards — clean white with a subtle left accent for status */
 .kl-rcard { background:var(--kl-surface); border:1px solid var(--kl-border);
-  border-radius:var(--kl-radius); padding:20px; margin:0 0 14px 0; box-shadow:var(--kl-shadow); }
+  border-radius:var(--kl-radius); padding:20px; margin:0 0 14px 0;
+  box-shadow:0 1px 2px rgba(20,32,48,.04), 0 6px 16px rgba(20,32,48,.05);
+  transition:transform .14s ease, box-shadow .14s ease; }
+.kl-rcard:hover { transform:translateY(-2px); box-shadow:0 2px 4px rgba(20,32,48,.06), 0 14px 28px rgba(20,32,48,.09); }
 .kl-rcard.bad  { border-left:3px solid var(--kl-danger); }
 .kl-rcard.warn { border-left:3px solid var(--kl-warn); }
 .kl-rcard.good { border-left:3px solid var(--kl-success); }
@@ -548,7 +557,8 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 .kl-rcard.warn .kl-rbig { color:var(--kl-warn); }
 .kl-rcard.good .kl-rbig { color:var(--kl-success); }
 .kl-rcard.info .kl-rbig { color:var(--kl-info); }
-.kl-rbig { font-size:30px; font-weight:700; margin:0; line-height:1.15; letter-spacing:-0.5px; }
+.kl-rbig { font-family:var(--kl-font-display); font-size:30px; font-weight:700; margin:0;
+  line-height:1.15; letter-spacing:-0.5px; font-variant-numeric:tabular-nums; }
 .kl-rsmall { font-size:13px; margin:8px 0 0 0; color:var(--kl-text-soft); }
 .kl-rgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin:0 0 16px 0; }
 .kl-iedit { cursor:pointer; }
@@ -1953,14 +1963,18 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 /* Overview — MarketMan-style KPI grid + charts */
 .kl-kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:0 0 18px 0; }
 .kl-kpi { background:var(--kl-surface); border:1px solid var(--kl-border); border-radius:14px;
-  padding:20px 22px; box-shadow:0 1px 3px rgba(20,32,48,.04); position:relative; overflow:hidden; }
+  padding:20px 22px; box-shadow:0 1px 2px rgba(20,32,48,.04), 0 6px 16px rgba(20,32,48,.05);
+  position:relative; overflow:hidden; transition:transform .14s ease, box-shadow .14s ease; }
+.kl-kpi:hover { transform:translateY(-2px); box-shadow:0 2px 4px rgba(20,32,48,.06), 0 14px 28px rgba(20,32,48,.09); }
 .kl-kpi::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:#15795f; }
 .kl-kpi.kpi-warn::before { background:#caa24a; }
 .kl-kpi.kpi-bad::before  { background:#c0392b; }
 .kl-kpi-label { font-size:12.5px; font-weight:600; color:var(--kl-text-soft);
   text-transform:uppercase; letter-spacing:.04em; margin:0 0 10px 0; }
-.kl-kpi-num { font-family:var(--kl-font-display); font-size:30px; font-weight:700;
-  color:var(--kl-text); margin:0; line-height:1.1; letter-spacing:-0.5px; }
+.kl-kpi-num { font-family:var(--kl-font-display); font-size:31px; font-weight:700;
+  color:var(--kl-text); margin:0; line-height:1.1; letter-spacing:-0.5px; font-variant-numeric:tabular-nums; }
+.kl-kpi.kpi-bad  .kl-kpi-num { color:var(--kl-danger); }
+.kl-kpi.kpi-warn .kl-kpi-num { color:var(--kl-warn); }
 .kl-kpi-sub { font-size:12.5px; color:var(--kl-text-soft); margin:8px 0 0 0; }
 .kl-kpi-trend { font-weight:700; padding:1px 8px; border-radius:999px; font-size:11.5px; }
 .kl-kpi-trend.good { background:#e8f5ef; color:#15795f; }
@@ -2086,7 +2100,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.77-manage-lock-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.79-report-polish-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -6600,6 +6614,9 @@ function currentRoute() {
   return ROUTES.includes(h) ? h : (klSession() ? 'dashboard' : 'login');
 }
 function showPage(name) {
+  // 🔐 Re-lock the Manage section the moment we navigate AWAY from it, so
+  // clicking back into Manage always asks for the price password again.
+  if (name !== 'manage') klLockNow();
   // Gating: if authenticated and this is an app page, restore its HTML
   // from the stash BEFORE we toggle/active or init it. If not
   // authenticated, the page stays empty (snoop sees nothing).
