@@ -12,7 +12,6 @@
   connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com https://api.qrserver.com;
   font-src    'self' data: https://fonts.gstatic.com;
   frame-src   'self';
-  frame-ancestors 'self';
   base-uri    'self';
   form-action 'self';
   upgrade-insecure-requests;
@@ -2100,7 +2099,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.79-report-polish-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.80-bugfix-400-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -7091,11 +7090,20 @@ async function initDashboardPage() {
     // v3.1 one-tap expiry waste queue (auto-hides if nothing expired)
     renderExpiryWasteQueue();
 
-    // Recent movements
+    // Recent movements — fetch user names separately (no FK embed) to avoid
+    // a PostgREST 400 when movements→user_profiles has no detected relationship.
     const moves = await sb.from('movements')
-      .select('movement_type, quantity, created_at, note, batches(items(name,unit)), user_profiles(full_name)')
+      .select('movement_type, quantity, created_at, note, user_id, batches(items(name,unit))')
       .order('created_at', { ascending: false }).limit(10);
-    renderMoves(moves.data || []);
+    const moveRows = moves.data || [];
+    const moveUids = [...new Set(moveRows.map(m => m.user_id).filter(Boolean))];
+    if (moveUids.length) {
+      const ur = await sb.from('user_profiles').select('user_id, full_name').in('user_id', moveUids);
+      const umap = {};
+      (ur.data || []).forEach(p => { umap[p.user_id] = p.full_name; });
+      moveRows.forEach(m => { m.__userName = umap[m.user_id] || ''; });
+    }
+    renderMoves(moveRows);
   } catch (e) {
     console.error(e);
     showMsg('dashMsg', 'Error: ' + (e.message || e), 'err');
@@ -7154,7 +7162,7 @@ function renderMoves(rows) {
       <td><strong>${h(m.movement_type)}</strong></td>
       <td>${h(itemName)}</td>
       <td>${h(fmtQty(m.quantity))} ${h(unit)}</td>
-      <td>${h(m.user_profiles && m.user_profiles.full_name)}</td>
+      <td>${h(m.__userName || (m.user_profiles && m.user_profiles.full_name) || '')}</td>
       <td>${h(m.note)}</td>
     </tr>`;
   }
