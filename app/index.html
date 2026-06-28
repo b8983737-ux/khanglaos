@@ -1363,12 +1363,14 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   display:flex; flex-direction:column; align-items:center;
   width:100%; max-width:320px; box-sizing:border-box; }
 .kl-pub-barcode-wrap svg { max-width:100%; height:auto; display:block; }
-.kl-prodlabel { display:flex; flex-direction:column; align-items:center; gap:16px; padding:10px; }
-.kl-prodlabel-bc { width:100%; max-width:300px; text-align:center; }
+.kl-prodlabel { display:flex; flex-direction:column; align-items:center; gap:14px;
+  padding:20px 18px; background:#fff; border:1px solid #e3e9e7; border-radius:14px;
+  box-shadow:0 1px 2px rgba(20,32,48,.05), 0 8px 20px rgba(20,32,48,.05); }
+.kl-prodlabel-bc { width:100%; max-width:320px; text-align:center; }
 .kl-prodlabel-bc svg { max-width:100%; height:auto; display:block; margin:0 auto; }
-.kl-prodlabel-qr { text-align:center; }
-.kl-prodlabel-qr img { width:130px !important; height:130px !important; display:block; margin:0 auto; }
-.kl-prodlabel-qr .kl-pub-qr-cap { font-family:monospace; font-size:12px; margin-top:4px; }
+.kl-prodlabel-qr { text-align:center; padding-top:12px; border-top:1px dashed #e3e9e7; width:100%; max-width:320px; }
+.kl-prodlabel-qr img { width:118px !important; height:118px !important; display:block; margin:0 auto; }
+.kl-prodlabel-qr .kl-pub-qr-cap { font-family:monospace; font-size:12px; font-weight:700; color:#5a6b66; margin-top:6px; letter-spacing:.5px; }
 .kl-pub-barcode-fallback { font-family:monospace; font-size:14px;
   font-weight:700; padding:14px 8px; text-align:center;
   border:1px dashed var(--kl-border,#888); border-radius:6px;
@@ -2099,7 +2101,7 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.80-bugfix-400-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.81-barcode-pro-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -5760,11 +5762,13 @@ async function klRenderDnBarcode(targetId, payload) {
       JsBarcode(svgEl, safePayload, {
         format: 'CODE128',
         displayValue: true,
-        fontSize: 14,
-        height: 60,
-        width: 1.8,
-        margin: 4,
-        textMargin: 4,
+        font: 'monospace',
+        fontOptions: 'bold',
+        fontSize: 15,
+        height: 64,
+        width: 1.9,
+        margin: 10,
+        textMargin: 6,
         background: '#ffffff',
         lineColor: '#14201b'
       });
@@ -14081,8 +14085,7 @@ window.invShowBarcode = function(itemId){
     +   '<div class="kl-prodlabel-bc" id="invbc_bc"></div>'
     +   '<div class="kl-prodlabel-qr" id="invbc_qr"></div>'
     + '</div>'
-    + '<div style="font-family:monospace;font-size:13px;margin-top:10px">'+h(sku)+'</div>'
-    + '<button type="button" class="kl-btn kl-btn-primary" style="margin-top:12px" onclick="invPrintBarcode()">'+h(t('inv.bc.print'))+'</button>'
+    + '<button type="button" class="kl-btn kl-btn-primary" style="margin-top:14px" onclick="invPrintBarcode()">'+h(t('inv.bc.print'))+'</button>'
     + '</div>';
   modal(t('inv.bc.title'), html);
   try { klRenderDnBarcode('invbc_bc', sku); } catch(e){}
