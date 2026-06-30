@@ -2056,3 +2056,22 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
   color:var(--kl-text-faint); margin-top:8px; }
 .kl-ov-legend { font-size:12.5px; color:var(--kl-text-soft); text-align:center;
   margin:18px 0 0 0; }
+/* ===== v3.86 Analytics — design #5 OPERATIONAL (scoped to .kl-ana-op) ===== */
+.kl-ana-op .kl-ana-attn{ display:flex; align-items:center; gap:10px; padding:10px 14px;
+  border-radius:10px; margin:0 0 14px 0; font-size:13.5px; border:1px solid; }
+.kl-ana-op .kl-ana-attn-ico{ font-size:16px; line-height:1; }
+.kl-ana-op .kl-ana-attn strong{ font-weight:700; }
+.kl-ana-op .kl-ana-attn.ok{   background:#e8f5ef; border-color:#bfe6d8; color:#0f6e56; }
+.kl-ana-op .kl-ana-attn.warn{ background:#fdf7ea; border-color:#f0dcae; color:#7a5a12; }
+.kl-ana-op .kl-ana-attn.bad{  background:#fdecea; border-color:#f5c6bf; color:#a3271a; }
+/* Operational KPI strip: denser, left status accent instead of top bar */
+.kl-ana-op .kl-kpi-grid{ gap:12px; margin:0 0 14px 0; }
+.kl-ana-op .kl-kpi{ border-radius:10px; padding:13px 16px; border-left:4px solid #15795f; }
+.kl-ana-op .kl-kpi::before{ display:none; }
+.kl-ana-op .kl-kpi-num{ font-size:27px; }
+.kl-ana-op .kl-kpi.kpi-warn{ border-left-color:#caa24a; background:#fdfaf2; }
+.kl-ana-op .kl-kpi.kpi-bad{  border-left-color:#c0392b; background:#fdf4f2; }
+/* tighter, firmer card headers for the control-room feel */
+.kl-ana-op .kl-ov-head{ font-weight:700; }
+.kl-ana-op .kl-ov-2col{ gap:14px; margin:0 0 14px 0; }
+@media(max-width:880px){ .kl-ana-op .kl-kpi-grid{ grid-template-columns:repeat(2,1fr); } }

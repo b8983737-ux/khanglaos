@@ -42,7 +42,7 @@
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.82-split-files-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.86-analytics-operational-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -10510,7 +10510,8 @@ async function initOverviewPage() {
       const v = Number(r.stock_value != null ? r.stock_value
                 : (Number(r.on_hand||0) * Number(r.unit_cost||r.last_cost||0))) || 0;
       stockValue += v;
-      const c = r.category || r.cat || 'Other';
+      let c = (r.category || r.cat || '').trim();
+      if (!c) c = t('ov.uncat');
       stockByCat[c] = (stockByCat[c]||0) + v;
     });
 
@@ -10630,7 +10631,14 @@ async function initOverviewPage() {
       return '<span class="kl-kpi-trend '+(good?'good':'bad')+'">'+arrow+' '+Math.abs(pct)+'%</span>';
     };
 
-    let html = '<div class="kl-kpi-grid">';
+    const __attnCls = reorderCount>0 ? 'bad' : (expRows.length>0 ? 'warn' : 'ok');
+    const __attnIco = __attnCls==='bad' ? '🚨' : (__attnCls==='warn' ? '⚠️' : '✅');
+    let html = '<div class="kl-ana-attn '+__attnCls+'">'
+      + '<span class="kl-ana-attn-ico">'+__attnIco+'</span>'
+      + '<span class="kl-ana-attn-txt"><strong>'+h(t('ov.kReorder'))+'</strong> '+reorderCount
+      + ' &nbsp;·&nbsp; <strong>'+h(t('ov.kExpiring'))+'</strong> '+expRows.length+' '+h(t('ov.kBatches'))+'</span>'
+      + '</div>';
+    html += '<div class="kl-kpi-grid">';
     html += '<div class="kl-kpi"><p class="kl-kpi-label">'+t('ov.kStockVal')+'</p>'
           + '<p class="kl-kpi-num">'+money(stockValue)+'</p>'
           + '<p class="kl-kpi-sub">'+svRows.length+' '+t('ov.kItems')+'</p></div>';
@@ -10722,7 +10730,9 @@ async function initOverviewPage() {
     html += '</div>';
 
     // ---- ROW 3: Stock-by-category chart (left) + Top wasted items (right) ----
-    const catArr = Object.keys(stockByCat).map(k=>({label:k.slice(0,6), val:stockByCat[k]}))
+    const catArr = Object.keys(stockByCat)
+                    .filter(k => Number(stockByCat[k]) > 0)
+                    .map(k=>({label:k.slice(0,8), val:stockByCat[k]}))
                     .sort((a,b)=>b.val-a.val).slice(0,6);
     html += '<div class="kl-ov-2col">';
     html += '<div class="kl-ov-card"><div class="kl-ov-head">'+t('ov.chStockCat')
@@ -10788,7 +10798,7 @@ async function initOverviewPage() {
     }
     html += '</div>';
 
-    body.innerHTML = html;
+    body.innerHTML = '<div class="kl-ana-op">' + html + '</div>';
 
     // Wire the date-range filter (once - guarded with dataset.wired).
     const ovDR = document.getElementById('ovDateRange');
