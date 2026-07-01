@@ -42,7 +42,7 @@
 </head>
 <body>
 <!-- KHANGLAOS BUILD: v3.55-po-asn-merge-session1-2026-06-02 -->
-<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.86-analytics-operational-s1</div>
+<div id="kl-build-mark" style="position:fixed;bottom:6px;right:8px;font-size:10px;color:#9aa6b0;opacity:.5;z-index:9999;pointer-events:none">v3.87-map-dock-routing-s1</div>
 <div id="kl-boot-splash" style="display:none;position:fixed;inset:0;z-index:9999;background:#103f33;align-items:center;justify-content:center;flex-direction:column;gap:18px">
   <div style="width:54px;height:54px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#15795f"/><text x="32" y="46" font-family="Arial,Helvetica,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">K</text><circle cx="50" cy="18" r="5.5" fill="#caa24a"/></svg></div>
   <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.25);border-top-color:#caa24a;border-radius:50%;animation:klspin .8s linear infinite"></div>
@@ -9988,8 +9988,14 @@ function klMapRenderFloor(zones){
     // v3.64: incoming goods routed to THIS zone (by storage_type → temp_zone).
     const __zinc = (window.__mapZoneIncoming && zn.temp_zone)
       ? (window.__mapZoneIncoming[String(zn.temp_zone).toLowerCase()] || []) : [];
+    let __zEta = '';
+    if (__zinc.length){
+      const __zms = __zinc.map(function(x){ return x.eta ? new Date(x.eta).getTime() : (x.expected ? new Date(x.expected+'T00:00:00').getTime() : Infinity); });
+      const __zmin = Math.min.apply(null, __zms);
+      if (isFinite(__zmin)) __zEta = ' · ' + new Date(__zmin).toISOString().slice(0,10);
+    }
     const incPill = __zinc.length
-      ? '<span class="kl-floor-exp" style="background:#eaf4ff;color:#1a5fb4;cursor:pointer" onclick="event.stopPropagation();mapZoneIncoming(\''+String(zn.temp_zone||'').replace(/[^a-zA-Z0-9_-]/g,'')+'\')">🚛 '+__zinc.length+' '+h(t('map.zoneIncoming')||'incoming')+'</span>'
+      ? '<span class="kl-floor-exp kl-zone-inc" style="background:#eaf4ff;color:#1a5fb4;cursor:pointer" onclick="event.stopPropagation();mapZoneIncoming(\''+String(zn.temp_zone||'').replace(/[^a-zA-Z0-9_-]/g,'')+'\')">🚛 '+__zinc.length+h(__zEta)+'</span>'
       : '';
     cells += '<div class="kl-floor-zone status-'+worst+'" onclick="klMapOpenDrawer('+zn.location_id+')">'
           + '<div class="kl-floor-zone-bar"></div>'
@@ -10028,14 +10034,14 @@ function klMapRenderFloor(zones){
       var moving = d.departed_at && !d.arrived_at;
       var e = __dockEta(d);
       var zones = (window.__mapDnZones && window.__mapDnZones[d.dn_id]) ? Object.keys(window.__mapDnZones[d.dn_id]) : [];
-      var dest = zones.length
-        ? '<div class="kl-truck-dest">' + zones.map(function(z){ return '<span>→ ' + h(klMapZoneTypeLabel(z)) + '</span>'; }).join('') + '</div>'
-        : '';
-      __trucks += '<button type="button" class="kl-truck ' + e.cls + '" onclick="mapIncomingDetail(' + d.dn_id + ')" title="' + h(d.dn_number || '') + '">'
+      var route = zones.length
+        ? '<span class="kl-truck-arr">➜</span>' + zones.map(function(z){ return '<span class="kl-truck-destz">' + (klMapZoneIcon(z) || '📍') + ' ' + h(klMapZoneTypeLabel(z)) + '</span>'; }).join(' ')
+        : '<span class="kl-truck-noz">⚠ ' + h(t('map.noZone') || 'Set destination zone') + '</span>';
+      __trucks += '<button type="button" class="kl-truck ' + e.cls + (zones.length ? '' : ' nozone') + '" onclick="mapIncomingDetail(' + d.dn_id + ')" title="' + h(d.dn_number || '') + '">'
         + '<div class="kl-truck-top"><span class="kl-truck-ico">' + (moving ? '🚚' : '🚛') + '</span>'
         +   '<span class="kl-truck-sup">' + h(d.supplier_name || '—') + '</span></div>'
-        + '<div class="kl-truck-eta ' + e.cls + '">' + h(e.txt) + '</div>'
-        + dest
+        + '<div class="kl-truck-route">' + route + '</div>'
+        + '<div class="kl-truck-eta ' + e.cls + '">🕑 ' + h(e.txt) + '</div>'
         + '</button>';
     });
   } else {

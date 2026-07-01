@@ -2075,3 +2075,14 @@ body.kl-has-sidebar #app-view .kl-page { margin-left: var(--kl-sidebar-w); }
 .kl-ana-op .kl-ov-head{ font-weight:700; }
 .kl-ana-op .kl-ov-2col{ gap:14px; margin:0 0 14px 0; }
 @media(max-width:880px){ .kl-ana-op .kl-kpi-grid{ grid-template-columns:repeat(2,1fr); } }
+
+/* ===== v3.87 Map — professional dock→zone routing ===== */
+.kl-truck-route{ display:flex; align-items:center; flex-wrap:wrap; gap:5px; margin:6px 0 3px; }
+.kl-truck-arr{ color:#15795f; font-weight:800; font-size:13px; }
+.kl-truck-destz{ font-size:10.5px; background:#e8f5ef; color:#0f6e56; border-radius:999px;
+  padding:2px 8px; font-weight:700; white-space:nowrap; }
+.kl-truck-noz{ font-size:10.5px; background:#fdecea; color:#a3271a; border-radius:999px;
+  padding:2px 8px; font-weight:700; white-space:nowrap; }
+.kl-truck.nozone{ border-left-style:dashed; }
+.kl-truck-eta{ display:flex; align-items:center; gap:4px; }
+.kl-zone-inc{ white-space:nowrap; }
